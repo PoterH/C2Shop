@@ -95,6 +95,62 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
 
 
+  // Helper functions for mathematical CPF/CNPJ verification
+  const isValidCPF = (cpf: string): boolean => {
+    const clean = cpf.replace(/\D/g, '');
+    if (clean.length !== 11) return false;
+    if (/^(\d)\1{10}$/.test(clean)) return false; // Sequence of same digits
+
+    let sum = 0;
+    for (let i = 0; i < 9; i++) {
+      sum += parseInt(clean.charAt(i)) * (10 - i);
+    }
+    let rev = 11 - (sum % 11);
+    if (rev === 10 || rev === 11) rev = 0;
+    if (rev !== parseInt(clean.charAt(9))) return false;
+
+    sum = 0;
+    for (let i = 0; i < 10; i++) {
+      sum += parseInt(clean.charAt(i)) * (11 - i);
+    }
+    rev = 11 - (sum % 11);
+    if (rev === 10 || rev === 11) rev = 0;
+    if (rev !== parseInt(clean.charAt(10))) return false;
+
+    return true;
+  };
+
+  const isValidCNPJ = (cnpj: string): boolean => {
+    const clean = cnpj.replace(/\D/g, '');
+    if (clean.length !== 14) return false;
+    if (/^(\d)\1{13}$/.test(clean)) return false; // Sequence of same digits
+
+    let size = clean.length - 2;
+    let numbers = clean.substring(0, size);
+    const digits = clean.substring(size);
+    let sum = 0;
+    let pos = size - 7;
+    for (let i = size; i >= 1; i--) {
+      sum += parseInt(numbers.charAt(size - i)) * pos--;
+      if (pos < 2) pos = 9;
+    }
+    let result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
+    if (result !== parseInt(digits.charAt(0))) return false;
+
+    size = size + 1;
+    numbers = clean.substring(0, size);
+    sum = 0;
+    pos = size - 7;
+    for (let i = size; i >= 1; i--) {
+      sum += parseInt(numbers.charAt(size - i)) * pos--;
+      if (pos < 2) pos = 9;
+    }
+    result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
+    if (result !== parseInt(digits.charAt(1))) return false;
+
+    return true;
+  };
+
   // Step Validations
   const validateInfoStep = () => {
     if (fullName.trim().split(' ').length < 2) {
@@ -110,6 +166,17 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
       setErrorMessage('Por favor, insira um CPF ou CNPJ válido.');
       return false;
     }
+    
+    // Validação matemática do documento
+    if (cleanCpfCnpj.length === 11 && !isValidCPF(cleanCpfCnpj)) {
+      setErrorMessage('CPF inválido. Por favor, verifique os números digitados.');
+      return false;
+    }
+    if (cleanCpfCnpj.length === 14 && !isValidCNPJ(cleanCpfCnpj)) {
+      setErrorMessage('CNPJ inválido. Por favor, verifique os números digitados.');
+      return false;
+    }
+
     const cleanPhone = phone.replace(/\D/g, '');
     if (cleanPhone.length < 10 || cleanPhone.length > 11) {
       setErrorMessage('Por favor, insira um telefone válido com DDD.');
