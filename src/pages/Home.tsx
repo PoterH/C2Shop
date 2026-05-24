@@ -165,32 +165,32 @@ export const Home: React.FC = () => {
             className="absolute -top-10 -left-10 w-[450px] h-[450px] md:w-[650px] md:h-[650px] will-change-transform"
             style={{ transform: 'translate3d(calc(var(--scroll-y, 0px) * 0.02), calc(var(--scroll-y, 0px) * 0.08), 0)' }}
           >
-            <div className="w-full h-full bg-gradient-to-br from-[#07D4F3]/25 via-[#3F1DA7]/20 to-[#8B5CF6]/25 rounded-full blur-[100px] md:blur-[140px] animate-morph-blob-1"></div>
+            <div className="w-full h-full bg-gradient-to-br from-[#00d2ff]/25 via-[#0066FF]/20 to-[#0a21a5]/25 rounded-full blur-[100px] md:blur-[140px] animate-morph-blob-1"></div>
           </div>
           <div 
             className="absolute top-40 -right-10 w-[400px] h-[400px] md:w-[600px] md:h-[600px] will-change-transform"
             style={{ transform: 'translate3d(calc(var(--scroll-y, 0px) * -0.02), calc(var(--scroll-y, 0px) * -0.05), 0)' }}
           >
-            <div className="w-full h-full bg-gradient-to-tr from-[#3F1DA7]/22 via-[#07D4F3]/20 to-[#8B5CF6]/22 rounded-full blur-[90px] md:blur-[130px] animate-morph-blob-2"></div>
+            <div className="w-full h-full bg-gradient-to-tr from-[#0066FF]/22 via-[#00d2ff]/20 to-[#0a21a5]/22 rounded-full blur-[90px] md:blur-[130px] animate-morph-blob-2"></div>
           </div>
           <div 
             className="absolute bottom-10 left-[10%] w-[350px] h-[350px] md:w-[550px] md:h-[550px] will-change-transform"
             style={{ transform: 'translate3d(calc(var(--scroll-y, 0px) * -0.01), calc(var(--scroll-y, 0px) * 0.04), 0)' }}
           >
-            <div className="w-full h-full bg-gradient-to-tl from-[#07D4F3]/18 via-[#3F1DA7]/20 to-[#8B5CF6]/18 rounded-full blur-[80px] md:blur-[120px] animate-morph-blob-3"></div>
+            <div className="w-full h-full bg-gradient-to-tl from-[#00d2ff]/18 via-[#0066FF]/20 to-[#0a21a5]/18 rounded-full blur-[80px] md:blur-[120px] animate-morph-blob-3"></div>
           </div>
           
           {/* Subtle top ambient light glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-[#07D4F3]/15 via-transparent to-transparent blur-3xl"></div>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-[#00d2ff]/15 via-transparent to-transparent blur-3xl"></div>
 
           {/* Tech Grid & Dot Patterns for premium background depth */}
           <div className="absolute inset-0 bg-grid-tech opacity-70"></div>
           <div className="absolute inset-0 bg-dot-tech opacity-50"></div>
 
           {/* Floating Sparkles/Telemetry Dots */}
-          <div className="absolute top-[20%] left-[10%] w-1.5 h-1.5 bg-[#07D4F3] rounded-full animate-pulse opacity-40"></div>
-          <div className="absolute top-[65%] left-[22%] w-1 h-1 bg-emerald-400 rounded-full animate-ping opacity-30"></div>
-          <div className="absolute top-[35%] right-[18%] w-1 h-1 bg-[#07D4F3] rounded-full animate-pulse opacity-50"></div>
+          <div className="absolute top-[20%] left-[10%] w-1.5 h-1.5 bg-[#00d2ff] rounded-full animate-pulse opacity-40"></div>
+          <div className="absolute top-[65%] left-[22%] w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping opacity-30"></div>
+          <div className="absolute top-[35%] right-[18%] w-1 h-1 bg-[#00d2ff] rounded-full animate-pulse opacity-50"></div>
           <div className="absolute top-[80%] right-[12%] w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse opacity-30"></div>
         </div>
 
@@ -220,7 +220,7 @@ export const Home: React.FC = () => {
                 Você só foca no projeto.
               </span>
               <span className="font-black text-4xl sm:text-[56px] md:text-[68px] lg:text-[76px] xl:text-[80px] block mt-1 sm:mt-2">
-                A <span className="bg-gradient-to-r from-[#07D4F3] via-[#3F1DA7] to-[#8B5CF6] bg-clip-text text-transparent">C2Tech</span> cuida do resto.
+                A <span className="bg-gradient-to-r from-[#00d2ff] via-[#0066FF] to-[#0a21a5] bg-clip-text text-transparent">C2Tech</span> cuida do resto.
               </span>
             </h1>
             
