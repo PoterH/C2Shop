@@ -1,7 +1,6 @@
 import { products } from './_products.js';
 import { getEfiInstance, isMockMode } from './_efi.js';
 import { sendConfirmationEmail } from './_email.js';
-import { MercadoPagoConfig, Payment } from 'mercadopago';
 
 export default async function handler(req: any, res: any) {
   // Configuração de CORS para desenvolvimento local
@@ -114,70 +113,47 @@ export default async function handler(req: any, res: any) {
         qrCodeBase64: qrCodeRes.imagemQrcode,
       });
     } else if (paymentMethod === 'credit_card') {
-      const mpAccessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
-      if (!mpAccessToken) {
-        throw new Error('MERCADOPAGO_ACCESS_TOKEN não configurada.');
+      const items = [{
+        name: `Licença ${product.name}`,
+        value: valueCentavos,
+        amount: 1
+      }];
+
+      const chargeRes = await efi.createCharge({}, { items });
+      const chargeId = chargeRes.data?.charge_id;
+
+      if (!chargeId) {
+        throw new Error('Falha ao registrar cobrança no Efí Bank');
       }
 
-      // Inicializa o cliente do Mercado Pago
-      const client = new MercadoPagoConfig({ accessToken: mpAccessToken });
-      const payment = new Payment(client);
-
-      const cleanPhone = buyer.phone.replace(/\D/g, '');
-      const areaCode = cleanPhone.substring(0, 2) || '11';
-      const phoneNumber = cleanPhone.substring(2) || '999999999';
-
-      const paymentBody = {
-        transaction_amount: Number(product.price),
-        description: `Licença ${product.name} - C2Tech`,
-        payment_method_id: paymentMethodId || 'visa',
-        token: paymentToken,
-        installments: Number(installments) || 1,
-        payer: {
-          email: buyer.email,
-          first_name: buyer.name.split(' ')[0],
-          last_name: buyer.name.split(' ').slice(1).join(' ') || 'Silva',
-          identification: {
-            type: buyer.cpf.replace(/\D/g, '').length > 11 ? 'CNPJ' : 'CPF',
-            number: buyer.cpf.replace(/\D/g, '')
-          }
-        },
-        additional_info: {
-          items: [
-            {
-              id: product.slug,
-              title: product.name,
-              description: `Licença vitalícia do software ${product.name}`,
-              category_id: 'software',
-              quantity: 1,
-              unit_price: Number(product.price)
-            }
-          ],
-          payer: {
-            first_name: buyer.name.split(' ')[0],
-            last_name: buyer.name.split(' ').slice(1).join(' ') || 'Silva',
-            phone: {
-              area_code: areaCode,
-              number: phoneNumber
+      const paymentData = {
+        payment: {
+          credit_card: {
+            installments: Number(installments) || 1,
+            payment_token: paymentToken,
+            billing_address: {
+              street: billingAddress.street,
+              number: String(billingAddress.number),
+              neighborhood: billingAddress.neighborhood,
+              zipcode: billingAddress.zipcode.replace(/\D/g, ''),
+              city: billingAddress.city,
+              state: billingAddress.state,
             },
-            address: billingAddress ? {
-              zip_code: billingAddress.zipcode.replace(/\D/g, ''),
-              street_name: billingAddress.street,
-              street_number: String(billingAddress.number || '123')
-            } : undefined
+            customer: {
+              name: buyer.name,
+              cpf: buyer.cpf.replace(/\D/g, ''),
+              email: buyer.email,
+              phone_number: buyer.phone.replace(/\D/g, '')
+            }
           }
         }
       };
 
-      const requestOptions = deviceId ? {
-        meliSessionId: deviceId
-      } : undefined;
-
-      const payRes = await payment.create({ body: paymentBody, requestOptions });
-      const status = payRes.status || 'pending';
+      const payRes = await efi.definePayMethod({ id: chargeId }, paymentData);
+      const status = payRes.data?.status || 'pending';
 
       // Se a cobrança de cartão for aprovada/confirmada, dispara o e-mail pelo Resend
-      if (status === 'approved' || status === 'authorized') {
+      if (status === 'approved' || status === 'paid' || status === 'confirmado') {
         try {
           await sendConfirmationEmail({
             buyerName: buyer.name,
@@ -185,7 +161,7 @@ export default async function handler(req: any, res: any) {
             productSlug: product.slug,
             productName: product.name,
             productPrice: product.price,
-            orderId: String(payRes.id),
+            orderId: String(chargeId),
             paymentMethod: 'credit_card'
           });
         } catch (err) {
