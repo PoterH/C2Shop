@@ -66,6 +66,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   // Polling ref
   const pollingIntervalRef = useRef<any>(null);
 
+  // Pix countdown state
+  const [timeLeft, setTimeLeft] = useState<number>(600);
 
   // Clean polling on unmount
   useEffect(() => {
@@ -75,6 +77,37 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
       }
     };
   }, []);
+
+  // Timer countdown for Pix
+  useEffect(() => {
+    let timerInterval: any = null;
+    if (currentStep === 'pix_waiting') {
+      setTimeLeft(600); // 10 minutos
+      timerInterval = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(timerInterval);
+            if (pollingIntervalRef.current) {
+              clearInterval(pollingIntervalRef.current);
+              pollingIntervalRef.current = null;
+            }
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (timerInterval) clearInterval(timerInterval);
+    };
+  }, [currentStep]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
 
   // Format Helper Masks
   const formatCPFOrCNPJ = (val: string) => {
@@ -861,60 +894,104 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
           {/* STEP 3: Pix Waiting Area */}
           {currentStep === 'pix_waiting' && (
             <div className="space-y-6 text-center py-4">
-              <div className="space-y-2">
-                <span className="bg-emerald-500/10 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-500/10 inline-flex items-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
-                  Aguardando Pagamento Pix
-                </span>
-                <h4 className="font-display font-extrabold text-slate-900 text-lg">
-                  Escaneie o QR Code ou Copie o código
-                </h4>
-              </div>
-
-              {/* QR Code Container */}
-              <div className="mx-auto w-48 h-48 bg-slate-50 border border-slate-100 rounded-3xl p-3 shadow-inner flex items-center justify-center">
-                {pixQrCode ? (
-                  <img 
-                    src={pixQrCode.startsWith('data:') || pixQrCode.startsWith('http') ? pixQrCode : `data:image/png;base64,${pixQrCode}`}
-                    alt="QR Code Pix"
-                    className="w-full h-full object-contain"
-                  />
-                ) : (
-                  <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
-                )}
-              </div>
-
-              {/* Copy Paste Code */}
-              <div className="space-y-2">
-                <p className="text-slate-500 text-xs max-w-sm mx-auto">
-                  Você também pode pagar copiando e colando a chave abaixo no aplicativo do seu banco.
-                </p>
-                <div className="flex items-center space-x-2 max-w-sm mx-auto bg-slate-50 border border-slate-200/60 p-2 rounded-2xl">
-                  <input
-                    type="text"
-                    readOnly
-                    value={pixCopyPaste}
-                    className="flex-1 bg-transparent text-xs text-slate-600 outline-none select-all truncate pl-1 border-none focus:ring-0"
-                  />
+              {timeLeft === 0 ? (
+                <div className="space-y-4 py-6">
+                  <div className="mx-auto w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center border border-red-100">
+                    <AlertTriangle className="w-8 h-8" />
+                  </div>
+                  <div className="space-y-1">
+                    <h5 className="font-display font-bold text-slate-800 text-sm">O tempo para pagamento expirou</h5>
+                    <p className="text-slate-500 text-xs max-w-xs mx-auto">Não se preocupe! Você pode voltar e gerar um novo código ou escolher pagar com cartão.</p>
+                  </div>
                   <button
-                    onClick={handleCopyPix}
-                    className="p-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 hover:text-accent-blue rounded-xl transition-all flex items-center justify-center shrink-0 cursor-pointer shadow-sm"
-                    title="Copiar Pix"
+                    onClick={() => setCurrentStep('payment')}
+                    className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition-all cursor-pointer border-none"
                   >
-                    {copied ? (
-                      <span className="text-[10px] font-bold text-emerald-600 px-1">Copiado!</span>
-                    ) : (
-                      <Copy className="w-4 h-4" />
-                    )}
+                    Gerar novo pagamento
                   </button>
                 </div>
-              </div>
+              ) : (
+                <>
+                  <div className="space-y-2">
+                    <span className="bg-emerald-500/10 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-500/10 inline-flex items-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
+                      Aguardando Pagamento Pix
+                    </span>
+                    <h4 className="font-display font-extrabold text-slate-900 text-lg">
+                      Escaneie o QR Code ou Copie o código
+                    </h4>
+                  </div>
 
-              {/* Safety badge */}
-              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 max-w-sm mx-auto flex items-center justify-center space-x-2 text-[11px] text-slate-500">
-                <Lock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                <span>Ambiente Criptografado e Monitorado pelo Efí Bank</span>
-              </div>
+                  {/* Timer display */}
+                  <div className="space-y-1 bg-slate-50 border border-slate-100 p-3 rounded-2xl max-w-[200px] mx-auto">
+                    <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">O QR Code expira em</p>
+                    <p className="text-lg font-mono font-bold text-emerald-600">
+                      {formatTime(timeLeft)}
+                    </p>
+                  </div>
+
+                  {/* QR Code Container */}
+                  <div className="mx-auto w-48 h-48 bg-slate-50 border border-slate-100 rounded-3xl p-3 shadow-inner flex items-center justify-center">
+                    {pixQrCode ? (
+                      <img 
+                        src={pixQrCode.startsWith('data:') || pixQrCode.startsWith('http') ? pixQrCode : `data:image/png;base64,${pixQrCode}`}
+                        alt="QR Code Pix"
+                        className="w-full h-full object-contain"
+                      />
+                    ) : (
+                      <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+                    )}
+                  </div>
+
+                  {/* Copy Paste Code */}
+                  <div className="space-y-2">
+                    <p className="text-slate-500 text-xs max-w-sm mx-auto">
+                      Você também pode pagar copiando e colando a chave abaixo no aplicativo do seu banco.
+                    </p>
+                    <div className="flex items-center space-x-2 max-w-sm mx-auto bg-slate-50 border border-slate-200/60 p-2 rounded-2xl">
+                      <input
+                        type="text"
+                        readOnly
+                        value={pixCopyPaste}
+                        className="flex-1 bg-transparent text-xs text-slate-600 outline-none select-all truncate pl-1 border-none focus:ring-0"
+                      />
+                      <button
+                        onClick={handleCopyPix}
+                        className="p-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 hover:text-accent-blue rounded-xl transition-all flex items-center justify-center shrink-0 cursor-pointer shadow-sm"
+                        title="Copiar Pix"
+                      >
+                        {copied ? (
+                          <span className="text-[10px] font-bold text-emerald-600 px-1">Copiado!</span>
+                        ) : (
+                          <Copy className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Safety badge */}
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 max-w-sm mx-auto flex items-center justify-center space-x-2 text-[11px] text-slate-500">
+                    <Lock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span>Ambiente Criptografado e Monitorado pelo Efí Bank</span>
+                  </div>
+
+                  {/* Back/Change method button */}
+                  <div className="pt-2">
+                    <button
+                      onClick={() => {
+                        if (pollingIntervalRef.current) {
+                          clearInterval(pollingIntervalRef.current);
+                          pollingIntervalRef.current = null;
+                        }
+                        setCurrentStep('payment');
+                      }}
+                      className="text-slate-500 hover:text-slate-700 text-xs font-semibold underline cursor-pointer border-none bg-transparent"
+                    >
+                      Voltar e escolher outra forma de pagamento
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
