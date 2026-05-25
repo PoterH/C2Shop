@@ -647,8 +647,7 @@ export const products: Product[] = [
       ram: '8 GB (Recomendado: 16 GB)',
       gpu: 'Placa dedicada com suporte a OpenGL (NVIDIA GeForce de 2 GB VRAM ou superior)',
       storage: '5 GB de espaço livre'
-    },
-    unavailable: true
+    }
   },
   {
     id: 'promob_enterprise_2024',
