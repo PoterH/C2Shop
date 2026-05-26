@@ -852,6 +852,35 @@ export const products: Product[] = [
       gpu: 'Suporte nativo a Metal da Apple',
       storage: '4 GB de espaço livre'
     }
+  },
+  {
+    id: 'camtasia_2026',
+    slug: 'camtasia-2026',
+    name: 'Camtasia 2026',
+    category: 'Design e Criatividade',
+    compatibility: 'Windows e macOS',
+    version: '2026.1.2',
+    description: 'Editor de vídeo e gravador de tela profissional tudo-em-um para criação de conteúdo de alta qualidade.',
+    longDescription: 'O TechSmith Camtasia 2026 é o software líder de mercado para gravação de tela e edição de vídeo voltado para a criação de tutoriais, demonstrações de produtos, aulas online e vídeos de treinamento. Esta versão completa e funcional oferece gravação em alta definição, edição multitrilha intuitiva, efeitos visuais modernos, legendagem automática por IA e biblioteca rica em recursos prontos, tudo com acesso vitalício e sem taxas de assinatura mensal.',
+    price: 127.90,
+    originalPrice: 649.00,
+    checkoutUrl: 'https://pay.cakto.com.br/kxd76qu',
+    imageUrl: '/images/products/camtasia-2026.png',
+    features: [
+      'Versão completa e funcional',
+      'Acesso vitalício para uso ilimitado',
+      'Instalação assistida inclusa',
+      'Entrega automática no e-mail após o pagamento',
+      'Suporte remoto quando necessário',
+      'Pronto para uso imediato'
+    ],
+    requirements: {
+      os: 'Windows 10 ou 11 (64-bits) / macOS 12 (Monterey) ou superior',
+      cpu: 'Intel Core i5 de 12ª geração / AMD Ryzen 5 ou Apple Silicon (M1/M2/M3/M4)',
+      ram: '8 GB (Recomendável: 16 GB ou mais)',
+      gpu: 'Placa dedicada com 2 GB VRAM / Nativamente compatível com Metal',
+      storage: '4 GB de espaço livre (SSD recomendado)'
+    }
   }
 ];
 
