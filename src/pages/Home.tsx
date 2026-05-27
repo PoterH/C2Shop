@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Zap, 
@@ -9,7 +9,9 @@ import {
   MessageSquare, 
   ChevronDown,
   ChevronUp,
-  Star
+  Star,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { products, CATEGORIES } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
@@ -35,10 +37,57 @@ export const Home: React.FC = () => {
     };
   }, []);
 
-  // Filter products for the landing page grid (show max 8 of active category)
+  // Filter products for the landing page grid (show max 16 of active category)
   const filteredProducts = products.filter(p => 
     activeCategory === 'Todos' || p.category === activeCategory
-  ).slice(0, 8);
+  ).slice(0, 16);
+
+  const [isPlaying, setIsPlaying] = useState(true);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  // Reset scroll to 0 when category changes
+  useEffect(() => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollLeft = 0;
+    }
+  }, [activeCategory]);
+
+  // Auto scroll effect for carousel
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(() => {
+      const el = carouselRef.current;
+      if (el) {
+        const scrollAmount = 320 + 24; // Card width + gap
+        const currentScroll = el.scrollLeft;
+        const maxScroll = el.scrollWidth - el.clientWidth;
+        
+        if (currentScroll >= maxScroll - 10) {
+          el.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          el.scrollTo({ left: currentScroll + scrollAmount, behavior: 'smooth' });
+        }
+      }
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isPlaying, filteredProducts]);
+
+  const scrollLeft = () => {
+    const el = carouselRef.current;
+    if (el) {
+      const scrollAmount = 320 + 24;
+      el.scrollTo({ left: el.scrollLeft - scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    const el = carouselRef.current;
+    if (el) {
+      const scrollAmount = 320 + 24;
+      el.scrollTo({ left: el.scrollLeft + scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   const toggleFaq = (index: number) => {
     setOpenFaqIndex(openFaqIndex === index ? null : index);
@@ -319,6 +368,16 @@ export const Home: React.FC = () => {
             </p>
           </div>
 
+          {/* Dynamic Catalog Notice Banner */}
+          <div className="max-w-4xl mx-auto mb-8 bg-sky-50/70 border border-sky-100/80 rounded-2xl p-4 text-center flex flex-col md:flex-row items-center justify-center gap-2 text-sky-950 text-sm shadow-sm select-none">
+            <span className="font-bold flex items-center justify-center text-accent-blue shrink-0">
+              💡 Apenas Alguns Destaques:
+            </span>
+            <span>
+              Esta é uma vitrine rotativa. Temos dezenas de outros softwares profissionais disponíveis em nosso catálogo completo!
+            </span>
+          </div>
+
           {/* Categories Slider/Tabs */}
           <div className="flex overflow-x-auto pb-4 mb-8 scrollbar-none justify-start md:justify-center -mx-4 px-4 gap-2">
             {CATEGORIES.map((category) => (
@@ -336,12 +395,40 @@ export const Home: React.FC = () => {
             ))}
           </div>
 
-          {/* Products Grid */}
+          {/* Products Carousel */}
           {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+            <div className="relative group/carousel w-full">
+              {/* Left Navigation Arrow */}
+              <button
+                onClick={scrollLeft}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 z-30 w-11 h-11 rounded-full bg-white hover:bg-slate-50 border border-slate-200 shadow-md hover:shadow-lg flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none opacity-0 group-hover/carousel:opacity-100 focus-visible:opacity-100"
+                aria-label="Anterior"
+              >
+                <ChevronLeft className="w-5 h-5 text-slate-700" />
+              </button>
+
+              {/* Scrollable Container */}
+              <div
+                ref={carouselRef}
+                className="flex overflow-x-auto gap-6 pb-6 pt-2 px-1 scroll-smooth scrollbar-none snap-x snap-mandatory"
+                onMouseEnter={() => setIsPlaying(false)}
+                onMouseLeave={() => setIsPlaying(true)}
+              >
+                {filteredProducts.map((product) => (
+                  <div key={product.id} className="w-[280px] sm:w-[320px] shrink-0 snap-start flex flex-col">
+                    <ProductCard product={product} />
+                  </div>
+                ))}
+              </div>
+
+              {/* Right Navigation Arrow */}
+              <button
+                onClick={scrollRight}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 z-30 w-11 h-11 rounded-full bg-white hover:bg-slate-50 border border-slate-200 shadow-md hover:shadow-lg flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none opacity-0 group-hover/carousel:opacity-100 focus-visible:opacity-100"
+                aria-label="Próximo"
+              >
+                <ChevronRight className="w-5 h-5 text-slate-700" />
+              </button>
             </div>
           ) : (
             <div className="text-center py-12 bg-white rounded-3xl border border-slate-200">
