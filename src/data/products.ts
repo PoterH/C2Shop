@@ -881,6 +881,35 @@ export const products: Product[] = [
       gpu: 'Placa dedicada com 2 GB VRAM ou superior com suporte a DirectX 12',
       storage: '4 GB de espaço livre (SSD recomendado)'
     }
+  },
+  {
+    id: 'pdfelement_12',
+    slug: 'pdfelement-12',
+    name: 'Wondershare PDFelement Professional 12',
+    category: 'Escritório e Produtividade',
+    compatibility: 'Windows',
+    version: '12.0.2',
+    description: 'Editor de PDF completo e profissional para editar, converter, assinar e ler arquivos PDF.',
+    longDescription: 'O Wondershare PDFelement Professional 12 para Windows é a solução definitiva de PDF tudo-em-um. Com uma interface moderna e intuitiva, ele permite editar textos e imagens em PDFs com a mesma facilidade de um processador de texto, converter arquivos de e para múltiplos formatos (Word, Excel, PowerPoint, imagens), criar formulários preenchíveis, assinar digitalmente e aplicar tecnologia OCR avançada para digitalizar e pesquisar textos em documentos escaneados.',
+    price: 137.90,
+    originalPrice: 649.00,
+    checkoutUrl: 'https://pay.cakto.com.br/gcgjq3d',
+    imageUrl: '/images/products/pdfelement-12.png',
+    features: [
+      'Versão completa e funcional',
+      'Acesso vitalício para uso ilimitado',
+      'Instalação assistida inclusa',
+      'Entrega automática no e-mail após o pagamento',
+      'Suporte remoto quando necessário',
+      'Pronto para uso imediato'
+    ],
+    requirements: {
+      os: 'Windows 10 ou 11 (64-bits)',
+      cpu: '1 GHz ou superior',
+      ram: '4 GB RAM (Recomendável: 8 GB)',
+      gpu: 'Placa de vídeo compatível com DirectX 9 ou superior',
+      storage: '2 GB de espaço livre'
+    }
   }
 ];
 
