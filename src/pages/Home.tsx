@@ -205,7 +205,7 @@ export const Home: React.FC = () => {
   return (
     <div className="pt-0">
       {/* 1. HERO SECTION */}
-      <section className="relative bg-[#020617] pt-20 pb-4 md:pt-28 md:pb-6 text-center z-0">
+      <section className="relative bg-[#020617] pt-20 pb-12 md:pt-40 md:pb-32 overflow-hidden text-center z-0">
         
         {/* Background Layers Wrapper (z-0 sits above section's bg color but behind relative z-10 content) */}
         <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0">
@@ -243,7 +243,7 @@ export const Home: React.FC = () => {
           <div className="absolute top-[80%] right-[12%] w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse opacity-30"></div>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5 flex flex-col items-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5 md:space-y-8 flex flex-col items-center">
           
           {/* 1. Pill Badge with Avatars */}
           <div 
@@ -263,7 +263,7 @@ export const Home: React.FC = () => {
           </div>
 
           {/* 2. Headline */}
-          <div className="space-y-3 sm:space-y-4 max-w-5xl text-center">
+          <div className="space-y-2 md:space-y-4 max-w-5xl text-center">
             <h1 className="font-display text-white tracking-tight leading-[1.1] text-balance">
               <span className="font-light text-2xl sm:text-[36px] md:text-[44px] lg:text-[48px] xl:text-[52px] block text-white/90">
                 Você só foca no projeto.
@@ -274,13 +274,13 @@ export const Home: React.FC = () => {
             </h1>
             
             {/* 3. Sub-headline */}
-            <p className="text-slate-400 text-sm sm:text-base md:text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed text-balance">
+            <p className="text-slate-400 text-sm sm:text-base md:text-lg lg:text-xl max-w-3xl mx-auto leading-normal md:leading-relaxed text-balance">
               Catálogo completo, área do cliente, entrega automática por e-mail e suporte técnico completo no WhatsApp! Tudo pronto para ativação vitalícia local, no mesmo lugar. E você só paga uma única vez por isso.
             </p>
           </div>
 
           {/* 4. Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-md sm:max-w-2xl pt-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-md sm:max-w-2xl pt-0 md:pt-4">
             <Link
               to="/catalogo"
               className="flex items-center justify-center px-8 py-4 md:px-12 md:py-5 text-base md:text-lg lg:text-xl font-bold text-white bg-accent-blue hover:bg-accent-blue-dark rounded-2xl md:rounded-3xl shadow-[0_4px_20px_rgba(2,132,199,0.25)] hover:shadow-[0_4px_25px_rgba(2,132,199,0.35)] transition-all duration-300 group whitespace-nowrap hover:scale-105 active:scale-95"
@@ -292,7 +292,7 @@ export const Home: React.FC = () => {
 
           {/* 5. Laptop AutoCAD Mockup (Static Image Only) */}
           <div 
-            className="w-full max-w-xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mt-6 transition-all duration-500 -mb-24 md:-mb-36 lg:-mb-48 xl:-mb-56"
+            className="w-full max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-7xl mt-4 md:mt-12 transition-all duration-500"
             style={{ transform: 'translate3d(0, calc(var(--scroll-y, 0px) * 0.03), 0)' }}
           >
             <img 
@@ -304,9 +304,16 @@ export const Home: React.FC = () => {
             />
           </div>
         </div>
+
+        {/* Wave Divider */}
+        <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none z-20 pointer-events-none">
+          <svg className="relative block w-full h-[40px] md:h-[80px]" viewBox="0 0 1440 120" preserveAspectRatio="none">
+            <path d="M0,80 Q720,20 1440,80 L1440,120 L0,120 Z" className="fill-white"></path>
+          </svg>
+        </div>
       </section>
 
-      {/* Down Arrow 1 (Placed outside Hero to prevent clipping by overflow-hidden) */}
+      {/* Down Arrow (Placed outside Hero to prevent clipping by overflow-hidden) */}
       <div className="relative z-30 h-0 w-full flex justify-center pointer-events-none">
         <button 
           onClick={() => {
@@ -322,8 +329,8 @@ export const Home: React.FC = () => {
         </button>
       </div>
 
-      {/* 2. CONFIDENCE SECTION (On White Background) */}
-      <section id="confidence-section" className="relative pt-28 pb-16 md:pt-44 md:pb-20 lg:pt-56 lg:pb-24 xl:pt-64 xl:pb-28 bg-white scroll-mt-20">
+      {/* 2. CONFIDENCE SECTION */}
+      <section id="confidence-section" className="py-12 bg-white scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {trustBadges.map((badge, i) => (
@@ -342,58 +349,28 @@ export const Home: React.FC = () => {
             ))}
           </div>
         </div>
-
-        {/* Wave Divider to transition into Dark Catalog Theme */}
-        <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none z-20 pointer-events-none">
-          <svg className="relative block w-full h-[40px] md:h-[80px]" viewBox="0 0 1440 120" preserveAspectRatio="none">
-            <path d="M0,80 Q720,20 1440,80 L1440,120 L0,120 Z" className="fill-[#020617]"></path>
-          </svg>
-        </div>
       </section>
 
-      {/* Down Arrow 2 (Placed outside Confidence to prevent clipping by overflow-hidden) */}
-      <div className="relative z-30 h-0 w-full flex justify-center pointer-events-none">
-        <button 
-          onClick={() => {
-            const nextSection = document.getElementById('catalog-section');
-            if (nextSection) {
-              nextSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
-          className="absolute -translate-y-1/2 w-8 h-8 md:w-10 h-10 rounded-full bg-white shadow-[0_4px_10px_rgba(0,0,0,0.1)] hover:shadow-[0_6px_15px_rgba(2,132,199,0.2)] flex items-center justify-center border border-slate-100/50 pointer-events-auto cursor-pointer animate-bounce transition-all duration-300 focus:outline-none"
-          aria-label="Rolar para baixo"
-        >
-          <ChevronDown className="w-4 h-4 md:w-5 h-5 text-sky-500" />
-        </button>
-      </div>
-
-      {/* 3. CATALOG SECTION (Dark Continuation) */}
-      <section id="catalog-section" className="relative bg-[#020617] pt-16 pb-28 md:pt-20 md:pb-36 overflow-hidden border-t border-white/5 z-0 scroll-mt-10">
-        {/* Background Layers (Tech grid and mists similar to Hero) */}
-        <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#0066FF]/15 via-[#00d2ff]/10 to-[#0a21a5]/15 rounded-full blur-[120px] will-change-transform animate-morph-blob-2"></div>
-          <div className="absolute inset-0 bg-grid-tech opacity-40"></div>
-          <div className="absolute inset-0 bg-dot-tech opacity-35"></div>
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* 3. CATALOG SECTION */}
+      <section className="py-16 md:py-24 bg-slate-50 border-y border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Section Header */}
           <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
-            <span className="text-[11px] font-extrabold text-sky-400 uppercase tracking-wider">
+            <span className="text-[11px] font-extrabold text-accent-blue uppercase tracking-wider">
               Loja Completa
             </span>
-            <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-white tracking-tight">
+            <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
               Encontre o software ideal para o seu projeto
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base">
+            <p className="text-slate-600 text-sm sm:text-base">
               Explore nossa seleção de ferramentas profissionais de alta performance com licença alternativa e pagamento único.
             </p>
           </div>
 
           {/* Dynamic Catalog Notice Banner */}
-          <div className="max-w-4xl mx-auto mb-8 bg-sky-950/40 border border-sky-800/40 rounded-2xl p-4 text-center flex flex-col md:flex-row items-center justify-center gap-2 text-sky-200 text-sm shadow-sm select-none">
-            <span className="font-bold flex items-center justify-center text-sky-400 shrink-0">
+          <div className="max-w-4xl mx-auto mb-8 bg-sky-50/70 border border-sky-100/80 rounded-2xl p-4 text-center flex flex-col md:flex-row items-center justify-center gap-2 text-sky-950 text-sm shadow-sm select-none">
+            <span className="font-bold flex items-center justify-center text-accent-blue shrink-0">
               💡 Apenas Alguns Destaques:
             </span>
             <span>
@@ -409,8 +386,8 @@ export const Home: React.FC = () => {
                 onClick={() => setActiveCategory(category)}
                 className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold tracking-wide whitespace-nowrap transition-all duration-200 border ${
                   activeCategory === category
-                    ? 'bg-sky-500 border-sky-500 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)]'
-                    : 'bg-slate-900/60 border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white'
+                    ? 'bg-slate-900 border-slate-900 text-white shadow'
+                    : 'bg-white border-slate-200 hover:border-slate-300 text-slate-600'
                 }`}
               >
                 {category}
@@ -463,41 +440,18 @@ export const Home: React.FC = () => {
           <div className="text-center mt-12">
             <Link
               to="/catalogo"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-slate-700 text-sm font-bold text-slate-250 hover:text-white shadow-md transition-all duration-200"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-white border border-slate-200 hover:border-slate-300 text-sm font-bold text-slate-800 hover:text-slate-900 shadow-sm transition-all duration-200"
             >
               <span>Ver catálogo de softwares completo</span>
-              <ArrowRight className="w-4 h-4 ml-2 text-slate-400" />
+              <ArrowRight className="w-4 h-4 ml-2 text-slate-500" />
             </Link>
           </div>
 
         </div>
-
-        {/* Wave Divider to transition into Light Theme */}
-        <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none z-20 pointer-events-none">
-          <svg className="relative block w-full h-[40px] md:h-[80px]" viewBox="0 0 1440 120" preserveAspectRatio="none">
-            <path d="M0,80 Q720,20 1440,80 L1440,120 L0,120 Z" className="fill-white"></path>
-          </svg>
-        </div>
       </section>
 
-      {/* Down Arrow 3 (Placed outside Catalog to prevent clipping by overflow-hidden) */}
-      <div className="relative z-30 h-0 w-full flex justify-center pointer-events-none">
-        <button 
-          onClick={() => {
-            const nextSection = document.getElementById('how-it-works-section');
-            if (nextSection) {
-              nextSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
-          className="absolute -translate-y-1/2 w-8 h-8 md:w-10 h-10 rounded-full bg-white shadow-[0_4px_10px_rgba(0,0,0,0.1)] hover:shadow-[0_6px_15px_rgba(2,132,199,0.2)] flex items-center justify-center border border-slate-100/50 pointer-events-auto cursor-pointer animate-bounce transition-all duration-300 focus:outline-none"
-          aria-label="Rolar para baixo"
-        >
-          <ChevronDown className="w-4 h-4 md:w-5 h-5 text-sky-500" />
-        </button>
-      </div>
-
       {/* 4. HOW IT WORKS SECTION */}
-      <section id="how-it-works-section" className="py-16 md:py-24 bg-white scroll-mt-20">
+      <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Section Header */}
