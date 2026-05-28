@@ -36,6 +36,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Success message states
+  const [successTitle, setSuccessTitle] = useState('Pagamento Confirmado!');
+  const [successDescription, setSuccessDescription] = useState('Sua transação foi processada com sucesso. Estamos gerando sua licença e enviando os arquivos de acesso para o seu e-mail.');
+
   // Form State: Personal Info
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -350,6 +354,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
             console.error('Erro ao chamar api/send-email:', emailErr);
           }
 
+          setSuccessTitle('Pagamento Confirmado!');
+          setSuccessDescription('Sua transação Pix foi processada com sucesso via Efí Bank. Estamos gerando sua licença e enviando os arquivos de acesso para o seu e-mail.');
           setCurrentStep('success');
           
           // Redirect to thank you page after 3 seconds of success screen
@@ -419,11 +425,21 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
       }
 
       if (data.status === 'approved' || data.status === 'paid' || data.status === 'confirmado') {
+        setSuccessTitle('Pagamento Aprovado!');
+        setSuccessDescription('Sua transação foi aprovada e processada com sucesso. Estamos gerando sua licença e enviando os arquivos de acesso para o seu e-mail.');
         setCurrentStep('success');
         setTimeout(() => {
           onClose();
           navigate('/obrigado');
         }, 3000);
+      } else if (data.status === 'authorized' || data.status === 'pending_analysis' || data.status === 'em_analise' || data.status === 'pending') {
+        setSuccessTitle('Pagamento em Análise!');
+        setSuccessDescription('Seu pagamento foi recebido e está em análise de segurança. Assim que a análise for concluída (geralmente em alguns minutos), as licenças e os arquivos de acesso serão enviados automaticamente para o seu e-mail.');
+        setCurrentStep('success');
+        setTimeout(() => {
+          onClose();
+          navigate('/obrigado');
+        }, 5000);
       } else {
         throw new Error(`O pagamento está com status: ${data.status}. Por favor, verifique os dados do cartão.`);
       }
@@ -915,10 +931,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
               <div className="space-y-2">
                 <h4 className="font-display font-extrabold text-slate-900 text-2xl">
-                  Pagamento Confirmado!
+                  {successTitle}
                 </h4>
                 <p className="text-slate-600 text-sm max-w-md mx-auto">
-                  Sua transação foi processada com sucesso no Efí Bank. Estamos gerando sua licença e enviando os arquivos de acesso para o seu e-mail.
+                  {successDescription}
                 </p>
               </div>
 
