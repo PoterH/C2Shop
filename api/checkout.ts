@@ -30,7 +30,7 @@ export default async function handler(req: any, res: any) {
   }
 
   // Busca o produto no banco de dados para segurança de preço
-  const product = products.find((p: any) => p.slug === productSlug);
+  const product = products.find((p: any) => p.slug === productSlug) as any;
   if (!product) {
     return res.status(404).json({ error: 'Produto não encontrado' });
   }

@@ -21,6 +21,7 @@ export interface Product {
   notes?: string;
   imageUrl?: string;
   unavailable?: boolean;
+  appmaxSku?: string;
 }
 
 export const CATEGORIES = [
