@@ -54,29 +54,61 @@ export async function sendConfirmationEmail({
   productSlug,
   productName,
   productPrice,
+  products: items,
   orderId,
   paymentMethod
 }: {
   buyerName: string;
   buyerEmail: string;
-  productSlug: string;
-  productName: string;
-  productPrice: number;
+  productSlug?: string;
+  productName?: string;
+  productPrice?: number;
+  products?: Array<{ slug: string; name: string; price: number }>;
   orderId: string;
   paymentMethod: 'pix' | 'credit_card';
 }) {
   const apiKey = getResendApiKey();
   const fromEmail = getResendFromEmail();
-  const downloadUrl = getDownloadLink(productSlug);
+
   if (!apiKey) {
     console.error('Resend API key não configurada.');
     return { success: false, error: 'Chave API do Resend não configurada.' };
   }
 
-  // Não gerar chaves de ativação, o download contém os arquivos de instalação e ativação
+  // Normalize products list for single product compatibility
+  let checkoutProducts: Array<{ slug: string; name: string; price: number }> = [];
+  if (items && Array.isArray(items)) {
+    checkoutProducts = items;
+  } else if (productSlug && productName && productPrice !== undefined) {
+    checkoutProducts = [{ slug: productSlug, name: productName, price: productPrice }];
+  }
 
-  const formattedPrice = productPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  if (checkoutProducts.length === 0) {
+    return { success: false, error: 'Nenhum produto fornecido para o e-mail de confirmação.' };
+  }
+
   const paymentMethodLabel = paymentMethod === 'pix' ? 'Pix (Aprovação Instantânea)' : 'Cartão de Crédito';
+  const totalPaid = checkoutProducts.reduce((sum, p) => sum + p.price, 0);
+  const formattedTotalPrice = totalPaid.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+  // Generate dynamic product rows
+  const productsTableRows = checkoutProducts.map(p => `
+    <tr>
+      <td style="padding: 12px; text-align: left; font-size: 14px; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 500;">${p.name}</td>
+      <td style="padding: 12px; text-align: right; font-size: 14px; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 500;">${p.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+    </tr>
+  `).join('');
+
+  // Generate dynamic download buttons
+  const downloadButtonsSection = checkoutProducts.map(p => {
+    const downloadUrl = getDownloadLink(p.slug);
+    return `
+      <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 16px 0; text-align: center;">
+        <h4 style="margin: 0 0 10px 0; color: #0f172a; font-size: 15px; font-weight: bold;">${p.name}</h4>
+        <a href="${downloadUrl}" target="_blank" style="display: inline-block; background-color: #0284c7; color: #ffffff !important; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-weight: bold; font-size: 14px; text-align: center; border: 1px solid #0284c7; min-width: 200px; box-shadow: 0 4px 6px rgba(2, 132, 199, 0.15);"><span style="color: #ffffff; font-weight: bold; text-decoration: none;">Acessar Google Drive (Download)</span></a>
+      </div>
+    `;
+  }).join('');
 
   const htmlContent = `
     <!DOCTYPE html>
@@ -92,58 +124,66 @@ export async function sendConfirmationEmail({
         </div>
         <div style="padding: 40px;">
           <h1 style="font-size: 22px; color: #0f172a; margin-top: 0; font-weight: bold;">Olá, ${buyerName}!</h1>
-          <p style="font-size: 15px; line-height: 1.6; color: #475569; margin-bottom: 24px;">O seu pagamento foi confirmado! O link de acesso ao Google Drive contendo todos os arquivos necessários para a instalação, ativação e o tutorial em vídeo passo a passo do seu <strong>${productName}</strong> já está liberado abaixo.</p>
+          <p style="font-size: 15px; line-height: 1.6; color: #475569; margin-bottom: 24px;">O seu pagamento foi confirmado! Abaixo estão liberados os links de acesso seguro ao Google Drive contendo todos os arquivos necessários para a instalação, ativação e o tutorial em vídeo passo a passo de cada um dos seus produtos adquiridos.</p>
 
           <h2 style="font-size: 16px; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-top: 32px; margin-bottom: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Detalhes do Pedido</h2>
           <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-            <tr>
-              <th style="padding: 12px; text-align: left; font-size: 14px; border-bottom: 1px solid #e2e8f0; color: #64748b; font-weight: 600; width: 40%;">Produto</th>
-              <td style="padding: 12px; text-align: left; font-size: 14px; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 500;">${productName}</td>
-            </tr>
-            <tr>
-              <th style="padding: 12px; text-align: left; font-size: 14px; border-bottom: 1px solid #e2e8f0; color: #64748b; font-weight: 600;">Valor Pago</th>
-              <td style="padding: 12px; text-align: left; font-size: 14px; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 500;">${formattedPrice}</td>
-            </tr>
-            <tr>
-              <th style="padding: 12px; text-align: left; font-size: 14px; border-bottom: 1px solid #e2e8f0; color: #64748b; font-weight: 600;">Método de Pagamento</th>
-              <td style="padding: 12px; text-align: left; font-size: 14px; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 500;">${paymentMethodLabel}</td>
-            </tr>
-            <tr>
-              <th style="padding: 12px; text-align: left; font-size: 14px; border-bottom: 1px solid #e2e8f0; color: #64748b; font-weight: 600;">Código da Transação</th>
-              <td style="padding: 12px; text-align: left; font-size: 14px; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 500;"><code>${orderId}</code></td>
-            </tr>
+            <thead>
+              <tr style="border-bottom: 2px solid #e2e8f0;">
+                <th style="padding: 12px 6px; text-align: left; font-size: 13px; color: #64748b; font-weight: bold; text-transform: uppercase;">Software</th>
+                <th style="padding: 12px 6px; text-align: right; font-size: 13px; color: #64748b; font-weight: bold; text-transform: uppercase;">Preço</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${productsTableRows}
+              <tr>
+                <td style="padding: 16px 6px 12px 6px; text-align: left; font-size: 14px; font-weight: bold; color: #0f172a;">Total Pago</td>
+                <td style="padding: 16px 6px 12px 6px; text-align: right; font-size: 16px; font-weight: bold; color: #0284c7;">${formattedTotalPrice}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px; text-align: left; font-size: 13px; color: #64748b;">Método de Pagamento</td>
+                <td style="padding: 6px; text-align: right; font-size: 13px; color: #475569;">${paymentMethodLabel}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px; text-align: left; font-size: 13px; color: #64748b; border-bottom: none;">Código do Pedido</td>
+                <td style="padding: 6px; text-align: right; font-size: 13px; color: #475569; border-bottom: none;"><code>${orderId}</code></td>
+              </tr>
+            </tbody>
           </table>
 
-          <h2 style="font-size: 16px; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-top: 32px; margin-bottom: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Passo a Passo de Instalação</h2>
-          <div style="margin: 24px 0;">
+          <h2 style="font-size: 16px; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-top: 36px; margin-bottom: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Links de Download e Acesso</h2>
+          
+          ${downloadButtonsSection}
+
+          <h2 style="font-size: 16px; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-top: 36px; margin-bottom: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Instruções de Instalação</h2>
+          <div style="margin: 20px 0;">
             <div style="margin-bottom: 16px;">
               <span style="background-color: #0284c7; color: #ffffff; width: 24px; height: 24px; border-radius: 50%; display: inline-block; text-align: center; line-height: 24px; font-weight: bold; font-size: 13px; margin-right: 12px; vertical-align: middle;">1</span>
-              <span style="font-size: 14px; color: #475569; line-height: 1.5; vertical-align: middle;">Clique no botão abaixo para acessar a pasta segura no Google Drive.</span>
+              <span style="font-size: 14px; color: #475569; line-height: 1.5; vertical-align: middle;">Clique nos botões correspondentes para abrir as pastas no Google Drive.</span>
             </div>
             <div style="margin-bottom: 16px;">
               <span style="background-color: #0284c7; color: #ffffff; width: 24px; height: 24px; border-radius: 50%; display: inline-block; text-align: center; line-height: 24px; font-weight: bold; font-size: 13px; margin-right: 12px; vertical-align: middle;">2</span>
-              <span style="font-size: 14px; color: #475569; line-height: 1.5; vertical-align: middle;">Assista ao tutorial em vídeo e leia o passo a passo para realizar a instalação e ativação corretamente.</span>
+              <span style="font-size: 14px; color: #475569; line-height: 1.5; vertical-align: middle;">Assista aos vídeos explicativos e siga o tutorial passo a passo para a instalação.</span>
             </div>
             <div style="margin-bottom: 16px;">
               <span style="background-color: #0284c7; color: #ffffff; width: 24px; height: 24px; border-radius: 50%; display: inline-block; text-align: center; line-height: 24px; font-weight: bold; font-size: 13px; margin-right: 12px; vertical-align: middle;">3</span>
-              <span style="font-size: 14px; color: #475569; line-height: 1.5; vertical-align: middle;">Pronto! Use o software de forma permanente e vitalícia, sem taxas adicionais.</span>
+              <span style="font-size: 14px; color: #475569; line-height: 1.5; vertical-align: middle;">Pronto! Use seus softwares de forma vitalícia e definitiva.</span>
             </div>
           </div>
 
-          <div style="text-align: center; margin: 40px 0;">
-            <a href="${downloadUrl}" target="_blank" style="display: inline-block; background-color: #0284c7; color: #ffffff !important; text-decoration: none; padding: 16px 36px; border-radius: 8px; font-weight: bold; font-size: 16px; text-align: center; border: 1px solid #0284c7; min-width: 250px; box-shadow: 0 4px 6px rgba(2, 132, 199, 0.15);"><span style="color: #ffffff; font-weight: bold; text-decoration: none;">Acessar Google Drive (Download)</span></a>
-          </div>
-
-          <p style="margin-top: 32px; font-size: 13px; color: #64748b; line-height: 1.6;">Precisando de suporte durante a instalação? Nosso suporte assistido via WhatsApp está à disposição. Basta falar diretamente conosco.</p>
+          <p style="margin-top: 32px; font-size: 13px; color: #64748b; line-height: 1.6;">Precisando de ajuda durante a instalação? Nosso suporte técnico via WhatsApp está à disposição para auxiliá-lo a qualquer momento. Basta entrar em contato.</p>
         </div>
         <div style="background-color: #f1f5f9; padding: 24px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0;">
           <p style="margin: 0 0 8px 0;">&copy; ${new Date().getFullYear()} C2Tech. Todos os direitos reservados.</p>
-          <p style="margin: 0;">Ambiente seguro e monitorado pelo Efí Bank.</p>
+          <p style="margin: 0;">Ambiente seguro criptografado.</p>
         </div>
       </div>
     </body>
     </html>
   `;
+
+  // Determine email subject name
+  const subjectLabel = checkoutProducts.length === 1 ? checkoutProducts[0].name : `${checkoutProducts.length} Softwares`;
 
   try {
     const response = await fetch('https://api.resend.com/emails', {
@@ -155,7 +195,7 @@ export async function sendConfirmationEmail({
       body: JSON.stringify({
         from: fromEmail,
         to: buyerEmail,
-        subject: `Sua Licença Vitalícia do ${productName} está liberada! 🚀`,
+        subject: `Sua Licença Vitalícia do ${subjectLabel} está liberada! 🚀`,
         html: htmlContent
       })
     });
@@ -169,14 +209,6 @@ export async function sendConfirmationEmail({
     return { success: true, id: result.id };
   } catch (error: any) {
     console.error('Falha ao enviar e-mail via Resend:', error);
-    if (error.message && error.message.includes('Testing domain restriction')) {
-      console.warn('\n--- DETECTADA RESTRIÇÃO DE DOMÍNIO DE TESTE DO RESEND ---');
-      console.warn('Você tentou enviar um e-mail para um destinatário que não é o seu e-mail cadastrado usando o remetente gratuito "onboarding@resend.dev".');
-      console.warn('Para enviar e-mails para qualquer cliente, você deve:');
-      console.warn('1. Acessar o dashboard do Resend, ir na aba "Domains" e verificar o seu domínio de envio (ex: c2tech.shop).');
-      console.warn('2. Adicionar no seu arquivo .env ou nas variáveis da Vercel:');
-      console.warn('   RESEND_FROM_EMAIL="C2Tech <suporte@seu-dominio-verificado.com>"\n');
-    }
     return { success: false, error: error.message || error };
   }
 }
