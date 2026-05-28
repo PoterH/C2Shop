@@ -103,12 +103,18 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
   const getInstallmentOptions = () => {
     const options = [];
+    const monthlyRate = 0.0299; // 2.99% ao mês
+
     for (let i = 1; i <= 12; i++) {
-      const value = product.price / i;
+      let value = product.price;
+      if (i > 1) {
+        // Tabela Price (Juros Compostos)
+        value = product.price * (monthlyRate * Math.pow(1 + monthlyRate, i)) / (Math.pow(1 + monthlyRate, i) - 1);
+      }
       const formattedValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
       options.push({
         value: String(i),
-        label: `${i}x de ${formattedValue} (Sem Juros)`
+        label: `${i}x de ${formattedValue}`
       });
     }
     return options;
@@ -968,7 +974,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                         ) : (
                           <>
                             <Lock className="w-4 h-4" />
-                            <span>Pagar com Segurança via Appmax</span>
+                            <span>Pagar com Segurança</span>
                           </>
                         )}
                       </button>
