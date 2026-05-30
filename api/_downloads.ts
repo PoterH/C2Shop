@@ -30,6 +30,9 @@ export const DOWNLOAD_LINKS: Record<string, string> = {
   'camtasia-2026': 'https://drive.google.com/drive/folders/1RodJmSK5LFS3mquN4bs0bWYzidQPb2vF?usp=drive_link',
   'pdfelement-12': 'https://drive.google.com/drive/folders/13nKtmJD-DSppbgEVVzpgW4hqx2yUALvw?usp=drive_link',
   'wondershare-recoverit-13': 'https://drive.google.com/drive/folders/1TyHzITakSn9JiRIrxMtjXClwMzC4z4TP?usp=drive_link',
+  'capcut-pro-mensal': 'https://wa.me/5581997349300?text=Olá,%20acabei%20de%20assinar%20o%20CapCut%20Pro%20Mensal%20e%20gostaria%20de%20ativar%20minha%20conta.',
+  'canva-pro-mensal': 'https://wa.me/5581997349300?text=Olá,%20acabei%20de%20assinar%20o%20Canva%20Pro%20Mensal%20e%20gostaria%20de%20ativar%20minha%20conta.',
+  'autodesk-all-apps': 'https://wa.me/5581997349300?text=Olá,%20acabei%20de%20assinar%20o%20Autodesk%20All%20Apps%20e%20gostaria%20de%20ativar%20minha%20conta.',
 };
 
 export function getDownloadLink(slug: string): string {

@@ -21,6 +21,7 @@ export const ProductDetail: React.FC = () => {
   const { addToCart, clearCart, setIsCartOpen } = useCart();
   const location = useLocation();
   const hasProcessedCheckoutRef = useRef(false);
+  const [autodeskPlan, setAutodeskPlan] = useState<'monthly_recurrent' | 'monthly_unique' | '12_months' | '24_months' | '36_months'>('monthly_recurrent');
 
   useEffect(() => {
     hasProcessedCheckoutRef.current = false;
@@ -75,12 +76,15 @@ export const ProductDetail: React.FC = () => {
   // Set document title for SEO
   useEffect(() => {
     if (product) {
-      document.title = `${product.name} Acesso Vitalício | C2Tech`;
+      const typeLabel = product.isSubscription ? 'Assinatura Mensal' : 'Acesso Vitalício';
+      document.title = `${product.name} ${typeLabel} | C2Shop`;
       
-      // Update meta description dynamically if needed (done through index.html originally, here dynamically)
       const metaDescription = document.querySelector('meta[name="description"]');
       if (metaDescription) {
-        metaDescription.setAttribute('content', `Adquira o ${product.name} com licença alternativa e acesso vitalício na C2Tech. Entrega automática por e-mail e suporte assistido inclusos.`);
+        const descText = product.isSubscription 
+          ? `Assine o ${product.name} Pro Mensal com o melhor preço e desconto no Pix. Acesso completo aos recursos premium e suporte prioritário.`
+          : `Adquira o ${product.name} com licença alternativa e acesso vitalício na C2Shop. Entrega automática por e-mail e suporte assistido inclusos.`;
+        metaDescription.setAttribute('content', descText);
       }
     }
   }, [product]);
@@ -111,6 +115,17 @@ export const ProductDetail: React.FC = () => {
   });
 
   const formattedOriginalPrice = product.originalPrice.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
+
+  const formattedRecurrencePrice = product.recurrencePrice?.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
+
+  const savings = product.price - (product.recurrencePrice || 0);
+  const formattedSavings = savings.toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   });
@@ -148,7 +163,7 @@ export const ProductDetail: React.FC = () => {
       >
         <div className="space-y-2">
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded">
-            Licença Alternativa
+            {product.isSubscription ? 'Plano de Assinatura' : 'Licença Alternativa'}
           </span>
           <h3 className="font-display font-extrabold text-2xl text-slate-950">
             {product.name}
@@ -180,47 +195,262 @@ export const ProductDetail: React.FC = () => {
             ) : (
               <span className="flex items-center text-emerald-600 font-semibold">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
-                Em estoque para entrega imediata
+                Ativação imediata pós confirmação
               </span>
             )}
           </div>
         </div>
 
+        {/* Autodesk Plan Selector */}
+        {product.id === 'autodesk_all_apps' && (
+          <div className="space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Escolha o plano Autodesk:</label>
+            <div className="grid grid-cols-1 gap-2">
+              <button
+                type="button"
+                onClick={() => setAutodeskPlan('monthly_recurrent')}
+                className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all relative cursor-pointer ${
+                  autodeskPlan === 'monthly_recurrent'
+                    ? 'border-emerald-500 bg-emerald-50/50 text-emerald-950 font-bold'
+                    : 'border-slate-200 hover:border-slate-350 bg-white text-slate-700'
+                }`}
+              >
+                <div className="flex flex-col">
+                  <span className="text-[11px]">Mensal Recorrente (Pix)</span>
+                  <span className="text-[9px] text-emerald-600 font-semibold">Destaque Pix</span>
+                </div>
+                <span className="text-[12px]">R$ 69,90<span className="text-[9px] font-normal text-slate-500">/mês</span></span>
+                {autodeskPlan === 'monthly_recurrent' && (
+                  <span className="absolute -top-2 left-3 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider">RECOMENDADO</span>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setAutodeskPlan('monthly_unique')}
+                className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                  autodeskPlan === 'monthly_unique'
+                    ? 'border-accent-blue bg-sky-50/50 text-sky-950 font-bold'
+                    : 'border-slate-200 hover:border-slate-350 bg-white text-slate-700'
+                }`}
+              >
+                <span className="text-[11px]">Mensal Compra Única</span>
+                <span className="text-[12px]">R$ 89,90<span className="text-[9px] font-normal text-slate-500">/30d</span></span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setAutodeskPlan('12_months')}
+                className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                  autodeskPlan === '12_months'
+                    ? 'border-accent-blue bg-sky-50/50 text-sky-950 font-bold'
+                    : 'border-slate-200 hover:border-slate-350 bg-white text-slate-700'
+                }`}
+              >
+                <span className="text-[11px]">Plano 12 Meses (1 Ano)</span>
+                <span className="text-[12px]">R$ 397,90</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setAutodeskPlan('24_months')}
+                className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                  autodeskPlan === '24_months'
+                    ? 'border-accent-blue bg-sky-50/50 text-sky-950 font-bold'
+                    : 'border-slate-200 hover:border-slate-350 bg-white text-slate-700'
+                }`}
+              >
+                <span className="text-[11px]">Plano 24 Meses (2 Anos)</span>
+                <span className="text-[12px]">R$ 597,90</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setAutodeskPlan('36_months')}
+                className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                  autodeskPlan === '36_months'
+                    ? 'border-accent-blue bg-sky-50/50 text-sky-950 font-bold'
+                    : 'border-slate-200 hover:border-slate-350 bg-white text-slate-700'
+                }`}
+              >
+                <span className="text-[11px]">Plano 36 Meses (3 Anos)</span>
+                <span className="text-[12px]">R$ 737,90</span>
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Price Details */}
-        <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
-          <div className="space-y-1">
-            <p className="text-xs text-slate-400 line-through">De {formattedOriginalPrice}</p>
-            <p className="text-2xl sm:text-3xl font-display font-black text-slate-950">
-              Por <span className="text-accent-blue">{formattedPrice}</span>
-            </p>
-            <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider">
-              Pagamento Único. Sem Mensalidade.
-            </p>
-          </div>
-          <div className="text-right shrink-0">
-            <span className="bg-emerald-500/10 text-emerald-700 text-xs font-bold px-2 py-1 rounded-lg border border-emerald-500/10">
-              Desconto de 80%
-            </span>
-          </div>
+        <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col gap-2.5">
+          {product.isSubscription ? (
+            product.id === 'autodesk_all_apps' ? (
+              <>
+                {autodeskPlan === 'monthly_recurrent' && (
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center w-full">
+                      <div className="space-y-0.5">
+                        <p className="text-[11px] text-slate-500 font-medium">Compra Única:</p>
+                        <p className="text-sm font-display font-bold text-slate-700">
+                          R$ 89,90 <span className="text-[10px] text-slate-500 font-normal">/30 dias</span>
+                        </p>
+                      </div>
+                    </div>
+                    <div className="border-t border-slate-200/60 my-0.5"></div>
+                    <div className="flex justify-between items-center w-full">
+                      <div className="space-y-0.5">
+                        <p className="text-[11px] text-emerald-600 font-bold flex items-center">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 animate-pulse"></span>
+                          Assinatura Recorrente:
+                        </p>
+                        <p className="text-2xl font-display font-black text-slate-950">
+                          <span className="text-emerald-600">R$ 69,90</span> <span className="text-xs text-slate-500 font-normal">/mês</span>
+                        </p>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <span className="bg-emerald-500/10 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-lg border border-emerald-500/10">
+                          Poupa R$ 20,00
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {autodeskPlan === 'monthly_unique' && (
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center w-full">
+                      <div className="space-y-0.5">
+                        <p className="text-[11px] text-accent-blue font-bold">Compra Única:</p>
+                        <p className="text-2xl font-display font-black text-slate-950">
+                          <span className="text-accent-blue">R$ 89,90</span> <span className="text-xs text-slate-500 font-normal">/30 dias</span>
+                        </p>
+                      </div>
+                    </div>
+                    <div className="border-t border-slate-200/60 my-0.5"></div>
+                    <div className="flex justify-between items-center w-full">
+                      <div className="space-y-0.5">
+                        <p className="text-[11px] text-slate-500 font-medium">Assinatura Recorrente:</p>
+                        <p className="text-sm font-display font-bold text-slate-700">
+                          R$ 69,90 <span className="text-[10px] text-slate-500 font-normal">/mês</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {autodeskPlan === '12_months' && (
+                  <div className="flex justify-between items-center w-full">
+                    <div className="space-y-0.5">
+                      <p className="text-[11px] text-slate-500 font-medium">Plano 12 Meses (1 Ano):</p>
+                      <p className="text-2xl font-display font-black text-slate-950">
+                        R$ 397,90 <span className="text-xs text-slate-500 font-normal">Pagamento Único</span>
+                      </p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <span className="bg-sky-500/10 text-sky-700 text-[10px] font-bold px-2 py-1 rounded-lg border border-sky-500/10">
+                        Equivale a R$ 33,15/mês
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {autodeskPlan === '24_months' && (
+                  <div className="flex justify-between items-center w-full">
+                    <div className="space-y-0.5">
+                      <p className="text-[11px] text-slate-500 font-medium">Plano 24 Meses (2 Anos):</p>
+                      <p className="text-2xl font-display font-black text-slate-950">
+                        R$ 597,90 <span className="text-xs text-slate-500 font-normal">Pagamento Único</span>
+                      </p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <span className="bg-sky-500/10 text-sky-700 text-[10px] font-bold px-2 py-1 rounded-lg border border-sky-500/10">
+                        Equivale a R$ 24,91/mês
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {autodeskPlan === '36_months' && (
+                  <div className="flex justify-between items-center w-full">
+                    <div className="space-y-0.5">
+                      <p className="text-[11px] text-slate-500 font-medium">Plano 36 Meses (3 Anos):</p>
+                      <p className="text-2xl font-display font-black text-slate-950">
+                        R$ 737,90 <span className="text-xs text-slate-500 font-normal">Pagamento Único</span>
+                      </p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <span className="bg-sky-500/10 text-sky-700 text-[10px] font-bold px-2 py-1 rounded-lg border border-sky-500/10">
+                        Equivale a R$ 20,49/mês
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="flex justify-between items-center w-full">
+                  <div className="space-y-0.5">
+                    <p className="text-[11px] text-slate-500 font-medium">Compra Única:</p>
+                    <p className="text-lg font-display font-extrabold text-slate-800">
+                      <span className="text-accent-blue">{formattedPrice}</span> <span className="text-[10px] text-slate-500 font-normal">/30 dias</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="border-t border-slate-200/60 my-0.5"></div>
+                <div className="flex justify-between items-center w-full">
+                  <div className="space-y-0.5">
+                    <p className="text-[11px] text-emerald-600 font-bold flex items-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 animate-pulse"></span>
+                      Assinatura Recorrente:
+                    </p>
+                    <p className="text-2xl font-display font-black text-slate-950">
+                      <span className="text-emerald-600">{formattedRecurrencePrice}</span> <span className="text-xs text-slate-500 font-normal">/mês</span>
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="bg-emerald-500/10 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-lg border border-emerald-500/10">
+                      Poupa {formattedSavings}
+                    </span>
+                  </div>
+                </div>
+              </>
+            )
+          ) : (
+            <div className="flex justify-between items-center w-full">
+              <div className="space-y-1">
+                <p className="text-xs text-slate-400 line-through">De {formattedOriginalPrice}</p>
+                <p className="text-2xl sm:text-3xl font-display font-black text-slate-950">
+                  Por <span className="text-accent-blue">{formattedPrice}</span>
+                </p>
+                <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider">
+                  Pagamento Único. Sem Mensalidade.
+                </p>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="bg-emerald-500/10 text-emerald-700 text-xs font-bold px-2 py-1 rounded-lg border border-emerald-500/10">
+                  Desconto de 80%
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Trust highlights */}
         <ul className="space-y-2.5 text-xs text-slate-600">
           <li className="flex items-center">
             <Check className="w-4 h-4 text-emerald-500 mr-2 shrink-0" />
-            <span>Entrega automática por e-mail</span>
+            <span>{product.isSubscription ? (product.id === 'canva_pro_mensal' ? 'Ativação direta na sua conta pessoal' : 'Envio imediato de credenciais privadas') : 'Entrega automática por e-mail'}</span>
           </li>
           <li className="flex items-center">
             <Check className="w-4 h-4 text-emerald-500 mr-2 shrink-0" />
-            <span>Passo a passo de instalação ilustrado</span>
+            <span>{product.isSubscription ? (product.id === 'canva_pro_mensal' ? 'Acesso via convite oficial sem senhas' : 'Suporte técnico de ativação incluso') : 'Passo a passo de instalação ilustrado'}</span>
           </li>
           <li className="flex items-center">
             <Check className="w-4 h-4 text-emerald-500 mr-2 shrink-0" />
-            <span>Acesso vitalício para uso ilimitado</span>
+            <span>{product.isSubscription ? 'Recursos Premium Pro liberados' : 'Acesso vitalício para uso ilimitado'}</span>
           </li>
           <li className="flex items-center">
             <Check className="w-4 h-4 text-emerald-500 mr-2 shrink-0" />
-            <span>Suporte remoto quando necessário</span>
+            <span>Suporte prioritário via WhatsApp</span>
           </li>
         </ul>
 
@@ -237,6 +467,20 @@ export const ProductDetail: React.FC = () => {
             <div className="w-full">
               <button
                 onClick={() => {
+                  if (product.id === 'autodesk_all_apps') {
+                    if (autodeskPlan === '12_months') {
+                      window.open('https://pay.cakto.com.br/sweaaho_448678', '_blank');
+                      return;
+                    }
+                    if (autodeskPlan === '24_months') {
+                      window.open('https://pay.cakto.com.br/3ci8dh3', '_blank');
+                      return;
+                    }
+                    if (autodeskPlan === '36_months') {
+                      window.open('https://pay.cakto.com.br/sjhwfte', '_blank');
+                      return;
+                    }
+                  }
                   clearCart();
                   addToCart(product);
                   setIsCartOpen(false);
@@ -269,7 +513,7 @@ export const ProductDetail: React.FC = () => {
           </p>
           <div className="flex items-center justify-center gap-1.5 opacity-60">
             <span className="px-1 border border-slate-200 rounded">PIX</span>
-            <span className="px-1 border border-slate-200 rounded">CARTÃO</span>
+            {!product.isSubscription && <span className="px-1 border border-slate-200 rounded">CARTÃO</span>}
           </div>
         </div>
       </div>
@@ -344,10 +588,17 @@ export const ProductDetail: React.FC = () => {
 
               {/* General details */}
               <div className="space-y-4 flex-1">
-                <span className="bg-emerald-500/10 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider inline-flex items-center border border-emerald-500/10">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2"></span>
-                  Acesso vitalício
-                </span>
+                {product.isSubscription ? (
+                  <span className="bg-purple-500/10 text-purple-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider inline-flex items-center border border-purple-500/10 animate-pulse">
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-2"></span>
+                    {product.id === 'autodesk_all_apps' ? 'Produto Original' : 'Plano Mensal'}
+                  </span>
+                ) : (
+                  <span className="bg-emerald-500/10 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider inline-flex items-center border border-emerald-500/10">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2"></span>
+                    Acesso vitalício
+                  </span>
+                )}
                 
                 <h1 className="font-display font-extrabold text-2xl sm:text-3xl text-slate-900 leading-tight">
                   {product.name}
@@ -391,7 +642,7 @@ export const ProductDetail: React.FC = () => {
                 ))}
                 <div className="flex items-start text-slate-700 text-sm">
                   <Check className="w-5 h-5 text-emerald-500 mr-2 shrink-0 mt-0.5" />
-                  <span>Guia de instalação ilustrado passo a passo</span>
+                  <span>{product.isSubscription ? 'Instruções simples de acesso e suporte premium' : 'Guia de instalação ilustrado passo a passo'}</span>
                 </div>
               </div>
             </div>
@@ -459,19 +710,33 @@ export const ProductDetail: React.FC = () => {
                 <div className="relative">
                   <span className="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-slate-900 border-4 border-white"></span>
                   <h4 className="text-sm font-bold text-slate-900">2. Envio automático por E-mail</h4>
-                  <p className="text-slate-500 text-xs mt-0.5">Confirmado o pagamento, o sistema envia o e-mail contendo os links de acesso imediatamente.</p>
+                  <p className="text-slate-500 text-xs mt-0.5">
+                    {product.isSubscription 
+                      ? 'Confirmado o pagamento, o sistema envia as credenciais de login e senha imediatamente por e-mail.' 
+                      : 'Confirmado o pagamento, o sistema envia o e-mail contendo os links de acesso imediatamente.'}
+                  </p>
                 </div>
 
                 <div className="relative">
                   <span className="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-slate-900 border-4 border-white"></span>
-                  <h4 className="text-sm font-bold text-slate-900">3. Acesso aos arquivos e guias</h4>
-                  <p className="text-slate-500 text-xs mt-0.5">O e-mail contém os arquivos de instalação e tutoriais passo a passo simples de executar.</p>
+                  <h4 className="text-sm font-bold text-slate-900">
+                    {product.isSubscription ? '3. Acesso à conta oficial' : '3. Acesso aos arquivos e guias'}
+                  </h4>
+                  <p className="text-slate-500 text-xs mt-0.5">
+                    {product.isSubscription 
+                      ? 'O e-mail contém o usuário e a senha para acessar a plataforma oficial (no computador, celular ou navegador).' 
+                      : 'O e-mail contém os arquivos de instalação e tutoriais passo a passo simples de executar.'}
+                  </p>
                 </div>
 
                 <div className="relative">
                   <span className="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-emerald-500 border-4 border-white animate-pulse"></span>
                   <h4 className="text-sm font-bold text-slate-900 text-emerald-700">4. Suporte Assistido Completo</h4>
-                  <p className="text-slate-500 text-xs mt-0.5">Se tiver qualquer tipo de dúvida ou dificuldade na instalação, nossa equipe técnica auxilia remotamente.</p>
+                  <p className="text-slate-500 text-xs mt-0.5">
+                    {product.isSubscription 
+                      ? 'Se tiver qualquer tipo de dúvida ou dificuldade para acessar a conta, nossa equipe técnica auxilia rapidamente via WhatsApp.' 
+                      : 'Se tiver qualquer tipo de dúvida ou dificuldade na instalação, nossa equipe técnica auxilia remotamente.'}
+                  </p>
                 </div>
               </div>
             </div>
@@ -554,14 +819,60 @@ export const ProductDetail: React.FC = () => {
               </h4>
               
               <div className="space-y-3.5 text-xs">
-                <div className="space-y-1">
-                  <p className="font-semibold text-slate-800">O software expira?</p>
-                  <p className="text-slate-500 leading-relaxed">Não. Trata-se de uma versão completa e funcional com acesso vitalício, sem taxas de renovação.</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="font-semibold text-slate-800">Posso reinstalar se trocar de computador?</p>
-                  <p className="text-slate-500 leading-relaxed">Sim. O link enviado por e-mail permanece ativo para reinstalação futura caso formate ou substitua seu computador.</p>
-                </div>
+                {product.id === 'autodesk_all_apps' ? (
+                  <>
+                    <div className="space-y-1">
+                      <p className="font-semibold text-slate-800">Como funciona o acesso?</p>
+                      <p className="text-slate-500 leading-relaxed">
+                        Você receberá as credenciais de login e senha exclusivos para acessar a conta oficial da ferramenta de forma 100% privada e segura. A ativação é feita diretamente em contato com o nosso suporte via WhatsApp após a confirmação do pagamento.
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="font-semibold text-slate-800">Quais tipos de assinatura estão disponíveis?</p>
+                      <p className="text-slate-500 leading-relaxed">
+                        Oferecemos o Plano Mensal Recorrente (pagamento exclusivo no Pix para maior economia), Plano Mensal Compra Única (acesso de 30 dias) e os planos de licença de longo prazo de 12, 24 e 36 meses (pagos no cartão de crédito via Cakto).
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="font-semibold text-slate-800">O que está incluso na assinatura?</p>
+                      <p className="text-slate-500 leading-relaxed">
+                        Todos os benefícios de uma assinatura original: acesso oficial a todos os 86 softwares da Autodesk com atualizações automáticas oficiais e suporte direto.
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="font-semibold text-slate-800">Quais são os principais softwares inclusos no pacote?</p>
+                      <p className="text-slate-500 leading-relaxed">
+                        Estão inclusos os principais e mais procurados softwares da Autodesk, como: <strong>AutoCAD</strong>, <strong>Revit</strong>, <strong>Inventor Professional</strong>, <strong>Maya</strong>, <strong>3ds Max</strong>, <strong>Civil 3D</strong>, <strong>Navisworks Manage</strong>, entre outros.
+                      </p>
+                    </div>
+                  </>
+                ) : product.isSubscription ? (
+                  <>
+                    <div className="space-y-1">
+                      <p className="font-semibold text-slate-800">Como funciona o acesso?</p>
+                      <p className="text-slate-500 leading-relaxed">
+                        Você receberá as credenciais de login e senha exclusivos no seu e-mail para acessar a conta oficial da ferramenta.
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="font-semibold text-slate-800">A assinatura expira?</p>
+                      <p className="text-slate-500 leading-relaxed">
+                        Sim, a expiração é de 30 dias e a assinatura se renova mensalmente. Caso precise trocar de dados ou suporte, nossa equipe realiza a substituição.
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="space-y-1">
+                      <p className="font-semibold text-slate-800">O software expira?</p>
+                      <p className="text-slate-500 leading-relaxed">Não. Trata-se de uma versão completa e funcional com acesso vitalício, sem taxas de renovação.</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="font-semibold text-slate-800">Posso reinstalar se trocar de computador?</p>
+                      <p className="text-slate-500 leading-relaxed">Sim. O link enviado por e-mail permanece ativo para reinstalação futura caso formate ou substitua seu computador.</p>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
@@ -575,6 +886,7 @@ export const ProductDetail: React.FC = () => {
         product={product}
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
+        initialSubOption={product?.id === 'autodesk_all_apps' ? (autodeskPlan === 'monthly_recurrent' ? 'recurrent' : 'avulso') : undefined}
       />
     </div>
   );

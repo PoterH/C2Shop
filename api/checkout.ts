@@ -23,7 +23,7 @@ export default async function handler(req: any, res: any) {
     return res.status(405).json({ error: 'Método não permitido' });
   }
 
-  const { productSlug, products: items, coupon, buyer, paymentMethod, card, installments, billingAddress } = req.body;
+  const { productSlug, products: items, coupon, buyer, paymentMethod, card, installments, billingAddress, subOption } = req.body;
 
   if ((!productSlug && (!items || !Array.isArray(items))) || !buyer || !paymentMethod) {
     return res.status(400).json({ error: 'Parâmetros obrigatórios ausentes' });
@@ -48,17 +48,29 @@ export default async function handler(req: any, res: any) {
   }
 
   // Math calculations
-  const subtotal = matchedProducts.reduce((sum, p) => sum + p.price, 0);
+  let subtotal = 0;
+  let isSubPayment = false;
+  let recurrence = false;
+
+  const firstProduct = matchedProducts[0];
+  if (firstProduct && firstProduct.isSubscription) {
+    isSubPayment = true;
+    recurrence = subOption === 'recurrent';
+    subtotal = recurrence ? (firstProduct.recurrencePrice || firstProduct.price) : firstProduct.price;
+  } else {
+    subtotal = matchedProducts.reduce((sum, p) => sum + p.price, 0);
+  }
+
   let discountAmount = 0;
   let finalTotal = subtotal;
 
-  // Coupon OFF10 rule: 10% discount for more than 1 item in the cart
-  if (coupon === 'OFF10' && matchedProducts.length > 1) {
+  // Coupon OFF10 rule: 10% discount for more than 1 item in the cart (only if not subscription)
+  if (!isSubPayment && coupon === 'OFF10' && matchedProducts.length > 1) {
     discountAmount = subtotal * 0.10;
     finalTotal = subtotal - discountAmount;
   }
 
-  const pixPrice = finalTotal * 0.98;
+  const pixPrice = isSubPayment ? finalTotal : (finalTotal * 0.98);
   const pixPriceStr = pixPrice.toFixed(2);
 
   // 1. PROCESSO DE PAGAMENTO PIX (EFI BANK)
@@ -84,7 +96,10 @@ export default async function handler(req: any, res: any) {
 
       // Group product names for Pix payment description (max 70 characters for Efí)
       const namesString = matchedProducts.map(p => p.name).join(', ');
-      const description = `Softwares: ${namesString} - C2Tech`.substring(0, 70);
+      const description = (isSubPayment 
+        ? `${recurrence ? 'Assinatura' : 'Plano'} ${firstProduct.name} - C2Shop` 
+        : `Softwares: ${namesString} - C2Shop`
+      ).substring(0, 70);
 
       const chargeBody = {
         calendario: {

@@ -22,12 +22,13 @@ interface CheckoutModalProps {
   product?: Product;
   isOpen: boolean;
   onClose: () => void;
+  initialSubOption?: 'recurrent' | 'avulso';
 }
 
 type Step = 'info' | 'payment' | 'pix_waiting' | 'success';
 type PaymentMethod = 'pix' | 'card';
 
-export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, onClose }) => {
+export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, onClose, initialSubOption }) => {
   const navigate = useNavigate();
   const { cartItems, total, discountAmount, couponCode, clearCart } = useCart();
   const activeProduct = product || cartItems[0];
@@ -47,6 +48,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   const [email, setEmail] = useState('');
   const [cpfCnpj, setCpfCnpj] = useState('');
   const [phone, setPhone] = useState('');
+  const [subOption, setSubOption] = useState<'recurrent' | 'avulso'>('recurrent');
+
+  // Sincroniza a opção inicial quando o modal abre
+  useEffect(() => {
+    if (isOpen) {
+      setSubOption(initialSubOption || 'recurrent');
+    }
+  }, [initialSubOption, isOpen]);
 
 
 
@@ -250,6 +259,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
         body: JSON.stringify({
           products: cartItems.map(item => ({ slug: item.slug })),
           coupon: couponCode || null,
+          subOption: activeProduct?.isSubscription ? subOption : undefined,
           buyer: {
             name: fullName,
             email: email,
@@ -299,6 +309,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
               body: JSON.stringify({
                 txid,
                 products: cartItems.map(item => ({ slug: item.slug, name: item.name, price: item.price })),
+                subOption: activeProduct?.isSubscription ? subOption : undefined,
                 buyer: {
                   name: fullName,
                   email,
@@ -338,8 +349,22 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   if (!isOpen) return null;
 
   // Pricing math
-  const formattedPrice = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  const pixDiscountPrice = total * 0.98;
+  const getCheckoutTotal = () => {
+    if (activeProduct?.isSubscription) {
+      return subOption === 'recurrent' ? (activeProduct.recurrencePrice || activeProduct.price) : activeProduct.price;
+    }
+    return total;
+  };
+  const checkoutTotal = getCheckoutTotal();
+  const formattedPrice = checkoutTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+  const getPixPrice = () => {
+    if (activeProduct?.isSubscription) {
+      return checkoutTotal; // Subscriptions have set net prices
+    }
+    return total * 0.98;
+  };
+  const pixDiscountPrice = getPixPrice();
   const formattedPixPrice = pixDiscountPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
   return (
@@ -396,19 +421,67 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
               </div>
 
               {/* List of items in checkout */}
-              <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 space-y-2">
+              <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 space-y-3">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Resumo do pedido</span>
-                {cartItems.map((item) => (
-                  <div key={item.id} className="flex justify-between items-center text-xs">
-                    <span className="font-semibold text-slate-700">{item.name}</span>
-                    <span className="font-bold text-slate-900">{item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                {activeProduct?.isSubscription ? (
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="font-semibold text-slate-700">{activeProduct.name}</span>
+                      <span className="font-bold text-slate-900">
+                        {(subOption === 'recurrent' ? activeProduct.recurrencePrice : activeProduct.price)?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                      </span>
+                    </div>
+                    
+                    {/* Subscription Option Switcher */}
+                    <div className="bg-white border border-slate-200/80 rounded-xl p-1 flex gap-1 mt-5 relative">
+                      <div className="absolute -top-2.5 left-4 bg-red-600 text-white text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest shadow-sm pointer-events-none z-10">
+                        Recomendado
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setSubOption('recurrent')}
+                        className={`flex-1 text-center py-2 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                          subOption === 'recurrent'
+                            ? 'bg-emerald-500 text-white shadow-sm'
+                            : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                        }`}
+                      >
+                        Recorrente
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSubOption('avulso')}
+                        className={`flex-1 text-center py-2 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                          subOption === 'avulso'
+                            ? 'bg-slate-900 text-white shadow-sm'
+                            : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                        }`}
+                      >
+                        Único
+                      </button>
+                    </div>
+                    
+                    <p className="text-[10px] text-slate-400 leading-relaxed font-medium">
+                      {subOption === 'recurrent' 
+                        ? '👉 Uma assinatura recorrente no Pix será criada via Efí Bank. Você pode cancelar a qualquer momento.'
+                        : '👉 Pagamento único de 30 dias. O acesso expira automaticamente se não for renovado.'}
+                    </p>
                   </div>
-                ))}
-                {discountAmount > 0 && (
-                  <div className="flex justify-between items-center text-xs text-emerald-600 font-semibold pt-2 border-t border-slate-200/60">
-                    <span>Desconto (10% OFF10)</span>
-                    <span>-{discountAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-                  </div>
+                ) : (
+                  <>
+                    {cartItems.map((item) => (
+                      <div key={item.id} className="flex justify-between items-center text-xs">
+                        <span className="font-semibold text-slate-700">{item.name}</span>
+                        <span className="font-bold text-slate-900">{item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                      </div>
+                    ))}
+                    {discountAmount > 0 && (
+                      <div className="flex justify-between items-center text-xs text-emerald-600 font-semibold pt-2 border-t border-slate-200/60">
+                        <span>Desconto (10% OFF10)</span>
+                        <span>-{discountAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
 
@@ -513,40 +586,48 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                 </h4>
                 
                 {/* Method selector tabs */}
-                <div className="grid grid-cols-2 gap-2 p-1.5 bg-slate-100 rounded-2xl border border-slate-200/50">
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod('pix')}
-                    className={`py-3 px-4 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                      paymentMethod === 'pix' 
-                        ? 'bg-white text-slate-900 shadow-sm' 
-                        : 'text-slate-500 hover:text-slate-700'
-                    }`}
-                  >
-                    Pix (2% de Desconto)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod('card')}
-                    className={`py-3 px-4 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                      paymentMethod === 'card' 
-                        ? 'bg-white text-slate-900 shadow-sm' 
-                        : 'text-slate-500 hover:text-slate-700'
-                    }`}
-                  >
-                    Cartão de Crédito
-                  </button>
-                </div>
+                {!activeProduct?.isSubscription ? (
+                  <div className="grid grid-cols-2 gap-2 p-1.5 bg-slate-100 rounded-2xl border border-slate-200/50">
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod('pix')}
+                      className={`py-3 px-4 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        paymentMethod === 'pix' 
+                          ? 'bg-white text-slate-900 shadow-sm' 
+                          : 'text-slate-500 hover:text-slate-700'
+                      }`}
+                    >
+                      Pix (2% de Desconto)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod('card')}
+                      className={`py-3 px-4 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        paymentMethod === 'card' 
+                          ? 'bg-white text-slate-900 shadow-sm' 
+                          : 'text-slate-500 hover:text-slate-700'
+                      }`}
+                    >
+                      Cartão de Crédito
+                    </button>
+                  </div>
+                ) : (
+                  <div className="p-3.5 bg-emerald-500/10 text-emerald-800 text-xs font-bold rounded-2xl border border-emerald-500/20 text-center flex items-center justify-center gap-1.5">
+                    <span>⚡ Método Exclusivo: Assinatura no Pix</span>
+                  </div>
+                )}
  
                 {/* Pix Area */}
                 {paymentMethod === 'pix' && (
                   <div className="space-y-4 pt-2">
                     <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-100 text-xs text-slate-700 leading-relaxed space-y-1">
                       <p className="font-bold text-emerald-800 flex items-center">
-                        ⚡ Desconto Exclusivo Pix
+                        {activeProduct?.isSubscription ? '⚡ Assinatura Pix Automática' : '⚡ Desconto Exclusivo Pix'}
                       </p>
                       <p>
-                        Ganhe 2% de desconto exclusivo pagando via Pix! O pagamento é aprovado imediatamente e o acesso será enviado ao seu e-mail em segundos.
+                        {activeProduct?.isSubscription 
+                          ? `A ativação do seu plano ${activeProduct.name} será realizada imediatamente após a confirmação do pagamento Pix.` 
+                          : 'Ganhe 2% de desconto exclusivo pagando via Pix! O pagamento é aprovado imediatamente e o acesso será enviado ao seu e-mail em segundos.'}
                       </p>
                     </div>
  

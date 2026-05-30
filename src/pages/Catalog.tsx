@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { products, CATEGORIES } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
 import { Search, SlidersHorizontal, Trash2 } from 'lucide-react';
@@ -7,6 +8,14 @@ export const Catalog: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
   const [selectedOS, setSelectedOS] = useState<'Todos' | 'Windows' | 'macOS'>('Todos');
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  const activeTab = searchParams.get('tab') === 'assinaturas' ? 'assinaturas' : 'vitalicios';
+  const setActiveTab = (tab: 'vitalicios' | 'assinaturas') => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('tab', tab);
+    setSearchParams(newParams, { replace: true });
+  };
 
   // Clear all filters
   const handleClearFilters = () => {
@@ -15,9 +24,18 @@ export const Catalog: React.FC = () => {
     setSelectedOS('Todos');
   };
 
+  // Total products in active tab
+  const totalTabProducts = useMemo(() => {
+    return products.filter(p => activeTab === 'assinaturas' ? !!p.isSubscription : !p.isSubscription).length;
+  }, [activeTab]);
+
   // Filtered and searched products
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
+      // 0. Filter by active tab (subscription vs lifetime)
+      const matchesTab = activeTab === 'assinaturas' ? !!product.isSubscription : !product.isSubscription;
+      if (!matchesTab) return false;
+
       // 1. Text search
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -33,20 +51,55 @@ export const Catalog: React.FC = () => {
 
       return matchesSearch && matchesCategory && matchesOS;
     });
-  }, [searchTerm, selectedCategory, selectedOS]);
+  }, [searchTerm, selectedCategory, selectedOS, activeTab]);
 
   return (
     <div className="pt-24 pb-16 bg-slate-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Page Title */}
-        <div className="text-left space-y-2 mb-10">
+        <div className="text-left space-y-2 mb-8">
           <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
             Catálogo de Softwares Profissionais
           </h1>
           <p className="text-slate-500 text-sm sm:text-base">
             Selecione e adquira os softwares essenciais para o seu desenvolvimento corporativo ou pessoal.
           </p>
+        </div>
+
+        {/* Tab Switcher (Vitalícios vs Assinaturas) */}
+        <div className="flex justify-start mb-8">
+          <div className="bg-white border border-slate-100 shadow-sm p-1.5 rounded-2xl flex gap-2">
+            <button
+              onClick={() => {
+                setActiveTab('vitalicios');
+                setSelectedCategory('Todos');
+              }}
+              className={`px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 ${
+                activeTab === 'vitalicios'
+                  ? 'bg-slate-900 text-white shadow-sm'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <span>Licenças Vitalícias</span>
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab('assinaturas');
+                setSelectedCategory('Todos');
+              }}
+              className={`px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 ${
+                activeTab === 'assinaturas'
+                  ? 'bg-slate-900 text-white shadow-sm'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <span>Assinaturas Mensais</span>
+              <span className="bg-emerald-500/10 text-emerald-600 text-[10px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                Novo
+              </span>
+            </button>
+          </div>
         </div>
 
         {/* Filters and Search Bar Container */}
@@ -131,7 +184,7 @@ export const Catalog: React.FC = () => {
         {/* Results Info */}
         <div className="mb-6 flex justify-between items-center text-xs text-slate-500">
           <p>
-            Mostrando <strong>{filteredProducts.length}</strong> de {products.length} softwares encontrados.
+            Mostrando <strong>{filteredProducts.length}</strong> de {totalTabProducts} {activeTab === 'assinaturas' ? 'assinaturas' : 'softwares'} encontrados.
           </p>
         </div>
 
