@@ -94,45 +94,111 @@ export default async function handler(req: any, res: any) {
         throw new Error('Instância Efí não inicializada');
       }
 
-      // Group product names for Pix payment description (max 70 characters for Efí)
-      const namesString = matchedProducts.map(p => p.name).join(', ');
-      const description = (isSubPayment 
-        ? `${recurrence ? 'Assinatura' : 'Plano'} ${firstProduct.name} - C2Shop` 
-        : `Softwares: ${namesString} - C2Shop`
-      ).substring(0, 70);
+      if (isSubPayment && recurrence) {
+        // ASSINATURA PIX AUTOMÁTICO (BCB RECORRENTE)
+        console.log(`Efí SDK: Criando Pix Automático para ${firstProduct.name}...`);
+        
+        // 1. Criar localização de recorrência
+        const locRes = await efi.pixCreateLocationRecurrenceAutomatic();
+        const locId = locRes.id;
+        if (!locId) {
+          throw new Error('Falha ao gerar localização da recorrência Pix Automático');
+        }
 
-      const chargeBody = {
-        calendario: {
-          expiracao: 3600 // 1 hora
-        },
-        devedor: {
-          cpf: buyer.cpf.replace(/\D/g, ''),
-          nome: buyer.name
-        },
-        valor: {
-          original: pixPriceStr
-        },
-        chave: process.env.EFI_PIX_KEY || '',
-        solicitacaoPagador: description
-      };
+        // 2. Definir datas (dataInicial deve ser no mínimo amanhã pelas regras do Banco Central)
+        const today = new Date();
+        const tomorrow = new Date();
+        tomorrow.setDate(today.getDate() + 1);
+        const dataInicial = tomorrow.toISOString().split('T')[0];
+        
+        const nextYear = new Date();
+        nextYear.setFullYear(today.getFullYear() + 2); // 2 anos de duração do contrato de recorrência
+        const dataFinal = nextYear.toISOString().split('T')[0];
 
-      const chargeRes = await efi.pixCreateImmediateCharge({}, chargeBody);
-      const locId = chargeRes.loc?.id;
-      const txid = chargeRes.txid;
+        // 3. Gerar txid de 32 caracteres hexadecimal exigido pela API
+        const hexTxid = Array.from({length: 32}, () => Math.floor(Math.random()*16).toString(16)).join('');
 
-      if (!locId) {
-        throw new Error('Falha ao gerar localização da cobrança Pix');
+        const recurrenceBody = {
+          vinculo: {
+            contrato: 'CTR' + Math.floor(100000 + Math.random()*900000),
+            devedor: {
+              cpf: buyer.cpf.replace(/\D/g, ''),
+              nome: buyer.name
+            },
+            objeto: `Assinatura ${firstProduct.name}`.substring(0, 30)
+          },
+          calendario: {
+            dataFinal: dataFinal,
+            dataInicial: dataInicial,
+            periodicidade: 'MENSAL'
+          },
+          valor: {
+            valorRec: pixPriceStr
+          },
+          politicaRetentativa: 'NAO_PERMITE',
+          loc: locId,
+          ativacao: {
+            dadosJornada: {
+              txid: hexTxid
+            }
+          }
+        };
+
+        const recRes = await efi.pixCreateRecurrenceAutomatic({}, recurrenceBody);
+        console.log("Recorrência Pix Automático criada:", JSON.stringify(recRes));
+
+        // 4. Gerar QR Code a partir do local de recorrência
+        const qrCodeRes = await efi.pixGenerateQRCode({ id: locId });
+
+        return res.status(200).json({
+          success: true,
+          paymentMethod: 'pix',
+          txid: hexTxid,
+          copyPaste: qrCodeRes.qrcode,
+          qrCodeBase64: qrCodeRes.imagemQrcode,
+          isAutomaticRecurrence: true
+        });
+      } else {
+        // COBRANÇA PIX IMEDIATA (AVULSO)
+        const namesString = matchedProducts.map(p => p.name).join(', ');
+        const description = (isSubPayment 
+          ? `${recurrence ? 'Assinatura' : 'Plano'} ${firstProduct.name} - C2Shop` 
+          : `Softwares: ${namesString} - C2Shop`
+        ).substring(0, 70);
+
+        const chargeBody = {
+          calendario: {
+            expiracao: 3600
+          },
+          devedor: {
+            cpf: buyer.cpf.replace(/\D/g, ''),
+            nome: buyer.name
+          },
+          valor: {
+            original: pixPriceStr
+          },
+          chave: process.env.EFI_PIX_KEY || '',
+          solicitacaoPagador: description
+        };
+
+        const chargeRes = await efi.pixCreateImmediateCharge({}, chargeBody);
+        const locId = chargeRes.loc?.id;
+        const txid = chargeRes.txid;
+
+        if (!locId) {
+          throw new Error('Falha ao gerar localização da cobrança Pix');
+        }
+
+        const qrCodeRes = await efi.pixGenerateQRCode({ id: locId });
+
+        return res.status(200).json({
+          success: true,
+          paymentMethod: 'pix',
+          txid: txid,
+          copyPaste: qrCodeRes.qrcode,
+          qrCodeBase64: qrCodeRes.imagemQrcode,
+        });
       }
-
-      const qrCodeRes = await efi.pixGenerateQRCode({ id: locId });
-
-      return res.status(200).json({
-        success: true,
-        paymentMethod: 'pix',
-        txid: txid,
-        copyPaste: qrCodeRes.qrcode,
-        qrCodeBase64: qrCodeRes.imagemQrcode,
-      });
     } catch (error: any) {
       console.error('Erro no processamento do checkout Pix:', error);
       return res.status(500).json({
