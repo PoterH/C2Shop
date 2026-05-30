@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
+import { useParams, Link, useSearchParams, useLocation } from 'react-router-dom';
 import { CheckoutModal } from '../components/CheckoutModal';
 import { useCart } from '../context/CartContext';
 import { getProductBySlug } from '../data/products';
@@ -19,6 +19,12 @@ export const ProductDetail: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const { addToCart, clearCart, setIsCartOpen } = useCart();
+  const location = useLocation();
+  const hasProcessedCheckoutRef = useRef(false);
+
+  useEffect(() => {
+    hasProcessedCheckoutRef.current = false;
+  }, [location.pathname]);
 
   const product = useMemo(() => {
     if (!slug) return undefined;
@@ -37,7 +43,8 @@ export const ProductDetail: React.FC = () => {
   }, [productReviews]);
 
   useEffect(() => {
-    if (searchParams.get('checkout') === 'true' && !product?.unavailable && product) {
+    if (searchParams.get('checkout') === 'true' && !product?.unavailable && product && !hasProcessedCheckoutRef.current) {
+      hasProcessedCheckoutRef.current = true;
       clearCart();
       addToCart(product);
       setIsCartOpen(false);
@@ -235,7 +242,7 @@ export const ProductDetail: React.FC = () => {
                   setIsCartOpen(false);
                   setIsCheckoutOpen(true);
                 }}
-                className="w-full flex items-center justify-center py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-center shadow-lg transition-all cursor-pointer border-none font-display text-sm"
+                className="w-full flex items-center justify-center py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-center shadow-lg transition-all cursor-pointer border-none font-display text-base"
                 id={`detail-buy-now-${product.id}`}
               >
                 Comprar agora

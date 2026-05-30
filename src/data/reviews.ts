@@ -851,5 +851,13 @@ export const reviewsData: Record<string, Review[]> = {
       date: "1 semana atrás",
       comment: "O OCR dele funcionou perfeitamente para digitalizar uns documentos antigos escaneados que eu tinha. Recomendo demais!"
     }
+  ],
+  wondershare_recoverit_13: [
+    {
+      author: "Felipe S. Pires",
+      rating: 5,
+      date: "3 dias atrás",
+      comment: "Salvou minha vida! Consegui recuperar mais de 200GB de fotos e vídeos de um HD externo que tinha sido formatado por engano. Funcionou perfeito!"
+    }
   ]
 };
