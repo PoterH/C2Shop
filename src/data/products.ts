@@ -911,6 +911,35 @@ export const products: Product[] = [
       gpu: 'Placa de vídeo compatível com DirectX 9 ou superior',
       storage: '2 GB de espaço livre'
     }
+  },
+  {
+    id: 'wondershare_recoverit_13',
+    slug: 'wondershare-recoverit-13',
+    name: 'Wondershare Recoverit 13',
+    category: 'Escritório e Produtividade',
+    compatibility: 'Windows',
+    version: '13.0.0',
+    description: 'Software profissional de recuperação de dados e restauração de arquivos excluídos.',
+    longDescription: 'O Wondershare Recoverit 13 para Windows é um software profissional de recuperação de dados líder de mercado. Ele possui uma taxa de recuperação de 95% e suporta a restauração de mais de 1000 formatos de arquivos (incluindo fotos, vídeos, documentos e e-mails) de quase todos os tipos de dispositivos de armazenamento: discos rígidos (HDD/SSD), pen drives, cartões de memória, além de sistemas de arquivos danificados ou formatados de forma acidental.',
+    price: 127.90,
+    originalPrice: 499.00,
+    checkoutUrl: 'https://pay.cakto.com.br/3dqe23f',
+    imageUrl: '/images/products/wondershare-recoverit-13.png',
+    features: [
+      'Versão completa e funcional',
+      'Acesso vitalício para uso ilimitado',
+      'Instalação assistida inclusa',
+      'Entrega automática no e-mail após o pagamento',
+      'Suporte remoto quando necessário',
+      'Pronto para uso imediato'
+    ],
+    requirements: {
+      os: 'Windows 10 ou 11 (64-bits)',
+      cpu: '1 GHz ou superior',
+      ram: '4 GB RAM (Recomendável: 8 GB)',
+      gpu: 'Placa de vídeo padrão',
+      storage: '2 GB de espaço livre'
+    }
   }
 ];
 

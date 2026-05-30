@@ -7,7 +7,6 @@ import {
   Check, 
   ShieldCheck, 
   MessageSquare, 
-  ShoppingCart, 
   Monitor, 
   ChevronRight, 
   ArrowLeft,
@@ -19,7 +18,7 @@ export const ProductDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const { addToCart } = useCart();
+  const { addToCart, clearCart, setIsCartOpen } = useCart();
 
   const product = useMemo(() => {
     if (!slug) return undefined;
@@ -38,13 +37,16 @@ export const ProductDetail: React.FC = () => {
   }, [productReviews]);
 
   useEffect(() => {
-    if (searchParams.get('checkout') === 'true' && !product?.unavailable) {
+    if (searchParams.get('checkout') === 'true' && !product?.unavailable && product) {
+      clearCart();
+      addToCart(product);
+      setIsCartOpen(false);
       setIsCheckoutOpen(true);
       const newParams = new URLSearchParams(searchParams);
       newParams.delete('checkout');
       setSearchParams(newParams, { replace: true });
     }
-  }, [searchParams, setSearchParams, product]);
+  }, [searchParams, setSearchParams, product, clearCart, addToCart, setIsCartOpen]);
 
   const renderStars = (rating: number) => {
     return (
@@ -225,24 +227,18 @@ export const ProductDetail: React.FC = () => {
               Temporariamente indisponível
             </button>
           ) : (
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="w-full">
               <button
                 onClick={() => {
+                  clearCart();
                   addToCart(product);
+                  setIsCartOpen(false);
                   setIsCheckoutOpen(true);
                 }}
-                className="flex-grow flex-[2] flex items-center justify-center py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-center shadow-lg transition-all cursor-pointer border-none font-display text-sm"
+                className="w-full flex items-center justify-center py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-center shadow-lg transition-all cursor-pointer border-none font-display text-sm"
                 id={`detail-buy-now-${product.id}`}
               >
                 Comprar agora
-              </button>
-              <button
-                onClick={() => addToCart(product)}
-                className="flex-grow flex-1 flex items-center justify-center py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-2xl text-center shadow transition-all cursor-pointer border-none font-display text-sm"
-                id={`detail-add-to-cart-${product.id}`}
-              >
-                <ShoppingCart className="w-5 h-5 mr-2 shrink-0" />
-                Adicionar ao Carrinho
               </button>
             </div>
           )}

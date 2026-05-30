@@ -11,8 +11,7 @@ import {
   FileText, 
   ChevronLeft,
   CheckCircle2,
-  AlertTriangle,
-  CreditCard
+  AlertTriangle
 } from 'lucide-react';
 import type { Product } from '../data/products';
 // @ts-ignore
@@ -48,53 +47,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   const [email, setEmail] = useState('');
   const [cpfCnpj, setCpfCnpj] = useState('');
   const [phone, setPhone] = useState('');
-
-  // Form State: Credit Card
-  const [cardHolderName, setCardHolderName] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [cardCvv, setCardCvv] = useState('');
-  const [cardExpiryMonth, setCardExpiryMonth] = useState('');
-  const [cardExpiryYear, setCardExpiryYear] = useState('');
-  const [cardInstallments, setCardInstallments] = useState('1');
-
-
-
-
-
-  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value.replace(/\D/g, '');
-    const parts = [];
-    for (let i = 0; i < raw.length; i += 4) {
-      parts.push(raw.substring(i, i + 4));
-    }
-    setCardNumber(parts.join(' ').substring(0, 19));
-  };
-
-  const handleCardCvvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value.replace(/\D/g, '');
-    setCardCvv(raw.substring(0, 4));
-  };
-
-  const getInstallmentOptions = () => {
-    const options = [];
-    const monthlyRate = 0.0299; // 2.99% ao mês
-
-    for (let i = 1; i <= 12; i++) {
-      let value = total;
-      if (i > 1) {
-        // Tabela Price (Juros Compostos)
-        value = total * (monthlyRate * Math.pow(1 + monthlyRate, i)) / (Math.pow(1 + monthlyRate, i) - 1);
-      }
-      const formattedValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      options.push({
-        value: String(i),
-        label: `${i}x de ${formattedValue}`
-      });
-    }
-    return options;
-  };
-
-
 
 
 
@@ -375,89 +327,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
     }, 3000);
   };
 
-  // Submit Card Order - Appmax Transparent Checkout
-  const handleCardCheckout = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Validation
-    if (!cardNumber || cardNumber.replace(/\s/g, '').length < 15) {
-      setErrorMessage('Por favor, insira um número de cartão válido.');
-      return;
-    }
-    if (!cardHolderName.trim()) {
-      setErrorMessage('Por favor, insira o nome do titular do cartão.');
-      return;
-    }
-    if (!cardExpiryMonth || !cardExpiryYear) {
-      setErrorMessage('Por favor, selecione o mês e o ano de vencimento.');
-      return;
-    }
-    if (!cardCvv || cardCvv.length < 3) {
-      setErrorMessage('Por favor, insira o código de segurança (CVV) válido.');
-      return;
-    }
-
-    setErrorMessage(null);
-    setLoading(true);
-
-    try {
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          products: cartItems.map(item => ({ slug: item.slug })),
-          coupon: couponCode || null,
-          buyer: {
-            name: fullName,
-            email: email,
-            cpf: cpfCnpj,
-            phone: phone
-          },
-          paymentMethod: 'credit_card',
-          installments: parseInt(cardInstallments, 10),
-          card: {
-            number: cardNumber.replace(/\s/g, ''),
-            holderName: cardHolderName,
-            cvv: cardCvv,
-            expirationMonth: parseInt(cardExpiryMonth, 10),
-            expirationYear: parseInt(cardExpiryYear, 10)
-          }
-        })
-      });
-
-      const data = await response.json();
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || data.details || 'Erro ao processar o pagamento no cartão.');
-      }
-
-      if (data.status === 'approved' || data.status === 'paid' || data.status === 'confirmado') {
-        setSuccessTitle('Pagamento Aprovado!');
-        setSuccessDescription('Sua transação foi aprovada e processada com sucesso. Estamos gerando sua licença e enviando os arquivos de acesso para o seu e-mail.');
-        setCurrentStep('success');
-        clearCart(); // Limpa o carrinho
-        setTimeout(() => {
-          onClose();
-          navigate('/obrigado');
-        }, 3000);
-      } else if (data.status === 'authorized' || data.status === 'pending_analysis' || data.status === 'em_analise' || data.status === 'pending') {
-        setSuccessTitle('Pagamento em Análise!');
-        setSuccessDescription('Seu pagamento foi recebido e está em análise de segurança. Assim que a análise for concluída (geralmente em alguns minutos), as licenças e os arquivos de acesso serão enviados automaticamente para o seu e-mail.');
-        setCurrentStep('success');
-        clearCart(); // Limpa o carrinho
-        setTimeout(() => {
-          onClose();
-          navigate('/obrigado');
-        }, 5000);
-      } else {
-        throw new Error(`O pagamento está com status: ${data.status}. Por favor, verifique os dados do cartão.`);
-      }
-    } catch (err: any) {
-      console.error(err);
-      setErrorMessage(err.message || 'Houve um erro ao processar o pagamento. Verifique seus dados e tente novamente.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Copy Pix code to clipboard
   const handleCopyPix = () => {
@@ -700,141 +569,26 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
                 {/* Credit Card Area */}
                 {paymentMethod === 'card' && (
-                  <form onSubmit={handleCardCheckout} className="space-y-5 pt-2">
-                    {/* DADOS DO CARTÃO */}
-                    <div className="space-y-3">
-                      <div className="flex items-center space-x-2 pb-1 border-b border-slate-100">
-                        <CreditCard className="w-4 h-4 text-accent-blue" />
-                        <h5 className="font-display font-bold text-slate-800 text-xs uppercase tracking-wider">
-                          Dados do Cartão de Crédito
-                        </h5>
-                      </div>
-
-                      {/* Nome do Titular */}
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
-                          Nome no Cartão
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={cardHolderName}
-                          onChange={(e) => setCardHolderName(e.target.value.toUpperCase())}
-                          placeholder="Como impresso no cartão"
-                          className="w-full px-3 py-2.5 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all outline-none"
-                        />
-                      </div>
-
-                      {/* Número do Cartão */}
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
-                          Número do Cartão
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={cardNumber}
-                          onChange={handleCardNumberChange}
-                          placeholder="0000 0000 0000 0000"
-                          className="w-full px-3 py-2.5 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all outline-none"
-                        />
-                      </div>
-
-                      {/* Vencimento e CVV Grid */}
-                      <div className="grid grid-cols-3 gap-3">
-                        <div className="space-y-1 col-span-1">
-                          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
-                            Mês
-                          </label>
-                          <select
-                            required
-                            value={cardExpiryMonth}
-                            onChange={(e) => setCardExpiryMonth(e.target.value)}
-                            className="w-full px-3 py-2.5 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all bg-white outline-none"
-                          >
-                            <option value="">Mês</option>
-                            {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map((m) => (
-                              <option key={m} value={m}>{m}</option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <div className="space-y-1 col-span-1">
-                          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
-                            Ano
-                          </label>
-                          <select
-                            required
-                            value={cardExpiryYear}
-                            onChange={(e) => setCardExpiryYear(e.target.value)}
-                            className="w-full px-3 py-2.5 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all bg-white outline-none"
-                          >
-                            <option value="">Ano</option>
-                            {Array.from({ length: 15 }, (_, i) => String(new Date().getFullYear() + i)).map((y) => (
-                              <option key={y} value={y}>{y}</option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <div className="space-y-1 col-span-1">
-                          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
-                            CVV
-                          </label>
-                          <input
-                            type="text"
-                            required
-                            value={cardCvv}
-                            onChange={handleCardCvvChange}
-                            placeholder="123"
-                            maxLength={4}
-                            className="w-full px-3 py-2.5 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all outline-none"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Parcelas */}
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
-                          Opções de Parcelamento
-                        </label>
-                        <select
-                          required
-                          value={cardInstallments}
-                          onChange={(e) => setCardInstallments(e.target.value)}
-                          className="w-full px-3 py-2.5 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all bg-white outline-none"
-                        >
-                          {getInstallmentOptions().map((opt) => (
-                            <option key={opt.value} value={opt.value}>
-                              {opt.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
+                  <div className="space-y-4 pt-2">
+                    <div className="p-4 bg-sky-50 rounded-2xl border border-sky-100 text-xs text-slate-700 leading-relaxed space-y-1">
+                      <p className="font-bold text-sky-800 flex items-center mb-1">
+                        💳 Pagamento via Cartão de Crédito (Cakto)
+                      </p>
+                      <p>
+                        Para concluir o pagamento via Cartão de Crédito de forma segura, clique no botão abaixo. Você será redirecionado para a página de checkout seguro da Cakto, com opção de parcelamento em até 12x.
+                      </p>
                     </div>
 
-
-
-                    {/* Botão de Finalização */}
-                    <div className="pt-2">
-                      <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full py-4 bg-accent-blue hover:bg-accent-blue-dark text-white font-bold rounded-2xl text-sm transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed border-none outline-none"
-                      >
-                        {loading ? (
-                          <>
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            <span>Processando Pagamento...</span>
-                          </>
-                        ) : (
-                          <>
-                            <Lock className="w-4 h-4" />
-                            <span>Pagar com Segurança</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </form>
+                    <a
+                      href={activeProduct?.checkoutUrl || 'https://pay.cakto.com.br'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-4 bg-accent-blue hover:bg-accent-blue-dark text-white font-bold rounded-2xl text-sm transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer text-center hover:no-underline border-none outline-none"
+                    >
+                      <Lock className="w-4 h-4" />
+                      <span>Ir para Checkout de Cartão (Cakto)</span>
+                    </a>
+                  </div>
                 )}
               </div>
             </div>

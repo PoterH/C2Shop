@@ -29,6 +29,7 @@ export const DOWNLOAD_LINKS: Record<string, string> = {
   'parallels-desktop-26': 'https://drive.google.com/drive/folders/1wkOyx2Vjh7y-IPWCiW-u5JK0XcYRp6ld?usp=drive_link',
   'camtasia-2026': 'https://drive.google.com/drive/folders/1RodJmSK5LFS3mquN4bs0bWYzidQPb2vF?usp=drive_link',
   'pdfelement-12': 'https://drive.google.com/drive/folders/13nKtmJD-DSppbgEVVzpgW4hqx2yUALvw?usp=drive_link',
+  'wondershare-recoverit-13': 'https://drive.google.com/drive/folders/1TyHzITakSn9JiRIrxMtjXClwMzC4z4TP?usp=drive_link',
 };
 
 export function getDownloadLink(slug: string): string {
