@@ -18,10 +18,9 @@ export const ProductDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const { addToCart, clearCart, setIsCartOpen } = useCart();
+  const { addToCart } = useCart();
   const location = useLocation();
   const hasProcessedCheckoutRef = useRef(false);
-  const [autodeskPlan, setAutodeskPlan] = useState<'monthly_recurrent' | 'monthly_unique' | '12_months' | '24_months' | '36_months'>('monthly_recurrent');
 
   useEffect(() => {
     hasProcessedCheckoutRef.current = false;
@@ -46,15 +45,12 @@ export const ProductDetail: React.FC = () => {
   useEffect(() => {
     if (searchParams.get('checkout') === 'true' && !product?.unavailable && product && !hasProcessedCheckoutRef.current) {
       hasProcessedCheckoutRef.current = true;
-      clearCart();
       addToCart(product);
-      setIsCartOpen(false);
-      setIsCheckoutOpen(true);
       const newParams = new URLSearchParams(searchParams);
       newParams.delete('checkout');
       setSearchParams(newParams, { replace: true });
     }
-  }, [searchParams, setSearchParams, product, clearCart, addToCart, setIsCartOpen]);
+  }, [searchParams, setSearchParams, product, addToCart]);
 
   const renderStars = (rating: number) => {
     return (
@@ -124,11 +120,7 @@ export const ProductDetail: React.FC = () => {
     currency: 'BRL',
   });
 
-  const savings = product.price - (product.recurrencePrice || 0);
-  const formattedSavings = savings.toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  });
+
 
   const whatsappNumber = '5581997349300'; // Substitua pelo seu número real do WhatsApp
   const whatsappMessage = encodeURIComponent(`Olá, tenho interesse no software ${product.name} e gostaria de tirar uma dúvida sobre a compatibilidade ou instalação.`);
@@ -201,219 +193,27 @@ export const ProductDetail: React.FC = () => {
           </div>
         </div>
 
-        {/* Autodesk Plan Selector */}
-        {product.id === 'autodesk_all_apps' && (
-          <div className="space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Escolha o plano Autodesk:</label>
-            <div className="grid grid-cols-1 gap-2">
-              <button
-                type="button"
-                onClick={() => setAutodeskPlan('monthly_recurrent')}
-                className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all relative cursor-pointer ${
-                  autodeskPlan === 'monthly_recurrent'
-                    ? 'border-emerald-500 bg-emerald-50/50 text-emerald-950 font-bold'
-                    : 'border-slate-200 hover:border-slate-350 bg-white text-slate-700'
-                }`}
-              >
-                <div className="flex flex-col">
-                  <span className="text-[11px]">Mensal Recorrente (Pix)</span>
-                  <span className="text-[9px] text-emerald-600 font-semibold">Destaque Pix</span>
-                </div>
-                <span className="text-[12px]">R$ 69,90<span className="text-[9px] font-normal text-slate-500">/mês</span></span>
-                {autodeskPlan === 'monthly_recurrent' && (
-                  <span className="absolute -top-2 left-3 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider">RECOMENDADO</span>
-                )}
-              </button>
 
-              <button
-                type="button"
-                onClick={() => setAutodeskPlan('monthly_unique')}
-                className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                  autodeskPlan === 'monthly_unique'
-                    ? 'border-accent-blue bg-sky-50/50 text-sky-950 font-bold'
-                    : 'border-slate-200 hover:border-slate-350 bg-white text-slate-700'
-                }`}
-              >
-                <span className="text-[11px]">Mensal Compra Única</span>
-                <span className="text-[12px]">R$ 89,90<span className="text-[9px] font-normal text-slate-500">/30d</span></span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setAutodeskPlan('12_months')}
-                className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                  autodeskPlan === '12_months'
-                    ? 'border-accent-blue bg-sky-50/50 text-sky-950 font-bold'
-                    : 'border-slate-200 hover:border-slate-350 bg-white text-slate-700'
-                }`}
-              >
-                <span className="text-[11px]">Plano 12 Meses (1 Ano)</span>
-                <span className="text-[12px]">R$ 397,90</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setAutodeskPlan('24_months')}
-                className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                  autodeskPlan === '24_months'
-                    ? 'border-accent-blue bg-sky-50/50 text-sky-950 font-bold'
-                    : 'border-slate-200 hover:border-slate-350 bg-white text-slate-700'
-                }`}
-              >
-                <span className="text-[11px]">Plano 24 Meses (2 Anos)</span>
-                <span className="text-[12px]">R$ 597,90</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setAutodeskPlan('36_months')}
-                className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                  autodeskPlan === '36_months'
-                    ? 'border-accent-blue bg-sky-50/50 text-sky-950 font-bold'
-                    : 'border-slate-200 hover:border-slate-350 bg-white text-slate-700'
-                }`}
-              >
-                <span className="text-[11px]">Plano 36 Meses (3 Anos)</span>
-                <span className="text-[12px]">R$ 737,90</span>
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* Price Details */}
         <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col gap-2.5">
           {product.isSubscription ? (
-            product.id === 'autodesk_all_apps' ? (
-              <>
-                {autodeskPlan === 'monthly_recurrent' && (
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center w-full">
-                      <div className="space-y-0.5">
-                        <p className="text-[11px] text-slate-500 font-medium">Compra Única:</p>
-                        <p className="text-sm font-display font-bold text-slate-700">
-                          R$ 89,90 <span className="text-[10px] text-slate-500 font-normal">/30 dias</span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="border-t border-slate-200/60 my-0.5"></div>
-                    <div className="flex justify-between items-center w-full">
-                      <div className="space-y-0.5">
-                        <p className="text-[11px] text-emerald-600 font-bold flex items-center">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 animate-pulse"></span>
-                          Assinatura Recorrente:
-                        </p>
-                        <p className="text-2xl font-display font-black text-slate-950">
-                          <span className="text-emerald-600">R$ 69,90</span> <span className="text-xs text-slate-500 font-normal">/mês</span>
-                        </p>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <span className="bg-emerald-500/10 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-lg border border-emerald-500/10">
-                          Poupa R$ 20,00
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {autodeskPlan === 'monthly_unique' && (
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center w-full">
-                      <div className="space-y-0.5">
-                        <p className="text-[11px] text-accent-blue font-bold">Compra Única:</p>
-                        <p className="text-2xl font-display font-black text-slate-950">
-                          <span className="text-accent-blue">R$ 89,90</span> <span className="text-xs text-slate-500 font-normal">/30 dias</span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="border-t border-slate-200/60 my-0.5"></div>
-                    <div className="flex justify-between items-center w-full">
-                      <div className="space-y-0.5">
-                        <p className="text-[11px] text-slate-500 font-medium">Assinatura Recorrente:</p>
-                        <p className="text-sm font-display font-bold text-slate-700">
-                          R$ 69,90 <span className="text-[10px] text-slate-500 font-normal">/mês</span>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {autodeskPlan === '12_months' && (
-                  <div className="flex justify-between items-center w-full">
-                    <div className="space-y-0.5">
-                      <p className="text-[11px] text-slate-500 font-medium">Plano 12 Meses (1 Ano):</p>
-                      <p className="text-2xl font-display font-black text-slate-950">
-                        R$ 397,90 <span className="text-xs text-slate-500 font-normal">Pagamento Único</span>
-                      </p>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <span className="bg-sky-500/10 text-sky-700 text-[10px] font-bold px-2 py-1 rounded-lg border border-sky-500/10">
-                        Equivale a R$ 33,15/mês
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {autodeskPlan === '24_months' && (
-                  <div className="flex justify-between items-center w-full">
-                    <div className="space-y-0.5">
-                      <p className="text-[11px] text-slate-500 font-medium">Plano 24 Meses (2 Anos):</p>
-                      <p className="text-2xl font-display font-black text-slate-950">
-                        R$ 597,90 <span className="text-xs text-slate-500 font-normal">Pagamento Único</span>
-                      </p>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <span className="bg-sky-500/10 text-sky-700 text-[10px] font-bold px-2 py-1 rounded-lg border border-sky-500/10">
-                        Equivale a R$ 24,91/mês
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {autodeskPlan === '36_months' && (
-                  <div className="flex justify-between items-center w-full">
-                    <div className="space-y-0.5">
-                      <p className="text-[11px] text-slate-500 font-medium">Plano 36 Meses (3 Anos):</p>
-                      <p className="text-2xl font-display font-black text-slate-950">
-                        R$ 737,90 <span className="text-xs text-slate-500 font-normal">Pagamento Único</span>
-                      </p>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <span className="bg-sky-500/10 text-sky-700 text-[10px] font-bold px-2 py-1 rounded-lg border border-sky-500/10">
-                        Equivale a R$ 20,49/mês
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                <div className="flex justify-between items-center w-full">
-                  <div className="space-y-0.5">
-                    <p className="text-[11px] text-slate-500 font-medium">Compra Única:</p>
-                    <p className="text-lg font-display font-extrabold text-slate-800">
-                      <span className="text-accent-blue">{formattedPrice}</span> <span className="text-[10px] text-slate-500 font-normal">/30 dias</span>
-                    </p>
-                  </div>
-                </div>
-                <div className="border-t border-slate-200/60 my-0.5"></div>
-                <div className="flex justify-between items-center w-full">
-                  <div className="space-y-0.5">
-                    <p className="text-[11px] text-emerald-600 font-bold flex items-center">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 animate-pulse"></span>
-                      Assinatura Recorrente:
-                    </p>
-                    <p className="text-2xl font-display font-black text-slate-950">
-                      <span className="text-emerald-600">{formattedRecurrencePrice}</span> <span className="text-xs text-slate-500 font-normal">/mês</span>
-                    </p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <span className="bg-emerald-500/10 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-lg border border-emerald-500/10">
-                      Poupa {formattedSavings}
-                    </span>
-                  </div>
-                </div>
-              </>
-            )
+            <div className="flex justify-between items-center w-full">
+              <div className="space-y-0.5">
+                <p className="text-[11px] text-emerald-600 font-bold flex items-center">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 animate-pulse"></span>
+                  Assinatura Recorrente:
+                </p>
+                <p className="text-2xl font-display font-black text-slate-950">
+                  <span className="text-emerald-600">{formattedRecurrencePrice || formattedPrice}</span> <span className="text-xs text-slate-500 font-normal">/mês</span>
+                </p>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="bg-emerald-500/10 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-lg border border-emerald-500/10">
+                  Cartão de Crédito
+                </span>
+              </div>
+            </div>
           ) : (
             <div className="flex justify-between items-center w-full">
               <div className="space-y-1">
@@ -467,24 +267,7 @@ export const ProductDetail: React.FC = () => {
             <div className="w-full">
               <button
                 onClick={() => {
-                  if (product.id === 'autodesk_all_apps') {
-                    if (autodeskPlan === '12_months') {
-                      window.open('https://pay.cakto.com.br/sweaaho_448678', '_blank');
-                      return;
-                    }
-                    if (autodeskPlan === '24_months') {
-                      window.open('https://pay.cakto.com.br/3ci8dh3', '_blank');
-                      return;
-                    }
-                    if (autodeskPlan === '36_months') {
-                      window.open('https://pay.cakto.com.br/sjhwfte', '_blank');
-                      return;
-                    }
-                  }
-                  clearCart();
                   addToCart(product);
-                  setIsCartOpen(false);
-                  setIsCheckoutOpen(true);
                 }}
                 className="w-full flex items-center justify-center py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-center shadow-lg transition-all cursor-pointer border-none font-display text-base"
                 id={`detail-buy-now-${product.id}`}
@@ -886,7 +669,6 @@ export const ProductDetail: React.FC = () => {
         product={product}
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
-        initialSubOption={product?.id === 'autodesk_all_apps' ? (autodeskPlan === 'monthly_recurrent' ? 'recurrent' : 'avulso') : undefined}
       />
     </div>
   );

@@ -24,6 +24,10 @@ export const CartDrawer: React.FC = () => {
   const [couponFeedback, setCouponFeedback] = useState<{ success: boolean; message: string } | null>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
+  const hasSubscription = cartItems.some(item => item.isSubscription);
+  const hasLifetime = cartItems.some(item => !item.isSubscription);
+  const isMixedCart = hasSubscription && hasLifetime;
+
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
     if (!couponInput.trim()) return;
@@ -128,7 +132,7 @@ export const CartDrawer: React.FC = () => {
                       {item.name}
                     </h4>
                     <span className="text-[10px] text-slate-450 text-slate-400">
-                      Licença vitalícia • {item.compatibility}
+                      {item.isSubscription ? 'Assinatura Mensal' : 'Licença vitalícia'} • {item.compatibility}
                     </span>
                     <div className="font-display font-black text-slate-900 text-sm mt-1">
                       {item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
@@ -152,6 +156,22 @@ export const CartDrawer: React.FC = () => {
         {/* Summary Footer */}
         {cartItems.length > 0 && (
           <div className="border-t border-slate-100 p-6 bg-slate-50/50 space-y-5">
+            {/* Mixed Cart Warning */}
+            {isMixedCart && (
+              <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 text-[11px] text-amber-800 leading-relaxed flex items-start gap-2.5">
+                <AlertCircle className="w-5 h-5 text-amber-550 shrink-0 mt-0.5" />
+                <div className="space-y-1">
+                  <p className="font-bold text-amber-900">Carrinho Misto Detectado</p>
+                  <p>
+                    Por motivos de cobrança recorrente no cartão, você não pode misturar assinaturas e licenças vitalícias no mesmo pedido.
+                  </p>
+                  <p className="font-semibold text-amber-950">
+                    Remova um dos tipos para continuar.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Coupon Input Form */}
             {!couponCode ? (
               <div className="space-y-1.5">
@@ -234,7 +254,8 @@ export const CartDrawer: React.FC = () => {
             <div className="space-y-3 pt-1">
               <button
                 onClick={handleCheckout}
-                className="w-full py-4 bg-accent-blue hover:bg-accent-blue-dark text-white font-bold rounded-2xl text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2 cursor-pointer border-none"
+                disabled={isMixedCart}
+                className="w-full py-4 bg-accent-blue hover:bg-accent-blue-dark text-white font-bold rounded-2xl text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2 cursor-pointer border-none disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span>Finalizar Compra</span>
               </button>

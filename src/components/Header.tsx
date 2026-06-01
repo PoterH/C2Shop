@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, MessageCircle, ArrowRight } from 'lucide-react';
+import { Menu, X, MessageCircle, ArrowRight, ShoppingBag } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 export const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const { cartItems, setIsCartOpen } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -106,6 +108,24 @@ export const Header: React.FC = () => {
               </a>
             )}
             
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className={`relative p-2 rounded-xl transition-all duration-200 ${
+                isHeaderDark
+                  ? 'text-slate-300 hover:text-white hover:bg-white/10'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+              aria-label="Carrinho de compras"
+            >
+              <ShoppingBag className="w-5 h-5" />
+              {cartItems.length > 0 && (
+                <span className={`absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent-blue text-[10px] font-bold text-white ring-2 ${
+                  isHeaderDark ? 'ring-[#020617]' : 'ring-white'
+                }`}>
+                  {cartItems.length}
+                </span>
+              )}
+            </button>
 
             <Link
               to="/catalogo"
@@ -132,6 +152,24 @@ export const Header: React.FC = () => {
               </a>
             )}
 
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className={`relative p-2 rounded-xl transition-all duration-200 ${
+                isHeaderDark
+                  ? 'text-slate-300 hover:text-white hover:bg-white/10'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+              aria-label="Carrinho de compras"
+            >
+              <ShoppingBag className="w-6 h-6" />
+              {cartItems.length > 0 && (
+                <span className={`absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent-blue text-[10px] font-bold text-white ring-2 ${
+                  isHeaderDark ? 'ring-[#020617]' : 'ring-white'
+                }`}>
+                  {cartItems.length}
+                </span>
+              )}
+            </button>
 
             <button
               onClick={() => setIsOpen(!isOpen)}
