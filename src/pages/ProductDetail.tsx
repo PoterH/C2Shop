@@ -18,9 +18,14 @@ export const ProductDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<'recurrent' | 'avulso'>('recurrent');
   const { addToCart } = useCart();
   const location = useLocation();
   const hasProcessedCheckoutRef = useRef(false);
+
+  useEffect(() => {
+    setSelectedPlan('recurrent');
+  }, [slug]);
 
   useEffect(() => {
     hasProcessedCheckoutRef.current = false;
@@ -196,22 +201,56 @@ export const ProductDetail: React.FC = () => {
 
 
         {/* Price Details */}
-        <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col gap-2.5">
+        <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col gap-3">
           {product.isSubscription ? (
-            <div className="flex justify-between items-center w-full">
-              <div className="space-y-0.5">
-                <p className="text-[11px] text-emerald-600 font-bold flex items-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 animate-pulse"></span>
-                  Assinatura Recorrente:
-                </p>
-                <p className="text-2xl font-display font-black text-slate-950">
-                  <span className="text-emerald-600">{formattedRecurrencePrice || formattedPrice}</span> <span className="text-xs text-slate-500 font-normal">/mês</span>
-                </p>
-              </div>
-              <div className="text-right shrink-0">
-                <span className="bg-emerald-500/10 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-lg border border-emerald-500/10">
-                  Cartão de Crédito
-                </span>
+            <div className="space-y-3 w-full text-left">
+              <span className="text-[10px] font-bold text-slate-450 text-slate-400 uppercase tracking-widest block font-sans">
+                Escolha o seu plano
+              </span>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Option 1: Recorrente (Destaque) */}
+                <button
+                  type="button"
+                  onClick={() => setSelectedPlan('recurrent')}
+                  className={`relative flex flex-col justify-between p-3.5 rounded-2xl border-2 text-left cursor-pointer transition-all ${
+                    selectedPlan === 'recurrent'
+                      ? 'border-emerald-500 bg-emerald-500/5 shadow-sm'
+                      : 'border-slate-200 bg-white hover:bg-slate-50/50'
+                  }`}
+                >
+                  <div className="flex justify-between items-start w-full">
+                    <span className="text-[10px] font-bold text-slate-700">Assinatura Mensal</span>
+                    <span className="bg-emerald-500 text-white text-[8px] font-extrabold px-1 rounded uppercase tracking-wider">
+                      Destaque
+                    </span>
+                  </div>
+                  <p className="text-base font-display font-black text-slate-950 mt-1.5">
+                    {formattedRecurrencePrice} <span className="text-[10px] text-slate-400 font-normal">/mês</span>
+                  </p>
+                  <p className="text-[9px] text-slate-400 mt-1 leading-tight font-medium">
+                    Apenas no Cartão
+                  </p>
+                </button>
+
+                {/* Option 2: Pagamento Único */}
+                <button
+                  type="button"
+                  onClick={() => setSelectedPlan('avulso')}
+                  className={`flex flex-col justify-between p-3.5 rounded-2xl border-2 text-left cursor-pointer transition-all ${
+                    selectedPlan === 'avulso'
+                      ? 'border-accent-blue bg-accent-blue/5 shadow-sm'
+                      : 'border-slate-200 bg-white hover:bg-slate-50/50'
+                  }`}
+                >
+                  <span className="text-[10px] font-bold text-slate-700">Pagamento Único</span>
+                  <p className="text-base font-display font-black text-slate-950 mt-1.5">
+                    {formattedPrice}
+                  </p>
+                  <p className="text-[9px] text-slate-400 mt-1 leading-tight font-medium">
+                    Pix, Cartão ou Boleto
+                  </p>
+                </button>
               </div>
             </div>
           ) : (
@@ -267,7 +306,7 @@ export const ProductDetail: React.FC = () => {
             <div className="w-full">
               <button
                 onClick={() => {
-                  addToCart(product);
+                  addToCart(product, selectedPlan);
                 }}
                 className="w-full flex items-center justify-center py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-center shadow-lg transition-all cursor-pointer border-none font-display text-base"
                 id={`detail-buy-now-${product.id}`}
@@ -295,8 +334,18 @@ export const ProductDetail: React.FC = () => {
             Checkout Seguro e Criptografado
           </p>
           <div className="flex items-center justify-center gap-1.5 opacity-60">
-            <span className="px-1 border border-slate-200 rounded">PIX</span>
-            {!product.isSubscription && <span className="px-1 border border-slate-200 rounded">CARTÃO</span>}
+            {product.isSubscription ? (
+              <>
+                <span className="px-1 border border-slate-200 rounded">CARTÃO</span>
+                <span className="px-1 border border-slate-200 rounded">BOLETO</span>
+              </>
+            ) : (
+              <>
+                <span className="px-1 border border-slate-200 rounded">PIX</span>
+                <span className="px-1 border border-slate-200 rounded">CARTÃO</span>
+                <span className="px-1 border border-slate-200 rounded">BOLETO</span>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -669,6 +718,7 @@ export const ProductDetail: React.FC = () => {
         product={product}
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
+        initialSubOption={selectedPlan}
       />
     </div>
   );

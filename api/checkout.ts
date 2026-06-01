@@ -316,12 +316,17 @@ export default async function handler(req: any, res: any) {
         const client = new MercadoPagoConfig({ accessToken: mpAccessToken });
         const payment = new Payment(client);
 
+        let allowedInstallments = Number(installments) || 1;
+        if (cardPrice < 90 && allowedInstallments > 3) {
+          allowedInstallments = 3;
+        }
+
         const paymentBody = {
           transaction_amount: Number(cardPrice.toFixed(2)),
           token: token,
           description: 'Servicos de Tecnologia C2Tech', // Generic description to prevent account suspension
           payment_method_id: methodId,
-          installments: Number(installments) || 1,
+          installments: allowedInstallments,
           payer: {
             email: buyer.email,
             first_name: buyer.name.trim().split(' ')[0],

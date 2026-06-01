@@ -25,6 +25,7 @@ export interface Product {
   isSubscription?: boolean;
   recurrencePrice?: number;
   billingPeriod?: 'mensal' | 'anual';
+  selectedSubOption?: 'recurrent' | 'avulso';
 }
 
 

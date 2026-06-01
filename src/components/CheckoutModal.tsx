@@ -83,10 +83,15 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   useEffect(() => {
     if (isOpen) {
       if (activeProduct?.isSubscription) {
-        setSubOption('recurrent');
-        setPaymentMethod('card');
+        const initial = activeProduct.selectedSubOption || initialSubOption || 'recurrent';
+        setSubOption(initial);
+        if (initial === 'recurrent') {
+          setPaymentMethod('card');
+        } else {
+          setPaymentMethod('pix');
+        }
       } else {
-        setSubOption(initialSubOption || 'recurrent');
+        setSubOption('avulso');
         setPaymentMethod('pix');
       }
     }
@@ -587,8 +592,17 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   const pixDiscountPrice = getPixPrice();
   const formattedPixPrice = pixDiscountPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
+  // Auto-adjust installments if it exceeds the max allowed for the current price
+  useEffect(() => {
+    const maxAllowed = checkoutTotal < 90 ? 3 : 12;
+    if (parseInt(installments, 10) > maxAllowed) {
+      setInstallments(String(maxAllowed));
+    }
+  }, [checkoutTotal, installments]);
+
   // Installment Options Calculation with 2.99% monthly interest rate
-  const installmentOptions = Array.from({ length: 12 }, (_, i) => {
+  const maxInstallments = checkoutTotal < 90 ? 3 : 12;
+  const installmentOptions = Array.from({ length: maxInstallments }, (_, i) => {
     const num = i + 1;
     if (num === 1) {
       const value = checkoutTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -676,11 +690,49 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                     <div className="flex justify-between items-center text-xs">
                       <span className="font-semibold text-slate-700">{activeProduct.name}</span>
                       <span className="font-bold text-slate-900">
-                        {(activeProduct.recurrencePrice || activeProduct.price)?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                        {checkoutTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                        {subOption === 'recurrent' && <span className="text-[10px] text-slate-500 font-normal"> /mês</span>}
                       </span>
                     </div>
+                    
+                    {/* Compact toggle buttons for plan */}
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSubOption('recurrent');
+                          setPaymentMethod('card');
+                        }}
+                        className={`py-2 px-3 text-center rounded-xl border text-[10px] font-bold transition-all ${
+                          subOption === 'recurrent'
+                            ? 'border-emerald-500 bg-emerald-500/10 text-emerald-800'
+                            : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                        }`}
+                      >
+                        Assinatura Mensal ({activeProduct.recurrencePrice?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })})
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSubOption('avulso');
+                          setPaymentMethod('pix');
+                        }}
+                        className={`py-2 px-3 text-center rounded-xl border text-[10px] font-bold transition-all ${
+                          subOption === 'avulso'
+                            ? 'border-accent-blue bg-accent-blue/10 text-accent-blue-dark'
+                            : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                        }`}
+                      >
+                        Pagamento Único ({activeProduct.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })})
+                      </button>
+                    </div>
+
                     <p className="text-[10px] text-slate-400 leading-relaxed font-medium">
-                      👉 Cobrança recorrente mensal no cartão de crédito via Mercado Pago. Cancele a qualquer momento.
+                      {subOption === 'recurrent' ? (
+                        <span>👉 Cobrança recorrente mensal no cartão de crédito via Mercado Pago. Cancele a qualquer momento.</span>
+                      ) : (
+                        <span>👉 Licença com pagamento único. Sem mensalidade ou recorrência futura.</span>
+                      )}
                     </p>
                   </div>
                 ) : (
@@ -801,70 +853,70 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                   2. Escolha como pagar
                 </h4>
                 
-                {/* Method selector cards */}
-                {!activeProduct?.isSubscription ? (
-                  <div className="grid grid-cols-3 gap-3 pb-2">
-                    {/* Pix Card */}
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod('pix')}
-                      className={`relative flex flex-col justify-between items-start p-4 h-24 text-left w-full cursor-pointer transition-all rounded-2xl border-2 ${
-                        paymentMethod === 'pix'
-                          ? 'border-emerald-500 bg-slate-50/50 shadow-sm'
-                          : 'border-slate-200/80 bg-slate-50/20 hover:bg-slate-50'
-                      }`}
-                    >
-                      {/* Pix Icon */}
-                      <svg className={`w-5 h-5 ${paymentMethod === 'pix' ? 'text-emerald-500' : 'text-slate-400'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 2L2 12l10 10 10-10L12 2z" />
-                        <path d="M12 7l-5 5 5 5 5-5-5-5z" fill="currentColor" />
-                      </svg>
+                 {/* Method selector cards */}
+                 {(!activeProduct?.isSubscription || subOption === 'avulso') ? (
+                   <div className="grid grid-cols-3 gap-3 pb-2">
+                     {/* Pix Card */}
+                     <button
+                       type="button"
+                       onClick={() => setPaymentMethod('pix')}
+                       className={`relative flex flex-col justify-between items-start p-4 h-24 text-left w-full cursor-pointer transition-all rounded-2xl border-2 ${
+                         paymentMethod === 'pix'
+                           ? 'border-emerald-500 bg-slate-50/50 shadow-sm'
+                           : 'border-slate-200/80 bg-slate-50/20 hover:bg-slate-50'
+                       }`}
+                     >
+                       {/* Pix Icon */}
+                       <svg className={`w-5 h-5 ${paymentMethod === 'pix' ? 'text-emerald-500' : 'text-slate-400'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                         <path d="M12 2L2 12l10 10 10-10L12 2z" />
+                         <path d="M12 7l-5 5 5 5 5-5-5-5z" fill="currentColor" />
+                       </svg>
 
-                      <span className="text-xs font-bold text-slate-800">Pix</span>
+                       <span className="text-xs font-bold text-slate-800">Pix</span>
 
-                      {/* 2% OFF Badge */}
-                      <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm z-10 whitespace-nowrap">
-                        2% OFF
-                      </div>
-                    </button>
+                       {/* 2% OFF Badge */}
+                       <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm z-10 whitespace-nowrap">
+                         2% OFF
+                       </div>
+                     </button>
 
-                    {/* Credit Card Card */}
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod('card')}
-                      className={`flex flex-col justify-between items-start p-4 h-24 text-left w-full cursor-pointer transition-all rounded-2xl border-2 ${
-                        paymentMethod === 'card'
-                          ? 'border-sky-500 bg-slate-50/50 shadow-sm'
-                          : 'border-slate-200/80 bg-slate-50/20 hover:bg-slate-50'
-                      }`}
-                    >
-                      {/* Credit Card Icon */}
-                      <CreditCard className={`w-5 h-5 ${paymentMethod === 'card' ? 'text-sky-500' : 'text-slate-400'}`} />
+                     {/* Credit Card Card */}
+                     <button
+                       type="button"
+                       onClick={() => setPaymentMethod('card')}
+                       className={`flex flex-col justify-between items-start p-4 h-24 text-left w-full cursor-pointer transition-all rounded-2xl border-2 ${
+                         paymentMethod === 'card'
+                           ? 'border-sky-500 bg-slate-50/50 shadow-sm'
+                           : 'border-slate-200/80 bg-slate-50/20 hover:bg-slate-50'
+                       }`}
+                     >
+                       {/* Credit Card Icon */}
+                       <CreditCard className={`w-5 h-5 ${paymentMethod === 'card' ? 'text-sky-500' : 'text-slate-400'}`} />
 
-                      <span className="text-xs font-bold text-slate-800">Cartão</span>
-                    </button>
+                       <span className="text-xs font-bold text-slate-800">Cartão</span>
+                     </button>
 
-                    {/* Boleto Card */}
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod('boleto')}
-                      className={`flex flex-col justify-between items-start p-4 h-24 text-left w-full cursor-pointer transition-all rounded-2xl border-2 ${
-                        paymentMethod === 'boleto'
-                          ? 'border-amber-500 bg-slate-50/50 shadow-sm'
-                          : 'border-slate-200/80 bg-slate-50/20 hover:bg-slate-50'
-                      }`}
-                    >
-                      {/* Boleto Icon (FileText) */}
-                      <FileText className={`w-5 h-5 ${paymentMethod === 'boleto' ? 'text-amber-500' : 'text-slate-400'}`} />
+                     {/* Boleto Card */}
+                     <button
+                       type="button"
+                       onClick={() => setPaymentMethod('boleto')}
+                       className={`flex flex-col justify-between items-start p-4 h-24 text-left w-full cursor-pointer transition-all rounded-2xl border-2 ${
+                         paymentMethod === 'boleto'
+                           ? 'border-amber-500 bg-slate-50/50 shadow-sm'
+                           : 'border-slate-200/80 bg-slate-50/20 hover:bg-slate-50'
+                       }`}
+                     >
+                       {/* Boleto Icon (FileText) */}
+                       <FileText className={`w-5 h-5 ${paymentMethod === 'boleto' ? 'text-amber-500' : 'text-slate-400'}`} />
 
-                      <span className="text-xs font-bold text-slate-800">Boleto</span>
-                    </button>
-                  </div>
-                ) : (
-                  <div className="p-3.5 bg-sky-500/10 text-sky-800 text-xs font-bold rounded-2xl border border-sky-500/20 text-center flex items-center justify-center gap-1.5">
-                    <span>⚡ Assinatura Recorrente via Cartão de Crédito</span>
-                  </div>
-                )}
+                       <span className="text-xs font-bold text-slate-800">Boleto</span>
+                     </button>
+                   </div>
+                 ) : (
+                   <div className="p-3.5 bg-sky-500/10 text-sky-800 text-xs font-bold rounded-2xl border border-sky-500/20 text-center flex items-center justify-center gap-1.5">
+                     <span>⚡ Assinatura Recorrente via Cartão de Crédito</span>
+                   </div>
+                 )}
  
                 {/* Pix Area */}
                 {paymentMethod === 'pix' && (

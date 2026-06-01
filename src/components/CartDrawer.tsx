@@ -24,8 +24,8 @@ export const CartDrawer: React.FC = () => {
   const [couponFeedback, setCouponFeedback] = useState<{ success: boolean; message: string } | null>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
-  const hasSubscription = cartItems.some(item => item.isSubscription);
-  const hasLifetime = cartItems.some(item => !item.isSubscription);
+  const hasSubscription = cartItems.some(item => item.isSubscription && item.selectedSubOption !== 'avulso');
+  const hasLifetime = cartItems.some(item => !item.isSubscription || item.selectedSubOption === 'avulso');
   const isMixedCart = hasSubscription && hasLifetime;
 
   const handleApplyCoupon = (e: React.FormEvent) => {
@@ -132,10 +132,16 @@ export const CartDrawer: React.FC = () => {
                       {item.name}
                     </h4>
                     <span className="text-[10px] text-slate-450 text-slate-400">
-                      {item.isSubscription ? 'Assinatura Mensal' : 'Licença vitalícia'} • {item.compatibility}
+                      {item.isSubscription 
+                        ? (item.selectedSubOption === 'avulso' ? 'Pagamento Único' : 'Assinatura Mensal')
+                        : 'Licença vitalícia'} • {item.compatibility}
                     </span>
                     <div className="font-display font-black text-slate-900 text-sm mt-1">
-                      {item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                      {item.isSubscription
+                        ? (item.selectedSubOption === 'avulso' 
+                            ? item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                            : (item.recurrencePrice || item.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' /mês')
+                        : item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                     </div>
                   </div>
 
