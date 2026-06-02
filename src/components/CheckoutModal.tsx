@@ -664,9 +664,27 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
           
           {/* Error Banner */}
           {errorMessage && (
-            <div className="p-4 bg-red-50 text-red-800 text-xs font-semibold rounded-2xl border border-red-100 flex items-start space-x-2">
-              <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-              <p>{errorMessage}</p>
+            <div className="p-4 bg-red-50 text-red-800 text-xs font-semibold rounded-2xl border border-red-100 flex flex-col gap-3">
+              <div className="flex items-start space-x-2">
+                <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                <p className="text-left leading-normal">{errorMessage}</p>
+              </div>
+              {/* Fallback option to pay via Cakto */}
+              {activeProduct?.checkoutUrl && (
+                <div className="pt-3 border-t border-red-200/50 mt-1 flex flex-col gap-2 text-left">
+                  <p className="text-slate-650 font-normal leading-relaxed">
+                    Dica: Se o pagamento falhar ou for recusado no cartão, você pode concluir a compra diretamente pelo nosso checkout alternativo da Cakto (que aceita Pix, Cartão e Boleto):
+                  </p>
+                  <a
+                    href={activeProduct.checkoutUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs shadow-md transition-all duration-200 self-start hover:no-underline"
+                  >
+                    Concluir Compra na Cakto
+                  </a>
+                </div>
+              )}
             </div>
           )}
 
