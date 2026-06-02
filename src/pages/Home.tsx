@@ -38,12 +38,15 @@ export const Home: React.FC = () => {
   }, []);
 
   // Filter products for the landing page grid (show max 16 of active category)
-  const filteredProducts = products.filter(p => 
-    !p.isSubscription && (activeCategory === 'Todos' || p.category === activeCategory)
-  ).slice(0, 16);
+  const filteredProducts = products
+    .filter(p => !p.isSubscription && (activeCategory === 'Todos' || p.category === activeCategory))
+    .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
+    .slice(0, 16);
 
   // Filter subscription products for the dedicated carousel
-  const subscriptionProducts = products.filter(p => p.isSubscription);
+  const subscriptionProducts = products
+    .filter(p => p.isSubscription)
+    .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
 
   const [isPlaying, setIsPlaying] = useState(true);
   const carouselRef = useRef<HTMLDivElement>(null);

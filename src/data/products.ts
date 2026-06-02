@@ -744,6 +744,122 @@ export const products: Product[] = [
     }
   },
   {
+    id: 'illustrator_2026',
+    slug: 'adobe-illustrator-2026',
+    name: 'Adobe Illustrator 2026',
+    category: 'Design e Criatividade',
+    compatibility: 'Windows',
+    version: '2026 (64-bits)',
+    description: 'Criação e edição de gráficos vetoriais, logotipos, ilustrações e layouts de página profissionais.',
+    longDescription: 'O Adobe Illustrator 2026 é o software de design de gráficos vetoriais padrão do setor, permitindo criar logotipos, ícones, desenhos, tipografia e ilustrações complexas para qualquer mídia. Esta versão completa e funcional oferece excelente rendimento local com aceleração de hardware.',
+    price: 97.00,
+    originalPrice: 499.00,
+    checkoutUrl: 'https://pay.cakto.com.br/ebyhwkz',
+    imageUrl: '/images/products/adobe-illustrator-2026.png',
+    features: [
+      'Versão completa e funcional',
+      'Acesso vitalício para uso ilimitado',
+      'Instalação assistida inclusa',
+      'Entrega automática no e-mail após o pagamento',
+      'Suporte remoto quando necessário',
+      'Pronto para uso imediato'
+    ],
+    requirements: {
+      os: 'Windows 10 ou 11 (64-bits)',
+      cpu: 'Processador Intel ou AMD de múltiplos núcleos com suporte a 64 bits',
+      ram: '8 GB (Recomendável: 16 GB)',
+      gpu: 'Compatível com OpenGL 4.x / DirectX 12 com no mínimo 2 GB VRAM',
+      storage: '4 GB de espaço livre (SSD recomendado)'
+    }
+  },
+  {
+    id: 'premiere_2026',
+    slug: 'adobe-premiere-pro-2026',
+    name: 'Adobe Premiere Pro 2026',
+    category: 'Design e Criatividade',
+    compatibility: 'Windows',
+    version: '2026 (64-bits)',
+    description: 'Edição de vídeo profissional para cinema, TV e web com linha do tempo intuitiva e IA integrada.',
+    longDescription: 'O Adobe Premiere Pro 2026 é o software líder para edição de vídeo de alto nível em computadores Windows, offering ferramentas criativas robustas, integração com outros apps e uma engine potente de renderização em tempo real local.',
+    price: 97.00,
+    originalPrice: 499.00,
+    checkoutUrl: 'https://pay.cakto.com.br/y98ydjt',
+    imageUrl: '/images/products/adobe-premiere-pro-2026.png',
+    features: [
+      'Versão completa e funcional',
+      'Acesso vitalício para uso ilimitado',
+      'Instalação assistida inclusa',
+      'Entrega automática no e-mail após o pagamento',
+      'Suporte remoto quando necessário',
+      'Pronto para uso imediato'
+    ],
+    requirements: {
+      os: 'Windows 10 ou 11 (64-bits)',
+      cpu: 'Intel Core i5 / AMD Ryzen 5 ou superior (Recomendado: i7/Ryzen 7)',
+      ram: '8 GB (Recomendado: 16 GB ou mais)',
+      gpu: 'Placa dedicada com suporte a DirectX 12 e mínimo de 2 GB VRAM',
+      storage: '8 GB de espaço livre (SSD recomendado)'
+    }
+  },
+  {
+    id: 'after_effects_2026',
+    slug: 'adobe-after-effects-2026',
+    name: 'Adobe After Effects 2026',
+    category: 'Design e Criatividade',
+    compatibility: 'Windows',
+    version: '2026 (64-bits)',
+    description: 'Criação de efeitos visuais cinematográficos, motion graphics e composições digitais.',
+    longDescription: 'O Adobe After Effects 2026 é o padrão da indústria para animações e efeitos visuais digitais. Crie introduções profissionais, transições animadas e composições fotorrealistas de forma estável no Windows.',
+    price: 97.00,
+    originalPrice: 499.00,
+    checkoutUrl: 'https://pay.cakto.com.br/bm6mauf',
+    imageUrl: '/images/products/adobe-after-effects-2026.png',
+    features: [
+      'Versão completa e funcional',
+      'Acesso vitalício para uso ilimitado',
+      'Instalação assistida inclusa',
+      'Entrega automática no e-mail após o pagamento',
+      'Suporte remoto quando necessário',
+      'Pronto para uso imediato'
+    ],
+    requirements: {
+      os: 'Windows 10 ou 11 (64-bits)',
+      cpu: 'Processador Intel ou AMD de múltiplos núcleos com suporte a 64 bits',
+      ram: '16 GB (Recomendado: 32 GB)',
+      gpu: 'Placa de vídeo dedicada de no mínimo 2 GB VRAM com suporte a DirectX 12',
+      storage: '15 GB de espaço livre (SSD recomendado)'
+    }
+  },
+  {
+    id: 'lightroom_classic_2026',
+    slug: 'adobe-lightroom-classic-2026',
+    name: 'Adobe Lightroom Classic 2026',
+    category: 'Design e Criatividade',
+    compatibility: 'Windows',
+    version: '2026 (64-bits)',
+    description: 'Organização, revelação rápida e edição profissional de fotografias e arquivos RAW.',
+    longDescription: 'O Adobe Lightroom Classic 2026 oferece ferramentas avançadas de tratamento e revelação de fotos, com fluxos eficientes locais para organizar e processar arquivos fotográficos pesados com total precisão.',
+    price: 97.00,
+    originalPrice: 499.00,
+    checkoutUrl: 'https://pay.cakto.com.br/je5uy6x',
+    imageUrl: '/images/products/adobe-lightroom-classic-2026.png',
+    features: [
+      'Versão completa e funcional',
+      'Acesso vitalício para uso ilimitado',
+      'Instalação assistida inclusa',
+      'Entrega automática no e-mail após o pagamento',
+      'Suporte remoto quando necessário',
+      'Pronto para uso imediato'
+    ],
+    requirements: {
+      os: 'Windows 10 ou 11 (64-bits)',
+      cpu: 'Intel ou AMD de múltiplos núcleos com suporte a 64 bits (2 GHz ou superior)',
+      ram: '8 GB (Recomendado: 16 GB)',
+      gpu: 'Placa dedicada com suporte a DirectX 12 e mínimo de 2 GB VRAM',
+      storage: '4 GB de espaço livre'
+    }
+  },
+  {
     id: 'proteus_9',
     slug: 'proteus-9-professional',
     name: 'Proteus 9 Professional Design Suite',

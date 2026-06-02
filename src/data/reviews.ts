@@ -744,6 +744,98 @@ export const reviewsData: Record<string, Review[]> = {
       comment: "o programa é muito bom e roda liso. Apenas o download que demorou um pouco por ser pesado."
     }
   ],
+  illustrator_2026: [
+    {
+      author: "Guilherme S.",
+      rating: 5,
+      date: "Ontem",
+      comment: "Illustrator 2026 rodando muito rápido no Windows 11. Criei várias artes vetorizadas pesadas e não travou nenhuma vez."
+    },
+    {
+      author: "Camila Nogueira",
+      rating: 5,
+      date: "4 dias atrás",
+      comment: "Excelente para trabalhar com design gráfico local. A ativação vitalícia sem assinatura mensal economiza muito no ano."
+    },
+    {
+      author: "Fabio D.",
+      rating: 4,
+      date: "1 semana atrás",
+      comment: "Gostei muito da estabilidade dessa versão. Suporte foi super atencioso e me ajudou na instalação rápida."
+    },
+    {
+      author: "Lucas B. Martins",
+      rating: 5,
+      date: "2 semanas atrás",
+      comment: "Excelente alternativa de compra vitalícia local. O Illustrator é super completo e sem surpresas."
+    }
+  ],
+  premiere_2026: [
+    {
+      author: "Matheus V. Costa",
+      rating: 5,
+      date: "Ontem",
+      comment: "Muito bom! Premiere 2026 com excelente desempenho de renderização por GPU. Editei em 4K sem engasgos."
+    },
+    {
+      author: "Larissa Dias",
+      rating: 5,
+      date: "3 dias atrás",
+      comment: "Entrega super rápida do link de download e instruções simples de instalar. Recomendo demais!"
+    },
+    {
+      author: "Tiago Silva",
+      rating: 4,
+      date: "1 semana atrás",
+      comment: "O programa é ótimo e completo. O download é um pouco pesado, mas a velocidade de resposta do editor compensa."
+    },
+    {
+      author: "Gabriel Nogueira",
+      rating: 5,
+      date: "2 semanas atrás",
+      comment: "Melhor editor do mercado. Comprei e já estou editando meus trabalhos locais."
+    },
+    {
+      author: "Mariana Santos",
+      rating: 5,
+      date: "3 semanas atrás",
+      comment: "Muito fácil de ativar seguindo o tutorial enviado. Aprovou na hora por Pix."
+    }
+  ],
+  after_effects_2026: [
+    {
+      author: "Bruno M. Ramos",
+      rating: 5,
+      date: "Ontem",
+      comment: "After Effects 2026 incrível. Renderizei animações complexas e o consumo de RAM está bem otimizado comparado à versão anterior."
+    },
+    {
+      author: "Marina P.",
+      rating: 4,
+      date: "5 dias atrás",
+      comment: "Comprei para o meu estúdio e ativou de primeira. Suporte por WhatsApp tirou minhas dúvidas de compatibilidade rapidamente."
+    }
+  ],
+  lightroom_classic_2026: [
+    {
+      author: "Rodrigo F. Lima",
+      rating: 5,
+      date: "Ontem",
+      comment: "Lightroom Classic 2026 perfeito para importar grandes catálogos de fotos RAW. A revelação de imagens está muito fluida."
+    },
+    {
+      author: "Debora L. Gomes",
+      rating: 5,
+      date: "2 dias atrás",
+      comment: "Sensacional! Edição profissional de fotos sem pagar mensalidades absurdas. O processo de compra foi muito seguro."
+    },
+    {
+      author: "Vinicius Souza",
+      rating: 4,
+      date: "1 semana atrás",
+      comment: "Excelente custo-benefício. Recomendo para fotógrafos profissionais que querem usar a versão local estável."
+    }
+  ],
   proteus_9: [
     {
       author: "Jefferson Santos",
