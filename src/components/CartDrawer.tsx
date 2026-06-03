@@ -129,7 +129,7 @@ export const CartDrawer: React.FC = () => {
                   {/* Product Info */}
                   <div className="flex-grow min-w-0">
                     <h4 className="font-display font-bold text-slate-800 text-sm truncate leading-tight">
-                      {item.name}
+                      {item.name} {item.selectedLicenseOption ? `(${item.selectedLicenseOption.label})` : ''}
                     </h4>
                     <span className="text-[10px] text-slate-450 text-slate-400">
                       {item.isSubscription 
@@ -137,11 +137,11 @@ export const CartDrawer: React.FC = () => {
                         : 'Licença vitalícia'} • {item.compatibility}
                     </span>
                     <div className="font-display font-black text-slate-900 text-sm mt-1">
-                      {item.isSubscription
+                      {item.isSubscription 
                         ? (item.selectedSubOption === 'avulso' 
-                            ? item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-                            : (item.recurrencePrice || item.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' /mês')
-                        : item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                          ? item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                          : (item.recurrencePrice || item.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' /mês')
+                      : (item.selectedLicenseOption?.price || item.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                     </div>
                   </div>
 

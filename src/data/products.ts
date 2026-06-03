@@ -26,6 +26,15 @@ export interface Product {
   recurrencePrice?: number;
   billingPeriod?: 'mensal' | 'anual';
   selectedSubOption?: 'recurrent' | 'avulso';
+  licenseOptions?: LicenseOption[];
+  selectedLicenseOption?: LicenseOption;
+}
+
+export interface LicenseOption {
+  quantity: number;
+  label: string;
+  price: number;
+  checkoutUrl: string;
 }
 
 
@@ -635,6 +644,13 @@ export const products: Product[] = [
     originalPrice: 1599.00,
     checkoutUrl: 'https://pay.cakto.com.br/i5whsbp_853381',
     imageUrl: '/images/products/promob-plus-professional-2025.png',
+    licenseOptions: [
+      { quantity: 1, label: '1 Licença (Padrão)', price: 307.90, checkoutUrl: 'https://pay.cakto.com.br/i5whsbp_853381' },
+      { quantity: 2, label: '2 Licenças', price: 507.90, checkoutUrl: 'https://pay.cakto.com.br/39xpft5' },
+      { quantity: 3, label: '3 Licenças', price: 707.90, checkoutUrl: 'https://pay.cakto.com.br/z5g6gaf' },
+      { quantity: 4, label: '4 Licenças', price: 857.90, checkoutUrl: 'https://pay.cakto.com.br/3eqw8av' },
+      { quantity: 5, label: '5 Licenças', price: 1005.90, checkoutUrl: 'https://pay.cakto.com.br/mkw8dvs' }
+    ],
     notes: 'Nota: A ativação é válida para 1 máquina por vez, sem possibilidade de transferência de licença.',
     features: [
       'Versão completa e funcional com Cut Pro e Real Scene 2.0',

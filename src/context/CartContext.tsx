@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { Product } from '../data/products';
+import type { Product, LicenseOption } from '../data/products';
 
 interface CartContextType {
   cartItems: Product[];
@@ -9,7 +9,7 @@ interface CartContextType {
   discountAmount: number;
   total: number;
   discountPercentage: number;
-  addToCart: (product: Product, subOption?: 'recurrent' | 'avulso') => void;
+  addToCart: (product: Product, subOption?: 'recurrent' | 'avulso', licenseOption?: LicenseOption) => void;
   removeFromCart: (productId: string) => void;
   clearCart: () => void;
   setIsCartOpen: (isOpen: boolean) => void;
@@ -62,7 +62,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [couponCode]);
 
-  const addToCart = (product: Product, subOption?: 'recurrent' | 'avulso') => {
+  const addToCart = (product: Product, subOption?: 'recurrent' | 'avulso', licenseOption?: LicenseOption) => {
     if (product.unavailable) return;
     
     setCartItems((prev) => {
@@ -71,11 +71,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (exists) {
         return prev.map((item) => 
           item.id === product.id 
-            ? { ...item, selectedSubOption: subOption || item.selectedSubOption || 'recurrent' }
+            ? { ...item, selectedSubOption: subOption || item.selectedSubOption || 'recurrent', selectedLicenseOption: licenseOption || item.selectedLicenseOption }
             : item
         );
       }
-      return [...prev, { ...product, selectedSubOption: subOption || 'recurrent' }];
+      return [...prev, { ...product, selectedSubOption: subOption || 'recurrent', selectedLicenseOption: licenseOption || product.licenseOptions?.[0] }];
     });
     
     // Automatically open the cart drawer
@@ -116,6 +116,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (item.isSubscription) {
       const isRecurrent = item.selectedSubOption !== 'avulso';
       return sum + (isRecurrent ? (item.recurrencePrice || item.price) : item.price);
+    }
+    if (item.selectedLicenseOption) {
+      return sum + item.selectedLicenseOption.price;
     }
     return sum + item.price;
   }, 0);

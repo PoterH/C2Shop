@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useParams, Link, useSearchParams, useLocation } from 'react-router-dom';
 import { CheckoutModal } from '../components/CheckoutModal';
 import { useCart } from '../context/CartContext';
-import { getProductBySlug } from '../data/products';
+import { getProductBySlug, type LicenseOption } from '../data/products';
 import { 
   Check, 
   ShieldCheck, 
@@ -19,6 +19,7 @@ export const ProductDetail: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<'recurrent' | 'avulso'>('recurrent');
+  const [selectedLicenseOption, setSelectedLicenseOption] = useState<LicenseOption | undefined>();
   const { addToCart } = useCart();
   const location = useLocation();
   const hasProcessedCheckoutRef = useRef(false);
@@ -35,6 +36,12 @@ export const ProductDetail: React.FC = () => {
     if (!slug) return undefined;
     return getProductBySlug(slug);
   }, [slug]);
+
+  useEffect(() => {
+    if (product?.licenseOptions && product.licenseOptions.length > 0 && !selectedLicenseOption) {
+      setSelectedLicenseOption(product.licenseOptions[0]);
+    }
+  }, [product, selectedLicenseOption]);
 
   const productReviews = useMemo(() => {
     if (!product) return [];
@@ -110,12 +117,14 @@ export const ProductDetail: React.FC = () => {
     );
   }
 
-  const formattedPrice = product.price.toLocaleString('pt-BR', {
+  const displayPrice = selectedLicenseOption ? selectedLicenseOption.price : product.price;
+  const formattedPrice = displayPrice.toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   });
 
-  const formattedOriginalPrice = product.originalPrice.toLocaleString('pt-BR', {
+  const displayOriginalPrice = selectedLicenseOption ? (selectedLicenseOption.quantity * product.originalPrice) : product.originalPrice;
+  const formattedOriginalPrice = displayOriginalPrice.toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   });
@@ -199,6 +208,48 @@ export const ProductDetail: React.FC = () => {
         </div>
 
 
+
+        
+        {product.licenseOptions && product.licenseOptions.length > 0 && (
+          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col gap-3">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block font-sans text-left">
+              Escolha a quantidade de licenças
+            </span>
+            <div className="flex flex-col gap-2">
+              {product.licenseOptions.map((opt) => {
+                const baseOption = product.licenseOptions![0];
+                const basePricePerUnit = baseOption.price / baseOption.quantity;
+                const standardPriceForQuantity = basePricePerUnit * opt.quantity;
+                const savings = standardPriceForQuantity - opt.price;
+                const hasSavings = savings > 0;
+
+                return (
+                  <button
+                    key={opt.quantity}
+                    onClick={() => setSelectedLicenseOption(opt)}
+                    className={`flex items-center justify-between p-3 rounded-xl border-2 text-left cursor-pointer transition-all ${
+                      selectedLicenseOption?.quantity === opt.quantity
+                        ? 'border-emerald-500 bg-emerald-500/5 shadow-sm'
+                        : 'border-slate-200 bg-white hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="flex flex-col items-start">
+                      <span className="text-sm font-bold text-slate-800">{opt.label}</span>
+                      {hasSavings && (
+                        <span className="text-[10px] font-bold text-emerald-600 mt-0.5 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100">
+                          Economize {savings.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-sm font-black text-emerald-600 shrink-0">
+                      {opt.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Price Details */}
         <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col gap-3">
@@ -306,7 +357,7 @@ export const ProductDetail: React.FC = () => {
             <div className="w-full">
               <button
                 onClick={() => {
-                  addToCart(product, selectedPlan);
+                  addToCart(product, selectedPlan, selectedLicenseOption);
                 }}
                 className="w-full flex items-center justify-center py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-center shadow-lg transition-all cursor-pointer border-none font-display text-base"
                 id={`detail-buy-now-${product.id}`}

@@ -523,7 +523,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                             : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
                         }`}
                       >
-                        Pagamento Único ({activeProduct.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })})
+                        Pagamento Único ({(activeProduct.selectedLicenseOption?.price || activeProduct.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })})
                       </button>
                     </div>
 
@@ -539,8 +539,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                   <>
                     {cartItems.map((item) => (
                       <div key={item.id} className="flex justify-between items-center text-xs">
-                        <span className="font-semibold text-slate-700">{item.name}</span>
-                        <span className="font-bold text-slate-900">{item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                        <span className="font-semibold text-slate-700">{item.name} {item.selectedLicenseOption ? `(${item.selectedLicenseOption.label})` : ''}</span>
+                        <span className="font-bold text-slate-900">{(item.selectedLicenseOption?.price || item.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                       </div>
                     ))}
                     {discountAmount > 0 && (
@@ -793,7 +793,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                           Para sua total segurança, o pagamento via cartão de crédito é processado diretamente em nossa plataforma blindada externa.
                         </p>
                         <a
-                          href={activeProduct?.checkoutUrl || '#'}
+                          href={activeProduct?.selectedLicenseOption?.checkoutUrl || activeProduct?.checkoutUrl || '#'}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="w-full py-3.5 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs transition-all shadow-md flex items-center justify-center cursor-pointer hover:no-underline"
