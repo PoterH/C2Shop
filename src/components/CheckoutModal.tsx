@@ -673,7 +673,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
               {activeProduct?.checkoutUrl && (
                 <div className="pt-3 border-t border-red-200/50 mt-1 flex flex-col gap-2 text-left">
                   <p className="text-slate-650 font-normal leading-relaxed">
-                    Dica: Se o pagamento falhar ou for recusado no cartão, você pode concluir a compra diretamente pelo nosso checkout alternativo da Cakto (que aceita Pix, Cartão e Boleto):
+                    Dica: Se o pagamento falhar ou for recusado no cartão, você pode concluir a compra diretamente pelo nosso checkout alternativo da Cakto:
                   </p>
                   <a
                     href={activeProduct.checkoutUrl}
