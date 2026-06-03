@@ -56,29 +56,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   const [phone, setPhone] = useState('');
   const [subOption, setSubOption] = useState<'recurrent' | 'avulso'>('recurrent');
 
-  // Form State: Credit Card Info
-  const [cardNumber, setCardNumber] = useState('');
-  const [cardHolder, setCardHolder] = useState('');
-  const [cardExpiry, setCardExpiry] = useState('');
-  const [cardCvv, setCardCvv] = useState('');
-  const [installments, setInstallments] = useState('1');
-
-  // Masks for credit card fields
-  const formatCardNumber = (val: string) => {
-    const raw = val.replace(/\D/g, '').substring(0, 16);
-    return raw.replace(/(\d{4})(?=\d)/g, '$1 ');
-  };
-
-  const formatCardExpiry = (val: string) => {
-    const raw = val.replace(/\D/g, '').substring(0, 4);
-    if (raw.length <= 2) return raw;
-    return `${raw.substring(0, 2)}/${raw.substring(2, 4)}`;
-  };
-
-  const formatCardCvv = (val: string) => {
-    return val.replace(/\D/g, '').substring(0, 4);
-  };
-
   // Sincroniza a opção inicial quando o modal abre
   useEffect(() => {
     if (isOpen) {
@@ -427,150 +404,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
     }
   };
 
-  // Submit Card Order
-  const handleCardCheckout = async () => {
-    // Basic field validation
-    if (!cardNumber.trim() || cardNumber.replace(/\D/g, '').length < 15) {
-      setErrorMessage('Por favor, informe um número de cartão válido.');
-      return;
-    }
-    if (!cardHolder.trim() || cardHolder.trim().split(' ').length < 2) {
-      setErrorMessage('Por favor, informe o nome completo do titular como impresso no cartão.');
-      return;
-    }
-    if (!cardExpiry.trim() || cardExpiry.replace(/\D/g, '').length < 4) {
-      setErrorMessage('Por favor, informe a validade do cartão (MM/AA).');
-      return;
-    }
-    if (!cardCvv.trim() || cardCvv.replace(/\D/g, '').length < 3) {
-      setErrorMessage('Por favor, informe o código de segurança (CVV).');
-      return;
-    }
-
-    setLoading(true);
-    setErrorMessage(null);
-
-    const mpPublicKey = import.meta.env.VITE_MERCADOPAGO_PUBLIC_KEY || 'mock_payee_code';
-
-    // Get brand or default to visa
-    const cardNumClean = cardNumber.replace(/\D/g, '');
-    let brand = 'visa';
-    if (cardNumClean.startsWith('5')) brand = 'master'; // mapped to master for MP
-    else if (cardNumClean.startsWith('3')) brand = 'amex';
-    else if (cardNumClean.startsWith('6')) brand = 'elo';
-    else if (cardNumClean.startsWith('4')) brand = 'visa';
-
-    try {
-      let paymentToken = 'mock_token_cc_' + Math.random().toString(36).substring(2, 15);
-      
-      // Attempt actual tokenization if mpPublicKey is available and not a mock value
-      if (mpPublicKey && mpPublicKey !== 'mock_payee_code' && !mpPublicKey.startsWith('YOUR_')) {
-        try {
-          const cleanExpiry = cardExpiry.replace(/\D/g, '');
-          const month = cleanExpiry.substring(0, 2);
-          const year = '20' + cleanExpiry.substring(2, 4);
-          const docNumber = cpfCnpj.replace(/\D/g, '');
-          const docType = docNumber.length > 11 ? 'CNPJ' : 'CPF';
-
-          const tokenRes = await fetch(`https://api.mercadopago.com/v1/card_tokens?public_key=${mpPublicKey}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              card_number: cardNumClean,
-              expiration_month: parseInt(month, 10),
-              expiration_year: parseInt(year, 10),
-              security_code: cardCvv,
-              cardholder: {
-                name: cardHolder,
-                identification: {
-                  type: docType,
-                  number: docNumber
-                }
-              }
-            })
-          });
-
-          const tokenResult = await tokenRes.json();
-          if (!tokenRes.ok || !tokenResult.id) {
-            const errMsg = tokenResult.cause?.[0]?.description || tokenResult.message || 'Dados de cartão inválidos.';
-            throw new Error(errMsg);
-          }
-
-          paymentToken = tokenResult.id;
-        } catch (tokErr: any) {
-          console.warn('Falha na tokenização Mercado Pago:', tokErr);
-          throw new Error(tokErr.message || 'Erro ao processar dados do cartão de crédito junto ao Mercado Pago.');
-        }
-      }
-
-      // Collect device profile session id for antifraude bypass
-      const deviceId = (window as any).MP_DEVICE_SESSION_ID || null;
-
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          products: cartItems.map(item => ({ slug: item.slug })),
-          coupon: couponCode || null,
-          subOption: activeProduct?.isSubscription ? subOption : undefined,
-          buyer: {
-            name: fullName,
-            email: email,
-            cpf: cpfCnpj,
-            phone: phone
-          },
-          paymentMethod: 'credit_card',
-          card: {
-            token: paymentToken,
-            brand: brand
-          },
-          paymentToken: paymentToken,
-          paymentMethodId: brand,
-          installments: Number(installments),
-          deviceId: deviceId
-        })
-      });
-
-      const data = await response.json();
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Erro ao processar pagamento com cartão de crédito.');
-      }
-
-      // If approved or authorized
-      if (data.status === 'approved' || data.status === 'authorized') {
-        setSuccessTitle('Pagamento Aprovado!');
-        setSuccessDescription('Seu pagamento via Cartão de Crédito foi processado com sucesso pelo Mercado Pago. Suas credenciais e links de acesso foram enviados para o seu e-mail.');
-        setCurrentStep('success');
-        clearCart();
-        
-        setTimeout(() => {
-          onClose();
-          navigate('/obrigado');
-        }, 3000);
-      } else if (data.status === 'in_process') {
-        setSuccessTitle('Pagamento em Análise!');
-        setSuccessDescription('Seu pagamento está passando por uma revisão de segurança do Mercado Pago. Assim que for aprovado, você receberá a licença em seu e-mail.');
-        setCurrentStep('success');
-        clearCart();
-
-        setTimeout(() => {
-          onClose();
-          navigate('/obrigado');
-        }, 4000);
-      } else {
-        throw new Error(`O pagamento foi retornado com status: ${data.status}. Tente novamente ou use outro cartão.`);
-      }
-
-    } catch (err: any) {
-      console.error(err);
-      setErrorMessage(err.message || 'Erro ao concluir pagamento com cartão. Tente novamente.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   if (!isOpen) return null;
 
   // Pricing math
@@ -592,42 +425,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   const pixDiscountPrice = getPixPrice();
   const formattedPixPrice = pixDiscountPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-  // Auto-adjust installments if it exceeds the max allowed for the current price
-  useEffect(() => {
-    const maxAllowed = checkoutTotal < 90 ? 3 : 12;
-    if (parseInt(installments, 10) > maxAllowed) {
-      setInstallments(String(maxAllowed));
-    }
-  }, [checkoutTotal, installments]);
 
-  // Installment Options Calculation with 2.99% monthly interest rate
-  const maxInstallments = checkoutTotal < 90 ? 3 : 12;
-  const installmentOptions = Array.from({ length: maxInstallments }, (_, i) => {
-    const num = i + 1;
-    if (num === 1) {
-      const value = checkoutTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      return { num, value, label: `1x de ${value} à vista` };
-    }
-    
-    // Taxa de juros padrão de mercado para parcelamento assumido pelo comprador (ex: 2.99% a.m.)
-    const monthlyRate = 0.0299;
-    const factor = (monthlyRate * Math.pow(1 + monthlyRate, num)) / (Math.pow(1 + monthlyRate, num) - 1);
-    const installmentValue = checkoutTotal * factor;
-    
-    const valueStr = installmentValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    return { 
-      num, 
-      value: valueStr, 
-      label: `${num}x de ${valueStr} *` 
-    };
-  });
-
-  const selectedInstallmentObj = installmentOptions.find(opt => opt.num === parseInt(installments, 10));
-  const cardButtonLabel = selectedInstallmentObj 
-    ? (selectedInstallmentObj.num === 1 
-        ? `Finalizar Compra - ${formattedPrice}` 
-        : `Finalizar Compra - ${selectedInstallmentObj.num}x de ${selectedInstallmentObj.value}`)
-    : `Finalizar Compra - ${formattedPrice}`;
 
   return (
     <>
@@ -999,99 +797,47 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                 {/* Credit Card Area */}
                 {paymentMethod === 'card' && (
                   <div className="space-y-4 pt-2">
-                    <div className="p-4 bg-sky-50 rounded-2xl border border-sky-100 text-[11px] text-slate-700 leading-relaxed">
-                      <p className="font-bold text-sky-800 flex items-center mb-0.5">
-                        💳 Transação Segura via Mercado Pago
-                      </p>
-                      <p>
-                        Seus dados são criptografados de ponta a ponta. Não armazenamos informações do seu cartão.
-                      </p>
-                    </div>
-
-                    <div className="space-y-3.5">
-                      {/* Número do Cartão */}
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Número do Cartão</label>
-                        <input 
-                          type="text"
-                          value={cardNumber}
-                          onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
-                          placeholder="0000 0000 0000 0000"
-                          maxLength={19}
-                          className="w-full px-4 py-2.5 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-xs transition-all outline-none"
-                        />
-                      </div>
-
-                      {/* Nome do Titular */}
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Nome do Titular (como no cartão)</label>
-                        <input 
-                          type="text"
-                          value={cardHolder}
-                          onChange={(e) => setCardHolder(e.target.value.toUpperCase())}
-                          placeholder="EX: JOAO S SANTOS"
-                          className="w-full px-4 py-2.5 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-xs transition-all outline-none"
-                        />
-                      </div>
-
-                      {/* Validade e CVV */}
-                      <div className="grid grid-cols-2 gap-3.5">
-                        <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Validade (MM/AA)</label>
-                          <input 
-                            type="text"
-                            value={cardExpiry}
-                            onChange={(e) => setCardExpiry(formatCardExpiry(e.target.value))}
-                            placeholder="MM/AA"
-                            maxLength={5}
-                            className="w-full px-4 py-2.5 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-xs transition-all outline-none text-center"
-                          />
+                    {cartItems.length === 1 ? (
+                      <div className="p-5 bg-sky-50 rounded-2xl border border-sky-100 flex flex-col items-center text-center">
+                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-3 shadow-sm text-sky-500">
+                          <Lock className="w-6 h-6" />
                         </div>
-
-                        <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Código CVV</label>
-                          <input 
-                            type="password"
-                            value={cardCvv}
-                            onChange={(e) => setCardCvv(formatCardCvv(e.target.value))}
-                            placeholder="123"
-                            maxLength={4}
-                            className="w-full px-4 py-2.5 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-xs transition-all outline-none text-center"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Parcelas */}
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Opções de Parcelamento</label>
-                        <select
-                          value={installments}
-                          onChange={(e) => setInstallments(e.target.value)}
-                          className="w-full px-4 py-2.5 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-xs bg-white outline-none"
+                        <h4 className="text-sm font-bold text-slate-800 mb-1">
+                          Pagamento Seguro via Cartão
+                        </h4>
+                        <p className="text-[11px] text-slate-500 mb-4 px-2 leading-relaxed">
+                          Para sua total segurança, o pagamento via cartão de crédito é processado diretamente em nossa plataforma blindada externa.
+                        </p>
+                        <a
+                          href={activeProduct?.checkoutUrl || '#'}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-3.5 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs transition-all shadow-md flex items-center justify-center cursor-pointer hover:no-underline"
                         >
-                          {installmentOptions.map((opt) => (
-                            <option key={opt.num} value={opt.num}>
-                              {opt.label}
-                            </option>
-                          ))}
-                        </select>
+                          Ir para Plataforma de Pagamento Seguro
+                        </a>
                       </div>
-                    </div>
-
-                    <button
-                      onClick={handleCardCheckout}
-                      disabled={loading}
-                      className="w-full mt-2 py-4 bg-accent-blue hover:bg-accent-blue-dark text-white font-bold rounded-2xl text-sm transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed border-none"
-                    >
-                      {loading ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          <span>Processando Cartão Seguro...</span>
-                        </>
-                      ) : (
-                        <span>{cardButtonLabel}</span>
-                      )}
-                    </button>
+                    ) : (
+                      <div className="p-5 bg-emerald-50 rounded-2xl border border-emerald-100 flex flex-col items-center text-center">
+                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-3 shadow-sm text-emerald-500">
+                          <CreditCard className="w-6 h-6" />
+                        </div>
+                        <h4 className="text-sm font-bold text-slate-800 mb-1">
+                          Desconto Especial Liberado! 🎉
+                        </h4>
+                        <p className="text-[11px] text-slate-600 mb-4 px-2 leading-relaxed">
+                          Notamos que você selecionou múltiplos softwares! Pagando no cartão de crédito via nosso WhatsApp de vendas, você ganha <strong>10% de desconto adicional</strong> em toda a compra.
+                        </p>
+                        <a
+                          href={`https://wa.me/5581997349300?text=${encodeURIComponent(`Olá! Quero finalizar o pagamento via Cartão de Crédito dos ${cartItems.length} softwares que estão no meu carrinho e garantir os 10% de desconto adicional!`)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-3.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold rounded-xl text-xs transition-all shadow-md flex items-center justify-center cursor-pointer hover:no-underline"
+                        >
+                          Finalizar com Desconto no WhatsApp
+                        </a>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
