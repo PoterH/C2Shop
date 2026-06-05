@@ -516,17 +516,17 @@ export const products: Product[] = [
     }
   },
   {
-    id: 'tekla_2025',
-    slug: 'tekla-structures-2025',
-    name: 'Tekla Structures 2025',
+    id: 'tekla_2026',
+    slug: 'tekla-structures-2026',
+    name: 'Tekla Structures 2026',
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows',
-    version: '2025 (64-bits)',
+    version: '2026 SP2 (64-bits)',
     description: 'Detalhamento de estruturas metálicas e concreto para grandes projetos de engenharia.',
-    longDescription: 'O Tekla Structures 2025 é o software BIM líder mundial para detalhamento estrutural de aço e estruturas pré-moldadas de concreto. Ele permite criar modelos construtivos 3D ricos em informações físicas, gerando desenhos de fabricação, listas de materiais automáticas e conexões CNC diretamente do modelo tridimensional de forma estável.',
+    longDescription: 'O Tekla Structures 2026 é o software BIM líder mundial para detalhamento estrutural de aço e estruturas pré-moldadas de concreto. Ele permite criar modelos construtivos 3D ricos em informações físicas, gerando desenhos de fabricação, listas de materiais automáticas e conexões CNC diretamente do modelo tridimensional de forma estável.',
     price: 237.90,
     originalPrice: 1199.00,
-    checkoutUrl: '[LINK_CHECKOUT_TEKLA]',
+    checkoutUrl: 'https://pay.cakto.com.br/p5j6qsj',
     imageUrl: '/images/products/tekla-structures-2025.png',
     features: [
       'Versão completa e funcional',
