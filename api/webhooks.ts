@@ -1,4 +1,7 @@
 import crypto from 'crypto';
+import { MercadoPagoConfig, Payment } from 'mercadopago';
+import { sendConfirmationEmail } from './_email.js';
+import { products } from './_products.js';
 
 export default async function handler(req: any, res: any) {
   // CORS configuration
@@ -61,7 +64,48 @@ export default async function handler(req: any, res: any) {
     console.log(`Webhook Mercado Pago Validado com Sucesso! (Evento ID: ${dataId})`);
     console.log('Detalhes do evento:', req.body);
 
-    // TODO: Adicionar lógica para atualizar status de pedido no banco de dados, se aplicável.
+    const type = req.body?.type || req.query?.topic || req.body?.action || req.query?.type || '';
+    
+    if (type.includes('payment') || type === 'payment') {
+      const mpAccessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
+      if (mpAccessToken) {
+        const client = new MercadoPagoConfig({ accessToken: mpAccessToken });
+        const paymentClient = new Payment(client);
+        
+        try {
+          const paymentData = await paymentClient.get({ id: dataId });
+          console.log('Dados do pagamento (Mercado Pago):', paymentData.status);
+          
+          if (paymentData.status === 'approved' || paymentData.status === 'authorized' || paymentData.status === 'accredited') {
+            const payerEmail = paymentData.payer?.email || paymentData.additional_info?.payer?.email || '';
+            const description = paymentData.description || '';
+            const paymentMethod = paymentData.payment_type_id === 'ticket' ? 'boleto' : 'credit_card';
+            
+            // Tenta identificar o produto comprado
+            let matchedProduct = products.find(p => description.includes(p.name) || (paymentData.additional_info?.items && paymentData.additional_info.items.some((i: any) => i.title === p.name || i.description === p.name)));
+            
+            if (payerEmail) {
+              await sendConfirmationEmail({
+                buyerName: paymentData.payer?.first_name || 'Cliente',
+                buyerEmail: payerEmail,
+                products: [{ 
+                  slug: matchedProduct ? matchedProduct.slug : 'generic', 
+                  name: matchedProduct ? matchedProduct.name : (description || 'Sua Compra'), 
+                  price: Number(paymentData.transaction_amount) || (matchedProduct ? matchedProduct.price : 0) 
+                }],
+                orderId: String(dataId),
+                paymentMethod: paymentMethod
+              });
+              console.log('E-mail de confirmação enviado via Webhook para:', payerEmail);
+            } else {
+               console.log('Não foi possível identificar o email do payer para envio de e-mail.');
+            }
+          }
+        } catch (mpError) {
+          console.error('Erro ao buscar detalhes do pagamento no Mercado Pago:', mpError);
+        }
+      }
+    }
 
     // Responder com sucesso para que o Mercado Pago saiba que recebemos
     return res.status(200).json({ success: true, message: 'Webhook recebido e autenticado com sucesso.' });

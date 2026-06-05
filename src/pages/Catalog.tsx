@@ -40,11 +40,19 @@ const getCategoryIcon = (category: string) => {
 };
 
 export const Catalog: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
   const [selectedOS, setSelectedOS] = useState<'Todos' | 'Windows' | 'macOS'>('Todos');
-  const [searchParams, setSearchParams] = useSearchParams();
   
+  // Sync URL search to local state if URL changes (e.g., from header)
+  React.useEffect(() => {
+    const q = searchParams.get('q');
+    if (q !== null) {
+      setSearchTerm(q);
+    }
+  }, [searchParams]);
+
   const activeTab = searchParams.get('tab') === 'assinaturas' ? 'assinaturas' : 'vitalicios';
   const setActiveTab = (tab: 'vitalicios' | 'assinaturas') => {
     const newParams = new URLSearchParams(searchParams);
@@ -57,6 +65,11 @@ export const Catalog: React.FC = () => {
     setSearchTerm('');
     setSelectedCategory('Todos');
     setSelectedOS('Todos');
+    
+    // Clear URL parameters
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete('q');
+    setSearchParams(newParams, { replace: true });
   };
 
   // Total products in active tab

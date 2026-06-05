@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, MessageCircle, ArrowRight, ShoppingBag } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, X, MessageCircle, ArrowRight, ShoppingBag, Search } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 export const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
+  const navigate = useNavigate();
   const { cartItems, setIsCartOpen } = useCart();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/catalogo?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery('');
+      setIsOpen(false);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -90,6 +101,24 @@ export const Header: React.FC = () => {
             ))}
           </nav>
  
+          {/* Desktop Search */}
+          <form onSubmit={handleSearch} className="hidden lg:flex flex-1 max-w-sm mx-6 relative group">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <Search className={`w-4 h-4 transition-colors ${isHeaderDark ? 'text-slate-400 group-focus-within:text-sky-400' : 'text-slate-400 group-focus-within:text-accent-blue'}`} />
+            </div>
+            <input
+              type="text"
+              placeholder="Pesquisar softwares..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={`w-full pl-11 pr-4 py-2.5 text-sm rounded-full border focus:outline-none focus:ring-2 transition-all shadow-sm hover:shadow ${
+                isHeaderDark 
+                  ? 'bg-slate-800/40 border-slate-700/50 text-white placeholder-slate-400 focus:border-sky-500 focus:ring-sky-500/20' 
+                  : 'bg-slate-50/80 border-slate-200 text-slate-800 placeholder-slate-400 focus:border-accent-blue focus:bg-white focus:ring-accent-blue/10 hover:border-slate-300'
+              }`}
+            />
+          </form>
+
           {/* Desktop CTAs */}
           <div className="hidden md:flex items-center space-x-4">
             {showWhatsApp && (
@@ -215,6 +244,19 @@ export const Header: React.FC = () => {
               </Link>
             ))}
             
+            <form onSubmit={handleSearch} className="relative pt-2 pb-2">
+              <div className="absolute inset-y-0 left-0 pl-4 top-2 flex items-center pointer-events-none">
+                <Search className="w-5 h-5 text-slate-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Pesquisar softwares..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/10 shadow-sm"
+              />
+            </form>
+
             <div className="pt-4 flex flex-col space-y-3">
               {showWhatsApp && (
                 <a

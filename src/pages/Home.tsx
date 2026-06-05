@@ -19,6 +19,7 @@ import { ProductCard } from '../components/ProductCard';
 export const Home: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('Todos');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
