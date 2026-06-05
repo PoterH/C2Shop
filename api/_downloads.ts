@@ -37,6 +37,7 @@ export const DOWNLOAD_LINKS: Record<string, string> = {
   'capcut-pro-mensal': 'https://wa.me/5581997349300?text=Olá,%20acabei%20de%20assinar%20o%20CapCut%20Pro%20Mensal%20e%20gostaria%20de%20ativar%20minha%20conta.',
   'canva-pro-mensal': 'https://wa.me/5581997349300?text=Olá,%20acabei%20de%20assinar%20o%20Canva%20Pro%20Mensal%20e%20gostaria%20de%20ativar%20minha%20conta.',
   'autodesk-all-apps': 'https://wa.me/5581997349300?text=Olá,%20acabei%20de%20assinar%20o%20Autodesk%20All%20Apps%20e%20gostaria%20de%20ativar%20minha%20conta.',
+  'geo5-2024-windows': 'https://drive.google.com/drive/folders/1FenKpzwD_EmJAIqRJL7IGz8lemAoDRor?usp=drive_link',
 };
 
 export function getDownloadLink(slug: string): string {

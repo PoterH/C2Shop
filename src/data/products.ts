@@ -62,7 +62,7 @@ export const products: Product[] = [
     originalPrice: 1599.00,
     checkoutUrl: 'https://pay.cakto.com.br/kcsubty_850603',
     imageUrl: '/images/products/geo5-2024.png',
-    notes: 'Nota: O acesso para download será enviado instantaneamente no seu e-mail após a compra. Link de acesso direto via Google Drive: https://drive.google.com/drive/folders/1FenKpzwD_EmJAIqRJL7IGz8lemAoDRor?usp=drive_link',
+    notes: 'Nota: O acesso para download será enviado instantaneamente no seu e-mail após a compra.',
     features: [
       'Versão 2024 completa com todos os módulos inclusos',
       'Análise de estabilidade de taludes e muros de arrimo',
