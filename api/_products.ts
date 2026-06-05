@@ -50,6 +50,37 @@ export const CATEGORIES = [
 
 export const products: Product[] = [
   {
+    id: 'geo5_2024_win',
+    slug: 'geo5-2024-windows',
+    name: 'GEO5 2024 (Todos os Módulos)',
+    category: 'Engenharia e Arquitetura',
+    compatibility: 'Windows',
+    version: '2024',
+    description: 'Software completo para geotecnia com todos os módulos inclusos.',
+    longDescription: 'O GEO5 2024 é um conjunto de software avançado e intuitivo projetado para resolver uma ampla gama de problemas geotécnicos. Esta versão inclui todos os módulos disponíveis, fornecendo soluções integradas para projeto de escavações, muros de arrimo, fundações, estabilidade de taludes, entre outros.',
+    price: 227.90,
+    originalPrice: 1599.00,
+    checkoutUrl: 'https://pay.cakto.com.br/kcsubty_850603',
+    imageUrl: '/images/products/geo5-2024.png',
+    notes: 'Nota: O acesso para download será enviado instantaneamente no seu e-mail após a compra. Link de acesso direto via Google Drive: https://drive.google.com/drive/folders/1FenKpzwD_EmJAIqRJL7IGz8lemAoDRor?usp=drive_link',
+    features: [
+      'Versão 2024 completa com todos os módulos inclusos',
+      'Análise de estabilidade de taludes e muros de arrimo',
+      'Projeto de fundações rasas e profundas',
+      'Análise de recalques e consolidação',
+      'Integração e importação de dados geológicos',
+      'Acesso vitalício para uso ilimitado'
+    ],
+    requirements: {
+      os: 'Windows 10, 11 (64-bits)',
+      cpu: 'Processador de 2 GHz ou superior',
+      ram: '8 GB ou mais',
+      storage: '20 GB de espaço livre',
+      gpu: 'Placa de vídeo compatível com DirectX 11 ou superior'
+    }
+  },
+
+  {
     id: 'autocad_2027_win',
     slug: 'autocad-2027-windows',
     name: 'AutoCAD 2027 (Windows)',
