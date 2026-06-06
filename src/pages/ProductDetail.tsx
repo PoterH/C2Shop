@@ -213,7 +213,7 @@ export const ProductDetail: React.FC = () => {
         {product.licenseOptions && product.licenseOptions.length > 0 && (
           <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col gap-3">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block font-sans text-left">
-              Escolha a quantidade de licenças
+              {product.isSubscription ? 'Escolha a duração da assinatura' : 'Escolha a quantidade de licenças'}
             </span>
             <div className="flex flex-col gap-2">
               {product.licenseOptions.map((opt) => {

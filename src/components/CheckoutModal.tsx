@@ -60,8 +60,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   useEffect(() => {
     if (isOpen) {
       if (activeProduct?.isSubscription) {
-        const initial = activeProduct.selectedSubOption || initialSubOption || 'recurrent';
-        setSubOption(initial);
+        let initial = activeProduct.selectedSubOption || initialSubOption || 'recurrent';
+        if (activeProduct.selectedLicenseOption) {
+          initial = 'avulso';
+        }
+        setSubOption(initial as 'recurrent' | 'avulso');
         if (initial === 'recurrent') {
           setPaymentMethod('card');
         } else {
@@ -409,7 +412,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   // Pricing math
   const getCheckoutTotal = () => {
     if (activeProduct?.isSubscription) {
-      return subOption === 'recurrent' ? (activeProduct.recurrencePrice || activeProduct.price) : activeProduct.price;
+      return subOption === 'recurrent' ? (activeProduct.recurrencePrice || activeProduct.price) : (activeProduct.selectedLicenseOption?.price || activeProduct.price);
     }
     return total;
   };
@@ -793,7 +796,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                           Para sua total segurança, o pagamento via cartão de crédito é processado diretamente em nossa plataforma blindada externa.
                         </p>
                         <a
-                          href={activeProduct?.selectedLicenseOption?.checkoutUrl || activeProduct?.checkoutUrl || '#'}
+                          href={(activeProduct?.isSubscription && subOption === 'recurrent') ? (activeProduct?.recurrenceCheckoutUrl || activeProduct?.checkoutUrl || '#') : (activeProduct?.selectedLicenseOption?.checkoutUrl || activeProduct?.checkoutUrl || '#')}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="w-full py-3.5 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs transition-all shadow-md flex items-center justify-center cursor-pointer hover:no-underline"
