@@ -141,13 +141,17 @@ export const Catalog: React.FC = () => {
               }}
               className={`px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 ${
                 activeTab === 'assinaturas'
-                  ? 'bg-slate-900 text-white shadow-sm'
+                  ? 'bg-indigo-600 text-white shadow-md'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               <Calendar className="w-4 h-4" />
-              <span>Assinaturas Mensais</span>
-              <span className="bg-emerald-500/10 text-emerald-600 text-[10px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
+              <span>Assinaturas</span>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider shadow-sm ${
+                activeTab === 'assinaturas' 
+                  ? 'bg-emerald-400 text-emerald-950' 
+                  : 'bg-emerald-500 text-white ring-2 ring-emerald-500/20'
+              }`}>
                 Novo
               </span>
             </button>
