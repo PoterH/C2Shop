@@ -1192,7 +1192,7 @@ export const products: Product[] = [
     recurrencePrice: 69.90,
     billingPeriod: 'mensal',
     licenseOptions: [
-      { quantity: 1, label: 'Mensal Avulso', price: 89.90, checkoutUrl: '' },
+      { quantity: 1, label: 'Mensal Único', price: 89.90, checkoutUrl: '' },
       { quantity: 12, label: '1 Ano', price: 397.90, checkoutUrl: 'https://pay.cakto.com.br/sweaaho_448678' },
       { quantity: 24, label: '2 Anos', price: 597.90, checkoutUrl: 'https://pay.cakto.com.br/3ci8dh3' },
       { quantity: 36, label: '3 Anos', price: 737.90, checkoutUrl: 'https://pay.cakto.com.br/sjhwfte' }

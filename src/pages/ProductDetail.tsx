@@ -243,6 +243,7 @@ export const ProductDetail: React.FC = () => {
                     </div>
                     <span className="text-sm font-black text-emerald-600 shrink-0">
                       {opt.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                      {opt.label.includes('Mensal') && <span className="text-[10px] font-bold ml-1 opacity-80">/mês</span>}
                     </span>
                   </button>
                 );
@@ -280,7 +281,7 @@ export const ProductDetail: React.FC = () => {
                     {formattedRecurrencePrice} <span className="text-[10px] text-slate-400 font-normal">/mês</span>
                   </p>
                   <p className="text-[9px] text-slate-400 mt-1 leading-tight font-medium">
-                    Apenas no Cartão
+                    Pix ou Cartão
                   </p>
                 </button>
 
@@ -297,6 +298,9 @@ export const ProductDetail: React.FC = () => {
                   <span className="text-[10px] font-bold text-slate-700">Pagamento Único</span>
                   <p className="text-base font-display font-black text-slate-950 mt-1.5">
                     {formattedPrice}
+                    {(selectedLicenseOption?.label.includes('Mensal') || (!selectedLicenseOption && product?.slug === 'autodesk-all-apps')) && (
+                      <span className="text-[10px] text-slate-400 font-normal ml-0.5">/mês</span>
+                    )}
                   </p>
                   <p className="text-[9px] text-slate-400 mt-1 leading-tight font-medium">
                     Pix, Cartão ou Boleto
