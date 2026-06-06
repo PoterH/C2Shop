@@ -77,7 +77,7 @@ export default async function handler(req: any, res: any) {
           console.log('Dados do pagamento (Mercado Pago):', paymentData.status);
           
           if (paymentData.status === 'approved' || paymentData.status === 'authorized' || paymentData.status === 'accredited') {
-            const payerEmail = paymentData.payer?.email || paymentData.additional_info?.payer?.email || '';
+            const payerEmail = paymentData.payer?.email || (paymentData.additional_info?.payer as any)?.email || '';
             const description = paymentData.description || '';
             const paymentMethod = paymentData.payment_type_id === 'ticket' ? 'boleto' : 'credit_card';
             

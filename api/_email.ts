@@ -65,7 +65,7 @@ export async function sendConfirmationEmail({
   productPrice?: number;
   products?: Array<{ slug: string; name: string; price: number }>;
   orderId: string;
-  paymentMethod: 'pix' | 'credit_card';
+  paymentMethod: 'pix' | 'credit_card' | 'boleto';
 }) {
   const apiKey = getResendApiKey();
   const fromEmail = getResendFromEmail();
@@ -87,7 +87,7 @@ export async function sendConfirmationEmail({
     return { success: false, error: 'Nenhum produto fornecido para o e-mail de confirmação.' };
   }
 
-  const paymentMethodLabel = paymentMethod === 'pix' ? 'Pix (Aprovação Instantânea)' : 'Cartão de Crédito';
+  const paymentMethodLabel = paymentMethod === 'pix' ? 'Pix (Aprovação Instantânea)' : (paymentMethod === 'boleto' ? 'Boleto Bancário' : 'Cartão de Crédito');
   const totalPaid = checkoutProducts.reduce((sum, p) => sum + p.price, 0);
   const formattedTotalPrice = totalPaid.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
