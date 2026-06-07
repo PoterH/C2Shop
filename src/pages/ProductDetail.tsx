@@ -413,7 +413,7 @@ export const ProductDetail: React.FC = () => {
           <div className="pt-4 mt-2 border-t border-slate-100 flex flex-col items-center justify-center">
             <div className="flex items-center justify-center bg-white rounded-xl overflow-hidden border border-slate-200/50 shadow-sm" title="Autodesk Authorized Reseller">
               <div className="relative w-[130px] h-[45px] flex items-center justify-center">
-                <img src="/images/autodesk-reseller.jpg" alt="Autodesk Authorized Reseller" className="w-[110%] h-[110%] object-contain scale-[1.15]" />
+                <img src="/images/autodesk-reseller.png" alt="Autodesk Authorized Reseller" className="w-[110%] h-[110%] object-contain scale-[1.15]" />
               </div>
             </div>
             <p className="text-[9px] text-slate-400 mt-2 font-medium uppercase tracking-wider">Revendedor Autorizado</p>

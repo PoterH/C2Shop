@@ -304,7 +304,7 @@ export const Home: React.FC = () => {
           </div>
 
           {/* 4. Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-md sm:max-w-3xl pt-0 md:pt-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-md sm:max-w-3xl pt-0 md:pt-4 relative z-20">
             <Link
               to="/catalogo"
               className="flex items-center justify-center px-8 py-4 md:px-12 md:py-5 text-base md:text-lg lg:text-xl font-bold text-white bg-accent-blue hover:bg-accent-blue-dark rounded-2xl md:rounded-3xl shadow-[0_4px_20px_rgba(2,132,199,0.25)] hover:shadow-[0_4px_25px_rgba(2,132,199,0.35)] transition-all duration-300 group whitespace-nowrap hover:scale-105 active:scale-95"
@@ -324,9 +324,32 @@ export const Home: React.FC = () => {
             </Link>
           </div>
 
+          {/* Desktop Trust Carousel (Below Buttons) */}
+          <div className="hidden md:flex flex-col items-center justify-center w-full max-w-6xl mt-12 mb-0 overflow-hidden relative z-20">
+            <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-8 font-sans">
+              Revendedor Autorizado e Parceiro Oficial
+            </p>
+            {/* Gradient Masks */}
+            <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#020617] to-transparent z-10 pointer-events-none mt-8"></div>
+            <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#020617] to-transparent z-10 pointer-events-none mt-8"></div>
+            
+            <div className="flex w-full overflow-hidden">
+              <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-12 px-6">
+                {['/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png'].map((logo, i) => (
+                  <img key={i} src={logo} alt="Partner" className="h-16 lg:h-20 object-contain invert grayscale opacity-70 hover:opacity-100 transition-opacity duration-300" />
+                ))}
+              </div>
+              <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-12 px-6" aria-hidden="true">
+                {['/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png'].map((logo, i) => (
+                  <img key={`dup-${i}`} src={logo} alt="Partner" className="h-16 lg:h-20 object-contain invert grayscale opacity-70 hover:opacity-100 transition-opacity duration-300" />
+                ))}
+              </div>
+            </div>
+          </div>
+
           {/* 5. Laptop AutoCAD Mockup (Static Image Only) */}
           <div 
-            className="w-full max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-7xl mt-4 md:mt-12 transition-all duration-500"
+            className="w-full max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-7xl mt-8 md:mt-4 transition-all duration-500 relative z-10"
             style={{ transform: 'translate3d(0, calc(var(--scroll-y, 0px) * 0.03), 0)' }}
           >
             <img 
@@ -336,6 +359,22 @@ export const Home: React.FC = () => {
               loading="eager"
               fetchPriority="high"
             />
+            
+            {/* Mobile Trust Carousel (Over the laptop bottom) */}
+            <div className="md:hidden absolute bottom-[5%] sm:bottom-[10%] left-0 right-0 flex flex-col items-center justify-center overflow-hidden z-30 opacity-70">
+              <div className="flex w-full overflow-hidden">
+                <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-8 px-4">
+                  {['/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/microsoft-partner.png'].map((logo, i) => (
+                    <img key={`mob-${i}`} src={logo} alt="Partner" className="h-10 sm:h-14 object-contain invert grayscale opacity-80" />
+                  ))}
+                </div>
+                <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-8 px-4" aria-hidden="true">
+                  {['/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/microsoft-partner.png'].map((logo, i) => (
+                    <img key={`mob-dup-${i}`} src={logo} alt="Partner" className="h-10 sm:h-14 object-contain invert grayscale opacity-80" />
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

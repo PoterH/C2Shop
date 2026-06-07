@@ -284,7 +284,7 @@ export const Footer: React.FC = () => {
                 {/* Selo Autodesk */}
                 <div className="flex items-center justify-center bg-white rounded-xl overflow-hidden border border-slate-200/20 hover:border-sky-500/40 transition-all shadow-sm" title="Autodesk Authorized Reseller">
                   <div className="relative w-[120px] h-[42px] flex items-center justify-center">
-                    <img src="/images/autodesk-reseller.jpg" alt="Autodesk Authorized Reseller" className="w-[110%] h-[110%] object-contain scale-[1.15]" />
+                    <img src="/images/autodesk-reseller.png" alt="Autodesk Authorized Reseller" className="w-[110%] h-[110%] object-contain scale-[1.15]" />
                   </div>
                 </div>
 
