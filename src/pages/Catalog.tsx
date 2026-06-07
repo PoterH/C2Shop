@@ -130,36 +130,36 @@ export const Catalog: React.FC = () => {
         </div>
 
         {/* Tab Switcher (Vitalícios vs Assinaturas) */}
-        <div className="flex justify-start mb-8">
-          <div className="bg-white border border-slate-100 shadow-sm p-1.5 rounded-2xl flex gap-2">
+        <div className="flex justify-start mb-8 overflow-x-auto scrollbar-none pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0">
+          <div className="bg-white border border-slate-100 shadow-sm p-1.5 rounded-2xl flex gap-2 w-max min-w-max shrink-0">
             <button
               onClick={() => {
                 setActiveTab('vitalicios');
                 setSelectedCategory('Todos');
               }}
-              className={`px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
+              className={`px-4 sm:px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
                 activeTab === 'vitalicios'
                   ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
                   : 'bg-transparent text-slate-800 border-slate-900 hover:bg-slate-100'
               }`}
             >
-              <Infinity className="w-4 h-4" />
-              <span>Licenças Vitalícias</span>
+              <Infinity className="w-4 h-4 shrink-0" />
+              <span className="whitespace-nowrap">Licenças Vitalícias</span>
             </button>
             <button
               onClick={() => {
                 setActiveTab('assinaturas');
                 setSelectedCategory('Todos');
               }}
-              className={`px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
+              className={`px-4 sm:px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
                 activeTab === 'assinaturas'
                   ? 'bg-indigo-600 text-white border-indigo-600 shadow-md'
                   : 'bg-transparent text-indigo-600 border-indigo-600 hover:bg-indigo-50'
               }`}
             >
-              <Calendar className="w-4 h-4" />
-              <span>Assinaturas</span>
-              <span className={`text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider shadow-sm animate-pulse ${
+              <Calendar className="w-4 h-4 shrink-0" />
+              <span className="whitespace-nowrap">Assinaturas</span>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider shadow-sm animate-pulse shrink-0 ${
                 activeTab === 'assinaturas' 
                   ? 'bg-emerald-400 text-emerald-950' 
                   : 'bg-emerald-500 text-white ring-2 ring-emerald-500/20'
@@ -172,15 +172,15 @@ export const Catalog: React.FC = () => {
                 setActiveTab('chaves');
                 setSelectedCategory('Todos');
               }}
-              className={`px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
+              className={`px-4 sm:px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
                 activeTab === 'chaves'
                   ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
                   : 'bg-transparent text-amber-600 border-amber-500 hover:bg-amber-50'
               }`}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
-              <span>Chaves / Keys</span>
-              <span className={`text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider shadow-sm animate-pulse ${
+              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
+              <span className="whitespace-nowrap">Chaves / Keys</span>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider shadow-sm animate-pulse shrink-0 ${
                 activeTab === 'chaves' 
                   ? 'bg-emerald-400 text-emerald-950' 
                   : 'bg-emerald-500 text-white ring-2 ring-emerald-500/20'
@@ -192,7 +192,7 @@ export const Catalog: React.FC = () => {
         </div>
 
         {/* Filters and Search Bar Container */}
-        <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 mb-8 space-y-6">
+        <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-4 sm:p-6 mb-8 space-y-6">
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Search Input */}
@@ -204,18 +204,18 @@ export const Catalog: React.FC = () => {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Buscar software (ex: AutoCAD, Office, SketchUp...)"
+                placeholder="Buscar software..."
                 className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200/80 rounded-2xl text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-accent-blue/20 focus:border-accent-blue transition-all"
                 id="search-input"
               />
             </div>
 
             {/* Compatibility Selector */}
-            <div className="flex items-center space-x-2 bg-slate-50 border border-slate-200/80 rounded-2xl p-1 animate-fade-in">
-              <span className="text-xs font-bold text-slate-500 pl-3 uppercase tracking-wider shrink-0">
+            <div className="flex items-center space-x-2 bg-slate-50 border border-slate-200/80 rounded-2xl p-1 animate-fade-in overflow-x-auto scrollbar-none">
+              <span className="text-[11px] sm:text-xs font-bold text-slate-500 pl-2 sm:pl-3 uppercase tracking-wider shrink-0">
                 Sistema:
               </span>
-              <div className="flex flex-1 gap-1">
+              <div className="flex flex-1 gap-1 min-w-max">
                 {(['Todos', 'Windows', 'macOS'] as const).map((os) => {
                   const getOSIcon = () => {
                     if (os === 'Windows') {
@@ -239,7 +239,7 @@ export const Catalog: React.FC = () => {
                     <button
                       key={os}
                       onClick={() => setSelectedOS(os)}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-semibold transition-all ${
+                      className={`flex items-center justify-center gap-1.5 py-2 px-3 sm:px-2.5 rounded-xl text-xs font-semibold transition-all ${
                         selectedOS === os
                           ? 'bg-slate-900 text-white shadow-sm'
                           : 'hover:bg-slate-200/55 text-slate-600'
