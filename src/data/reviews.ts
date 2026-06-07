@@ -1053,5 +1053,51 @@ export const reviewsData: Record<string, Review[]> = {
       date: "2 semanas atrás",
       comment: "Muito bom ter todas as ferramentas em uma só assinatura. O processo de pegar o login com o suporte foi tranquilo. Recomendo para engenheiros e arquitetos."
     }
+  ],
+  windows_11_pro: [
+    {
+      author: "João Batista",
+      rating: 5,
+      date: "Ontem",
+      comment: "Chave enviada na hora pelo WhatsApp, ativei meu PC novo sem nenhum problema. Recomendo muito!"
+    },
+    {
+      author: "Marcos P.",
+      rating: 5,
+      date: "3 dias atrás",
+      comment: "Ativação vinculada na minha conta Microsoft certinho, agora não perco mais se precisar formatar."
+    },
+    {
+      author: "Letícia Costa",
+      rating: 5,
+      date: "1 semana atrás",
+      comment: "Atendimento nota 10! Tive uma dúvida na hora de validar no sistema e me ajudaram passo a passo."
+    },
+    {
+      author: "Felipe S.",
+      rating: 4,
+      date: "2 semanas atrás",
+      comment: "Muito bom preço, a chave original é outra vida, o sistema fica sem frescura de ativador."
+    },
+    {
+      author: "Augusto S.",
+      rating: 5,
+      date: "1 mês atrás",
+      comment: "Tudo perfeito, a licença é permanente mesmo e o Windows Update funciona normal."
+    }
+  ],
+  windows_10_pro: [
+    {
+      author: "Thiago Almeida",
+      rating: 5,
+      date: "4 dias atrás",
+      comment: "Rápido e prático, chegou a chave no whats em 2 minutos. Meu Windows 10 já tá ativadão."
+    },
+    {
+      author: "Roberto Oliveira",
+      rating: 5,
+      date: "1 semana atrás",
+      comment: "Tava cansado daquela marca d'água de ativar o Windows. Comprei aqui e sumiu na hora com a chave original."
+    }
   ]
 };

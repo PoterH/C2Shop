@@ -53,8 +53,9 @@ export const Catalog: React.FC = () => {
     }
   }, [searchParams]);
 
-  const activeTab = searchParams.get('tab') === 'assinaturas' ? 'assinaturas' : 'vitalicios';
-  const setActiveTab = (tab: 'vitalicios' | 'assinaturas') => {
+  const tabParam = searchParams.get('tab');
+  const activeTab = (tabParam === 'assinaturas' || tabParam === 'chaves') ? tabParam : 'vitalicios';
+  const setActiveTab = (tab: 'vitalicios' | 'assinaturas' | 'chaves') => {
     const newParams = new URLSearchParams(searchParams);
     newParams.set('tab', tab);
     setSearchParams(newParams, { replace: true });
@@ -74,15 +75,26 @@ export const Catalog: React.FC = () => {
 
   // Total products in active tab
   const totalTabProducts = useMemo(() => {
-    return products.filter(p => activeTab === 'assinaturas' ? !!p.isSubscription : !p.isSubscription).length;
+    return products.filter(p => {
+      if (activeTab === 'assinaturas') return !!p.isSubscription;
+      if (activeTab === 'chaves') return p.category === 'Chaves de Ativação';
+      return !p.isSubscription && p.category !== 'Chaves de Ativação';
+    }).length;
   }, [activeTab]);
 
   // Filtered and searched products
   const filteredProducts = useMemo(() => {
     return products
       .filter((product) => {
-        // 0. Filter by active tab (subscription vs lifetime)
-        const matchesTab = activeTab === 'assinaturas' ? !!product.isSubscription : !product.isSubscription;
+        // 0. Filter by active tab (subscription vs lifetime vs keys)
+        let matchesTab = false;
+        if (activeTab === 'assinaturas') {
+          matchesTab = !!product.isSubscription;
+        } else if (activeTab === 'chaves') {
+          matchesTab = product.category === 'Chaves de Ativação';
+        } else {
+          matchesTab = !product.isSubscription && product.category !== 'Chaves de Ativação';
+        }
         if (!matchesTab) return false;
 
         // 1. Text search
@@ -125,10 +137,10 @@ export const Catalog: React.FC = () => {
                 setActiveTab('vitalicios');
                 setSelectedCategory('Todos');
               }}
-              className={`px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 ${
+              className={`px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
                 activeTab === 'vitalicios'
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                  : 'bg-transparent text-slate-800 border-slate-900 hover:bg-slate-100'
               }`}
             >
               <Infinity className="w-4 h-4" />
@@ -139,16 +151,37 @@ export const Catalog: React.FC = () => {
                 setActiveTab('assinaturas');
                 setSelectedCategory('Todos');
               }}
-              className={`px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 ${
+              className={`px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
                 activeTab === 'assinaturas'
-                  ? 'bg-indigo-600 text-white shadow-md'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-md'
+                  : 'bg-transparent text-indigo-600 border-indigo-600 hover:bg-indigo-50'
               }`}
             >
               <Calendar className="w-4 h-4" />
               <span>Assinaturas</span>
-              <span className={`text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider shadow-sm ${
+              <span className={`text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider shadow-sm animate-pulse ${
                 activeTab === 'assinaturas' 
+                  ? 'bg-emerald-400 text-emerald-950' 
+                  : 'bg-emerald-500 text-white ring-2 ring-emerald-500/20'
+              }`}>
+                Novo
+              </span>
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab('chaves');
+                setSelectedCategory('Todos');
+              }}
+              className={`px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
+                activeTab === 'chaves'
+                  ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
+                  : 'bg-transparent text-amber-600 border-amber-500 hover:bg-amber-50'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
+              <span>Chaves / Keys</span>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider shadow-sm animate-pulse ${
+                activeTab === 'chaves' 
                   ? 'bg-emerald-400 text-emerald-950' 
                   : 'bg-emerald-500 text-white ring-2 ring-emerald-500/20'
               }`}>
@@ -262,7 +295,7 @@ export const Catalog: React.FC = () => {
         {/* Results Info */}
         <div className="mb-6 flex justify-between items-center text-xs text-slate-500">
           <p>
-            Mostrando <strong>{filteredProducts.length}</strong> de {totalTabProducts} {activeTab === 'assinaturas' ? 'assinaturas' : 'softwares'} encontrados.
+            Mostrando <strong>{filteredProducts.length}</strong> de {totalTabProducts} {activeTab === 'assinaturas' ? 'assinaturas' : (activeTab === 'chaves' ? 'chaves' : 'softwares')} encontrados.
           </p>
         </div>
 

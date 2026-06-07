@@ -268,12 +268,33 @@ export const Footer: React.FC = () => {
               </div>
             </div>
 
-            {/* Right: Security Certificates */}
+            {/* Right: Security Certificates & Partners */}
             <div className="space-y-3 text-center lg:text-right">
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block font-sans">
-                Segurança
+                Segurança & Parceiros
               </span>
-              <div className="flex flex-wrap gap-4 justify-center lg:justify-end items-center">
+              <div className="flex flex-wrap gap-3 justify-center lg:justify-end items-center">
+                {/* Selo Corel Partner */}
+                <div className="flex items-center justify-center bg-white rounded-xl overflow-hidden border border-slate-200/20 hover:border-sky-500/40 transition-all shadow-sm" title="Corel Authorized Partner">
+                  <div className="relative w-[100px] h-[42px] flex items-center justify-center">
+                    <img src="/images/corel-partner.png" alt="Corel Authorized Partner" className="w-[150%] h-[150%] object-contain scale-[1.6]" />
+                  </div>
+                </div>
+
+                {/* Selo Autodesk */}
+                <div className="flex items-center justify-center bg-white rounded-xl overflow-hidden border border-slate-200/20 hover:border-sky-500/40 transition-all shadow-sm" title="Autodesk Authorized Reseller">
+                  <div className="relative w-[120px] h-[42px] flex items-center justify-center">
+                    <img src="/images/autodesk-reseller.jpg" alt="Autodesk Authorized Reseller" className="w-[110%] h-[110%] object-contain scale-[1.15]" />
+                  </div>
+                </div>
+
+                {/* Selo Microsoft Partner */}
+                <div className="flex items-center justify-center bg-white rounded-xl overflow-hidden border border-slate-200/20 hover:border-sky-500/40 transition-all shadow-sm" title="Microsoft Partner Network">
+                  <div className="relative w-[110px] h-[42px] flex items-center justify-center">
+                    <img src="/images/microsoft-partner.png" alt="Microsoft Partner Network" className="w-[140%] h-[140%] object-contain scale-[1.35]" />
+                  </div>
+                </div>
+
                 {/* Selo Compra 100% Segura */}
                 <div className="flex items-center space-x-2.5 bg-slate-900/40 border border-emerald-500/20 rounded-2xl px-4 py-2 hover:border-emerald-500/40 transition-colors shadow-sm">
                   <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400">

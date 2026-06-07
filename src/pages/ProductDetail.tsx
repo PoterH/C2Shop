@@ -89,10 +89,12 @@ export const ProductDetail: React.FC = () => {
       
       const metaDescription = document.querySelector('meta[name="description"]');
       if (metaDescription) {
-        const descText = product.isSubscription 
-          ? `Assine o ${product.name} Pro Mensal com o melhor preço e desconto no Pix. Acesso completo aos recursos premium e suporte prioritário.`
-          : `Adquira o ${product.name} com licença alternativa e acesso vitalício na C2Shop. Entrega automática por e-mail e suporte assistido inclusos.`;
-        metaDescription.setAttribute('content', descText);
+        const defaultDescription = product.isSubscription 
+        ? `Adquira a assinatura do ${product.name} na C2Shop com ativação rápida e suporte assistido. Garantia de funcionamento e atualizações.`
+        : product.category === 'Chaves de Ativação'
+        ? `Adquira a chave de ativação original do ${product.name} na C2Shop com licença permanente. Envio imediato via WhatsApp.`
+        : `Adquira o ${product.name} com licença alternativa e acesso vitalício na C2Shop. Entrega automática por e-mail e suporte assistido inclusos.`;
+        metaDescription.setAttribute('content', defaultDescription);
       }
     }
   }, [product]);
@@ -168,9 +170,11 @@ export const ProductDetail: React.FC = () => {
         }`}
       >
         <div className="space-y-2">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded">
-            {product.isSubscription ? 'Plano de Assinatura' : 'Licença Alternativa'}
-          </span>
+          <div className="inline-flex items-center space-x-2 bg-slate-100 px-3 py-1.5 rounded-lg mb-6">
+            <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+              {product.isSubscription ? 'Plano de Assinatura' : product.category === 'Chaves de Ativação' ? 'Chave de Ativação Original' : 'Licença Alternativa'}
+            </span>
+          </div>
           <h3 className="font-display font-extrabold text-2xl text-slate-950">
             {product.name}
           </h3>
@@ -403,6 +407,42 @@ export const ProductDetail: React.FC = () => {
             )}
           </div>
         </div>
+
+        {/* Autodesk Reseller Seal */}
+        {product.id === 'autodesk_all_apps' && (
+          <div className="pt-4 mt-2 border-t border-slate-100 flex flex-col items-center justify-center">
+            <div className="flex items-center justify-center bg-white rounded-xl overflow-hidden border border-slate-200/50 shadow-sm" title="Autodesk Authorized Reseller">
+              <div className="relative w-[130px] h-[45px] flex items-center justify-center">
+                <img src="/images/autodesk-reseller.jpg" alt="Autodesk Authorized Reseller" className="w-[110%] h-[110%] object-contain scale-[1.15]" />
+              </div>
+            </div>
+            <p className="text-[9px] text-slate-400 mt-2 font-medium uppercase tracking-wider">Revendedor Autorizado</p>
+          </div>
+        )}
+
+        {/* Microsoft Partner Seal */}
+        {(product.id === 'windows_11_pro' || product.id === 'windows_10_pro') && (
+          <div className="pt-4 mt-2 border-t border-slate-100 flex flex-col items-center justify-center">
+            <div className="flex items-center justify-center bg-white rounded-xl overflow-hidden border border-slate-200/50 shadow-sm" title="Microsoft Partner Network">
+              <div className="relative w-[130px] h-[45px] flex items-center justify-center">
+                <img src="/images/microsoft-partner.png" alt="Microsoft Partner Network" className="w-[140%] h-[140%] object-contain scale-[1.35]" />
+              </div>
+            </div>
+            <p className="text-[9px] text-slate-400 mt-2 font-medium uppercase tracking-wider">Parceiro Oficial</p>
+          </div>
+        )}
+
+        {/* Corel Partner Seal */}
+        {product.id === 'coreldraw_2026' && (
+          <div className="pt-4 mt-2 border-t border-slate-100 flex flex-col items-center justify-center">
+            <div className="flex items-center justify-center bg-white rounded-xl overflow-hidden border border-slate-200/50 shadow-sm" title="Corel Authorized Partner">
+              <div className="relative w-[130px] h-[45px] flex items-center justify-center">
+                <img src="/images/corel-partner.png" alt="Corel Authorized Partner" className="w-[140%] h-[140%] object-contain scale-[1.6]" />
+              </div>
+            </div>
+            <p className="text-[9px] text-slate-400 mt-2 font-medium uppercase tracking-wider">Parceiro Autorizado</p>
+          </div>
+        )}
       </div>
     );
   };
@@ -746,6 +786,17 @@ export const ProductDetail: React.FC = () => {
                       <p className="text-slate-500 leading-relaxed">
                         Sim, a expiração é de 30 dias e a assinatura se renova mensalmente. Caso precise trocar de dados ou suporte, nossa equipe realiza a substituição.
                       </p>
+                    </div>
+                  </>
+                ) : product.category === 'Chaves de Ativação' ? (
+                  <>
+                    <div className="space-y-1">
+                      <p className="font-semibold text-slate-800">A chave expira?</p>
+                      <p className="text-slate-500 leading-relaxed">Não. Trata-se de uma licença original de 25 dígitos com acesso vitalício, sem taxas de renovação, ativada de forma permanente no seu dispositivo.</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="font-semibold text-slate-800">Como recebo o produto?</p>
+                      <p className="text-slate-500 leading-relaxed">Após o pagamento, você receberá no e-mail um acesso para falar diretamente no nosso WhatsApp, onde a chave original de 25 dígitos será entregue imediatamente.</p>
                     </div>
                   </>
                 ) : (

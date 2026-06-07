@@ -38,6 +38,8 @@ export const DOWNLOAD_LINKS: Record<string, string> = {
   'canva-pro-mensal': 'https://wa.me/5581997349300?text=Olá,%20acabei%20de%20assinar%20o%20Canva%20Pro%20Mensal%20e%20gostaria%20de%20ativar%20minha%20conta.',
   'autodesk-all-apps': 'https://wa.me/5581997349300?text=Olá,%20acabei%20de%20assinar%20o%20Autodesk%20Todos%20os%20Aplicativos%20e%20gostaria%20de%20ativar%20minha%20conta.',
   'geo5-2024-windows': 'https://drive.google.com/drive/folders/1FenKpzwD_EmJAIqRJL7IGz8lemAoDRor?usp=drive_link',
+  'windows-11-pro': 'https://wa.me/5581997349300?text=Olá,%20acabei%20de%20comprar%20a%20chave%20do%20Windows%2011%20Pro%20e%20gostaria%20de%20receber.',
+  'windows-10-pro': 'https://wa.me/5581997349300?text=Olá,%20acabei%20de%20comprar%20a%20chave%20do%20Windows%2010%20Pro%20e%20gostaria%20de%20receber.',
 };
 
 export function getDownloadLink(slug: string): string {

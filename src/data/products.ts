@@ -29,6 +29,7 @@ export interface Product {
   recurrenceCheckoutUrl?: string;
   licenseOptions?: LicenseOption[];
   selectedLicenseOption?: LicenseOption;
+  reviews?: any[];
 }
 
 export interface LicenseOption {
@@ -1210,6 +1211,113 @@ export const products: Product[] = [
       gpu: 'Placa dedicada com suporte a DirectX 12',
       storage: '50 GB de espaço livre'
     }
+  },
+  {
+    id: 'windows_11_pro',
+    slug: 'windows-11-pro',
+    name: 'Windows 11 Pro',
+    category: 'Chaves de Ativação',
+    compatibility: 'Windows',
+    version: 'Pro (25 dígitos)',
+    description: 'Chave de ativação original de 25 dígitos para Windows 11 Professional. Licença vitalícia e permanente.',
+    longDescription: 'Adquira a sua chave de ativação original (25 dígitos) do Windows 11 Pro e ative o seu sistema operacional de forma oficial e permanente. Esta licença é vitalícia, vinculada diretamente à sua conta Microsoft e hardware do seu PC. O Windows 11 Pro oferece os melhores recursos de produtividade, segurança avançada com BitLocker, área de trabalho remota e integração perfeita para ambientes profissionais. A chave será enviada diretamente pelo WhatsApp imediatamente após a confirmação do pagamento.',
+    price: 89.90,
+    originalPrice: 199.90,
+    checkoutUrl: 'https://pay.cakto.com.br/mzrcqje_917458',
+    imageUrl: '/images/products/windows-11-pro.png',
+    isSubscription: false,
+    features: [
+      'Chave original de 25 dígitos',
+      'Licença vitalícia e permanente',
+      'Suporte a BitLocker e Área de Trabalho Remota',
+      'Ativação online oficial da Microsoft',
+      'Envio imediato via WhatsApp'
+    ],
+    requirements: {
+      os: 'Computador sem sistema ou com Windows 11',
+      cpu: 'Processador de 1 GHz ou superior (Compatível com Windows 11)',
+      ram: '4 GB RAM ou superior',
+      gpu: 'Gráficos compatíveis com DirectX 12',
+      storage: '64 GB de espaço livre'
+    },
+    reviews: [
+      {
+        id: 'w11_rev1',
+        userId: 'w11_u1',
+        userName: 'Carlos Eduardo',
+        rating: 5,
+        comment: 'Chave enviada na mesma hora pelo WhatsApp, ativei meu PC novo que tinha acabado de montar. Tudo perfeito!',
+        date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      },
+      {
+        id: 'w11_rev2',
+        userId: 'w11_u2',
+        userName: 'Fernando Silva',
+        rating: 5,
+        comment: 'Ativação funcionou de primeira. Reconheceu como licença digital vinculada a minha conta Microsoft. Excelente.',
+        date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      },
+      {
+        id: 'w11_rev3',
+        userId: 'w11_u3',
+        userName: 'Amanda Oliveira',
+        rating: 5,
+        comment: 'Muito prático, o preço está ótimo e a entrega foi super rápida. Instalei no notebook do meu trabalho e economizei muito.',
+        date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      }
+    ]
+  },
+  {
+    id: 'windows_10_pro',
+    slug: 'windows-10-pro',
+    name: 'Windows 10 Pro',
+    category: 'Chaves de Ativação',
+    compatibility: 'Windows',
+    version: 'Pro (25 dígitos)',
+    description: 'Chave de ativação original de 25 dígitos para Windows 10 Professional. Licença vitalícia e definitiva.',
+    longDescription: 'Adquira a sua chave de ativação original (25 dígitos) do Windows 10 Pro. Ative o sistema operacional mais estável e utilizado do mundo de forma oficial. A licença é vitalícia e conta com todos os recursos premium da versão Pro, como BitLocker, Área de Trabalho Remota e Hyper-V. A chave será entregue para você rapidamente através do WhatsApp logo após a aprovação do pagamento.',
+    price: 79.90,
+    originalPrice: 179.90,
+    checkoutUrl: 'https://pay.cakto.com.br/ihir3na',
+    imageUrl: '/images/products/windows-10-pro.png',
+    isSubscription: false,
+    features: [
+      'Chave original de 25 dígitos',
+      'Licença permanente',
+      'Ativação online oficial da Microsoft',
+      'Acesso a recursos Pro (BitLocker, Hyper-V)',
+      'Entrega rápida via WhatsApp'
+    ],
+    requirements: {
+      os: 'Computador sem sistema ou com Windows 10',
+      cpu: 'Processador de 1 GHz ou superior',
+      ram: '2 GB RAM ou superior',
+      gpu: 'Gráficos compatíveis com DirectX 9',
+      storage: '20 GB de espaço livre'
+    },
+    reviews: [
+      {
+        id: 'w10_rev1',
+        userId: 'w10_u1',
+        userName: 'Roberto Mendes',
+        rating: 5,
+        comment: 'Estava precisando de uma chave para o PC do escritório, ativou rápido e removeu aquela marca d\'água chata da tela. Recomendo.',
+        date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      },
+      {
+        id: 'w10_rev2',
+        userId: 'w10_u2',
+        userName: 'Marcos Vinícius',
+        rating: 5,
+        comment: 'O suporte respondeu na hora no Whats. Me mandaram a key e em menos de 1 minuto meu Windows estava ativado como original. Show!',
+        date: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      }
+    ]
   }
 ];
 

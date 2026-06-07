@@ -122,25 +122,30 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               </span>
             ) : product.isSubscription ? (
               <>
-                <span className="bg-white/95 backdrop-blur-md text-purple-700 text-[10px] font-semibold px-2.5 py-1 rounded-full flex items-center border border-purple-500/20 shadow-sm uppercase tracking-wider">
+                <span className="bg-white/95 backdrop-blur-md text-purple-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center border border-purple-500/20 shadow-sm">
                   <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-1.5 animate-pulse"></span>
-                  {product.id === 'autodesk_all_apps' ? 'Produto Original' : 'Plano Mensal'}
-                </span>
-                <span className="bg-white/95 backdrop-blur-md text-sky-700 text-[10px] font-semibold px-2.5 py-1 rounded-full flex items-center border border-sky-500/20 shadow-sm uppercase tracking-wider">
-                  <Send className="w-2.5 h-2.5 mr-1" />
-                  Ativação imediata
+                  {product.id === 'autodesk_all_apps' ? 'Produto original' : 'Plano mensal'}
                 </span>
               </>
             ) : (
               <>
-                <span className="bg-white/90 backdrop-blur-md text-emerald-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center border border-emerald-500/20 shadow-sm">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
-                  Acesso vitalício
-                </span>
-                <span className="bg-white/90 backdrop-blur-md text-sky-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center border border-sky-500/20 shadow-sm">
-                  <Send className="w-2.5 h-2.5 mr-1" />
-                  Entrega imediata
-                </span>
+                {product.category === 'Chaves de Ativação' ? (
+                  <span className="bg-white/90 backdrop-blur-md text-amber-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center border border-amber-500/20 shadow-sm">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span>
+                    Chave original
+                  </span>
+                ) : (
+                  <span className="bg-white/90 backdrop-blur-md text-emerald-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center border border-emerald-500/20 shadow-sm">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
+                    Acesso vitalício
+                  </span>
+                )}
+                {product.category !== 'Chaves de Ativação' && (
+                  <span className="bg-white/90 backdrop-blur-md text-sky-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center border border-sky-500/20 shadow-sm">
+                    <Send className="w-2.5 h-2.5 mr-1" />
+                    Entrega imediata
+                  </span>
+                )}
               </>
             )}
           </div>
