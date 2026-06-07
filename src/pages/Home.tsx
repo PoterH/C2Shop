@@ -324,24 +324,27 @@ export const Home: React.FC = () => {
             </Link>
           </div>
 
-          {/* Desktop Trust Carousel (Below Buttons) */}
-          <div className="hidden md:flex flex-col items-center justify-center w-full max-w-6xl mt-12 mb-0 overflow-hidden relative z-20">
-            <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-8 font-sans">
+          {/* Trust Carousel (Below Buttons on all devices) */}
+          <div className="flex flex-col items-center justify-center w-full max-w-6xl mt-10 md:mt-12 mb-2 md:mb-0 overflow-hidden relative z-20">
+            <p className="text-[9px] md:text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-6 md:mb-8 font-sans">
               Revendedor Autorizado e Parceiro Oficial
             </p>
-            {/* Gradient Masks */}
-            <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#020617] to-transparent z-10 pointer-events-none mt-8"></div>
-            <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#020617] to-transparent z-10 pointer-events-none mt-8"></div>
             
-            <div className="flex w-full overflow-hidden">
-              <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-12 px-6">
+            <div 
+              className="flex w-full overflow-hidden opacity-80 md:opacity-100"
+              style={{
+                maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
+                WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)'
+              }}
+            >
+              <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-8 md:gap-12 px-4 md:px-6">
                 {['/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png'].map((logo, i) => (
-                  <img key={i} src={logo} alt="Partner" className="h-16 lg:h-20 object-contain invert grayscale opacity-70 hover:opacity-100 transition-opacity duration-300" />
+                  <img key={i} src={logo} alt="Partner" className="h-10 sm:h-12 lg:h-20 object-contain invert grayscale opacity-80 md:opacity-70 hover:opacity-100 transition-opacity duration-300" />
                 ))}
               </div>
-              <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-12 px-6" aria-hidden="true">
+              <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-8 md:gap-12 px-4 md:px-6" aria-hidden="true">
                 {['/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png'].map((logo, i) => (
-                  <img key={`dup-${i}`} src={logo} alt="Partner" className="h-16 lg:h-20 object-contain invert grayscale opacity-70 hover:opacity-100 transition-opacity duration-300" />
+                  <img key={`dup-${i}`} src={logo} alt="Partner" className="h-10 sm:h-12 lg:h-20 object-contain invert grayscale opacity-80 md:opacity-70 hover:opacity-100 transition-opacity duration-300" />
                 ))}
               </div>
             </div>
@@ -359,22 +362,6 @@ export const Home: React.FC = () => {
               loading="eager"
               fetchPriority="high"
             />
-            
-            {/* Mobile Trust Carousel (Over the laptop bottom) */}
-            <div className="md:hidden absolute bottom-[5%] sm:bottom-[10%] left-0 right-0 flex flex-col items-center justify-center overflow-hidden z-30 opacity-70">
-              <div className="flex w-full overflow-hidden">
-                <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-8 px-4">
-                  {['/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/microsoft-partner.png'].map((logo, i) => (
-                    <img key={`mob-${i}`} src={logo} alt="Partner" className="h-10 sm:h-14 object-contain invert grayscale opacity-80" />
-                  ))}
-                </div>
-                <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-8 px-4" aria-hidden="true">
-                  {['/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/microsoft-partner.png'].map((logo, i) => (
-                    <img key={`mob-dup-${i}`} src={logo} alt="Partner" className="h-10 sm:h-14 object-contain invert grayscale opacity-80" />
-                  ))}
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
