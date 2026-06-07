@@ -84,7 +84,7 @@ export const ProductDetail: React.FC = () => {
   // Set document title for SEO
   useEffect(() => {
     if (product) {
-      const typeLabel = product.isSubscription ? 'Assinatura Mensal' : 'Acesso Vitalício';
+      const typeLabel = product.isSubscription ? 'Pagamento Recorrente' : 'Acesso Vitalício';
       document.title = `${product.name} ${typeLabel} | C2Shop`;
       
       const metaDescription = document.querySelector('meta[name="description"]');
@@ -272,7 +272,7 @@ export const ProductDetail: React.FC = () => {
                   }`}
                 >
                   <div className="flex justify-between items-start w-full">
-                    <span className="text-[10px] font-bold text-slate-700">Assinatura Mensal</span>
+                    <span className="text-[10px] font-bold text-slate-700">Pagamento Recorrente</span>
                     <span className="bg-emerald-500 text-white text-[8px] font-extrabold px-1 rounded uppercase tracking-wider">
                       Destaque
                     </span>
