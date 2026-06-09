@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Send, Info, Star, ShoppingCart } from 'lucide-react';
+import { Send, Info, Star, ShoppingCart } from 'lucide-react';
 import type { Product } from '../data/products';
 import { reviewsData } from '../data/reviews';
 import { useCart } from '../context/CartContext';
