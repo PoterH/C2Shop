@@ -30,6 +30,8 @@ export interface Product {
   licenseOptions?: LicenseOption[];
   selectedLicenseOption?: LicenseOption;
   reviews?: any[];
+  keywords?: string[];
+  isRecommended?: boolean;
 }
 
 export interface LicenseOption {
@@ -53,6 +55,7 @@ export const CATEGORIES = [
 export const products: Product[] = [
   {
     id: 'geo5_2024_win',
+    keywords: ['autodesk', 'engenharia', 'arquitetura', 'cad', 'bim'],
     slug: 'geo5-2024-windows',
     name: 'GEO5 2024 (Todos os Módulos)',
     category: 'Engenharia e Arquitetura',
@@ -84,6 +87,7 @@ export const products: Product[] = [
 
   {
     id: 'autocad_2027_win',
+    keywords: ['autodesk', 'engenharia', 'arquitetura', 'cad', 'bim'],
     slug: 'autocad-2027-windows',
     name: 'AutoCAD 2027 (Windows)',
     category: 'Engenharia e Arquitetura',
@@ -113,6 +117,7 @@ export const products: Product[] = [
   },
   {
     id: 'autocad_2027_mac',
+    keywords: ['autodesk', 'engenharia', 'arquitetura', 'cad', 'bim'],
     slug: 'autocad-2027-macos',
     name: 'AutoCAD 2027 (macOS)',
     category: 'Engenharia e Arquitetura',
@@ -142,6 +147,7 @@ export const products: Product[] = [
   },
   {
     id: 'revit_2027',
+    keywords: ['autodesk', 'engenharia', 'arquitetura', 'cad', 'bim'],
     slug: 'revit-2027',
     name: 'Revit 2027',
     category: 'Engenharia e Arquitetura',
@@ -171,6 +177,7 @@ export const products: Product[] = [
   },
   {
     id: 'inventor_pro_2027',
+    keywords: ['autodesk', 'engenharia', 'arquitetura', 'cad', 'bim'],
     slug: 'inventor-professional-2027',
     name: 'Inventor Professional 2027',
     category: 'Engenharia e Arquitetura',
@@ -200,6 +207,7 @@ export const products: Product[] = [
   },
   {
     id: 'civil3d_2027',
+    keywords: ['autodesk', 'engenharia', 'arquitetura', 'cad', 'bim'],
     slug: 'civil-3d-2027',
     name: 'Civil 3D 2027',
     category: 'Engenharia e Arquitetura',
@@ -229,6 +237,7 @@ export const products: Product[] = [
   },
   {
     id: 'navisworks_2027',
+    keywords: ['autodesk', 'engenharia', 'arquitetura', 'cad', 'bim'],
     slug: 'navisworks-manage-2027',
     name: 'Navisworks Manage 2027',
     category: 'Engenharia e Arquitetura',
@@ -374,6 +383,7 @@ export const products: Product[] = [
   },
   {
     id: 'cype_2026',
+    keywords: ['autodesk', 'engenharia', 'arquitetura', 'cad', 'bim'],
     slug: 'cypecad-2026',
     name: 'Cype 2026.A (Completo)',
     category: 'Engenharia e Arquitetura',
@@ -519,6 +529,7 @@ export const products: Product[] = [
   },
   {
     id: 'tekla_2026',
+    keywords: ['autodesk', 'engenharia', 'arquitetura', 'cad', 'bim'],
     slug: 'tekla-structures-2026',
     name: 'Tekla Structures 2026',
     category: 'Engenharia e Arquitetura',
@@ -548,6 +559,7 @@ export const products: Product[] = [
   },
   {
     id: 'office_25_win',
+    keywords: ['microsoft', 'office', 'windows', 'design', 'video'],
     slug: 'office-2024-professional-plus',
     name: 'Office 2024 Professional Plus (Windows)',
     category: 'Escritório e Produtividade',
@@ -578,6 +590,7 @@ export const products: Product[] = [
   },
   {
     id: 'office_25_mac',
+    keywords: ['microsoft', 'office', 'windows', 'design', 'video'],
     slug: 'office-2024-professional-mac',
     name: 'Office 2024 Professional (macOS)',
     category: 'Escritório e Produtividade',
@@ -608,6 +621,7 @@ export const products: Product[] = [
   },
   {
     id: 'vray_7',
+    keywords: ['adobe', 'corel', 'design', 'render', '3d'],
     slug: 'vray-7-windows',
     name: 'Chaos V-Ray 7',
     category: 'Design e Criatividade',
@@ -637,6 +651,7 @@ export const products: Product[] = [
   },
   {
     id: 'enscape',
+    keywords: ['adobe', 'corel', 'design', 'render', '3d'],
     slug: 'chaos-enscape-windows',
     name: 'Chaos Enscape (Windows)',
     category: 'Design e Criatividade',
@@ -736,6 +751,7 @@ export const products: Product[] = [
   },
   {
     id: 'coreldraw_2026',
+    keywords: ['adobe', 'corel', 'design', 'render', '3d'],
     slug: 'coreldraw-graphics-suite-2026',
     name: 'CorelDRAW Graphics Suite 2026',
     category: 'Design e Criatividade',
@@ -765,6 +781,7 @@ export const products: Product[] = [
   },
   {
     id: 'photoshop_2026',
+    keywords: ['adobe', 'corel', 'design', 'render', '3d'],
     slug: 'adobe-photoshop-2026',
     name: 'Adobe Photoshop 2026',
     category: 'Design e Criatividade',
@@ -794,6 +811,7 @@ export const products: Product[] = [
   },
   {
     id: 'illustrator_2026',
+    keywords: ['adobe', 'corel', 'design', 'render', '3d'],
     slug: 'adobe-illustrator-2026',
     name: 'Adobe Illustrator 2026',
     category: 'Design e Criatividade',
@@ -997,6 +1015,7 @@ export const products: Product[] = [
   },
   {
     id: 'coreldraw_2026_mac',
+    keywords: ['adobe', 'corel', 'design', 'render', '3d'],
     slug: 'coreldraw-graphics-suite-2026-macos',
     name: 'CorelDRAW Graphics Suite 2026 (macOS)',
     category: 'Design e Criatividade',
@@ -1113,6 +1132,7 @@ export const products: Product[] = [
   },
   {
     id: 'capcut_pro_mensal',
+    keywords: ['capcut', 'video', 'design', 'editor'],
     slug: 'capcut-pro-mensal',
     name: 'CapCut Pro Mensal',
     category: 'Design e Criatividade',
@@ -1145,6 +1165,7 @@ export const products: Product[] = [
   },
   {
     id: 'canva_pro_mensal',
+    keywords: ['canva', 'design', 'arte', 'editor'],
     slug: 'canva-pro-mensal',
     name: 'Canva Pro Mensal',
     category: 'Design e Criatividade',
@@ -1177,11 +1198,13 @@ export const products: Product[] = [
   },
   {
     id: 'autodesk_all_apps',
+    keywords: ['autocad', 'revit', 'maya', 'fusion 360', '3ds max', 'advanced steel', 'inventor', 'autodesk', 'bim', 'cad'],
+    isRecommended: true,
     slug: 'autodesk-all-apps',
     name: 'Autodesk Todos os Aplicativos',
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows e macOS',
-    version: '2025/2026/2027',
+    version: '2024/2025/2026/2027',
     description: 'Assinatura Autodesk Todos os Aplicativos. Acesso completo e oficial a mais de 80 softwares da Autodesk (AutoCAD, Revit, Inventor, Maya, 3ds Max).',
     longDescription: 'O Autodesk Todos os Aplicativos oferece acesso completo a mais de 80 softwares oficiais da Autodesk. Você receberá credenciais de acesso exclusivas e privadas (login e senha) para utilizar as ferramentas de forma 100% privativa e profissional. O plano inclui atualizações oficiais constantes, suporte completo e acesso direto. Necessário entrar em contato com o nosso suporte via WhatsApp após a compra para receber as suas credenciais privadas de login.',
     price: 89.90,
@@ -1205,15 +1228,16 @@ export const products: Product[] = [
       'Ativação via suporte (necessário entrar em contato)'
     ],
     requirements: {
-      os: 'Windows 10/11 ou macOS 12+',
-      cpu: 'Intel Core i5 / AMD Ryzen 5 ou superior',
-      ram: '8 GB (Recomendado 16 GB+)',
-      gpu: 'Placa dedicada com suporte a DirectX 12',
-      storage: '50 GB de espaço livre'
+      os: 'Windows 10/11 ou macOS atualizado',
+      cpu: 'Processador Intel ou AMD Dual-core básico',
+      ram: '4 GB de memória RAM',
+      gpu: 'Placa de vídeo básica integrada',
+      storage: 'Espaço livre variável de acordo com a instalação'
     }
   },
   {
     id: 'windows_11_pro',
+    keywords: ['microsoft', 'office', 'windows', 'design', 'video'],
     slug: 'windows-11-pro',
     name: 'Windows 11 Pro',
     category: 'Chaves de Ativação',
@@ -1272,6 +1296,7 @@ export const products: Product[] = [
   },
   {
     id: 'windows_10_pro',
+    keywords: ['microsoft', 'office', 'windows', 'design', 'video'],
     slug: 'windows-10-pro',
     name: 'Windows 10 Pro',
     category: 'Chaves de Ativação',

@@ -257,8 +257,6 @@ export const Header: React.FC = () => {
           </div>
         )}
       </div>
-      </div>
-
       {/* Mobile Drawer (with backdrop-blur and sliding animation) */}
       <div
         className={`fixed inset-0 top-[60px] z-30 md:hidden bg-slate-900/20 backdrop-blur-sm transition-opacity duration-300 ${

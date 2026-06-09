@@ -15,7 +15,8 @@ import {
   Briefcase,
   Wrench,
   Cpu,
-  Activity
+  Activity,
+  LayoutGrid
 } from 'lucide-react';
 
 const getCategoryIcon = (category: string) => {
@@ -54,10 +55,14 @@ export const Catalog: React.FC = () => {
   }, [searchParams]);
 
   const tabParam = searchParams.get('tab');
-  const activeTab = (tabParam === 'assinaturas' || tabParam === 'chaves') ? tabParam : 'vitalicios';
-  const setActiveTab = (tab: 'vitalicios' | 'assinaturas' | 'chaves') => {
+  const activeTab = (tabParam === 'assinaturas' || tabParam === 'chaves' || tabParam === 'vitalicios') ? tabParam : 'todos';
+  const setActiveTab = (tab: 'todos' | 'vitalicios' | 'assinaturas' | 'chaves') => {
     const newParams = new URLSearchParams(searchParams);
-    newParams.set('tab', tab);
+    if (tab === 'todos') {
+      newParams.delete('tab');
+    } else {
+      newParams.set('tab', tab);
+    }
     setSearchParams(newParams, { replace: true });
   };
 
@@ -78,7 +83,8 @@ export const Catalog: React.FC = () => {
     return products.filter(p => {
       if (activeTab === 'assinaturas') return !!p.isSubscription;
       if (activeTab === 'chaves') return p.category === 'Chaves de Ativação';
-      return !p.isSubscription && p.category !== 'Chaves de Ativação';
+      if (activeTab === 'vitalicios') return !p.isSubscription && p.category !== 'Chaves de Ativação';
+      return true; // 'todos'
     }).length;
   }, [activeTab]);
 
@@ -87,20 +93,22 @@ export const Catalog: React.FC = () => {
     return products
       .filter((product) => {
         // 0. Filter by active tab (subscription vs lifetime vs keys)
-        let matchesTab = false;
+        let matchesTab = true;
         if (activeTab === 'assinaturas') {
           matchesTab = !!product.isSubscription;
         } else if (activeTab === 'chaves') {
           matchesTab = product.category === 'Chaves de Ativação';
-        } else {
+        } else if (activeTab === 'vitalicios') {
           matchesTab = !product.isSubscription && product.category !== 'Chaves de Ativação';
         }
         if (!matchesTab) return false;
 
         // 1. Text search
-        const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                              product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                              product.category.toLowerCase().includes(searchTerm.toLowerCase());
+        const lowerSearch = searchTerm.toLowerCase();
+        const matchesSearch = product.name.toLowerCase().includes(lowerSearch) ||
+                              product.description.toLowerCase().includes(lowerSearch) ||
+                              product.category.toLowerCase().includes(lowerSearch) ||
+                              (product.keywords && product.keywords.some((k: string) => k.toLowerCase().includes(lowerSearch)));
 
         // 2. Category filter
         const matchesCategory = selectedCategory === 'Todos' || product.category === selectedCategory;
@@ -112,7 +120,11 @@ export const Catalog: React.FC = () => {
 
         return matchesSearch && matchesCategory && matchesOS;
       })
-      .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+      .sort((a, b) => {
+        if (a.id === 'autodesk_all_apps') return -1;
+        if (b.id === 'autodesk_all_apps') return 1;
+        return a.name.localeCompare(b.name, 'pt-BR');
+      });
   }, [searchTerm, selectedCategory, selectedOS, activeTab]);
 
   return (
@@ -130,8 +142,22 @@ export const Catalog: React.FC = () => {
         </div>
 
         {/* Tab Switcher (Vitalícios vs Assinaturas) */}
-        <div className="flex justify-start mb-8 overflow-x-auto scrollbar-none pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0">
-          <div className="bg-white border border-slate-100 shadow-sm p-1.5 rounded-2xl flex gap-2 w-max min-w-max shrink-0">
+        <div className="flex justify-start mb-8">
+          <div className="bg-white border border-slate-100 shadow-sm p-2 sm:p-1.5 rounded-2xl flex flex-col sm:flex-row gap-2 w-full sm:w-max shrink-0">
+            <button
+              onClick={() => {
+                setActiveTab('todos');
+                setSelectedCategory('Todos');
+              }}
+              className={`px-4 sm:px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
+                activeTab === 'todos'
+                  ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                  : 'bg-transparent text-slate-800 border-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <LayoutGrid className="w-4 h-4 shrink-0" />
+              <span className="whitespace-nowrap">Todos os Softwares</span>
+            </button>
             <button
               onClick={() => {
                 setActiveTab('vitalicios');
@@ -295,13 +321,13 @@ export const Catalog: React.FC = () => {
         {/* Results Info */}
         <div className="mb-6 flex justify-between items-center text-xs text-slate-500">
           <p>
-            Mostrando <strong>{filteredProducts.length}</strong> de {totalTabProducts} {activeTab === 'assinaturas' ? 'assinaturas' : (activeTab === 'chaves' ? 'chaves' : 'softwares')} encontrados.
+            Mostrando <strong>{filteredProducts.length}</strong> de {totalTabProducts} {activeTab === 'assinaturas' ? 'assinaturas' : (activeTab === 'chaves' ? 'chaves' : (activeTab === 'vitalicios' ? 'softwares' : 'produtos'))} encontrados.
           </p>
         </div>
 
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8">
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

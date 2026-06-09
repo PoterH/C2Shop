@@ -395,6 +395,7 @@ export const ProductDetail: React.FC = () => {
           <div className="flex items-center justify-center gap-1.5 opacity-60">
             {product.isSubscription ? (
               <>
+                <span className="px-1 border border-slate-200 rounded">PIX</span>
                 <span className="px-1 border border-slate-200 rounded">CARTÃO</span>
                 <span className="px-1 border border-slate-200 rounded">BOLETO</span>
               </>
@@ -757,7 +758,7 @@ export const ProductDetail: React.FC = () => {
                     <div className="space-y-1">
                       <p className="font-semibold text-slate-800">Quais tipos de assinatura estão disponíveis?</p>
                       <p className="text-slate-500 leading-relaxed">
-                        Oferecemos o Plano Mensal Recorrente (pagamento exclusivo no Pix para maior economia), Plano Mensal Compra Única (acesso de 30 dias) e os planos de licença de longo prazo de 12, 24 e 36 meses (pagos no cartão de crédito via Cakto).
+                        Oferecemos o Plano Mensal Recorrente, Plano Mensal Compra Única (acesso de 30 dias) e os planos de longo prazo de 1, 2 e 3 anos. Todos os planos aceitam pagamento via Pix e Cartão de Crédito. O pagamento via Boleto Bancário está disponível exclusivamente para os planos de 1 a 3 anos.
                       </p>
                     </div>
                     <div className="space-y-1">

@@ -1,14 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Send, Info, Star } from 'lucide-react';
+import { Check, Send, Info, Star, ShoppingCart } from 'lucide-react';
 import type { Product } from '../data/products';
 import { reviewsData } from '../data/reviews';
+import { useCart } from '../context/CartContext';
 
 interface ProductCardProps {
   product: Product;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const { addToCart } = useCart();
   const productReviews = reviewsData[product.id] || [];
   const averageRating = productReviews.length > 0
     ? (productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length).toFixed(1)
@@ -67,10 +69,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
 
   return (
-    <div className="group bg-white rounded-3xl border border-slate-100 hover:border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full overflow-hidden">
+    <div className="relative group bg-white rounded-3xl border border-slate-100 hover:border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full">
+      {product.isRecommended && (
+        <div className="absolute -top-3 left-4 z-20 bg-red-600 text-white text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg shadow-[0_4px_12px_rgba(220,38,38,0.4)] flex items-center gap-1 border border-red-500">
+          <Star className="w-3.5 h-3.5 fill-current" /> RECOMENDADO
+        </div>
+      )}
       <Link to={`/produto/${product.slug}`} className="flex flex-col flex-1 hover:no-underline text-inherit">
         {/* Product Image / Visual Area */}
-        <div className="relative h-44 bg-slate-50 flex items-center justify-center border-b border-slate-50 overflow-hidden">
+        <div className="relative h-44 bg-slate-50 rounded-t-[23px] flex items-center justify-center border-b border-slate-50 overflow-hidden">
           {product.imageUrl ? (
             <img
               src={product.imageUrl}
@@ -113,42 +120,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </>
           )}
 
-          {/* Badges Overlay */}
-          <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-            {product.unavailable ? (
-              <span className="bg-rose-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center border border-rose-600/30 shadow-md uppercase tracking-wider">
-                <span className="w-1.5 h-1.5 rounded-full bg-white mr-1.5 animate-pulse"></span>
-                Indisponível
-              </span>
-            ) : product.isSubscription ? (
-              <>
-                <span className="bg-white/95 backdrop-blur-md text-purple-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center border border-purple-500/20 shadow-sm">
-                  <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-1.5 animate-pulse"></span>
-                  {product.id === 'autodesk_all_apps' ? 'Produto original' : 'Plano mensal'}
-                </span>
-              </>
-            ) : (
-              <>
-                {product.category === 'Chaves de Ativação' ? (
-                  <span className="bg-white/90 backdrop-blur-md text-amber-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center border border-amber-500/20 shadow-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span>
-                    Chave original
-                  </span>
-                ) : (
-                  <span className="bg-white/90 backdrop-blur-md text-emerald-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center border border-emerald-500/20 shadow-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
-                    Acesso vitalício
-                  </span>
-                )}
-                {product.category !== 'Chaves de Ativação' && (
-                  <span className="bg-white/90 backdrop-blur-md text-sky-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center border border-sky-500/20 shadow-sm">
-                    <Send className="w-2.5 h-2.5 mr-1" />
-                    Entrega imediata
-                  </span>
-                )}
-              </>
-            )}
-          </div>
+
 
           {/* Semi-transparent dark overlay for unavailable products */}
           {product.unavailable && (
@@ -161,17 +133,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
 
         {/* Product Info */}
-        <div className="p-5 pb-0 flex-1 flex flex-col">
+        <div className="p-3 sm:p-5 pb-0 flex-1 flex flex-col">
           {/* Category & OS */}
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold text-accent-blue uppercase tracking-wider">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
+            <span className="text-[9px] sm:text-[11px] font-bold text-accent-blue uppercase tracking-wider truncate pr-1">
               {product.category}
             </span>
             {renderOSIcon()}
           </div>
 
           {/* Title */}
-          <h3 className="font-display font-bold text-lg text-slate-900 group-hover:text-accent-blue transition-colors duration-200 mb-1">
+          <h3 className="font-display font-bold text-sm sm:text-lg leading-tight sm:leading-normal text-slate-900 group-hover:text-accent-blue transition-colors duration-200 mb-1">
             {product.name}
           </h3>
 
@@ -196,71 +168,86 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           )}
 
           {/* Version Badge for clarity */}
-          <div className="mb-2">
-            <span className="inline-block bg-slate-100 text-slate-600 text-[11px] font-medium px-2 py-0.5 rounded">
+          <div className="mb-2 sm:mb-4">
+            <span className="inline-block bg-slate-100 text-slate-600 text-[9px] sm:text-[11px] font-medium px-1.5 sm:px-2 py-0.5 rounded">
               Versão: {product.version}
             </span>
           </div>
 
-          {/* Description */}
-          <p className="text-slate-500 text-xs line-clamp-2 leading-relaxed mb-4">
-            {product.description}
-          </p>
-
-          {/* Features / Bullet points */}
-          <div className="space-y-1.5 mb-5 flex-1">
-            <div className="flex items-start text-slate-600 text-[11px]">
-              <Check className="w-3.5 h-3.5 text-emerald-500 mr-1.5 shrink-0 mt-0.5" />
-              <span>{product.isSubscription ? (product.features[0] || 'Acesso premium completo') : 'Versão completa e funcional'}</span>
-            </div>
-            <div className="flex items-start text-slate-600 text-[11px]">
-              <Check className="w-3.5 h-3.5 text-emerald-500 mr-1.5 shrink-0 mt-0.5" />
-              <span>{product.isSubscription ? (product.features[1] || 'Atualizações oficiais inclusas') : 'Instalação assistida inclusa'}</span>
-            </div>
-          </div>
-
-          {/* Divider */}
-          <hr className="border-slate-100 my-4" />
-
           {/* Pricing & CTA */}
-          <div className="flex items-end justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-2 sm:mb-4 gap-1 sm:gap-0">
             <div className="flex flex-col">
               {product.isSubscription ? (
                 <>
-                  <span className="text-[10px] text-slate-400 font-medium">
-                    Avulso: {formattedPrice}
+                  <span className="text-[9px] sm:text-[10px] text-slate-400 font-medium">
+                    Único: {formattedPrice}
                   </span>
-                  <span className="text-xl font-display font-extrabold text-slate-900 tracking-tight">
-                    Pix: <span className="text-purple-600">{formattedRecurrencePrice}</span><span className="text-xs text-slate-500 font-normal">/mês</span>
+                  <span className="text-base sm:text-xl font-display font-extrabold text-slate-900 tracking-tight leading-none sm:leading-normal">
+                    Pix: <span className="text-purple-600">{formattedRecurrencePrice}</span><span className="text-[10px] sm:text-xs text-slate-500 font-normal">/mês</span>
                   </span>
-                  <span className="text-[9px] text-emerald-600 font-bold uppercase tracking-wider">
+                  <span className="text-[8px] sm:text-[9px] text-emerald-600 font-bold uppercase tracking-wider hidden sm:block">
                     Desconto na assinatura
                   </span>
                 </>
               ) : (
                 <>
-                  <span className="text-[10px] text-slate-400 line-through">
+                  <span className="text-[9px] sm:text-[10px] text-slate-400 line-through">
                     De {formattedOriginalPrice}
                   </span>
-                  <span className="text-xl font-display font-extrabold text-slate-900 tracking-tight">
+                  <span className="text-base sm:text-xl font-display font-extrabold text-slate-900 tracking-tight leading-none sm:leading-normal">
                     Por <span className="text-accent-blue">{formattedPrice}</span>
                   </span>
-                  <span className="text-[9px] text-emerald-600 font-semibold uppercase">
+                  <span className="text-[8px] sm:text-[9px] text-emerald-600 font-semibold uppercase hidden sm:block">
                     Sem mensalidades
                   </span>
                 </>
               )}
             </div>
 
-            <span className="text-[10px] text-slate-400 bg-slate-50 border border-slate-100 rounded px-1.5 py-0.5 font-medium shrink-0">
-              {product.isSubscription ? 'Pix Assinatura' : 'Pix / Cartão'}
+            <span className="text-[8px] sm:text-[10px] text-slate-400 bg-slate-50 border border-slate-100 rounded px-1.5 py-0.5 font-medium shrink-0 self-start sm:self-auto">
+              Pix / Cartão
             </span>
+          </div>
+
+          {/* Badges / Status */}
+          <div className="flex flex-col items-start gap-1 mb-2">
+            {product.unavailable ? (
+              <span className="bg-rose-50 text-rose-700 text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center border border-rose-200 uppercase tracking-wider">
+                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-rose-500 mr-1.5 animate-pulse"></span>
+                Indisponível
+              </span>
+            ) : product.isSubscription ? (
+              <span className="bg-purple-50 text-purple-700 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center border border-purple-200">
+                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-purple-500 mr-1.5 animate-pulse"></span>
+                {product.id === 'autodesk_all_apps' ? 'Produto original' : 'Plano mensal'}
+              </span>
+            ) : (
+              <>
+                {product.category === 'Chaves de Ativação' ? (
+                  <span className="bg-amber-50 text-amber-700 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center border border-amber-200">
+                    <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-amber-500 mr-1.5"></span>
+                    Chave original
+                  </span>
+                ) : (
+                  <span className="bg-emerald-50 text-emerald-700 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center border border-emerald-200">
+                    <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
+                    Acesso vitalício
+                  </span>
+                )}
+                {product.category !== 'Chaves de Ativação' && (
+                  <span className="text-emerald-600 text-[9px] sm:text-[11px] font-semibold flex items-center mt-0.5">
+                    <Send className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1 shrink-0" />
+                    <span className="truncate">Entrega imediata FULL</span>
+                  </span>
+                )}
+              </>
+            )}
           </div>
         </div>
       </Link>
 
       {/* CTA Buttons */}
-      <div className="px-5 pb-5 pt-0 mt-auto">
+      <div className="px-3 sm:px-5 pb-3 sm:pb-5 pt-0 mt-auto">
         {product.unavailable ? (
           <Link
             to={`/produto/${product.slug}`}
@@ -270,22 +257,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             Ver detalhes do software
           </Link>
         ) : (
-          <div className="grid grid-cols-2 gap-2">
-            <Link
-              to={`/produto/${product.slug}`}
-              className="flex items-center justify-center py-2 px-3 border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors duration-200"
-            >
-              <Info className="w-3.5 h-3.5 mr-1 text-slate-400" />
-              Detalhes
-            </Link>
-            <Link
-              to={`/produto/${product.slug}?checkout=true`}
-              className="flex items-center justify-center py-2 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-xs font-semibold text-white transition-all duration-200 shadow-sm shadow-emerald-500/10 hover:shadow border-none text-center hover:no-underline"
-              id={`buy-now-${product.id}`}
-            >
-              Comprar
-            </Link>
-          </div>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              addToCart(product);
+            }}
+            className="flex items-center justify-center w-full py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-xs font-bold text-white transition-all duration-200 shadow-[0_4px_12px_rgba(16,185,129,0.3)] hover:shadow-[0_6px_16px_rgba(16,185,129,0.4)] border-none text-center transform hover:-translate-y-0.5 active:translate-y-0"
+            id={`add-to-cart-${product.id}`}
+          >
+            <ShoppingCart className="w-4 h-4 mr-1.5" />
+            Quero levar
+          </button>
         )}
       </div>
     </div>
