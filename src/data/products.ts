@@ -1343,6 +1343,36 @@ export const products: Product[] = [
         verified: true
       }
     ]
+  },
+  {
+    id: 'adobe_acrobat_pro_2026',
+    keywords: ['adobe', 'acrobat', 'pro', 'dc', 'pdf', 'editor', 'leitor', '2026'],
+    slug: 'adobe-acrobat-pro-dc-2026',
+    name: 'Adobe Acrobat Pro DC 2026',
+    category: 'Design e Criatividade',
+    compatibility: 'Windows',
+    version: '2026 (64-bits)',
+    description: 'A solução completa em PDF. Crie, edite, converta e assine documentos com a ferramenta oficial da Adobe.',
+    longDescription: 'O Adobe Acrobat Pro DC 2026 oferece as melhores ferramentas para trabalhar com PDFs. Edite textos e imagens diretamente no PDF, converta documentos, crie formulários preenchíveis, e adicione assinaturas digitais com facilidade e segurança. Uma licença vitalícia completa para turbinar a sua produtividade no Windows.\n\n// NOTA INTERNA: Link de entrega configurado na Cakto -> https://drive.google.com/drive/folders/1OXYAN30RI857GoCV9MVKZSKZl2tX28De?usp=drive_link',
+    price: 127.90,
+    originalPrice: 299.90,
+    checkoutUrl: 'https://pay.cakto.com.br/gm7y7qs',
+    imageUrl: '/images/products/adobe-acrobat-pro.png',
+    isSubscription: false,
+    features: [
+      'Acesso vitalício',
+      'Edição avançada de PDFs',
+      'Conversão de arquivos',
+      'Assinaturas digitais',
+      'Proteção por senha'
+    ],
+    requirements: {
+      os: 'Windows 10 ou Windows 11 (64-bits)',
+      cpu: 'Processador de 1.5 GHz ou superior',
+      ram: '2 GB de RAM',
+      gpu: 'Placa de vídeo básica',
+      storage: '4.5 GB de espaço disponível em disco'
+    }
   }
 ];
 
