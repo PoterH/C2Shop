@@ -302,7 +302,7 @@ export const ProductDetail: React.FC = () => {
                   <span className="text-[10px] font-bold text-slate-700">Pagamento Único</span>
                   <p className="text-base font-display font-black text-slate-950 mt-1.5">
                     {formattedPrice}
-                    {(selectedLicenseOption?.label.includes('Mensal') || (!selectedLicenseOption && product?.slug === 'autodesk-all-apps')) && (
+                    {(selectedLicenseOption?.label.includes('Mensal') || (!selectedLicenseOption && product?.isSubscription)) && (
                       <span className="text-[10px] text-slate-400 font-normal ml-0.5">/mês</span>
                     )}
                   </p>
