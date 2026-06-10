@@ -1099,5 +1099,25 @@ export const reviewsData: Record<string, Review[]> = {
       date: "1 semana atrás",
       comment: "Tava cansado daquela marca d'água de ativar o Windows. Comprei aqui e sumiu na hora com a chave original."
     }
+  ],
+  adobe_acrobat_pro_2026: [
+    {
+      author: "Julio C. Ramos",
+      rating: 5,
+      date: "Ontem",
+      comment: "Excelente! Editando e assinando meus contratos em PDF sem complicação. Licença vitalícia compensa muito."
+    },
+    {
+      author: "Amanda Freitas",
+      rating: 5,
+      date: "3 dias atrás",
+      comment: "Instalação super rápida e o software roda liso no Windows 11. Cansada de pagar mensalidade pra Adobe!"
+    },
+    {
+      author: "Carlos P. Neto",
+      rating: 5,
+      date: "1 semana atrás",
+      comment: "Recomendo a todos, entrega super rápida e o Acrobat tá funcionando perfeitamente."
+    }
   ]
 };
