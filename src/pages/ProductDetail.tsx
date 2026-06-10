@@ -6,7 +6,6 @@ import { getProductBySlug, type LicenseOption } from '../data/products';
 import { 
   Check, 
   ShieldCheck, 
-  MessageSquare, 
   Monitor, 
   ChevronRight, 
   ArrowLeft,
@@ -138,9 +137,7 @@ export const ProductDetail: React.FC = () => {
 
 
 
-  const whatsappNumber = '5581997349300'; // Substitua pelo seu número real do WhatsApp
-  const whatsappMessage = encodeURIComponent(`Olá, tenho interesse no software ${product.name} e gostaria de tirar uma dúvida sobre a compatibilidade ou instalação.`);
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+
 
   // Structured Data (JSON-LD Schema Markup) for Product SEO
   const schemaMarkup = {
@@ -374,16 +371,6 @@ export const ProductDetail: React.FC = () => {
               </button>
             </div>
           )}
-          
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full flex items-center justify-center py-3.5 bg-white border border-slate-200 hover:border-slate-300 text-slate-700 hover:text-emerald-600 font-bold rounded-2xl text-center transition-all"
-          >
-            <MessageSquare className="w-5 h-5 text-emerald-500 mr-2 shrink-0" />
-            Tirar dúvidas no WhatsApp
-          </a>
         </div>
 
         {/* Secure payment banner */}
