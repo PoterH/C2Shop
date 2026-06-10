@@ -1353,7 +1353,7 @@ export const products: Product[] = [
     compatibility: 'Windows',
     version: '2026 (64-bits)',
     description: 'A solução completa em PDF. Crie, edite, converta e assine documentos com a ferramenta oficial da Adobe.',
-    longDescription: 'O Adobe Acrobat Pro DC 2026 oferece as melhores ferramentas para trabalhar com PDFs. Edite textos e imagens diretamente no PDF, converta documentos, crie formulários preenchíveis, e adicione assinaturas digitais com facilidade e segurança. Uma licença vitalícia completa para turbinar a sua produtividade no Windows.\n\n// NOTA INTERNA: Link de entrega configurado na Cakto -> https://drive.google.com/drive/folders/1OXYAN30RI857GoCV9MVKZSKZl2tX28De?usp=drive_link',
+    longDescription: 'O Adobe Acrobat Pro DC 2026 oferece as melhores ferramentas para trabalhar com PDFs. Edite textos e imagens diretamente no PDF, converta documentos, crie formulários preenchíveis, e adicione assinaturas digitais com facilidade e segurança. Uma licença vitalícia completa para turbinar a sua produtividade no Windows.',
     price: 127.90,
     originalPrice: 299.90,
     checkoutUrl: 'https://pay.cakto.com.br/gm7y7qs',
