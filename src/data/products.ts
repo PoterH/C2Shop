@@ -1373,6 +1373,36 @@ export const products: Product[] = [
       gpu: 'Placa de vídeo básica',
       storage: '4.5 GB de espaço disponível em disco'
     }
+  },
+  {
+    id: 'fl_studio_2025',
+    keywords: ['fl', 'studio', 'producer', 'edition', '2025', 'audio', 'plugins', 'addons', 'musica', 'daw'],
+    slug: 'fl-studio-2025-producer-edition',
+    name: 'FL Studio 2025 Producer Edition + All Plugins',
+    category: 'Design e Criatividade',
+    compatibility: 'Windows',
+    version: '2025 (All Plugins + Addons)',
+    description: 'A estação de trabalho de áudio digital definitiva. Crie, grave, edite e mixe suas músicas com plugins premium.',
+    longDescription: 'O FL Studio 2025 Producer Edition traz tudo o que você precisa para a produção musical profissional. Esta versão inclui todos os plugins e addons (All Plugins Edition), oferecendo sintetizadores avançados, efeitos de mixagem e ferramentas de masterização em uma interface intuitiva. Licença vitalícia completa e permanente para Windows.',
+    price: 127.90,
+    originalPrice: 499.90,
+    checkoutUrl: 'https://pay.cakto.com.br/x6cwjnu',
+    imageUrl: '/images/products/fl-studio-2025.png',
+    isSubscription: false,
+    features: [
+      'Acesso vitalício',
+      'Inclui todos os plugins e addons',
+      'Gravação de áudio multipista',
+      'Sequenciador de última geração',
+      'Mixagem e masterização profissional'
+    ],
+    requirements: {
+      os: 'Windows 10 ou Windows 11 (64-bits)',
+      cpu: 'Processador Intel ou AMD de 2.0 GHz ou superior',
+      ram: '4 GB de RAM (8 GB recomendado)',
+      gpu: 'Compatível com Direct3D',
+      storage: '4 GB de espaço disponível'
+    }
   }
 ];
 
