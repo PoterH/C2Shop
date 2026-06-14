@@ -295,6 +295,13 @@ export const Footer: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Selo Promob Authorized Reseller */}
+                <div className="flex items-center justify-center bg-white rounded-xl overflow-hidden border border-slate-200/20 hover:border-sky-500/40 transition-all shadow-sm" title="Promob Authorized Reseller">
+                  <div className="relative w-[120px] h-[42px] flex items-center justify-center">
+                    <img src="/images/promob-reseller.png" alt="Promob Authorized Reseller" className="w-[130%] h-[130%] object-contain scale-[1.25]" />
+                  </div>
+                </div>
+
                 {/* Selo Compra 100% Segura */}
                 <div className="flex items-center space-x-2.5 bg-slate-900/40 border border-emerald-500/20 rounded-2xl px-4 py-2 hover:border-emerald-500/40 transition-colors shadow-sm">
                   <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400">

@@ -431,6 +431,18 @@ export const ProductDetail: React.FC = () => {
             <p className="text-[9px] text-slate-400 mt-2 font-medium uppercase tracking-wider">Parceiro Autorizado</p>
           </div>
         )}
+
+        {/* Promob Partner Seal */}
+        {(product.id === 'promob_professional_2025' || product.id === 'promob_enterprise_2024') && (
+          <div className="pt-4 mt-2 border-t border-slate-100 flex flex-col items-center justify-center">
+            <div className="flex items-center justify-center bg-white rounded-xl overflow-hidden border border-slate-200/50 shadow-sm" title="Promob Authorized Reseller">
+              <div className="relative w-[130px] h-[45px] flex items-center justify-center">
+                <img src="/images/promob-reseller.png" alt="Promob Authorized Reseller" className="w-[130%] h-[130%] object-contain scale-[1.25]" />
+              </div>
+            </div>
+            <p className="text-[9px] text-slate-400 mt-2 font-medium uppercase tracking-wider">Revendedor Autorizado</p>
+          </div>
+        )}
       </div>
     );
   };
