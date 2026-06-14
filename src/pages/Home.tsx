@@ -344,12 +344,12 @@ export const Home: React.FC = () => {
               }}
             >
               <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-8 md:gap-12 px-4 md:px-6">
-                {['/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png'].map((logo, i) => (
+                {['/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/promob-reseller.png', '/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/promob-reseller.png'].map((logo, i) => (
                   <img key={i} src={logo} alt="Partner" className="h-10 sm:h-12 lg:h-20 object-contain invert grayscale opacity-80 md:opacity-70 hover:opacity-100 transition-opacity duration-300" />
                 ))}
               </div>
               <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-8 md:gap-12 px-4 md:px-6" aria-hidden="true">
-                {['/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png'].map((logo, i) => (
+                {['/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/promob-reseller.png', '/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/promob-reseller.png'].map((logo, i) => (
                   <img key={`dup-${i}`} src={logo} alt="Partner" className="h-10 sm:h-12 lg:h-20 object-contain invert grayscale opacity-80 md:opacity-70 hover:opacity-100 transition-opacity duration-300" />
                 ))}
               </div>
