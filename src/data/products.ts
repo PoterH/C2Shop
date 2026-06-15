@@ -360,7 +360,7 @@ export const products: Product[] = [
     name: 'ArchiCAD 29 BRA',
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows',
-    version: '29 (64-bits)',
+    version: '29.1.0 Build 4006',
     description: 'Software de autoria BIM líder para arquitetos com fluxos de trabalho avançados.',
     longDescription: 'O ArchiCAD 29 BRA é a referência em modelagem arquitetônica BIM. Desenvolvido especificamente por e para arquitetos, ele oferece uma modelagem flexível de volumes, documentação 2D automática a partir do modelo 3D, renderizações integradas e coordenação fluida com outros engenheiros.',
     price: 137.90,
