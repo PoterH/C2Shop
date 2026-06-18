@@ -1205,14 +1205,10 @@ export const products: Product[] = [
     longDescription: 'O Autodesk Todos os Aplicativos oferece acesso completo a mais de 80 softwares oficiais da Autodesk. Você receberá credenciais de acesso exclusivas e privadas (login e senha) para utilizar as ferramentas de forma 100% privativa e profissional. O plano inclui atualizações oficiais constantes, suporte completo e acesso direto. Necessário entrar em contato com o nosso suporte via WhatsApp após a compra para receber as suas credenciais privadas de login.',
     price: 89.90,
     originalPrice: 199.90,
-    checkoutUrl: '',
-    recurrenceCheckoutUrl: 'https://pay.cakto.com.br/6ek2ybh',
+    checkoutUrl: 'https://pay.cakto.com.br/6ek2ybh',
     imageUrl: '/images/products/autodesk-all-apps.png',
-    isSubscription: true,
-    recurrencePrice: 69.90,
-    billingPeriod: 'mensal',
     licenseOptions: [
-      { quantity: 1, label: 'Mensal Único', price: 89.90, checkoutUrl: '' },
+      { quantity: 1, label: 'Mensal', price: 89.90, checkoutUrl: 'https://pay.cakto.com.br/6ek2ybh' },
       { quantity: 12, label: '1 Ano', price: 397.90, checkoutUrl: 'https://pay.cakto.com.br/sweaaho_448678' },
       { quantity: 24, label: '2 Anos', price: 597.90, checkoutUrl: 'https://pay.cakto.com.br/3ci8dh3' },
       { quantity: 36, label: '3 Anos', price: 737.90, checkoutUrl: 'https://pay.cakto.com.br/sjhwfte' }
