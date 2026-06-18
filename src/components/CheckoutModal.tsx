@@ -909,10 +909,25 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                     </div>
                   </div>
 
+                  {/* Pix Scam Alert Warning */}
+                  <div className="bg-amber-50 border border-amber-200/60 rounded-2xl p-4 max-w-sm mx-auto text-left shadow-sm">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center shrink-0 mt-0.5">
+                        <Lock className="w-4 h-4 text-amber-600" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <p className="text-xs font-bold text-amber-800">Aviso: Seu banco exibiu um alerta de "golpe"?</p>
+                        <p className="text-[11px] text-amber-700/90 leading-relaxed">
+                          Fique tranquilo! Alguns bancos exibem essa mensagem automática por usarmos a Efí/Cakto como geradora do código Pix. <b>Isto é apenas um aviso padrão para recebedores novos no seu aplicativo.</b> A C2Tech garante que sua transação é processada por uma instituição autorizada pelo Banco Central e é <b>100% segura</b>.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Safety badge */}
-                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 max-w-sm mx-auto flex items-center justify-center space-x-2 text-[11px] text-slate-500">
-                    <Lock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span>Ambiente Criptografado e Monitorado pelo Efí Bank</span>
+                  <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 max-w-sm mx-auto flex items-center justify-center space-x-2 text-[11px] text-slate-500">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                    <span>Transação Monitorada pelo Banco Central</span>
                   </div>
 
                   {/* Back/Change method button */}

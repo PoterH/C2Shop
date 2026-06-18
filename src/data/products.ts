@@ -477,7 +477,7 @@ export const products: Product[] = [
     name: 'Rhinoceros 8 Rhino 3D',
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows',
-    version: '8.x Professional',
+    version: '8 Commercial',
     description: 'Modelador 3D matemático avançado baseado em curvas NURBS para superfícies complexas.',
     longDescription: 'O Rhinoceros 8 (Rhino 3D) é amplamente utilizado por designers de produtos, engenheiros navais, joalheiros e arquitetos devido ao seu incrível motor matemático baseado em curvas NURBS. Permite criar formas curvas orgânicas com máxima precisão geométrica, além de incluir o Grasshopper integrado para modelagem paramétrica algorítmica.',
     price: 167.90,
@@ -1398,6 +1398,36 @@ export const products: Product[] = [
       ram: '4 GB de RAM (8 GB recomendado)',
       gpu: 'Compatível com Direct3D',
       storage: '4 GB de espaço disponível'
+    }
+  },
+  {
+    id: 'rhinoceros_8_mac',
+    slug: 'rhinoceros-8-mac',
+    name: 'Rhinoceros 8 Rhino 3D (Para Mac)',
+    category: 'Engenharia e Arquitetura',
+    compatibility: 'macOS',
+    version: '8 Commercial',
+    description: 'Modelador 3D matemático avançado baseado em curvas NURBS para superfícies complexas. Versão nativa para macOS.',
+    longDescription: 'O Rhinoceros 8 (Rhino 3D) é amplamente utilizado por designers de produtos, engenheiros navais, joalheiros e arquitetos devido ao seu incrível motor matemático baseado em curvas NURBS. Permite criar formas curvas orgânicas com máxima precisão geométrica, além de incluir o Grasshopper integrado para modelagem paramétrica algorítmica. Esta versão é otimizada e nativa para o ecossistema Apple macOS.',
+    price: 197.90,
+    originalPrice: 849.00,
+    checkoutUrl: 'https://pay.cakto.com.br/ew26je8',
+    imageUrl: '/images/products/rhinoceros-8-mac.png',
+    features: [
+      'Versão completa e funcional para macOS',
+      'Grasshopper totalmente integrado',
+      'Acesso vitalício para uso ilimitado',
+      'Instalação assistida inclusa',
+      'Entrega automática no e-mail após o pagamento',
+      'Suporte remoto quando necessário',
+      'Pronto para uso imediato'
+    ],
+    requirements: {
+      os: 'macOS 12.4 (Monterey) ou mais recente',
+      cpu: 'Apple Silicon (M1/M2/M3) ou Processador Intel',
+      ram: '8 GB (Recomendável: 16 GB)',
+      gpu: 'AMD ou Apple Silicon',
+      storage: '5 GB de espaço livre'
     }
   }
 ];
