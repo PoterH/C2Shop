@@ -1207,6 +1207,8 @@ export const products: Product[] = [
     originalPrice: 199.90,
     checkoutUrl: 'https://pay.cakto.com.br/6ek2ybh',
     imageUrl: '/images/products/autodesk-all-apps.png',
+    isSubscription: true,
+    billingPeriod: 'mensal',
     licenseOptions: [
       { quantity: 1, label: 'Mensal', price: 89.90, checkoutUrl: 'https://pay.cakto.com.br/6ek2ybh' },
       { quantity: 12, label: '1 Ano', price: 397.90, checkoutUrl: 'https://pay.cakto.com.br/sweaaho_448678' },
