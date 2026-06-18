@@ -255,7 +255,7 @@ export const ProductDetail: React.FC = () => {
 
         {/* Price Details */}
         <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col gap-3">
-          {product.isSubscription ? (
+          {product.isSubscription && product.recurrencePrice ? (
             <div className="space-y-3 w-full text-left">
               <span className="text-[10px] font-bold text-slate-450 text-slate-400 uppercase tracking-widest block font-sans">
                 Escolha o seu plano
@@ -314,10 +314,11 @@ export const ProductDetail: React.FC = () => {
               <div className="space-y-1">
                 <p className="text-xs text-slate-400 line-through">De {formattedOriginalPrice}</p>
                 <p className="text-2xl sm:text-3xl font-display font-black text-slate-950">
-                  Por <span className="text-accent-blue">{formattedPrice}</span>
+                  Por <span className={product.isSubscription ? "text-purple-600" : "text-accent-blue"}>{formattedPrice}</span>
+                  {product.isSubscription && <span className="text-sm text-slate-500 font-normal ml-1">/mês</span>}
                 </p>
                 <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider">
-                  Pagamento Único. Sem Mensalidade.
+                  {product.isSubscription ? 'Assinatura' : 'Pagamento Único. Sem Mensalidade.'}
                 </p>
               </div>
               <div className="text-right shrink-0">
