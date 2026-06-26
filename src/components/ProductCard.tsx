@@ -183,7 +183,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     {product.recurrencePrice ? `Único: ${formattedPrice}` : `De: ${formattedOriginalPrice}`}
                   </span>
                   <span className="text-base sm:text-xl font-display font-extrabold text-slate-900 tracking-tight leading-none sm:leading-normal">
-                    Pix: <span className="text-purple-600">{product.recurrencePrice ? formattedRecurrencePrice : formattedPrice}</span><span className="text-[10px] sm:text-xs text-slate-500 font-normal">/mês</span>
+                    Por: <span className="text-purple-600">{product.recurrencePrice ? formattedRecurrencePrice : formattedPrice}</span><span className="text-[10px] sm:text-xs text-slate-500 font-normal">/mês</span>
                   </span>
                   <span className="text-[8px] sm:text-[9px] text-emerald-600 font-bold uppercase tracking-wider hidden sm:block">
                     Desconto na assinatura

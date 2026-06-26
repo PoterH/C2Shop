@@ -16,45 +16,40 @@ export const TermsPage: React.FC = () => {
               Seja bem-vindo ao site da <strong>C2Tech</strong>. Ao acessar e adquirir qualquer produto digital em nosso portal, você concorda expressamente com os termos estabelecidos a seguir. Recomendamos a leitura atenta antes de prosseguir com qualquer transação.
             </p>
 
-            <h3 className="font-display font-bold text-slate-950 text-base mt-6">1. Escopo das Soluções Comercializadas</h3>
+            <h3 className="font-display font-bold text-slate-950 text-base mt-6">1. Modelos de Licenciamento (Vitalício vs Assinaturas)</h3>
             <p>
-              A C2Tech é especializada no fornecimento e distribuição de softwares digitais para computadores locais sob a modalidade de <strong>licença alternativa</strong>. 
+              Comercializamos softwares em dois formatos: <strong>Assinaturas</strong> (planos com renovação periódica) e <strong>Vitalícios</strong> (pagamento único). 
             </p>
             <p>
-              Os arquivos adquiridos destinam-se ao funcionamento completo e funcional da ferramenta selecionada em máquina local, com <strong>acesso vitalício</strong> para a versão específica comercializada no momento da compra (conforme descrito em cada anúncio).
-            </p>
-
-            <h3 className="font-display font-bold text-slate-950 text-base mt-6">2. Limitações de Recursos em Nuvem e Atualizações</h3>
-            <p>
-              Os softwares e ferramentas fornecidos pela C2Tech são projetados para execução local. Devido à natureza da licença alternativa, o comprador está ciente de que:
-            </p>
-            <ul className="list-disc pl-5 space-y-1.5 mt-2">
-              <li>Não estão inclusos serviços ou recursos integrados de armazenamento em nuvem (como espaço de armazenamento no OneDrive).</li>
-              <li>Não há acesso a recursos integrados de servidores de inteligência artificial corporativa que dependam de logins em contas online na nuvem do fabricante.</li>
-              <li>Não estão inclusas atualizações de versão garantidas lançadas posteriormente pelos fabricantes. O software operará estritamente na versão indicada no anúncio.</li>
-            </ul>
-
-            <h3 className="font-display font-bold text-slate-950 text-base mt-6">3. Entrega e Acesso</h3>
-            <p>
-              A C2Tech utiliza sistemas automatizados de processamento. A entrega dos links de download e dos tutoriais passo a passo é efetuada de forma automática por e-mail imediatamente após a confirmação de pagamento do checkout seguro. O cliente é inteiramente responsável por informar o endereço de e-mail correto no formulário de compra.
+              Para os softwares <strong>Vitalícios</strong>, o acesso ao programa nunca expira. O funcionamento se comporta de forma vitalícia <strong>na máquina em que foi instalado</strong>, garantindo o uso permanente desde que o cliente entenda e cumpra os demais termos a seguir (como não perder os arquivos e não trocar de computador).
             </p>
 
-            <h3 className="font-display font-bold text-slate-950 text-base mt-6">4. Suporte Técnico de Instalação</h3>
+            <h3 className="font-display font-bold text-slate-950 text-base mt-6">2. Escopo e Entrega</h3>
             <p>
-              Nos comprometemos a garantir que o software adquirido esteja pronto para uso. Para isso, oferecemos o serviço de <strong>instalação assistida</strong> remota nos casos em que o comprador enfrente dificuldades ou encontre erros no processo de instalação autônomo. 
-            </p>
-            <p>
-              O suporte é restrito à inicialização e funcionamento básico local do software, não englobando cursos de usabilidade, modelagens sob demanda, plugins externos de terceiros ou configurações avançadas de infraestrutura de rede corporativa do cliente.
+              O cliente receberá, após a confirmação da compra, todos os arquivos e informações necessárias para conseguir efetuar a instalação do software vitalício por conta própria ou entrar no seu software por assinatura.
             </p>
 
-            <h3 className="font-display font-bold text-slate-950 text-base mt-6">5. Requisitos de Sistema e Responsabilidade</h3>
+            <h3 className="font-display font-bold text-slate-950 text-base mt-6">3. Instalação Remota</h3>
             <p>
-              Cada software possui requisitos mínimos de hardware e sistema operacional descritos em sua respectiva página de detalhes. É responsabilidade exclusiva do cliente garantir que seu equipamento atenda a essas especificações técnicas antes de efetuar o pedido.
+              Caso o cliente deseje solicitar a instalação remota, a <strong>primeira é sempre gratuita</strong>. As demais instalações remotas (em caso de troca de computador ou formatação, por exemplo) possuem um valor fixo de R$ 50,00, desde que o cliente ainda possua os arquivos que recebeu na compra.
             </p>
 
-            <h3 className="font-display font-bold text-slate-950 text-base mt-6">6. Modificações dos Termos</h3>
+            <h3 className="font-display font-bold text-slate-950 text-base mt-6">4. Perda de Arquivos</h3>
             <p>
-              A C2Tech reserva-se o direito de modificar estes Termos de Uso a qualquer momento, visando adequar-se a mudanças técnicas, regulamentares ou de processos internos. A navegação contínua no site após a publicação de novos termos constitui aceitação tácita.
+              É de responsabilidade do cliente guardar os arquivos. Caso o cliente perca os arquivos do programa e precise de um novo download, ele deverá pagar novamente o valor integral do software.
+            </p>
+
+            <h3 className="font-display font-bold text-slate-950 text-base mt-6">5. Suporte Técnico e Reparos</h3>
+            <p>
+              O suporte técnico para possíveis problemas com os softwares possui garantia de <strong>30 dias</strong>. Após esse período, o suporte não cobre mais erros ou formatações, sendo necessário o cliente pagar uma taxa fixa de R$ 50,00 para efetuar reparos em seus softwares.
+            </p>
+
+            <h3 className="font-display font-bold text-slate-950 text-base mt-6">6. Licenciamento por Dispositivo e Uso em Outras Máquinas</h3>
+            <p>
+              O nosso suporte técnico e garantia de instalação cobrem estritamente <strong>1 (uma) máquina por vez</strong>. Caso o cliente deseje instalar os arquivos vitálicios adquiridos em computadores adicionais por conta própria, a C2Tech não bloqueia nem impede essa ação. No entanto, <strong>não nos responsabilizamos</strong> nem prestamos suporte para o funcionamento em máquinas extras.
+            </p>
+            <p>
+              Para receber suporte assistido ou garantia de funcionamento em demais dispositivos, é necessário efetuar uma nova compra e pagar novamente o valor integral. Todas as vendas e entregas digitais são definitivas.
             </p>
           </div>
         </div>

@@ -55,6 +55,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   const [cpfCnpj, setCpfCnpj] = useState('');
   const [phone, setPhone] = useState('');
   const [subOption, setSubOption] = useState<'recurrent' | 'avulso'>('recurrent');
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   // Sincroniza a opção inicial quando o modal abre
   useEffect(() => {
@@ -226,6 +227,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
   // Step Validations
   const validateInfoStep = () => {
+    if (!termsAccepted) {
+      setErrorMessage('Por favor, leia e aceite os Termos e Condições para prosseguir.');
+      return false;
+    }
     if (fullName.trim().split(' ').length < 2) {
       setErrorMessage('Por favor, informe seu nome completo.');
       return false;
@@ -622,8 +627,26 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                 </div>
               </div>
 
+              {/* Termos e Condições */}
+              <div className="pt-4">
+                <label className="flex items-start gap-2.5 cursor-pointer group">
+                  <div className="relative flex items-center justify-center shrink-0 mt-0.5">
+                    <input 
+                      type="checkbox" 
+                      className="peer appearance-none w-4 h-4 border-2 border-slate-300 rounded bg-white checked:bg-accent-blue checked:border-accent-blue transition-all cursor-pointer"
+                      checked={termsAccepted}
+                      onChange={(e) => setTermsAccepted(e.target.checked)}
+                    />
+                    <CheckCircle2 className="absolute w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
+                  </div>
+                  <span className="text-[11px] text-slate-500 leading-snug">
+                    Li e concordo com os <a href="/termos" target="_blank" rel="noopener noreferrer" className="text-accent-blue hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>Termos e Condições</a> de compra, uso e suporte.
+                  </span>
+                </label>
+              </div>
+
               {/* Total display & continue */}
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] text-slate-400 uppercase tracking-wider block">Valor total</span>
                   <span className="text-xl font-display font-black text-slate-900">{formattedPrice}</span>
