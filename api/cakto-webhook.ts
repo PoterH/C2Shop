@@ -18,6 +18,27 @@ export default async function handler(req: any, res: any) {
   try {
     const payload = req.body;
     console.log('--- RECEBIDO WEBHOOK DA CAKTO ---');
+    
+    // Verificação de Segurança (Webhook Secret)
+    const expectedSecret = process.env.CAKTO_WEBHOOK_SECRET;
+    if (expectedSecret) {
+      const providedSecret = 
+        req.headers['x-cakto-signature'] || 
+        req.headers['x-cakto-token'] || 
+        req.headers['authorization'] || 
+        payload.secret || 
+        payload.token || 
+        (payload.data && payload.data.secret);
+        
+      if (providedSecret !== expectedSecret) {
+        console.error('Falha na autenticação do webhook. Chave secreta inválida.');
+        return res.status(401).json({ error: 'Não autorizado' });
+      }
+      console.log('Autenticação do webhook validada com sucesso.');
+    } else {
+      console.warn('AVISO: CAKTO_WEBHOOK_SECRET não está configurada no servidor. Webhook vulnerável.');
+    }
+
     console.log('Payload:', JSON.stringify(payload, null, 2));
 
     const data = payload.data || {};
