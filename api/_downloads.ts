@@ -5,6 +5,7 @@ export const DOWNLOAD_LINKS: Record<string, string> = {
   'inventor-professional-2027': 'https://drive.google.com/open?id=1iczqn4y2-Tvdx4Vp9WjhAslvqM4mM9FK',
   'navisworks-manage-2027': 'https://drive.google.com/open?id=1l4jt7SCth0Pa9niPHAN0NUgvvxw7t1tD',
   'adobe-photoshop-2026': 'https://drive.google.com/open?id=1_idfhrAAsyUoRd8US1rISgzE-P9C9wxI',
+  'adobe-acrobat-pro-dc-2026': 'https://drive.google.com/drive/folders/1OXYAN30RI857GoCV9MVKZSKZl2tX28De?usp=drive_link',
   'adobe-illustrator-2026': 'https://drive.google.com/drive/folders/1wfikDovRV2Z6hx8Gibv47zsta5eaxlfE?usp=sharing',
   'adobe-after-effects-2026': 'https://drive.google.com/drive/folders/1n7IMbAMrKMrph3SAClqZjA-lWKu7aEef?usp=sharing',
   'adobe-lightroom-classic-2026': 'https://drive.google.com/drive/folders/1e496p9h2z0Ri0npC8wKdHDgl19jJtCtz?usp=sharing',
