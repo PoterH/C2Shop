@@ -1348,6 +1348,36 @@ export const products: Product[] = [
       gpu: 'Placa de vídeo básica',
       storage: '4.5 GB de espaço disponível em disco'
     }
+  },
+  {
+    id: 'filmora_15',
+    keywords: ['filmora', '15', 'wondershare', 'video', 'editor', 'edicao'],
+    slug: 'filmora-15',
+    name: 'Filmora 15',
+    category: 'Design e Criatividade',
+    compatibility: 'Windows',
+    version: '15',
+    description: 'Um dos editores de vídeo mais populares e fáceis de usar do mercado, com recursos avançados de IA.',
+    longDescription: 'O Wondershare Filmora 15 traz uma revolução na edição de vídeo com novas ferramentas alimentadas por inteligência artificial. Crie vídeos incríveis de forma rápida, com efeitos, transições e edição de áudio profissional, tudo em uma interface intuitiva. Licença vitalícia completa para Windows.',
+    price: 127.90,
+    originalPrice: 299.90,
+    checkoutUrl: 'https://pay.cakto.com.br/32u8f6d',
+    imageUrl: '/images/products/filmora-15.png',
+    isSubscription: false,
+    features: [
+      'Acesso vitalício',
+      'Edição de vídeo com IA',
+      'Efeitos e transições premium',
+      'Edição de áudio avançada',
+      'Exportação em 4K'
+    ],
+    requirements: {
+      os: 'Windows 10 ou Windows 11 (64-bits)',
+      cpu: 'Intel i3 ou superior, 2GHz ou superior',
+      ram: '8 GB de RAM',
+      gpu: 'Placa de vídeo compatível',
+      storage: '10 GB de espaço disponível em disco'
+    }
   }
 ];
 
