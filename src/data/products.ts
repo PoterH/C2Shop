@@ -82,7 +82,27 @@ export const products: Product[] = [
       ram: '8 GB ou mais',
       storage: '20 GB de espaço livre',
       gpu: 'Placa de vídeo compatível com DirectX 11 ou superior'
-    }
+    },
+    reviews: [
+      {
+        id: 'geo5_rev1',
+        userId: 'geo_u1',
+        userName: 'Eng. Marcelo',
+        rating: 5,
+        comment: 'Todos os módulos liberados conforme anunciado. Já estou usando nos projetos de contenção do escritório. Sensacional.',
+        date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      },
+      {
+        id: 'geo5_rev2',
+        userId: 'geo_u2',
+        userName: 'Ricardo Silva',
+        rating: 5,
+        comment: 'O suporte remoto deles é nota 10. Tive uma dúvida na instalação e resolveram em 5 minutos.',
+        date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      }
+    ]
   },
 
   {
@@ -1396,7 +1416,45 @@ export const products: Product[] = [
       ram: '4 GB de RAM (8 GB recomendado)',
       gpu: 'Compatível com Direct3D',
       storage: '4 GB de espaço disponível'
-    }
+    },
+    reviews: [
+      {
+        id: 'fl25_rev1',
+        userId: 'fl25_u1',
+        userName: 'DJ Marcos',
+        rating: 5,
+        comment: 'Versão completassa, veio com todos os plugins que eu precisava. Beatmaking subiu de nível.',
+        date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      },
+      {
+        id: 'fl25_rev2',
+        userId: 'fl25_u2',
+        userName: 'Lucas Beats',
+        rating: 5,
+        comment: 'Muito bom, link direto do Drive sem enrolação.',
+        date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      },
+      {
+        id: 'fl25_rev3',
+        userId: 'fl25_u3',
+        userName: 'Ana Prod',
+        rating: 5,
+        comment: 'Melhor investimento, funcionando 100%. Recomendo.',
+        date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      },
+      {
+        id: 'fl25_rev4',
+        userId: 'fl25_u4',
+        userName: 'Pedro Henrique',
+        rating: 4,
+        comment: 'Instalação tranquila. Obrigado C2Tech.',
+        date: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      }
+    ]
   },
   {
     id: 'rhinoceros_8_mac',
@@ -1456,7 +1514,36 @@ export const products: Product[] = [
       ram: '8 GB de RAM',
       gpu: 'Placa de vídeo compatível',
       storage: '10 GB de espaço disponível em disco'
-    }
+    },
+    reviews: [
+      {
+        id: 'filmora_rev1',
+        userId: 'f15_u1',
+        userName: 'Carlos Eduardo',
+        rating: 5,
+        comment: 'Excelente programa para edição, uso no meu canal do YouTube e os novos recursos de IA economizam muito tempo. Recomendo demais!',
+        date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      },
+      {
+        id: 'filmora_rev2',
+        userId: 'f15_u2',
+        userName: 'Fernanda Lima',
+        rating: 5,
+        comment: 'A instalação foi super fácil. Recebi o link logo após o pagamento via Pix. Tudo funcionando perfeitamente.',
+        date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      },
+      {
+        id: 'filmora_rev3',
+        userId: 'f15_u3',
+        userName: 'Roberto Santos',
+        rating: 4,
+        comment: 'Software muito bom e leve. Chegou tudo certinho no email.',
+        date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      }
+    ]
   }
 ];
 

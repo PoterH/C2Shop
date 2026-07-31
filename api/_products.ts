@@ -79,7 +79,27 @@ export const products: Product[] = [
       ram: '8 GB ou mais',
       storage: '20 GB de espaço livre',
       gpu: 'Placa de vídeo compatível com DirectX 11 ou superior'
-    }
+    },
+    reviews: [
+      {
+        id: 'geo5_rev1',
+        userId: 'geo_u1',
+        userName: 'Eng. Marcelo',
+        rating: 5,
+        comment: 'Todos os módulos liberados conforme anunciado. Já estou usando nos projetos de contenção do escritório. Sensacional.',
+        date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      },
+      {
+        id: 'geo5_rev2',
+        userId: 'geo_u2',
+        userName: 'Ricardo Silva',
+        rating: 5,
+        comment: 'O suporte remoto deles é nota 10. Tive uma dúvida na instalação e resolveram em 5 minutos.',
+        date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      }
+    ]
   },
 
   {
@@ -1377,7 +1397,104 @@ export const products: Product[] = [
       ram: '8 GB de RAM',
       gpu: 'Placa de vídeo compatível',
       storage: '10 GB de espaço disponível em disco'
-    }
+    },
+    reviews: [
+      {
+        id: 'filmora_rev1',
+        userId: 'f15_u1',
+        userName: 'Carlos Eduardo',
+        rating: 5,
+        comment: 'Excelente programa para edição, uso no meu canal do YouTube e os novos recursos de IA economizam muito tempo. Recomendo demais!',
+        date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      },
+      {
+        id: 'filmora_rev2',
+        userId: 'f15_u2',
+        userName: 'Fernanda Lima',
+        rating: 5,
+        comment: 'A instalação foi super fácil. Recebi o link logo após o pagamento via Pix. Tudo funcionando perfeitamente.',
+        date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      },
+      {
+        id: 'filmora_rev3',
+        userId: 'f15_u3',
+        userName: 'Roberto Santos',
+        rating: 4,
+        comment: 'Software muito bom e leve. Chegou tudo certinho no email.',
+        date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      }
+    ]
+  },
+  {
+    id: 'fl_studio_2025',
+    keywords: ['fl', 'studio', 'producer', 'edition', '2025', 'audio', 'plugins', 'addons', 'musica', 'daw'],
+    slug: 'fl-studio-2025-producer-edition',
+    name: 'FL Studio 2025 Producer Edition + All Plugins',
+    category: 'Design e Criatividade',
+    compatibility: 'Windows',
+    version: '2025 (All Plugins + Addons)',
+    description: 'A estação de trabalho de áudio digital definitiva. Crie, grave, edite e mixe suas músicas com plugins premium.',
+    longDescription: 'O FL Studio 2025 Producer Edition traz tudo o que você precisa para a produção musical profissional. Esta versão inclui todos os plugins e addons (All Plugins Edition), oferecendo sintetizadores avançados, efeitos de mixagem e ferramentas de masterização em uma interface intuitiva. Licença vitalícia completa e permanente para Windows.',
+    price: 127.90,
+    originalPrice: 499.90,
+    checkoutUrl: 'https://pay.cakto.com.br/x6cwjnu',
+    imageUrl: '/images/products/fl-studio-2025.png',
+    isSubscription: false,
+    features: [
+      'Acesso vitalício',
+      'Inclui todos os plugins e addons',
+      'Gravação de áudio multipista',
+      'Sequenciador de última geração',
+      'Mixagem e masterização profissional'
+    ],
+    requirements: {
+      os: 'Windows 10 ou Windows 11 (64-bits)',
+      cpu: 'Processador Intel ou AMD de 2.0 GHz ou superior',
+      ram: '4 GB de RAM (8 GB recomendado)',
+      gpu: 'Compatível com Direct3D',
+      storage: '4 GB de espaço disponível'
+    },
+    reviews: [
+      {
+        id: 'fl25_rev1',
+        userId: 'fl25_u1',
+        userName: 'DJ Marcos',
+        rating: 5,
+        comment: 'Versão completassa, veio com todos os plugins que eu precisava. Beatmaking subiu de nível.',
+        date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      },
+      {
+        id: 'fl25_rev2',
+        userId: 'fl25_u2',
+        userName: 'Lucas Beats',
+        rating: 5,
+        comment: 'Muito bom, link direto do Drive sem enrolação.',
+        date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      },
+      {
+        id: 'fl25_rev3',
+        userId: 'fl25_u3',
+        userName: 'Ana Prod',
+        rating: 5,
+        comment: 'Melhor investimento, funcionando 100%. Recomendo.',
+        date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      },
+      {
+        id: 'fl25_rev4',
+        userId: 'fl25_u4',
+        userName: 'Pedro Henrique',
+        rating: 4,
+        comment: 'Instalação tranquila. Obrigado C2Tech.',
+        date: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString(),
+        verified: true
+      }
+    ]
   }
 ];
 
