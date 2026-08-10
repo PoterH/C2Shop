@@ -1,12 +1,12 @@
 import React from 'react';
 
 interface WhatsAppButtonProps {
-  phoneNumber?: string;
+  // phoneNumber?: string; // Comentado temporariamente
   message?: string;
 }
 
 export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
-  phoneNumber = '5581997349300', // Substitua pelo seu número real do WhatsApp
+  // phoneNumber = '5581997349300', // Substitua pelo seu número real do WhatsApp
   message = 'Olá, tenho interesse em um software da C2Tech e gostaria de tirar uma dúvida.'
 }) => {
   const encodedMessage = encodeURIComponent(message);
