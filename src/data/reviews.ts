@@ -1120,4 +1120,65 @@ export const reviewsData: Record<string, Review[]> = {
       comment: "Recomendo a todos, entrega super rápida e o Acrobat tá funcionando perfeitamente."
     }
   ]
+,
+  filmora_15: [
+    {
+      author: "Carlos Eduardo",
+      rating: 5,
+      date: "3 dias atrás",
+      comment: "Excelente programa para edição, uso no meu canal do YouTube e os novos recursos de IA economizam muito tempo. Recomendo demais!"
+    },
+    {
+      author: "Fernanda Lima",
+      rating: 5,
+      date: "10 dias atrás",
+      comment: "A instalação foi super fácil. Recebi o link logo após o pagamento via Pix. Tudo funcionando perfeitamente."
+    },
+    {
+      author: "Roberto Santos",
+      rating: 4,
+      date: "15 dias atrás",
+      comment: "Software muito bom e leve. Chegou tudo certinho no email."
+    }
+  ],
+  geo5_2024_win: [
+    {
+      author: "Eng. Marcelo",
+      rating: 5,
+      date: "5 dias atrás",
+      comment: "Todos os módulos liberados conforme anunciado. Já estou usando nos projetos de contenção do escritório. Sensacional."
+    },
+    {
+      author: "Ricardo Silva",
+      rating: 5,
+      date: "12 dias atrás",
+      comment: "O suporte remoto deles é nota 10. Tive uma dúvida na instalação e resolveram em 5 minutos."
+    }
+  ],
+  fl_studio_2025: [
+    {
+      author: "DJ Marcos",
+      rating: 5,
+      date: "2 dias atrás",
+      comment: "Versão completassa, veio com todos os plugins que eu precisava. Beatmaking subiu de nível."
+    },
+    {
+      author: "Lucas Beats",
+      rating: 5,
+      date: "1 semana atrás",
+      comment: "Muito bom, link direto do Drive sem enrolação."
+    },
+    {
+      author: "Ana Prod",
+      rating: 5,
+      date: "20 dias atrás",
+      comment: "Melhor investimento, funcionando 100%. Recomendo."
+    },
+    {
+      author: "Pedro Henrique",
+      rating: 4,
+      date: "25 dias atrás",
+      comment: "Instalação tranquila. Obrigado C2Tech."
+    }
+  ]
 };

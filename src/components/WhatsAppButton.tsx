@@ -10,7 +10,8 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
   message = 'Olá, tenho interesse em um software da C2Tech e gostaria de tirar uma dúvida.'
 }) => {
   const encodedMessage = encodeURIComponent(message);
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+  // TEMPORARY: Redirecionando para email devido à instabilidade do WhatsApp
+  const whatsappUrl = `mailto:c2tech2025@gmail.com?subject=Contato C2Tech&body=${encodedMessage}`;
 
   return (
     <a
