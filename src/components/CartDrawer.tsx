@@ -133,15 +133,19 @@ export const CartDrawer: React.FC = () => {
                     </h4>
                     <span className="text-[10px] text-slate-450 text-slate-400">
                       {item.isSubscription 
-                        ? (item.selectedSubOption === 'avulso' ? 'Pagamento Único' : 'Assinatura Mensal')
+                        ? (item.selectedLicenseOption 
+                            ? `Assinatura ${item.selectedLicenseOption.label}` 
+                            : (item.selectedSubOption === 'avulso' ? 'Pagamento Único' : 'Assinatura Mensal'))
                         : 'Licença vitalícia'} • {item.compatibility}
                     </span>
                     <div className="font-display font-black text-slate-900 text-sm mt-1">
-                      {item.isSubscription 
-                        ? (item.selectedSubOption === 'avulso' 
-                          ? item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-                          : (item.recurrencePrice || item.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' /mês')
-                      : (item.selectedLicenseOption?.price || item.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                      {item.selectedLicenseOption
+                        ? (item.selectedLicenseOption.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + (item.selectedLicenseOption.label.includes('Mensal') ? ' /mês' : ''))
+                        : (item.isSubscription 
+                          ? (item.selectedSubOption === 'avulso' 
+                            ? item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                            : (item.recurrencePrice || item.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' /mês')
+                          : item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))}
                     </div>
                   </div>
 

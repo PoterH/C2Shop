@@ -308,6 +308,32 @@ export const reviewsData: Record<string, Review[]> = {
       comment: "Roda liso e o bimmx funciona perfeitamente tb, recomendo a compra"
     }
   ],
+  archicad_30: [
+    {
+      author: "Rodrigo M. Pires",
+      rating: 5,
+      date: "Ontem",
+      comment: "archicad 30 fico show de bola!! bem mais leve q o 29 na hr de subir os 3d pesados. vlw pelo suporte na instalaçao"
+    },
+    {
+      author: "Gabriela S. Arquiteta",
+      rating: 5,
+      date: "3 dias atrás",
+      comment: "comsegui instalar de boa pelo tutorial, veio tudo certinho no email na msm hora. programa perfeito e em portugues"
+    },
+    {
+      author: "Marcos Vinicius B.",
+      rating: 5,
+      date: "5 dias atrás",
+      comment: "tava com medo de dar erro na build 3000 mas rodou liso dmais no win 11. atendimento nota 10 no whats obrigado"
+    },
+    {
+      author: "Camila Duarte",
+      rating: 4,
+      date: "1 semana atrás",
+      comment: "Muito bom, só demorou um pouco pra baixar por causa da minha net lerdinha kkk mas o software em si é sensacional"
+    }
+  ],
   cype_2026: [
     {
       author: "Eng. Sergio N.",

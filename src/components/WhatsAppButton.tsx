@@ -1,17 +1,16 @@
 import React from 'react';
 
 interface WhatsAppButtonProps {
-  // phoneNumber?: string; // Comentado temporariamente
+  phoneNumber?: string;
   message?: string;
 }
 
 export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
-  // phoneNumber = '5581997349300', // Substitua pelo seu número real do WhatsApp
+  phoneNumber = '5581997349300', // Substitua pelo seu número real do WhatsApp
   message = 'Olá, tenho interesse em um software da C2Tech e gostaria de tirar uma dúvida.'
 }) => {
   const encodedMessage = encodeURIComponent(message);
-  // TEMPORARY: Redirecionando para email devido à instabilidade do WhatsApp
-  const whatsappUrl = `mailto:c2tech2025@gmail.com?subject=Contato C2Tech&body=${encodedMessage}`;
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
   return (
     <a

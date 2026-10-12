@@ -363,7 +363,7 @@ export const ProductDetail: React.FC = () => {
             <div className="w-full">
               <button
                 onClick={() => {
-                  addToCart(product, selectedPlan, selectedLicenseOption);
+                  addToCart(product, selectedLicenseOption ? 'avulso' : selectedPlan, selectedLicenseOption);
                 }}
                 className="w-full flex items-center justify-center py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-center shadow-lg transition-all cursor-pointer border-none font-display text-base"
                 id={`detail-buy-now-${product.id}`}

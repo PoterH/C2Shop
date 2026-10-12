@@ -65,24 +65,15 @@ export const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 flex flex-col ${
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-md border-b border-slate-100'
+          ? 'bg-white/95 backdrop-blur-md shadow-md py-3 border-b border-slate-100'
           : isHeaderDark
-            ? 'bg-[#020617]/50 backdrop-blur-md border-b border-white/5'
-            : 'bg-white border-b border-slate-100'
+            ? 'bg-[#020617]/50 backdrop-blur-md py-4 border-b border-white/5'
+            : 'bg-white py-4 sm:py-5 border-b border-slate-100'
       }`}
     >
-      <div className="bg-amber-50 border-b border-amber-200 text-amber-800 text-[11px] sm:text-sm font-medium py-2 px-4 text-center w-full flex items-center justify-center gap-2">
-        <span className="relative flex h-2.5 w-2.5 shrink-0">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
-        </span>
-        <span>
-          <strong>Aviso:</strong> Nosso WhatsApp está temporariamente indisponível. Atendimento provisório via e-mail: <a href="mailto:c2tech2025@gmail.com" className="font-bold underline hover:text-amber-900 transition-colors">c2tech2025@gmail.com</a>
-        </span>
-      </div>
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full transition-all duration-300 ${isScrolled ? 'py-3' : 'py-4 sm:py-5'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {isMobileSearchActive ? (
           /* Active Mobile Search Bar State */

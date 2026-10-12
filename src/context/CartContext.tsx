@@ -65,17 +65,20 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const addToCart = (product: Product, subOption?: 'recurrent' | 'avulso', licenseOption?: LicenseOption) => {
     if (product.unavailable) return;
     
+    const chosenOption = licenseOption !== undefined ? licenseOption : (product.licenseOptions && product.licenseOptions.length > 0 ? product.licenseOptions[0] : undefined);
+    const chosenSubOption = chosenOption ? 'avulso' : (subOption || 'recurrent');
+
     setCartItems((prev) => {
       // Check if already in cart
       const exists = prev.find((item) => item.id === product.id);
       if (exists) {
         return prev.map((item) => 
           item.id === product.id 
-            ? { ...item, selectedSubOption: subOption || item.selectedSubOption || 'recurrent', selectedLicenseOption: licenseOption || item.selectedLicenseOption }
+            ? { ...item, selectedSubOption: chosenSubOption, selectedLicenseOption: chosenOption }
             : item
         );
       }
-      return [...prev, { ...product, selectedSubOption: subOption || 'recurrent', selectedLicenseOption: licenseOption || product.licenseOptions?.[0] }];
+      return [...prev, { ...product, selectedSubOption: chosenSubOption, selectedLicenseOption: chosenOption }];
     });
     
     // Automatically open the cart drawer
@@ -113,12 +116,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Math calculations
   const subtotal = cartItems.reduce((sum, item) => {
+    if (item.selectedLicenseOption) {
+      return sum + item.selectedLicenseOption.price;
+    }
     if (item.isSubscription) {
       const isRecurrent = item.selectedSubOption !== 'avulso';
       return sum + (isRecurrent ? (item.recurrencePrice || item.price) : item.price);
-    }
-    if (item.selectedLicenseOption) {
-      return sum + item.selectedLicenseOption.price;
     }
     return sum + item.price;
   }, 0);

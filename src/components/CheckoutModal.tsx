@@ -60,11 +60,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   // Sincroniza a opção inicial quando o modal abre
   useEffect(() => {
     if (isOpen) {
-      if (activeProduct?.isSubscription) {
+      if (activeProduct?.selectedLicenseOption) {
+        setSubOption('avulso');
+        setPaymentMethod('pix');
+      } else if (activeProduct?.isSubscription) {
         let initial = activeProduct.selectedSubOption || initialSubOption || 'recurrent';
-        if (activeProduct.selectedLicenseOption) {
-          initial = 'avulso';
-        }
         setSubOption(initial as 'recurrent' | 'avulso');
         if (initial === 'recurrent') {
           setPaymentMethod('card');
@@ -269,7 +269,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   // Initiate checkout
   const handleProceedToPayment = () => {
     if (validateInfoStep()) {
-      if (activeProduct?.isSubscription) {
+      if (activeProduct?.isSubscription && !activeProduct?.selectedLicenseOption && subOption === 'recurrent') {
         setPaymentMethod('card');
       }
       setCurrentStep('payment');
@@ -285,9 +285,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          products: cartItems.map(item => ({ slug: item.slug })),
+          products: cartItems.map(item => ({ 
+            slug: item.slug, 
+            licenseQuantity: item.selectedLicenseOption?.quantity 
+          })),
           coupon: couponCode || null,
-          subOption: activeProduct?.isSubscription ? subOption : undefined,
+          subOption: activeProduct?.isSubscription && !activeProduct?.selectedLicenseOption ? subOption : undefined,
           buyer: {
             name: fullName,
             email: email,
@@ -416,8 +419,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
   // Pricing math
   const getCheckoutTotal = () => {
+    if (activeProduct?.selectedLicenseOption) {
+      return activeProduct.selectedLicenseOption.price;
+    }
     if (activeProduct?.isSubscription) {
-      return subOption === 'recurrent' ? (activeProduct.recurrencePrice || activeProduct.price) : (activeProduct.selectedLicenseOption?.price || activeProduct.price);
+      return subOption === 'recurrent' ? (activeProduct.recurrencePrice || activeProduct.price) : activeProduct.price;
     }
     return total;
   };
@@ -493,7 +499,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
               {/* List of items in checkout */}
               <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 space-y-3">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Resumo do pedido</span>
-                {activeProduct?.isSubscription ? (
+                {activeProduct?.isSubscription && !activeProduct?.selectedLicenseOption ? (
                   <div className="space-y-3">
                     <div className="flex justify-between items-center text-xs">
                       <span className="font-semibold text-slate-700">{activeProduct.name}</span>
@@ -548,7 +554,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                     {cartItems.map((item) => (
                       <div key={item.id} className="flex justify-between items-center text-xs">
                         <span className="font-semibold text-slate-700">{item.name} {item.selectedLicenseOption ? `(${item.selectedLicenseOption.label})` : ''}</span>
-                        <span className="font-bold text-slate-900">{(item.selectedLicenseOption?.price || item.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                        <span className="font-bold text-slate-900">
+                          {(item.selectedLicenseOption?.price || item.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                          {item.selectedLicenseOption?.label.includes('Mensal') && <span className="text-[10px] text-slate-500 font-normal"> /mês</span>}
+                        </span>
                       </div>
                     ))}
                     {discountAmount > 0 && (
@@ -680,7 +689,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                 </h4>
                 
                  {/* Method selector cards */}
-                 {(!activeProduct?.isSubscription || subOption === 'avulso') ? (
+                 {(!activeProduct?.isSubscription || subOption === 'avulso' || !!activeProduct?.selectedLicenseOption) ? (
                    <div className="grid grid-cols-3 gap-3 pb-2">
                      {/* Pix Card */}
                      <button
@@ -819,7 +828,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                           Para sua total segurança, o pagamento via cartão de crédito é processado diretamente em nossa plataforma blindada externa.
                         </p>
                         <a
-                          href={(activeProduct?.isSubscription && subOption === 'recurrent') ? (activeProduct?.recurrenceCheckoutUrl || activeProduct?.checkoutUrl || '#') : (activeProduct?.selectedLicenseOption?.checkoutUrl || activeProduct?.checkoutUrl || '#')}
+                          href={activeProduct?.selectedLicenseOption?.checkoutUrl ? activeProduct.selectedLicenseOption.checkoutUrl : ((activeProduct?.isSubscription && subOption === 'recurrent') ? (activeProduct?.recurrenceCheckoutUrl || activeProduct?.checkoutUrl || '#') : (activeProduct?.checkoutUrl || '#'))}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="w-full py-3.5 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs transition-all shadow-md flex items-center justify-center cursor-pointer hover:no-underline"
