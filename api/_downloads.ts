@@ -13,6 +13,7 @@ export const DOWNLOAD_LINKS: Record<string, string> = {
   'coreldraw-graphics-suite-2026-macos': 'https://drive.google.com/open?id=1TQFGgnqH3v1kylnnb2GYynnHCfBf-9kF',
   'promob-plus-professional-2025': 'https://drive.google.com/open?id=1KHkh6hTxa_630LoQwoH41EvRNO_WJWhP',
   'archicad-29-bra': 'https://drive.google.com/open?id=1TnHlZ7orSkt2yYlIEiJ9aKdJEPA2TKhY',
+  'archicad-30-bra': 'https://drive.google.com/drive/folders/18WRYXfZVXSuOD8W0LGYLWS69wVa5dPMT?usp=sharing',
   'cypecad-2026': 'https://drive.google.com/open?id=18d9KGJpC5iwv52Td3mGUNtaYZ5hBIl3l',
   'office-2024-professional-plus': 'https://drive.google.com/open?id=171D-xOBKQyWelQ_qCrHckvliwVsQgrgr',
   'eberick-builder-2025': 'https://drive.google.com/open?id=10KvPsuZ4coEQ6RIirgdVnvr4wewhNrrS',

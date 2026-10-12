@@ -61,7 +61,21 @@ export default async function handler(req: any, res: any) {
   let recurrence = false;
 
   const firstProduct = matchedProducts[0];
-  if (firstProduct && firstProduct.isSubscription) {
+  const firstItem = checkoutItems[0];
+
+  // Check if a specific license option was requested (e.g. Autodesk 1 Ano, 2 Anos, 3 Anos)
+  let chosenOptionPrice: number | undefined;
+  if (firstProduct?.licenseOptions && firstProduct.licenseOptions.length > 0 && firstItem?.licenseQuantity) {
+    const matchOpt = firstProduct.licenseOptions.find((opt: any) => opt.quantity === firstItem.licenseQuantity);
+    if (matchOpt) {
+      chosenOptionPrice = matchOpt.price;
+    }
+  }
+
+  if (chosenOptionPrice !== undefined) {
+    subtotal = chosenOptionPrice;
+    isSubPayment = false;
+  } else if (firstProduct && firstProduct.isSubscription) {
     isSubPayment = true;
     recurrence = subOption === 'recurrent';
     subtotal = recurrence ? (firstProduct.recurrencePrice || firstProduct.price) : firstProduct.price;

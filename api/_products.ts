@@ -1,5 +1,6 @@
 export interface Product {
   id: string;
+  keywords?: string[];
   slug: string;
   name: string;
   category: string;
@@ -378,6 +379,36 @@ export const products: Product[] = [
     imageUrl: '/images/products/archicad-29-bra.png',
     features: [
       'Versão completa e funcional',
+      'Acesso vitalício para uso ilimitado',
+      'Instalação assistida inclusa',
+      'Entrega automática no e-mail após o pagamento',
+      'Suporte remoto quando necessário',
+      'Pronto para uso imediato'
+    ],
+    requirements: {
+      os: 'Windows 10 ou 11 (64-bits)',
+      cpu: 'Intel Core i5 ou AMD Ryzen equivalente (Recomendado i7/Ryzen 7)',
+      ram: '8 GB (Recomendável: 16 GB ou mais)',
+      gpu: 'Placa com 2 GB VRAM dedicada com suporte a OpenGL 4.5 (Recomendado 4 GB+)',
+      storage: '5 GB de espaço livre para instalação (SSD recomendado)'
+    }
+  },
+  {
+    id: 'archicad_30',
+    keywords: ['archicad', '30', 'bra', 'arquitetura', 'bim', 'graphisoft', 'cad'],
+    slug: 'archicad-30-bra',
+    name: 'ArchiCAD 30 BRA',
+    category: 'Engenharia e Arquitetura',
+    compatibility: 'Windows',
+    version: '30.0.0 Build 3000',
+    description: 'Software de autoria BIM líder para arquitetos com fluxos de trabalho avançados e máxima performance.',
+    longDescription: 'O ArchiCAD 30 BRA representa o ápice da modelagem arquitetônica BIM. Desenvolvido para entregar máxima velocidade e integração, esta versão traz inovações na modelagem de projetos complexos, automação precisa de documentação 2D a partir do modelo 3D e renderização em tempo real. Licença vitalícia com instalação e suporte inclusos.',
+    price: 157.90,
+    originalPrice: 799.00,
+    checkoutUrl: 'https://pay.cakto.com.br/khwk5iz',
+    imageUrl: '/images/products/archicad-30-bra.png',
+    features: [
+      'Versão completa e funcional em Português Brasil',
       'Acesso vitalício para uso ilimitado',
       'Instalação assistida inclusa',
       'Entrega automática no e-mail após o pagamento',
@@ -1129,70 +1160,6 @@ export const products: Product[] = [
       ram: '4 GB RAM (Recomendável: 8 GB)',
       gpu: 'Placa de vídeo padrão',
       storage: '2 GB de espaço livre'
-    }
-  },
-  {
-    id: 'capcut_pro_mensal',
-    slug: 'capcut-pro-mensal',
-    name: 'CapCut Pro Mensal',
-    category: 'Design e Criatividade',
-    compatibility: 'Windows e macOS',
-    version: 'Pro Mensal',
-    description: 'Assinatura mensal do CapCut Pro. Crie vídeos profissionais com recursos avançados e efeitos exclusivos.',
-    longDescription: 'O CapCut Pro Mensal oferece acesso completo a todos os recursos premium do editor de vídeos mais popular do momento. Tenha acesso a modelos exclusivos, efeitos avançados de transição, animações premium, remoção automática de fundo por IA, legendas automáticas inteligentes e muito mais. Ideal para criadores de conteúdo que buscam qualidade profissional de forma rápida e prática.',
-    price: 47.90,
-    originalPrice: 59.90,
-    checkoutUrl: 'https://pay.cakto.com.br/capcut-pro-mensal',
-    imageUrl: '/images/products/capcut-pro-mensal.png',
-    isSubscription: true,
-    recurrencePrice: 37.90,
-    billingPeriod: 'mensal',
-    features: [
-      'Acesso Pro completo',
-      'Modelos e efeitos exclusivos',
-      'Recursos avançados de IA (Legendas, Corte)',
-      'Exportação em até 4K 60fps',
-      'Suporte a múltiplos dispositivos',
-      'Atualizações inclusas'
-    ],
-    requirements: {
-      os: 'Windows 10/11 ou macOS 10.15+',
-      cpu: 'Intel Core i3 / Apple Silicon',
-      ram: '8 GB RAM',
-      gpu: 'Placa integrada de vídeo',
-      storage: '2 GB de espaço livre'
-    }
-  },
-  {
-    id: 'canva_pro_mensal',
-    slug: 'canva-pro-mensal',
-    name: 'Canva Pro Mensal',
-    category: 'Design e Criatividade',
-    compatibility: 'Windows e macOS',
-    version: 'Pro Mensal',
-    description: 'Assinatura mensal do Canva Pro. Crie designs profissionais utilizando seu próprio perfil pessoal.',
-    longDescription: 'O Canva Pro Mensal é a solução ideal para designers, profissionais de marketing e criadores de conteúdo. O acesso é enviado por um link de convite oficial, o que significa que você não precisa fornecer nenhuma senha: você ativa o Canva Pro diretamente na sua conta pessoal existente, mantendo todos os seus designs e projetos 100% seguros e privados. Tenha acesso ilimitado a mais de 100 milhões de fotos, vídeos, elementos gráficos e ferramentas mágicas de IA.',
-    price: 19.90,
-    originalPrice: 29.90,
-    checkoutUrl: 'https://pay.cakto.com.br/canva-pro-mensal',
-    imageUrl: '/images/products/canva-pro-mensal.png',
-    isSubscription: true,
-    recurrencePrice: 9.90,
-    billingPeriod: 'mensal',
-    features: [
-      'Ativação em sua conta pessoal (sem fornecer senha)',
-      'Acesso oficial via link de convite',
-      'Mais de 100 milhões de assets premium',
-      'Remoção de fundo instantânea e Kit de Marca',
-      'Redimensionamento mágico e ferramentas de IA',
-      'Planejador de conteúdo integrado'
-    ],
-    requirements: {
-      os: 'Windows, macOS, iOS ou Android',
-      cpu: 'Qualquer processador compatível com navegador',
-      ram: '4 GB RAM',
-      gpu: 'Qualquer placa de vídeo',
-      storage: 'Acesso via Web (sem espaço em disco necessário)'
     }
   },
   {
