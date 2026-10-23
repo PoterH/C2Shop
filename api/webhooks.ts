@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { sendConfirmationEmail } from './_email.js';
 import { products } from './_products.js';
+import { sendFacebookCapiEvent } from './_fbCapi.js';
 
 export default async function handler(req: any, res: any) {
   // CORS configuration
@@ -85,13 +86,32 @@ export default async function handler(req: any, res: any) {
             let matchedProduct = products.find(p => description.includes(p.name) || (paymentData.additional_info?.items && paymentData.additional_info.items.some((i: any) => i.title === p.name || i.description === p.name)));
             
             if (payerEmail) {
+              const paidAmount = Number(paymentData.transaction_amount) || (matchedProduct ? matchedProduct.price : 0);
+
+              await sendFacebookCapiEvent({
+                eventName: 'Purchase',
+                eventId: String(dataId),
+                buyer: {
+                  name: paymentData.payer?.first_name || 'Cliente',
+                  email: payerEmail,
+                },
+                customData: {
+                  value: paidAmount,
+                  currency: 'BRL',
+                  contentIds: [matchedProduct ? matchedProduct.slug : 'generic'],
+                  contentName: matchedProduct ? matchedProduct.name : (description || 'Sua Compra'),
+                  numItems: 1,
+                  orderId: String(dataId),
+                },
+              });
+
               await sendConfirmationEmail({
                 buyerName: paymentData.payer?.first_name || 'Cliente',
                 buyerEmail: payerEmail,
                 products: [{ 
                   slug: matchedProduct ? matchedProduct.slug : 'generic', 
                   name: matchedProduct ? matchedProduct.name : (description || 'Sua Compra'), 
-                  price: Number(paymentData.transaction_amount) || (matchedProduct ? matchedProduct.price : 0) 
+                  price: paidAmount
                 }],
                 orderId: String(dataId),
                 paymentMethod: paymentMethod

@@ -1,5 +1,6 @@
 import { products } from './_products.js';
 import { sendConfirmationEmail } from './_email.js';
+import { sendFacebookCapiEvent } from './_fbCapi.js';
 
 export default async function handler(req: any, res: any) {
   // Configuração de CORS para desenvolvimento local
@@ -124,6 +125,33 @@ export default async function handler(req: any, res: any) {
     }
 
     console.log(`Produtos encontrados no webhook da Cakto: ${matchedProducts.map(p => p.name).join(', ')}`);
+
+    const phone =
+      payload.buyer?.phone || payload.customer?.phone || payload.phone || payload.payer?.phone ||
+      data.buyer?.phone || data.customer?.phone || data.phone || data.payer?.phone;
+
+    const totalAmount =
+      Number(payload.amount || payload.total || data.amount || data.total || data.order?.amount) ||
+      matchedProducts.reduce((acc, p) => acc + p.price, 0);
+
+    // Dispara evento Purchase para a API de Conversões do Facebook (CAPI)
+    await sendFacebookCapiEvent({
+      eventName: 'Purchase',
+      eventId: String(orderId),
+      buyer: {
+        name,
+        email,
+        phone,
+      },
+      customData: {
+        value: totalAmount,
+        currency: 'BRL',
+        contentIds: matchedProducts.map(p => p.slug),
+        contentName: matchedProducts.map(p => p.name).join(', '),
+        numItems: matchedProducts.length,
+        orderId: String(orderId),
+      },
+    });
 
     // Dispara o e-mail de entrega via Resend
     const emailRes = await sendConfirmationEmail({
