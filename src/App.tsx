@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -16,12 +16,17 @@ import { CartProvider } from './context/CartContext';
 import { CartDrawer } from './components/CartDrawer';
 import { trackPageView } from './utils/pixel';
 
-// Scroll to top automatically when navigating to a new route & track PageView
+// Scroll to top automatically when navigating to a new route & track SPA PageViews
 function ScrollToTop() {
   const { pathname } = useLocation();
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     trackPageView();
   }, [pathname]);
 
