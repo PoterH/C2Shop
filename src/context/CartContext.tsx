@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Product, LicenseOption } from '../data/products';
+import { trackEvent } from '../utils/pixel';
 
 interface CartContextType {
   cartItems: Product[];
@@ -81,6 +82,20 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return [...prev, { ...product, selectedSubOption: chosenSubOption, selectedLicenseOption: chosenOption }];
     });
     
+    // Track AddToCart on Facebook Pixel
+    const itemPrice = chosenOption
+      ? chosenOption.price
+      : (product.isSubscription && chosenSubOption === 'recurrent'
+          ? (product.recurrencePrice || product.price)
+          : product.price);
+    trackEvent('AddToCart', {
+      content_name: product.name,
+      content_ids: [product.slug],
+      content_type: 'product',
+      value: itemPrice,
+      currency: 'BRL',
+    });
+
     // Automatically open the cart drawer
     setIsCartOpen(true);
   };

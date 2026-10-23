@@ -1,4 +1,5 @@
 import React from 'react';
+import { trackEvent } from '../utils/pixel';
 
 interface WhatsAppButtonProps {
   phoneNumber?: string;
@@ -17,6 +18,7 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() => trackEvent('Contact', { content_name: 'WhatsApp Flutuante' })}
       className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full shadow-2xl transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-emerald-300 group"
       aria-label="Falar no WhatsApp"
       id="whatsapp-floating-btn"

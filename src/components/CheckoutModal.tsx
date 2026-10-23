@@ -18,6 +18,7 @@ import type { Product } from '../data/products';
 // @ts-ignore
 import EfiPay from 'payment-token-efi';
 import { useCart } from '../context/CartContext';
+import { trackEvent } from '../utils/pixel';
 
 interface CheckoutModalProps {
   product?: Product;
@@ -273,6 +274,21 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
         setPaymentMethod('card');
       }
       setCurrentStep('payment');
+
+      // Track InitiateCheckout on Facebook Pixel
+      const currentVal = activeProduct?.selectedLicenseOption
+        ? activeProduct.selectedLicenseOption.price
+        : (activeProduct?.isSubscription
+            ? (subOption === 'recurrent' ? (activeProduct.recurrencePrice || activeProduct.price) : activeProduct.price)
+            : total);
+      trackEvent('InitiateCheckout', {
+        content_ids: cartItems.map(item => item.slug),
+        content_name: cartItems.map(item => item.name).join(', '),
+        content_type: 'product',
+        num_items: cartItems.length || 1,
+        value: currentVal,
+        currency: 'BRL',
+      });
     }
   };
 
@@ -309,6 +325,19 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
       setPixCopyPaste(data.copyPaste);
       setPixQrCode(data.qrCodeBase64);
       setCurrentStep('pix_waiting');
+
+      // Track AddPaymentInfo when Pix QR Code is generated
+      const currentVal = activeProduct?.selectedLicenseOption
+        ? activeProduct.selectedLicenseOption.price
+        : (activeProduct?.isSubscription
+            ? (subOption === 'recurrent' ? (activeProduct.recurrencePrice || activeProduct.price) : activeProduct.price)
+            : total * 0.98);
+      trackEvent('AddPaymentInfo', {
+        content_ids: cartItems.map(item => item.slug),
+        content_type: 'product',
+        value: Number(currentVal.toFixed(2)),
+        currency: 'BRL',
+      }, `pix_info_${data.txid}`);
       
       // Start status polling
       startPolling(data.txid, Date.now());
@@ -331,6 +360,22 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
         
         if (data.success && data.status === 'CONCLUIDA') {
           if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+
+          const finalPaidVal = activeProduct?.selectedLicenseOption
+            ? activeProduct.selectedLicenseOption.price
+            : (activeProduct?.isSubscription
+                ? (subOption === 'recurrent' ? (activeProduct.recurrencePrice || activeProduct.price) : activeProduct.price)
+                : total * 0.98);
+
+          // Track Purchase on Browser Pixel (deduplicated with Server CAPI via eventID = txid)
+          trackEvent('Purchase', {
+            content_ids: cartItems.map(item => item.slug),
+            content_name: cartItems.map(item => item.name).join(', '),
+            content_type: 'product',
+            num_items: cartItems.length || 1,
+            value: Number(finalPaidVal.toFixed(2)),
+            currency: 'BRL',
+          }, String(txid));
           
           // Dispara o envio de e-mail de confirmação no backend
           try {
@@ -339,8 +384,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 txid,
-                products: cartItems.map(item => ({ slug: item.slug, name: item.name, price: item.price })),
-                subOption: activeProduct?.isSubscription ? subOption : undefined,
+                products: cartItems.map(item => ({ slug: item.slug, name: item.name, price: item.selectedLicenseOption?.price || item.price })),
+                subOption: activeProduct?.isSubscription && !activeProduct?.selectedLicenseOption ? subOption : undefined,
                 buyer: {
                   name: fullName,
                   email,
@@ -406,6 +451,15 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
       setBoletoBarcode(data.barcode);
       setBoletoUrl(data.ticketUrl);
       setCurrentStep('boleto_waiting');
+
+      // Track AddPaymentInfo when Boleto is generated
+      trackEvent('AddPaymentInfo', {
+        content_ids: cartItems.map(item => item.slug),
+        content_type: 'product',
+        value: Number(total.toFixed(2)),
+        currency: 'BRL',
+      });
+
       clearCart();
     } catch (err: any) {
       console.error(err);
@@ -831,6 +885,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                           href={activeProduct?.selectedLicenseOption?.checkoutUrl ? activeProduct.selectedLicenseOption.checkoutUrl : ((activeProduct?.isSubscription && subOption === 'recurrent') ? (activeProduct?.recurrenceCheckoutUrl || activeProduct?.checkoutUrl || '#') : (activeProduct?.checkoutUrl || '#'))}
                           target="_blank"
                           rel="noopener noreferrer"
+                          onClick={() => {
+                            trackEvent('AddPaymentInfo', {
+                              content_ids: cartItems.map(item => item.slug),
+                              content_type: 'product',
+                              value: Number(checkoutTotal.toFixed(2)),
+                              currency: 'BRL',
+                            });
+                          }}
                           className="w-full py-3.5 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs transition-all shadow-md flex items-center justify-center cursor-pointer hover:no-underline"
                         >
                           Ir para Plataforma de Pagamento Seguro

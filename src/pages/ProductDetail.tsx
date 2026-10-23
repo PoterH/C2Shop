@@ -12,6 +12,7 @@ import {
   Star
 } from 'lucide-react';
 import { reviewsData } from '../data/reviews';
+import { trackEvent } from '../utils/pixel';
 
 export const ProductDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -41,6 +42,18 @@ export const ProductDetail: React.FC = () => {
       setSelectedLicenseOption(product.licenseOptions[0]);
     }
   }, [product, selectedLicenseOption]);
+
+  useEffect(() => {
+    if (product) {
+      trackEvent('ViewContent', {
+        content_name: product.name,
+        content_ids: [product.slug],
+        content_type: 'product',
+        value: product.price,
+        currency: 'BRL',
+      });
+    }
+  }, [product?.id]);
 
   const productReviews = useMemo(() => {
     if (!product) return [];

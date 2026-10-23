@@ -14,13 +14,15 @@ import { ThankYouPage } from './pages/ThankYouPage';
 
 import { CartProvider } from './context/CartContext';
 import { CartDrawer } from './components/CartDrawer';
+import { trackPageView } from './utils/pixel';
 
-// Scroll to top automatically when navigating to a new route
+// Scroll to top automatically when navigating to a new route & track PageView
 function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    trackPageView();
   }, [pathname]);
 
   return null;
