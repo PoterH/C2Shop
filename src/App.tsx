@@ -15,6 +15,7 @@ import { ThankYouPage } from './pages/ThankYouPage';
 import { CartProvider } from './context/CartContext';
 import { CartDrawer } from './components/CartDrawer';
 import { trackPageView } from './utils/pixel';
+import { Analytics } from '@vercel/analytics/react';
 
 // Scroll to top automatically when navigating to a new route & track SPA PageViews
 function ScrollToTop() {
@@ -70,6 +71,7 @@ function App() {
 
           {/* Cart Drawer */}
           <CartDrawer />
+          <Analytics />
         </div>
       </BrowserRouter>
     </CartProvider>
