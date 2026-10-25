@@ -50,8 +50,8 @@ export const FAQPage: React.FC = () => {
       a: 'Sim! Caso prefira sanar dúvidas específicas sobre requisitos mínimos de sistema antes de fechar a compra, nossa equipe de vendas poderá te guiar e finalizar o processo via chat.'
     },
     {
-      q: 'Como funcionam os planos de assinatura mensal?',
-      a: 'Para softwares específicos (como Canva Pro e CapCut Pro), oferecemos opções de assinatura mensal exclusiva via Pix. O acesso é válido por 30 dias com renovação a cada mês.'
+      q: 'Como funcionam os planos de assinatura e contas oficiais?',
+      a: 'Para softwares sob demanda ou planos oficiais (como Autodesk Todos os Aplicativos), oferecemos opções de acesso com faturamento simplificado via Pix ou Cartão. Você recebe credenciais exclusivas para uso profissional.'
     },
     {
       q: 'O que recebo ao assinar um plano mensal?',

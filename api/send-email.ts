@@ -34,11 +34,20 @@ export default async function handler(req: any, res: any) {
   // Find all matched products
   const matchedProducts: any[] = [];
   for (const item of emailItems) {
-    const matched = products.find((p: any) => p.slug === item.slug);
+    let matched = products.find((p: any) => p.slug === item.slug);
+    if (!matched) {
+      matched = products.find((p: any) =>
+        p.licenseOptions?.some((opt: any) => opt.downloadSlug === item.slug)
+      );
+    }
     if (!matched) {
       return res.status(404).json({ error: `Produto não encontrado: ${item.slug}` });
     }
-    matchedProducts.push(matched);
+    matchedProducts.push({
+      ...matched,
+      customSlug: item.slug,
+      customName: (item as any).name || matched.name,
+    });
   }
 
   // Validação de segurança: verifica no Efí Bank se a transação do Pix realmente foi paga (CONCLUIDA)
@@ -78,8 +87,8 @@ export default async function handler(req: any, res: any) {
         finalPrice = finalPrice * 0.98; // Aplica desconto do Pix (2%) para exibir o valor correto do recibo
       }
       return {
-        slug: p.slug,
-        name: p.name,
+        slug: p.customSlug || p.slug,
+        name: p.customName || p.name,
         price: finalPrice
       };
     });

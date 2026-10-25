@@ -90,16 +90,87 @@ export default async function handler(req: any, res: any) {
       return res.status(400).json({ error: 'E-mail do comprador não encontrado no payload' });
     }
 
+    // Helper para identificar produto ou versão específica (licenseOptions) a partir de slug/id/nome/checkoutUrl
+    const findProductOrOption = (sku?: string, rawName?: string, offerUrlOrCode?: string) => {
+      const skuLower = (sku || '').toLowerCase().trim();
+      const nameLower = (rawName || '').toLowerCase().trim();
+      const offerLower = (offerUrlOrCode || '').toLowerCase().trim();
+
+      // 1. Tenta casar primeiro com uma opção específica de versão (licenseOptions)
+      for (const p of products as any[]) {
+        if (Array.isArray(p.licenseOptions)) {
+          // 1a. Match exato por downloadSlug ou código do link da Cakto
+          for (const opt of p.licenseOptions) {
+            const optSlug = (opt.downloadSlug || '').toLowerCase();
+            const optCheckout = (opt.checkoutUrl || '').toLowerCase();
+            const checkoutCode = optCheckout.split('/').pop() || '';
+
+            if (
+              (skuLower && optSlug && skuLower === optSlug) ||
+              (skuLower && checkoutCode && skuLower === checkoutCode) ||
+              (offerLower && checkoutCode && offerLower.includes(checkoutCode))
+            ) {
+              return {
+                slug: opt.downloadSlug || p.slug,
+                name: `${p.name} (${opt.label})`,
+                price: opt.price ?? p.price,
+              };
+            }
+          }
+
+          // 1b. Match por nome contendo o nome base do produto + ano + plataforma
+          const baseName = p.name.toLowerCase().replace('autodesk ', '').trim();
+          if (nameLower && (nameLower.includes(baseName) || baseName.includes(nameLower))) {
+            const wantsMac = nameLower.includes('mac') || skuLower.includes('mac');
+            const matchedOpt = p.licenseOptions.find((opt: any) => {
+              const optYear = String(opt.year || '').toLowerCase();
+              const optPlat = String(opt.platform || '').toLowerCase();
+              const isMacOpt = optPlat.includes('mac');
+              return optYear && nameLower.includes(optYear) && isMacOpt === wantsMac;
+            });
+            if (matchedOpt) {
+              return {
+                slug: matchedOpt.downloadSlug || p.slug,
+                name: `${p.name} (${matchedOpt.label})`,
+                price: matchedOpt.price ?? p.price,
+              };
+            }
+          }
+        }
+      }
+
+      // 2. Match direto no produto principal
+      const matched = (products as any[]).find((p: any) => {
+        const pName = p.name.toLowerCase();
+        const pCheckoutCode = ((p.checkoutUrl || '').toLowerCase().split('/').pop() || '');
+        return (
+          (skuLower && (p.slug.toLowerCase() === skuLower || p.id.toLowerCase() === skuLower)) ||
+          (skuLower && pCheckoutCode && skuLower === pCheckoutCode) ||
+          (offerLower && pCheckoutCode && offerLower.includes(pCheckoutCode)) ||
+          (nameLower && (pName.includes(nameLower) || nameLower.includes(pName)))
+        );
+      });
+
+      return matched || null;
+    };
+
+    const offerCode =
+      payload.offer?.code ||
+      payload.offer?.id ||
+      payload.offer?.url ||
+      payload.checkout_url ||
+      data.offer?.code ||
+      data.offer?.id ||
+      data.offer?.url ||
+      data.checkout_url ||
+      '';
+
     // Match products in local DB
     const matchedProducts: any[] = [];
     if (itemsArray.length > 0) {
       for (const item of itemsArray) {
-        const sku = item.slug || item.id || item.product_id;
-        const matched = products.find((p: any) => 
-          p.slug === sku || 
-          p.id === sku || 
-          (item.name && p.name.toLowerCase().includes(item.name.toLowerCase()))
-        );
+        const sku = item.slug || item.id || item.product_id || item.offer_id;
+        const matched = findProductOrOption(sku, item.name || item.title, item.checkout_url || offerCode);
         if (matched) {
           matchedProducts.push(matched);
         }
@@ -107,13 +178,14 @@ export default async function handler(req: any, res: any) {
     }
 
     // Fallback if no items matched via array
-    if (matchedProducts.length === 0 && productSlug) {
-      const matched = products.find((p: any) => 
-        p.slug === productSlug || 
-        p.id === productSlug || 
-        (payload.product?.name && p.name.toLowerCase().includes(payload.product.name.toLowerCase())) ||
-        (data.product?.name && p.name.toLowerCase().includes(data.product.name.toLowerCase()))
-      );
+    if (matchedProducts.length === 0) {
+      const rawProductName =
+        payload.product?.name ||
+        data.product?.name ||
+        payload.offer?.name ||
+        data.offer?.name ||
+        '';
+      const matched = findProductOrOption(productSlug, rawProductName, offerCode);
       if (matched) {
         matchedProducts.push(matched);
       }

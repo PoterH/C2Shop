@@ -48,9 +48,7 @@ export const reviewsData: Record<string, Review[]> = {
       rating: 4,
       date: "2 meses atrás",
       comment: "o programa é otimo, so achei a instalação um pouco demorada pela minha internet, mas rodou perfeito."
-    }
-  ],
-  autocad_2027_mac: [
+    },
     {
       author: "Felipe G. Dias",
       rating: 5,
@@ -74,6 +72,36 @@ export const reviewsData: Record<string, Review[]> = {
       rating: 5,
       date: "1 mês atrás",
       comment: "Gostei muito. Roda direto sem precisar de emulador nem nada. Recomendo mto."
+    },
+    {
+      author: "Arq. Camila Fontes",
+      rating: 5,
+      date: "1 mês atrás",
+      comment: "Peguei a versão 2019 pro notebook de obra e a 2026 pro PC do escritório. Ambas ativaram de primeira com o vídeo!"
+    },
+    {
+      author: "Rafael Mendonça",
+      rating: 5,
+      date: "2 meses atrás",
+      comment: "Funciona todas as rotinas LISP que uso no trabalho. Preço justo e entrega realmente imediata no email."
+    },
+    {
+      author: "Vitor Hugo B.",
+      rating: 5,
+      date: "2 meses atrás",
+      comment: "Tava pagando caro antes, aqui foi pagamento único e nunca mais deu aviso de licença. Recomendo de olhos fechados."
+    },
+    {
+      author: "Fernanda T. Azevedo",
+      rating: 4,
+      date: "2 meses atrás",
+      comment: "Download veio rapidinho pelo Google Drive e o passo a passo em vídeo facilita demais pra quem não manja muito."
+    },
+    {
+      author: "Daniel C. Peixoto",
+      rating: 5,
+      date: "3 meses atrás",
+      comment: "Excelente atendimento no WhatsApp, tiraram minha dúvida antes da compra e o AutoCAD 2027 tá voando."
     }
   ],
   revit_2027: [
@@ -212,20 +240,6 @@ export const reviewsData: Record<string, Review[]> = {
       comment: "comprei e o link veio na hora. Suporte atencioso dms tirou duvida de plugin"
     },
     {
-      author: "Fagner S.",
-      rating: 5,
-      date: "1 mês atrás",
-      comment: "Muito facil, o instalador faz quase tudo sozinho kkkkk indico mt"
-    },
-    {
-      author: "Gabriela O.",
-      rating: 4,
-      date: "1 mês atrás",
-      comment: "Gostei muito, funciona tudo e nao da aquelas telas de erro de licença"
-    }
-  ],
-  sketchup_2026_mac: [
-    {
       author: "Gabriel K.",
       rating: 5,
       date: "3 dias atrás",
@@ -282,32 +296,6 @@ export const reviewsData: Record<string, Review[]> = {
       comment: "Tudo certo no download, os arquivos sao meio grandes mas o tutorial explica bem direitinho"
     }
   ],
-  archicad_29: [
-    {
-      author: "Amanda V. Lopes",
-      rating: 5,
-      date: "Ontem",
-      comment: "Archicad 29 em portugues rodando lisinho aq. A interface ta mt rapida, curti dmais"
-    },
-    {
-      author: "Eduardo Santos",
-      rating: 5,
-      date: "4 dias atrás",
-      comment: "Melhor q o autocad pra arquitetura, recomendo o site, entregou em segundos"
-    },
-    {
-      author: "Roberto Farias",
-      rating: 5,
-      date: "1 semana atrás",
-      comment: "tudo certo, instalei e ja to fazendo meu primeiro projeto no BIM. Muito bom."
-    },
-    {
-      author: "Larissa M.",
-      rating: 4,
-      date: "3 semanas atrás",
-      comment: "Roda liso e o bimmx funciona perfeitamente tb, recomendo a compra"
-    }
-  ],
   archicad_30: [
     {
       author: "Rodrigo M. Pires",
@@ -316,48 +304,120 @@ export const reviewsData: Record<string, Review[]> = {
       comment: "archicad 30 fico show de bola!! bem mais leve q o 29 na hr de subir os 3d pesados. vlw pelo suporte na instalaçao"
     },
     {
+      author: "Amanda V. Lopes",
+      rating: 5,
+      date: "Ontem",
+      comment: "Peguei a versão 29 em português rodando lisinho aqui. A interface tá muito rápida, curti demais"
+    },
+    {
       author: "Gabriela S. Arquiteta",
       rating: 5,
       date: "3 dias atrás",
-      comment: "comsegui instalar de boa pelo tutorial, veio tudo certinho no email na msm hora. programa perfeito e em portugues"
+      comment: "consegui instalar de boa pelo tutorial, veio tudo certinho no email na msm hora. programa perfeito e em portugues"
+    },
+    {
+      author: "Eduardo Santos",
+      rating: 5,
+      date: "4 dias atrás",
+      comment: "Melhor q o autocad pra arquitetura, recomendo o site, entregou em segundos"
     },
     {
       author: "Marcos Vinicius B.",
       rating: 5,
       date: "5 dias atrás",
-      comment: "tava com medo de dar erro na build 3000 mas rodou liso dmais no win 11. atendimento nota 10 no whats obrigado"
+      comment: "Comprei o 28 pro meu notebook mais antigo e rodou liso demais no win 11. Atendimento nota 10 no whats obrigado"
+    },
+    {
+      author: "Roberto Farias",
+      rating: 5,
+      date: "1 semana atrás",
+      comment: "tudo certo, instalei e ja to fazendo meu primeiro projeto no BIM. Muito bom."
     },
     {
       author: "Camila Duarte",
       rating: 4,
       date: "1 semana atrás",
       comment: "Muito bom, só demorou um pouco pra baixar por causa da minha net lerdinha kkk mas o software em si é sensacional"
+    },
+    {
+      author: "Larissa M.",
+      rating: 4,
+      date: "3 semanas atrás",
+      comment: "Roda liso e o bimmx funciona perfeitamente tb, recomendo a compra"
     }
   ],
   cype_2026: [
     {
       author: "Eng. Sergio N.",
       rating: 5,
-      date: "4 dias atrás",
-      comment: "Cypecad completo com todos os modulos ativos, perfeito pra calcular as sapatas e vigas."
+      date: "2 dias atrás",
+      comment: "Cypecad completo com todos os modulos ativos, perfeito pra calcular as sapatas, vigas e pilares nas normas da NBR."
     },
     {
       author: "Kleber Lima",
       rating: 5,
-      date: "1 semana atrás",
-      comment: "Estava com duvida se vinha com tudo mesmo e o suporte me mandou a lista dos modulos no zap. Otimo atendimeto"
+      date: "5 dias atrás",
+      comment: "Estava com duvida se vinha com o Cype 3D e o Arquimedes juntos, e vem tudo completo mesmo! Otimo atendimento."
     },
     {
       author: "Alexandre S.",
       rating: 4,
-      date: "2 semanas atrás",
-      comment: "Muito bom, rodou tranquilo no win10. Vale super a pena."
+      date: "1 semana atrás",
+      comment: "Muito bom, peguei a 2025.d por ter todos os idiomas e rodou tranquilo no Windows 11. Vale super a pena."
     },
     {
       author: "Jeferson O.",
       rating: 5,
+      date: "1 semana atrás",
+      comment: "O modulo de escadas, lajes e fundacoes funcionando certinho na versao 2026 em portugues, otimo preco."
+    },
+    {
+      author: "Eng. Marcos Tadeu",
+      rating: 5,
+      date: "2 semanas atrás",
+      comment: "Calculo galpao metalico toda semana no Cype 3D e ta rodando liso, gerando as pranchas e memorial sem erro nenhum."
+    },
+    {
+      author: "Leandro F. Barros",
+      rating: 5,
+      date: "2 semanas atrás",
+      comment: "Entrega imediata no e-mail e o vídeo de instalação explica cada detalhe. Em 15 minutos já estava com o CypeCAD aberto."
+    },
+    {
+      author: "Renata C. Vasconcelos",
+      rating: 5,
+      date: "3 semanas atrás",
+      comment: "Uso bastante o CypeTherm e o Arquimedes pros laudos e orcamentos aqui do escritorio, veio tudo desbloqueado."
+    },
+    {
+      author: "Gustavo H. Mendes",
+      rating: 4,
+      date: "3 semanas atrás",
+      comment: "Programa pesado pq vem a suite inteira, mas depois que instala funciona perfeitamente e não pede mensalidade."
+    },
+    {
+      author: "Dr. Paulo Roberto",
+      rating: 5,
       date: "1 mês atrás",
-      comment: "O modulo de escadas e fundacoes funcionando certinho, otimo preco"
+      comment: "Excelente custo-benefício. Peguei o 2026.a em português Brasil e todas as normas NBR 6118 estão certinhas."
+    },
+    {
+      author: "Fabiano Costa",
+      rating: 5,
+      date: "1 mês atrás",
+      comment: "Suporte pelo WhatsApp muito prestativo, me ajudaram a configurar na hora. Recomendo a C2Tech."
+    },
+    {
+      author: "Danilo Moraes",
+      rating: 5,
+      date: "2 meses atrás",
+      comment: "Melhor investimento pra quem tá começando a projetar estruturas por conta própria. CypeCAD e Cype 3D 100% funcionais."
+    },
+    {
+      author: "Henrique A. Pires",
+      rating: 5,
+      date: "2 meses atrás",
+      comment: "Tudo conforme anunciado, link direto no Google Drive e ativação vitalícia funcionando redondo."
     }
   ],
   solidworks_2026: [
@@ -638,10 +698,22 @@ export const reviewsData: Record<string, Review[]> = {
       comment: "Promob 2025 completo com cut pro funcionando perfeito. Catalogo atualizado e rodando liso"
     },
     {
+      author: "Marcenaria Silva",
+      rating: 5,
+      date: "4 dias atrás",
+      comment: "Peguei a versão 2024 Enterprise pro notebook da oficina e está rodando muito bem, excelente custo benefício."
+    },
+    {
       author: "Claudio P. Rosa",
       rating: 5,
       date: "5 dias atrás",
       comment: "suporte me ajudou a instalar por acesso remoto pq deu erro de permissao no meu windows. Excelente pos venda"
+    },
+    {
+      author: "Jeferson Costa",
+      rating: 5,
+      date: "1 semana atrás",
+      comment: "O cut pro ajuda mto a economizar chapa de mdf, funciona perfeitamente o plano de corte"
     },
     {
       author: "Bruna A. Freitas",
@@ -656,6 +728,12 @@ export const reviewsData: Record<string, Review[]> = {
       comment: "Excelente programa, plano de corte ta gerando certinho e economizando mdf"
     },
     {
+      author: "Alexandre G.",
+      rating: 4,
+      date: "3 semanas atrás",
+      comment: "tudo certo com a instalacao, recomendo a loja para todos"
+    },
+    {
       author: "Cesar D.",
       rating: 4,
       date: "1 mês atrás",
@@ -666,64 +744,98 @@ export const reviewsData: Record<string, Review[]> = {
       rating: 5,
       date: "1 mês atrás",
       comment: "Recomendo msm a loja, suporte resolveu tudo pelo WhatsApp rapidinho."
-    }
-  ],
-  promob_enterprise_2024: [
-    {
-      author: "Marcenaria Silva",
-      rating: 5,
-      date: "4 dias atrás",
-      comment: "Rodando muito bem na minha marcenaria antiga, excelente custo beneficio."
-    },
-    {
-      author: "Jeferson Costa",
-      rating: 5,
-      date: "1 semana atrás",
-      comment: "O cut pro ajuda mto a economizar chapa de mdf, funciona perfeitamente o plano de corte"
-    },
-    {
-      author: "Alexandre G.",
-      rating: 4,
-      date: "3 semanas atrás",
-      comment: "tudo certo com a instalacao, recomendo a loja para todos"
     },
     {
       author: "Sandro B.",
       rating: 5,
       date: "1 mês atrás",
-      comment: "Muito bom, ativou facil e ta ajudando bastante nos projetos mais simples aq de casa"
+      comment: "Muito bom, ativou facil e ta ajudando bastante nos projetos de móveis planejados aq"
     }
   ],
   coreldraw_2026: [
     {
       author: "Douglas Arte",
       rating: 5,
-      date: "3 dias atrás",
+      date: "2 dias atrás",
       comment: "CorelDraw rodando sem travar com arquivos pesados de comunicacao visual. Recomendo dmais"
+    },
+    {
+      author: "Gisele T. Andrade",
+      rating: 5,
+      date: "3 dias atrás",
+      comment: "Nossa muito bom! Roda direto no macOS sem precisar de emular nada e veio super bem explicado a instalacao. Amei!"
+    },
+    {
+      author: "Rodrigo P. Martins",
+      rating: 5,
+      date: "5 dias atrás",
+      comment: "tudo certo no meu macbook m2 pro. o corel roda nativo e as ferramentas de vetor estao super rapidas"
     },
     {
       author: "Fabio R. Ramos",
       rating: 5,
       date: "1 semana atrás",
-      comment: "Uso pra fazer artes pra sublimacao, funciona tudo e nao fica dando erro de licenca."
+      comment: "Uso pra fazer artes pra sublimacao, funciona tudo e nao fica dando erro de licenca nem modo visitante."
+    },
+    {
+      author: "Luan Gráfica Rápida",
+      rating: 5,
+      date: "1 semana atrás",
+      comment: "Peguei o X7 pro PC da plotter de recorte e o 2025 pro computador de criação. Ambos funcionando 100% e salvando normal."
     },
     {
       author: "Matheus N. Costa",
       rating: 4,
       date: "2 semanas atrás",
-      comment: "Muito bom o software, chegou super rapido no email com os links certinho"
+      comment: "Muito bom o software, chegou super rapido no email com os links certinho e o video passo a passo"
+    },
+    {
+      author: "Fabiola S. Nogueira",
+      rating: 4,
+      date: "2 semanas atrás",
+      comment: "comprei pra fazer artes e estampas no Mac e ate agora esta perfeito. o suporte me ajudou a instalar por chat no whatsapp, recomendo."
     },
     {
       author: "Vivian L.",
       rating: 5,
       date: "3 semanas atrás",
-      comment: "Sempre usei Corel e essa versao 2026 ta mt estavel. Instalou sem dor de cabeca"
+      comment: "Sempre usei Corel e essa versao 2026 ta mt estavel. Instalou sem dor de cabeca seguindo o video"
+    },
+    {
+      author: "Carlos Henrique S.",
+      rating: 5,
+      date: "3 semanas atrás",
+      comment: "Estava sofrendo com programa fechando sozinho antes, comprei esse da C2Tech e nunca mais tive problema. Salva e exporta PDF certinho."
+    },
+    {
+      author: "Priscila Fontes",
+      rating: 5,
+      date: "1 mês atrás",
+      comment: "Comprei a versão 2022 que eu já era acostumada a usar na agência e rodou liso demais no meu notebook."
     },
     {
       author: "Alexandre Rocha",
       rating: 5,
       date: "1 mês atrás",
       comment: "entrega na hora e suporte tirou minhas duvidas rapidinho. Nota dez"
+    },
+    {
+      author: "Gráfica Expressa JM",
+      rating: 5,
+      date: "1 mês atrás",
+      comment: "Preço excelente pela qualidade. O PowerTrace e o Photo-Paint vieram junto funcionando perfeitamente."
+    },
+    {
+      author: "Bruno V. Tavares",
+      rating: 4,
+      date: "2 meses atrás",
+      comment: "Ótimo atendimento e envio imediato no e-mail após o Pix. Recomendo pra quem trabalha com serigrafia e estamparia."
+    },
+    {
+      author: "Tatiane M. Melo",
+      rating: 5,
+      date: "2 meses atrás",
+      comment: "Muito fácil de instalar com o vídeo tutorial que vem na pasta do Drive. Funcionando vitalício de verdade!"
     }
   ],
   photoshop_2026: [
@@ -922,26 +1034,6 @@ export const reviewsData: Record<string, Review[]> = {
       comment: "otimo custo beneficio! a instalacao tem bastantes passos mas o tutorial em video q eles mandam ajuda muito."
     }
   ],
-  coreldraw_2026_mac: [
-    {
-      author: "Gisele T. Andrade",
-      rating: 5,
-      date: "Ontem",
-      comment: "Nossa muito bom! Roda direto no macOS sem precisar de emular nada e veio super bem explicado a instalacao. Amei!"
-    },
-    {
-      author: "Rodrigo P. Martins",
-      rating: 5,
-      date: "5 dias atrás",
-      comment: "tudo certo no meu macbook m2 pro. o corel roda nativo e as ferramentas de vetor estao super rapidas"
-    },
-    {
-      author: "Fabiola S. Nogueira",
-      rating: 4,
-      date: "2 semanas atrás",
-      comment: "comprei pra fazer artes e estampas e ate agora esta perfeito. o suporte me ajudou a instalar por chat no whatsapp, recomendo."
-    }
-  ],
   camtasia_2026: [
     {
       author: "Julio C. Ramos",
@@ -976,82 +1068,6 @@ export const reviewsData: Record<string, Review[]> = {
       rating: 5,
       date: "3 dias atrás",
       comment: "Salvou minha vida! Consegui recuperar mais de 200GB de fotos e vídeos de um HD externo que tinha sido formatado por engano. Funcionou perfeito!"
-    }
-  ],
-  capcut_pro_mensal: [
-    {
-      author: "Lucas F. Rocha",
-      rating: 5,
-      date: "2 dias atrás",
-      comment: "Assinei o CapCut Pro pra editar meus Reels. A entrega do login e senha foi na hora no e-mail e ativou tudo certinho no meu app de PC. Os recursos de IA ajudam muito a legendar os vídeos rápido!"
-    },
-    {
-      author: "Mariana Santos",
-      rating: 5,
-      date: "5 dias atrás",
-      comment: "Estava cansada da versão gratuita com marca d'água e limitações. Essa assinatura no Pix cabe no bolso e funciona muito bem, recomendo demais!"
-    },
-    {
-      author: "Thiago N. Ramos",
-      rating: 5,
-      date: "1 semana atrás",
-      comment: "Tudo certo. O envio das credenciais foi bem rápido e o suporte explicou como funciona a rotação das contas. Roda liso no meu Mac e no PC."
-    },
-    {
-      author: "Caroline Albuquerque",
-      rating: 4,
-      date: "2 semanas atrás",
-      comment: "Muito bom! Editor completo, o áudio de IA é incrível. Apenas tive uma dúvida para logar na conta compartilhada de início, mas o suporte respondeu rápido no WhatsApp."
-    },
-    {
-      author: "Felipe G. Dias",
-      rating: 5,
-      date: "3 semanas atrás",
-      comment: "Perfeito para criadores de conteúdo. Todos os stickers, efeitos e transições liberados. Custo-benefício excelente pelo Pix!"
-    }
-  ],
-  canva_pro_mensal: [
-    {
-      author: "Juliana K. Costa",
-      rating: 5,
-      date: "Ontem",
-      comment: "Assinei o Canva Pro e liberou tudo na mesma hora! Consigo usar todas as fotos, remover fundo com 1 clique e criar os kits de marca para os meus clientes de social media. Muito prático."
-    },
-    {
-      author: "Rodrigo P. Martins",
-      rating: 5,
-      date: "3 dias atrás",
-      comment: "Excelente! A entrega do acesso é muito rápida. O valor do Pix recorrente compensa demais para quem usa todo dia para trabalhar."
-    },
-    {
-      author: "Carla R. Pontes",
-      rating: 5,
-      date: "1 semana atrás",
-      comment: "Ótimo atendimento e suporte no WhatsApp. Explicaram direitinho como funciona a conta Pro e já estou criando minhas apresentações da empresa. Recomendo!"
-    },
-    {
-      author: "Beatriz Nogueira",
-      rating: 4,
-      date: "1 semana atrás",
-      comment: "Gostei bastante, acesso rápido a todos os templates e fotos premium. Só tive que configurar meu kit de marca de novo, mas fora isso é maravilhoso."
-    },
-    {
-      author: "Guilherme B. Silva",
-      rating: 5,
-      date: "2 semanas atrás",
-      comment: "Perfeito, liberação automática no e-mail logo após pagar o Pix. Vale muito a pena pelo preço cobrado."
-    },
-    {
-      author: "Ana Julia M.",
-      rating: 5,
-      date: "3 semanas atrás",
-      comment: "Maravilhoso! Canva Pro é essencial hoje em dia. Esse plano por assinatura no Pix foi a melhor alternativa que encontrei. Recomendo muito a C2Tech."
-    },
-    {
-      author: "Marcelo A. Rocha",
-      rating: 4,
-      date: "1 mês atrás",
-      comment: "Muito prático o kit de marca e o redimensionador automático de designs. Aprovou o Pix na hora."
     }
   ],
   autodesk_all_apps: [

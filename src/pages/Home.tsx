@@ -229,7 +229,7 @@ export const Home: React.FC = () => {
   return (
     <div className="pt-0">
       {/* 1. HERO SECTION */}
-      <section className="relative bg-[#020617] pt-20 pb-12 md:pt-40 md:pb-32 overflow-hidden text-center z-0">
+      <section className="relative bg-[#020617] pt-24 pb-6 sm:pt-28 md:pt-32 sm:pb-8 overflow-hidden text-center z-0">
         
         {/* Background Layers Wrapper (z-0 sits above section's bg color but behind relative z-10 content) */}
         <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0">
@@ -267,19 +267,19 @@ export const Home: React.FC = () => {
           <div className="absolute top-[80%] right-[12%] w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse opacity-30"></div>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5 md:space-y-8 flex flex-col items-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3.5 sm:space-y-4 md:space-y-5 flex flex-col items-center">
           
           {/* 1. Pill Badge with Avatars */}
           <div 
-            className="inline-flex items-center space-x-2.5 bg-slate-900/60 backdrop-blur-md rounded-full border border-sky-500/30 px-3.5 py-1.5 shadow-[0_0_20px_rgba(2,132,199,0.1)] hover:border-sky-500/50 transition-all duration-300 pointer-events-none select-none animate-soft-pulse"
+            className="inline-flex items-center space-x-2 bg-slate-900/60 backdrop-blur-md rounded-full border border-sky-500/30 px-3.5 py-1 shadow-[0_0_20px_rgba(2,132,199,0.1)] hover:border-sky-500/50 transition-all duration-300 pointer-events-none select-none animate-soft-pulse"
           >
             {/* Overlapping Avatars */}
             <div className="flex -space-x-2">
-              <img className="w-6 h-6 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64&q=80" alt="Cliente 1" />
-              <img className="w-6 h-6 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&h=64&q=80" alt="Cliente 2" />
-              <img className="w-6 h-6 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=64&h=64&q=80" alt="Cliente 3" />
-              <img className="w-6 h-6 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=64&h=64&q=80" alt="Cliente 4" />
-              <img className="w-6 h-6 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=64&h=64&q=80" alt="Cliente 5" />
+              <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64&q=80" alt="Cliente 1" />
+              <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&h=64&q=80" alt="Cliente 2" />
+              <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=64&h=64&q=80" alt="Cliente 3" />
+              <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=64&h=64&q=80" alt="Cliente 4" />
+              <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=64&h=64&q=80" alt="Cliente 5" />
             </div>
             <span className="text-[11px] font-bold text-sky-400 tracking-wide">
               +5.000 clientes satisfeitos
@@ -287,78 +287,78 @@ export const Home: React.FC = () => {
           </div>
 
           {/* 2. Headline */}
-          <div className="space-y-2 md:space-y-4 max-w-5xl text-center">
-            <h1 className="font-display text-white tracking-tight leading-[1.1] text-balance">
-              <span className="font-light text-2xl sm:text-[36px] md:text-[44px] lg:text-[48px] xl:text-[52px] block text-white/90">
+          <div className="space-y-2 md:space-y-3 max-w-5xl text-center">
+            <h1 className="font-display text-white tracking-tight leading-[1.08] text-balance">
+              <span className="font-light text-2xl sm:text-[34px] md:text-[40px] lg:text-[44px] xl:text-[48px] block text-white/90">
                 Você só foca no projeto.
               </span>
-              <span className="font-black text-4xl sm:text-[56px] md:text-[68px] lg:text-[76px] xl:text-[80px] block mt-1 sm:mt-2">
+              <span className="font-black text-3xl sm:text-[50px] md:text-[62px] lg:text-[70px] xl:text-[74px] block mt-1 sm:mt-1.5">
                 A <span className="bg-gradient-to-r from-[#00d2ff] via-[#0066FF] to-[#0a21a5] bg-clip-text text-transparent">C2Tech</span> cuida do resto.
               </span>
             </h1>
             
             {/* 3. Sub-headline */}
-            <p className="text-slate-400 text-sm sm:text-base md:text-lg lg:text-xl max-w-3xl mx-auto leading-normal md:leading-relaxed text-balance">
+            <p className="text-slate-400 text-xs sm:text-sm md:text-base lg:text-lg max-w-3xl mx-auto leading-relaxed text-balance">
               Catálogo completo, área do cliente, entrega automática por e-mail e suporte técnico completo no WhatsApp! Tudo pronto para ativação vitalícia local, no mesmo lugar. E você só paga uma única vez por isso.
             </p>
           </div>
 
           {/* 4. Action Buttons */}
-          <div className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center w-full max-w-md sm:max-w-5xl pt-0 md:pt-4 relative z-20">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-2.5 sm:gap-3.5 justify-center w-full max-w-md sm:max-w-5xl pt-1 sm:pt-2 relative z-20">
             <Link
               to="/catalogo"
-              className="flex items-center justify-center px-6 py-4 md:px-8 md:py-4 text-base md:text-lg font-bold text-white bg-accent-blue hover:bg-accent-blue-dark rounded-2xl md:rounded-3xl shadow-[0_4px_20px_rgba(2,132,199,0.25)] hover:shadow-[0_4px_25px_rgba(2,132,199,0.35)] transition-all duration-300 group whitespace-nowrap hover:scale-105 active:scale-95"
+              className="flex items-center justify-center px-5 py-3 md:px-7 md:py-3.5 text-sm md:text-base font-bold text-white bg-accent-blue hover:bg-accent-blue-dark rounded-xl md:rounded-2xl shadow-[0_4px_20px_rgba(2,132,199,0.25)] hover:shadow-[0_4px_25px_rgba(2,132,199,0.35)] transition-all duration-300 group whitespace-nowrap hover:scale-105 active:scale-95"
             >
               <span>Explorar softwares</span>
-              <ArrowRight className="w-5 h-5 ml-2.5 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="w-4.5 h-4.5 ml-2 transition-transform group-hover:translate-x-1" />
             </Link>
             <Link
               to="/catalogo?tab=assinaturas"
-              className="flex items-center justify-center px-6 py-4 md:px-8 md:py-4 text-base md:text-lg font-bold text-white bg-slate-900/60 backdrop-blur-md hover:bg-slate-900/80 rounded-2xl md:rounded-3xl border border-sky-500/30 hover:border-sky-500/60 shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_25px_rgba(2,132,199,0.15)] transition-all duration-300 group whitespace-nowrap hover:scale-105 active:scale-95"
+              className="flex items-center justify-center px-5 py-3 md:px-7 md:py-3.5 text-sm md:text-base font-bold text-white bg-slate-900/60 backdrop-blur-md hover:bg-slate-900/80 rounded-xl md:rounded-2xl border border-sky-500/30 hover:border-sky-500/60 shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_25px_rgba(2,132,199,0.15)] transition-all duration-300 group whitespace-nowrap hover:scale-105 active:scale-95"
             >
               <span>Planos de Assinatura</span>
-              <span className="ml-2.5 px-2 py-0.5 text-[10px] font-extrabold bg-sky-500 text-white rounded-md uppercase tracking-wider animate-pulse shrink-0">
+              <span className="ml-2 px-1.5 py-0.5 text-[9px] font-extrabold bg-sky-500 text-white rounded-md uppercase tracking-wider animate-pulse shrink-0">
                 Novo
               </span>
             </Link>
             <Link
               to="/catalogo?q=microsoft"
-              className="flex items-center justify-center px-6 py-4 md:px-8 md:py-4 text-base md:text-lg font-bold text-white bg-slate-900/60 backdrop-blur-md hover:bg-slate-900/80 rounded-2xl md:rounded-3xl border border-indigo-500/40 hover:border-indigo-500/70 shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_25px_rgba(99,102,241,0.25)] transition-all duration-300 group whitespace-nowrap hover:scale-105 active:scale-95"
+              className="flex items-center justify-center px-5 py-3 md:px-7 md:py-3.5 text-sm md:text-base font-bold text-white bg-slate-900/60 backdrop-blur-md hover:bg-slate-900/80 rounded-xl md:rounded-2xl border border-indigo-500/40 hover:border-indigo-500/70 shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_25px_rgba(99,102,241,0.25)] transition-all duration-300 group whitespace-nowrap hover:scale-105 active:scale-95"
             >
               <span>Ative seu Windows/Office</span>
-              <ArrowRight className="w-5 h-5 ml-2.5 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="w-4.5 h-4.5 ml-2 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
 
           {/* Trust Carousel (Below Buttons on all devices) */}
-          <div className="flex flex-col items-center justify-center w-full max-w-6xl mt-10 md:mt-12 mb-2 md:mb-0 overflow-hidden relative z-20">
-            <p className="text-[9px] md:text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-6 md:mb-8 font-sans">
+          <div className="flex flex-col items-center justify-center w-full max-w-6xl mt-5 sm:mt-7 mb-1 overflow-hidden relative z-20">
+            <p className="text-[10px] sm:text-xs text-slate-400 uppercase tracking-widest font-bold mb-3 sm:mb-4 font-sans">
               Revendedor Autorizado e Parceiro Oficial
             </p>
             
             <div 
-              className="flex w-full overflow-hidden opacity-80 md:opacity-100"
+              className="flex w-full overflow-hidden"
               style={{
-                maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
-                WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)'
+                maskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
+                WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)'
               }}
             >
-              <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-8 md:gap-12 px-4 md:px-6">
+              <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-10 sm:gap-14 md:gap-16 px-4 md:px-6">
                 {['/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/promob-reseller.png', '/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/promob-reseller.png'].map((logo, i) => (
-                  <img key={i} src={logo} alt="Partner" className="h-10 sm:h-12 lg:h-20 object-contain invert grayscale opacity-80 md:opacity-70 hover:opacity-100 transition-opacity duration-300" />
+                  <img key={i} src={logo} alt="Partner" className="h-10 sm:h-12 md:h-14 lg:h-16 object-contain invert grayscale brightness-125 contrast-125 opacity-90 hover:opacity-100 transition-all duration-300" />
                 ))}
               </div>
-              <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-8 md:gap-12 px-4 md:px-6" aria-hidden="true">
+              <div className="flex shrink-0 min-w-full justify-around items-center animate-marquee gap-10 sm:gap-14 md:gap-16 px-4 md:px-6" aria-hidden="true">
                 {['/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/promob-reseller.png', '/images/microsoft-partner.png', '/images/autodesk-reseller.png', '/images/corel-partner.png', '/images/promob-reseller.png'].map((logo, i) => (
-                  <img key={`dup-${i}`} src={logo} alt="Partner" className="h-10 sm:h-12 lg:h-20 object-contain invert grayscale opacity-80 md:opacity-70 hover:opacity-100 transition-opacity duration-300" />
+                  <img key={`dup-${i}`} src={logo} alt="Partner" className="h-10 sm:h-12 md:h-14 lg:h-16 object-contain invert grayscale brightness-125 contrast-125 opacity-90 hover:opacity-100 transition-all duration-300" />
                 ))}
               </div>
             </div>
           </div>
 
-          {/* 5. Laptop AutoCAD Mockup (Static Image Only) */}
+          {/* 5. Laptop AutoCAD Mockup (Stretched Wide & Pulled Higher Up) */}
           <div 
-            className="w-full max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-7xl mt-8 md:mt-4 transition-all duration-500 relative z-10"
+            className="w-full max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-7xl mt-0 md:-mt-2 -mb-28 sm:-mb-44 md:-mb-64 lg:-mb-80 transition-all duration-500 relative z-10"
             style={{ transform: 'translate3d(0, calc(var(--scroll-y, 0px) * 0.03), 0)' }}
           >
             <img 
@@ -373,7 +373,7 @@ export const Home: React.FC = () => {
 
         {/* Wave Divider */}
         <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none z-20 pointer-events-none">
-          <svg className="relative block w-full h-[40px] md:h-[80px]" viewBox="0 0 1440 120" preserveAspectRatio="none">
+          <svg className="relative block w-full h-[36px] md:h-[64px]" viewBox="0 0 1440 120" preserveAspectRatio="none">
             <path d="M0,80 Q720,20 1440,80 L1440,120 L0,120 Z" className="fill-white"></path>
           </svg>
         </div>
@@ -531,10 +531,10 @@ export const Home: React.FC = () => {
               <span>Novidade</span>
             </div>
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-white tracking-tight">
-              Planos de Assinatura Mensal
+              Acesso a Contas Oficiais e Assinaturas
             </h2>
             <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-              Acesse ferramentas de design e criação líderes de mercado como <strong className="text-white font-semibold">Canva Pro</strong> e <strong className="text-white font-semibold">CapCut Pro</strong>. Sem fidelidade, com faturamento simplificado no Pix e suporte completo incluso.
+              Acesse ferramentas e suítes profissionais com credenciais oficiais exclusivas, como <strong className="text-white font-semibold">Autodesk Todos os Aplicativos</strong>. Sem complicações, com faturamento simplificado e suporte dedicado C2Tech.
             </p>
           </div>
 

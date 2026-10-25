@@ -10,7 +10,12 @@ interface CartContextType {
   discountAmount: number;
   total: number;
   discountPercentage: number;
-  addToCart: (product: Product, subOption?: 'recurrent' | 'avulso', licenseOption?: LicenseOption) => void;
+  addToCart: (
+    product: Product,
+    subOption?: 'recurrent' | 'avulso',
+    licenseOption?: LicenseOption,
+    deviceCount?: number
+  ) => void;
   removeFromCart: (productId: string) => void;
   clearCart: () => void;
   setIsCartOpen: (isOpen: boolean) => void;
@@ -63,11 +68,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [couponCode]);
 
-  const addToCart = (product: Product, subOption?: 'recurrent' | 'avulso', licenseOption?: LicenseOption) => {
+  const addToCart = (
+    product: Product,
+    subOption?: 'recurrent' | 'avulso',
+    licenseOption?: LicenseOption,
+    deviceCount: number = 1
+  ) => {
     if (product.unavailable) return;
     
     const chosenOption = licenseOption !== undefined ? licenseOption : (product.licenseOptions && product.licenseOptions.length > 0 ? product.licenseOptions[0] : undefined);
     const chosenSubOption = chosenOption ? 'avulso' : (subOption || 'recurrent');
+    const validDeviceCount = Math.max(1, deviceCount);
 
     setCartItems((prev) => {
       // Check if already in cart
@@ -75,19 +86,33 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (exists) {
         return prev.map((item) => 
           item.id === product.id 
-            ? { ...item, selectedSubOption: chosenSubOption, selectedLicenseOption: chosenOption }
+            ? {
+                ...item,
+                selectedSubOption: chosenSubOption,
+                selectedLicenseOption: chosenOption,
+                deviceCount: validDeviceCount,
+              }
             : item
         );
       }
-      return [...prev, { ...product, selectedSubOption: chosenSubOption, selectedLicenseOption: chosenOption }];
+      return [
+        ...prev,
+        {
+          ...product,
+          selectedSubOption: chosenSubOption,
+          selectedLicenseOption: chosenOption,
+          deviceCount: validDeviceCount,
+        },
+      ];
     });
     
     // Track AddToCart on Facebook Pixel
-    const itemPrice = chosenOption
+    const unitPrice = chosenOption
       ? chosenOption.price
       : (product.isSubscription && chosenSubOption === 'recurrent'
           ? (product.recurrencePrice || product.price)
           : product.price);
+    const itemPrice = unitPrice * validDeviceCount;
     trackEvent('AddToCart', {
       content_name: product.name,
       content_ids: [product.slug],
@@ -131,14 +156,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Math calculations
   const subtotal = cartItems.reduce((sum, item) => {
+    const count = item.deviceCount || 1;
     if (item.selectedLicenseOption) {
-      return sum + item.selectedLicenseOption.price;
+      return sum + item.selectedLicenseOption.price * count;
     }
     if (item.isSubscription) {
       const isRecurrent = item.selectedSubOption !== 'avulso';
-      return sum + (isRecurrent ? (item.recurrencePrice || item.price) : item.price);
+      return sum + (isRecurrent ? (item.recurrencePrice || item.price) : item.price) * count;
     }
-    return sum + item.price;
+    return sum + item.price * count;
   }, 0);
   
   // Coupon OFF10 only applies when items count > 1

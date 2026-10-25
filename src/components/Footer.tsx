@@ -106,13 +106,18 @@ export const Footer: React.FC = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/como-funciona" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    Como funciona
+                  <Link to="/sobre-nos" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
+                    Sobre Nós
                   </Link>
                 </li>
                 <li>
-                  <Link to="/suporte" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    Suporte Técnico
+                  <Link to="/entrega-e-pagamento" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
+                    Entrega e Pagamento Seguro
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/contato" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
+                    Fale Conosco / Suporte
                   </Link>
                 </li>
                 <li>

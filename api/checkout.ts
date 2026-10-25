@@ -188,14 +188,19 @@ export default async function handler(req: any, res: any) {
           : `Softwares: ${namesString} - C2Shop`
         ).substring(0, 70);
 
-        const chargeBody = {
+        const cleanDoc = (buyer.cpf || '').replace(/\D/g, '');
+        const devedorPayload =
+          cleanDoc.length === 11
+            ? { cpf: cleanDoc, nome: buyer.name }
+            : cleanDoc.length === 14
+            ? { cnpj: cleanDoc, nome: buyer.name }
+            : undefined;
+
+        const chargeBody: Record<string, any> = {
           calendario: {
             expiracao: 3600
           },
-          devedor: {
-            cpf: buyer.cpf.replace(/\D/g, ''),
-            nome: buyer.name
-          },
+          ...(devedorPayload ? { devedor: devedorPayload } : {}),
           valor: {
             original: pixPriceStr
           },

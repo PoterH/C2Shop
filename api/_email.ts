@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { getDownloadLink } from './_downloads.js';
 
-function getResendApiKey() {
+export function getResendApiKey() {
   try {
     const envPath = path.join(process.cwd(), '.env');
     if (fs.existsSync(envPath)) {
@@ -25,7 +25,7 @@ function getResendApiKey() {
   return process.env.RESEND_API_KEY || '';
 }
 
-function getResendFromEmail() {
+export function getResendFromEmail() {
   try {
     const envPath = path.join(process.cwd(), '.env');
     if (fs.existsSync(envPath)) {

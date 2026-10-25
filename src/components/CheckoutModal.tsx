@@ -241,24 +241,26 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
       return false;
     }
     const cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
-    if (cleanCpfCnpj.length !== 11 && cleanCpfCnpj.length !== 14) {
-      setErrorMessage('Por favor, insira um CPF ou CNPJ válido.');
-      return false;
-    }
-    
-    // Validação matemática do documento
-    if (cleanCpfCnpj.length === 11 && !isValidCPF(cleanCpfCnpj)) {
-      setErrorMessage('CPF inválido. Por favor, verifique os números digitados.');
-      return false;
-    }
-    if (cleanCpfCnpj.length === 14 && !isValidCNPJ(cleanCpfCnpj)) {
-      setErrorMessage('CNPJ inválido. Por favor, verifique os números digitados.');
-      return false;
+    if (cleanCpfCnpj.length > 0) {
+      if (cleanCpfCnpj.length !== 11 && cleanCpfCnpj.length !== 14) {
+        setErrorMessage('Por favor, insira um CPF ou CNPJ válido ou deixe o campo em branco.');
+        return false;
+      }
+
+      // Validação matemática do documento apenas se preenchido
+      if (cleanCpfCnpj.length === 11 && !isValidCPF(cleanCpfCnpj)) {
+        setErrorMessage('CPF inválido. Por favor, verifique os números digitados ou deixe em branco.');
+        return false;
+      }
+      if (cleanCpfCnpj.length === 14 && !isValidCNPJ(cleanCpfCnpj)) {
+        setErrorMessage('CNPJ inválido. Por favor, verifique os números digitados ou deixe em branco.');
+        return false;
+      }
     }
 
     const cleanPhone = phone.replace(/\D/g, '');
-    if (cleanPhone.length < 10 || cleanPhone.length > 11) {
-      setErrorMessage('Por favor, insira um telefone válido com DDD.');
+    if (cleanPhone.length > 0 && (cleanPhone.length < 10 || cleanPhone.length > 11)) {
+      setErrorMessage('Por favor, insira um telefone válido com DDD ou deixe o campo em branco.');
       return false;
     }
     setErrorMessage(null);
@@ -384,7 +386,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 txid,
-                products: cartItems.map(item => ({ slug: item.slug, name: item.name, price: item.selectedLicenseOption?.price || item.price })),
+                products: cartItems.map(item => ({
+                  slug: item.selectedLicenseOption?.downloadSlug || item.slug,
+                  name: item.selectedLicenseOption ? `${item.name} (${item.selectedLicenseOption.label})` : item.name,
+                  price: item.selectedLicenseOption?.price || item.price
+                })),
                 subOption: activeProduct?.isSubscription && !activeProduct?.selectedLicenseOption ? subOption : undefined,
                 buyer: {
                   name: fullName,
@@ -424,6 +430,20 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
   // Submit Boleto Order
   const handleBoletoCheckout = async () => {
+    const cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
+    if (cleanCpfCnpj.length !== 11 && cleanCpfCnpj.length !== 14) {
+      setErrorMessage('Para emissão de Boleto Bancário, o Banco Central exige informar um CPF ou CNPJ válido.');
+      return;
+    }
+    if (cleanCpfCnpj.length === 11 && !isValidCPF(cleanCpfCnpj)) {
+      setErrorMessage('CPF inválido para emissão do boleto. Verifique os números digitados.');
+      return;
+    }
+    if (cleanCpfCnpj.length === 14 && !isValidCNPJ(cleanCpfCnpj)) {
+      setErrorMessage('CNPJ inválido para emissão do boleto. Verifique os números digitados.');
+      return;
+    }
+
     setLoading(true);
     setErrorMessage(null);
     try {
@@ -659,14 +679,16 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                 {/* Grid CPF e Celular */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div className="space-y-1">
-                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">CPF ou CNPJ</label>
+                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+                      CPF ou CNPJ <span className="text-[10px] font-normal text-slate-400 lowercase">(opcional)</span>
+                    </label>
                     <div className="relative">
                       <FileText className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                       <input 
                         type="text"
                         value={cpfCnpj}
                         onChange={(e) => setCpfCnpj(formatCPFOrCNPJ(e.target.value))}
-                        placeholder="Ex: 000.000.000-00"
+                        placeholder="Opcional"
                         maxLength={18}
                         className="w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all"
                       />
@@ -674,14 +696,16 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">WhatsApp / Celular</label>
+                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+                      WhatsApp / Celular <span className="text-[10px] font-normal text-slate-400 lowercase">(opcional)</span>
+                    </label>
                     <div className="relative">
                       <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                       <input 
                         type="text"
                         value={phone}
                         onChange={(e) => setPhone(formatPhone(e.target.value))}
-                        placeholder="Ex: (81) 99999-9999"
+                        placeholder="Opcional"
                         maxLength={15}
                         className="w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all"
                       />
@@ -850,6 +874,25 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                       </p>
                     </div>
 
+                    {cpfCnpj.replace(/\D/g, '').length !== 11 && cpfCnpj.replace(/\D/g, '').length !== 14 && (
+                      <div className="space-y-1 text-left">
+                        <label className="text-[11px] font-bold text-slate-600 uppercase tracking-wider block">
+                          Informe seu CPF ou CNPJ (obrigatório apenas para Boleto)
+                        </label>
+                        <div className="relative">
+                          <FileText className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                          <input
+                            type="text"
+                            value={cpfCnpj}
+                            onChange={(e) => setCpfCnpj(formatCPFOrCNPJ(e.target.value))}
+                            placeholder="000.000.000-00"
+                            maxLength={18}
+                            className="w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 rounded-xl text-sm transition-all"
+                          />
+                        </div>
+                      </div>
+                    )}
+
                     <button
                       onClick={handleBoletoCheckout}
                       disabled={loading}
@@ -1000,21 +1043,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                           <Copy className="w-4 h-4" />
                         )}
                       </button>
-                    </div>
-                  </div>
-
-                  {/* Pix Scam Alert Warning */}
-                  <div className="bg-amber-50 border border-amber-200/60 rounded-2xl p-4 max-w-sm mx-auto text-left shadow-sm">
-                    <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center shrink-0 mt-0.5">
-                        <Lock className="w-4 h-4 text-amber-600" />
-                      </div>
-                      <div className="space-y-1.5">
-                        <p className="text-xs font-bold text-amber-800">Aviso: Seu banco exibiu um alerta de "golpe"?</p>
-                        <p className="text-[11px] text-amber-700/90 leading-relaxed">
-                          Fique tranquilo! Alguns bancos exibem essa mensagem automática por usarmos a Efí/Cakto como geradora do código Pix. <b>Isto é apenas um aviso padrão para recebedores novos no seu aplicativo.</b> A C2Tech garante que sua transação é processada por uma instituição autorizada pelo Banco Central e é <b>100% segura</b>.
-                        </p>
-                      </div>
                     </div>
                   </div>
 

@@ -43,14 +43,22 @@ const getCategoryIcon = (category: string) => {
 export const Catalog: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
-  const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    searchParams.get('categoria') || 'Todos'
+  );
   const [selectedOS, setSelectedOS] = useState<'Todos' | 'Windows' | 'macOS'>('Todos');
   
-  // Sync URL search to local state if URL changes (e.g., from header)
+  // Sync URL search & category to local state if URL changes (e.g., from header mega-menu)
   React.useEffect(() => {
     const q = searchParams.get('q');
     if (q !== null) {
       setSearchTerm(q);
+    } else {
+      setSearchTerm('');
+    }
+    const cat = searchParams.get('categoria');
+    if (cat !== null) {
+      setSelectedCategory(cat);
     }
   }, [searchParams]);
 
@@ -75,6 +83,7 @@ export const Catalog: React.FC = () => {
     // Clear URL parameters
     const newParams = new URLSearchParams(searchParams);
     newParams.delete('q');
+    newParams.delete('categoria');
     setSearchParams(newParams, { replace: true });
   };
 
@@ -128,7 +137,7 @@ export const Catalog: React.FC = () => {
   }, [searchTerm, selectedCategory, selectedOS, activeTab]);
 
   return (
-    <div className="pt-24 pb-16 bg-slate-50 min-h-screen">
+    <div className="pt-28 pb-16 bg-slate-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Page Title */}

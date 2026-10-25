@@ -4,6 +4,7 @@ import { Send, Info, Star, ShoppingCart } from 'lucide-react';
 import type { Product } from '../data/products';
 import { reviewsData } from '../data/reviews';
 import { useCart } from '../context/CartContext';
+import { useCurrency } from '../context/CurrencyContext';
 
 interface ProductCardProps {
   product: Product;
@@ -11,26 +12,18 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
+  const { formatPrice } = useCurrency();
   const productReviews = reviewsData[product.id] || [];
   const averageRating = productReviews.length > 0
     ? (productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length).toFixed(1)
     : "5.0";
 
   // Format price
-  const formattedPrice = product.price.toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  });
-
-  const formattedOriginalPrice = product.originalPrice.toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  });
-
-  const formattedRecurrencePrice = product.recurrencePrice?.toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  });
+  const formattedPrice = formatPrice(product.price);
+  const formattedOriginalPrice = formatPrice(product.originalPrice);
+  const formattedRecurrencePrice = product.recurrencePrice
+    ? formatPrice(product.recurrencePrice)
+    : undefined;
 
   // Determine OS Icon
   const renderOSIcon = () => {

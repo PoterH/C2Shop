@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Trash2, Tag, ShoppingBag, ShieldCheck, Ticket, AlertCircle } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useCurrency } from '../context/CurrencyContext';
 import { CheckoutModal } from './CheckoutModal';
 
 export const CartDrawer: React.FC = () => {
   const navigate = useNavigate();
+  const { formatPrice } = useCurrency();
   const {
     cartItems,
     isCartOpen,
@@ -120,7 +122,7 @@ export const CartDrawer: React.FC = () => {
                   {/* Product Image */}
                   <div className="w-14 h-14 bg-white border border-slate-100 rounded-xl p-1 overflow-hidden shrink-0 flex items-center justify-center">
                     <img 
-                      src={item.imageUrl} 
+                      src={item.selectedLicenseOption?.imageUrl || item.imageUrl} 
                       alt={item.name}
                       className="max-w-full max-h-full object-contain"
                     />
@@ -131,21 +133,21 @@ export const CartDrawer: React.FC = () => {
                     <h4 className="font-display font-bold text-slate-800 text-sm truncate leading-tight">
                       {item.name} {item.selectedLicenseOption ? `(${item.selectedLicenseOption.label})` : ''}
                     </h4>
-                    <span className="text-[10px] text-slate-450 text-slate-400">
+                    <span className="text-[10px] text-slate-450 text-slate-400 block">
                       {item.isSubscription 
                         ? (item.selectedLicenseOption 
                             ? `Assinatura ${item.selectedLicenseOption.label}` 
                             : (item.selectedSubOption === 'avulso' ? 'Pagamento Único' : 'Assinatura Mensal'))
-                        : 'Licença vitalícia'} • {item.compatibility}
+                        : 'Licença vitalícia'} • {item.selectedLicenseOption?.platform || item.compatibility} • {(item.deviceCount || 1) === 1 ? '1 Dispositivo' : `${item.deviceCount} Dispositivos`}
                     </span>
                     <div className="font-display font-black text-slate-900 text-sm mt-1">
                       {item.selectedLicenseOption
-                        ? (item.selectedLicenseOption.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + (item.selectedLicenseOption.label.includes('Mensal') ? ' /mês' : ''))
+                        ? (formatPrice(item.selectedLicenseOption.price * (item.deviceCount || 1)) + (item.selectedLicenseOption.label.includes('Mensal') ? ' /mês' : ''))
                         : (item.isSubscription 
                           ? (item.selectedSubOption === 'avulso' 
-                            ? item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-                            : (item.recurrencePrice || item.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' /mês')
-                          : item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))}
+                            ? formatPrice(item.price * (item.deviceCount || 1))
+                            : formatPrice((item.recurrencePrice || item.price) * (item.deviceCount || 1)) + ' /mês')
+                          : formatPrice(item.price * (item.deviceCount || 1)))}
                     </div>
                   </div>
 
@@ -239,7 +241,7 @@ export const CartDrawer: React.FC = () => {
               <div className="flex justify-between">
                 <span>Subtotal</span>
                 <span className="font-semibold text-slate-800">
-                  {subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                  {formatPrice(subtotal)}
                 </span>
               </div>
 
@@ -247,7 +249,7 @@ export const CartDrawer: React.FC = () => {
                 <div className="flex justify-between text-emerald-600 font-semibold">
                   <span>Desconto (10% OFF10)</span>
                   <span>
-                    -{discountAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                    -{formatPrice(discountAmount)}
                   </span>
                 </div>
               )}
@@ -255,7 +257,7 @@ export const CartDrawer: React.FC = () => {
               <div className="flex justify-between items-center text-sm pt-2.5 border-t border-slate-200/60 text-slate-900 font-bold">
                 <span className="font-display">Total do Pedido</span>
                 <span className="font-display font-extrabold text-lg text-slate-950">
-                  {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                  {formatPrice(total)}
                 </span>
               </div>
             </div>
