@@ -303,7 +303,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          products: cartItems.map(item => ({ 
+          products: (product ? [product] : cartItems).map(item => ({ 
             slug: item.slug, 
             licenseQuantity: item.selectedLicenseOption?.quantity 
           })),
@@ -386,7 +386,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 txid,
-                products: cartItems.map(item => ({
+                products: (product ? [product] : cartItems).map(item => ({
                   slug: item.selectedLicenseOption?.downloadSlug || item.slug,
                   name: item.selectedLicenseOption ? `${item.name} (${item.selectedLicenseOption.label})` : item.name,
                   price: item.selectedLicenseOption?.price || item.price
@@ -451,7 +451,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          products: cartItems.map(item => ({ slug: item.slug })),
+          products: (product ? [product] : cartItems).map(item => ({ 
+            slug: item.slug, 
+            licenseQuantity: item.selectedLicenseOption?.quantity 
+          })),
           coupon: couponCode || null,
           buyer: {
             name: fullName,
@@ -493,11 +496,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
   // Pricing math
   const getCheckoutTotal = () => {
-    if (activeProduct?.selectedLicenseOption) {
-      return activeProduct.selectedLicenseOption.price;
-    }
-    if (activeProduct?.isSubscription) {
-      return subOption === 'recurrent' ? (activeProduct.recurrencePrice || activeProduct.price) : activeProduct.price;
+    if (product) {
+      if (product.selectedLicenseOption) {
+        return product.selectedLicenseOption.price;
+      }
+      if (product.isSubscription) {
+        return subOption === 'recurrent' ? (product.recurrencePrice || product.price) : product.price;
+      }
+      return product.price;
     }
     return total;
   };
@@ -505,10 +511,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   const formattedPrice = checkoutTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
   const getPixPrice = () => {
-    if (activeProduct?.isSubscription) {
+    if (product && product.isSubscription) {
       return checkoutTotal; // Subscriptions have set net prices
     }
-    return total * 0.98;
+    return checkoutTotal * 0.98;
   };
   const pixDiscountPrice = getPixPrice();
   const formattedPixPrice = pixDiscountPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });

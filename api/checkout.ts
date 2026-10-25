@@ -59,29 +59,28 @@ export default async function handler(req: any, res: any) {
   let subtotal = 0;
   let isSubPayment = false;
   let recurrence = false;
-
   const firstProduct = matchedProducts[0];
-  const firstItem = checkoutItems[0];
 
-  // Check if a specific license option was requested (e.g. Autodesk 1 Ano, 2 Anos, 3 Anos)
-  let chosenOptionPrice: number | undefined;
-  if (firstProduct?.licenseOptions && firstProduct.licenseOptions.length > 0 && firstItem?.licenseQuantity) {
-    const matchOpt = firstProduct.licenseOptions.find((opt: any) => opt.quantity === firstItem.licenseQuantity);
-    if (matchOpt) {
-      chosenOptionPrice = matchOpt.price;
+  const itemsWithPrices = checkoutItems.map(item => {
+    const prod = products.find((p: any) => p.slug === item.slug);
+    if (!prod) return { item, prod: null, price: 0 };
+
+    let itemPrice = prod.price;
+    if (item.licenseQuantity && prod.licenseOptions && prod.licenseOptions.length > 0) {
+      const matchOpt = prod.licenseOptions.find((opt: any) => opt.quantity === item.licenseQuantity);
+      if (matchOpt) {
+        itemPrice = matchOpt.price;
+      }
+    } else if (prod.isSubscription) {
+      isSubPayment = true;
+      recurrence = subOption === 'recurrent';
+      itemPrice = recurrence ? (prod.recurrencePrice || prod.price) : prod.price;
     }
-  }
 
-  if (chosenOptionPrice !== undefined) {
-    subtotal = chosenOptionPrice;
-    isSubPayment = false;
-  } else if (firstProduct && firstProduct.isSubscription) {
-    isSubPayment = true;
-    recurrence = subOption === 'recurrent';
-    subtotal = recurrence ? (firstProduct.recurrencePrice || firstProduct.price) : firstProduct.price;
-  } else {
-    subtotal = matchedProducts.reduce((sum, p) => sum + p.price, 0);
-  }
+    return { item, prod, price: itemPrice };
+  });
+
+  subtotal = itemsWithPrices.reduce((sum, entry) => sum + entry.price, 0);
 
   let discountAmount = 0;
   let finalTotal = subtotal;
@@ -317,13 +316,13 @@ export default async function handler(req: any, res: any) {
           total_amount: cardPrice.toFixed(2), // Orders API exige string para valores
           external_reference: externalRef,
           description: 'Servicos de Tecnologia C2Tech',
-          items: matchedProducts.map(p => ({
-            title: p.name,
-            description: p.name,
-            picture_url: `https://c2tech.shop${p.image}`,
+          items: itemsWithPrices.map(({ prod, price }) => ({
+            title: prod?.name || 'Software',
+            description: prod?.name || 'Software',
+            picture_url: `https://c2tech.shop${prod?.imageUrl || ''}`,
             category_id: 'electronics',
             quantity: 1,
-            unit_price: p.price.toFixed(2)
+            unit_price: price.toFixed(2)
           })),
           transactions: {
             payments: [
@@ -441,13 +440,13 @@ export default async function handler(req: any, res: any) {
         total_amount: cardPrice.toFixed(2),
         description: 'Servicos de Tecnologia C2Tech',
         external_reference: externalRef,
-        items: matchedProducts.map(p => ({
-          title: p.name,
-          description: p.name,
-          picture_url: `https://c2tech.shop${p.image}`,
+        items: itemsWithPrices.map(({ prod, price }) => ({
+          title: prod?.name || 'Software',
+          description: prod?.name || 'Software',
+          picture_url: `https://c2tech.shop${prod?.imageUrl || ''}`,
           category_id: 'electronics',
           quantity: 1,
-          unit_price: p.price.toFixed(2)
+          unit_price: price.toFixed(2)
         })),
         transactions: {
           payments: [
