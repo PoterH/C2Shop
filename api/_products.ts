@@ -460,10 +460,6 @@ export const products: Product[] = [
       storage: '5 GB de espaço livre para instalação (SSD recomendado)'
     }
   },
-      gpu: 'Placa com 2 GB VRAM dedicada com suporte a OpenGL 4.5 (Recomendado 4 GB+)',
-      storage: '5 GB de espaço livre para instalação (SSD recomendado)'
-    }
-  },
   {
     id: 'cype_2026',
     slug: 'cypecad-2026',
@@ -654,10 +650,6 @@ export const products: Product[] = [
       cpu: 'WINDOWS: Intel ou AMD de múltiplos núcleos / MAC: Apple Silicon ou Intel',
       ram: '8 GB (Recomendável: 16 GB)',
       gpu: 'WINDOWS: OpenGL 4.1 / MAC: Apple Silicon ou AMD',
-      storage: '5 GB de espaço livre'
-    }
-  },
-      gpu: 'Compatível com OpenGL 4.1 (Recomendado NVIDIA GeForce)',
       storage: '5 GB de espaço livre'
     }
   },

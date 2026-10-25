@@ -38,7 +38,7 @@ export default async function handler(req: any, res: any) {
   }
 
   // Backwards compatibility for single productSlug and array of products
-  let checkoutItems: Array<{ slug: string }> = [];
+  let checkoutItems: Array<{ slug: string; licenseQuantity?: number; [key: string]: any }> = [];
   if (items && Array.isArray(items)) {
     checkoutItems = items;
   } else if (productSlug) {
