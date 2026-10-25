@@ -34,6 +34,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   const navigate = useNavigate();
   const { cartItems, total, discountAmount, couponCode, clearCart } = useCart();
   const activeProduct = product || cartItems[0];
+  const isDirectProductCheckout = Boolean(product && cartItems.length === 0);
   
   // Steps & Tabs
   const [currentStep, setCurrentStep] = useState<Step>('info');
@@ -303,7 +304,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          products: (product ? [product] : cartItems).map(item => ({ 
+          products: (isDirectProductCheckout && product ? [product] : cartItems).map(item => ({ 
             slug: item.slug, 
             licenseQuantity: item.selectedLicenseOption?.quantity 
           })),
@@ -386,7 +387,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 txid,
-                products: (product ? [product] : cartItems).map(item => ({
+                products: (isDirectProductCheckout && product ? [product] : cartItems).map(item => ({
                   slug: item.selectedLicenseOption?.downloadSlug || item.slug,
                   name: item.selectedLicenseOption ? `${item.name} (${item.selectedLicenseOption.label})` : item.name,
                   price: item.selectedLicenseOption?.price || item.price
@@ -451,7 +452,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          products: (product ? [product] : cartItems).map(item => ({ 
+          products: (isDirectProductCheckout && product ? [product] : cartItems).map(item => ({ 
             slug: item.slug, 
             licenseQuantity: item.selectedLicenseOption?.quantity 
           })),
@@ -496,7 +497,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
   // Pricing math
   const getCheckoutTotal = () => {
-    if (product) {
+    if (isDirectProductCheckout && product) {
       if (product.selectedLicenseOption) {
         return product.selectedLicenseOption.price;
       }
@@ -511,7 +512,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   const formattedPrice = checkoutTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
   const getPixPrice = () => {
-    if (product && product.isSubscription) {
+    if (isDirectProductCheckout && product?.isSubscription) {
       return checkoutTotal; // Subscriptions have set net prices
     }
     return checkoutTotal * 0.98;

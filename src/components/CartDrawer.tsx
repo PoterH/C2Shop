@@ -284,7 +284,6 @@ export const CartDrawer: React.FC = () => {
       {/* Render Checkout Modal if isCheckoutOpen is true */}
       {isCheckoutOpen && (
         <CheckoutModal 
-          product={cartItems[0]} // Pass first product just in case fallback is needed
           isOpen={isCheckoutOpen} 
           onClose={() => setIsCheckoutOpen(false)} 
         />
