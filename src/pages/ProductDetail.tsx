@@ -969,6 +969,8 @@ export const ProductDetail: React.FC = () => {
                     <label className="block text-xs font-semibold text-slate-700">
                       {product.isSubscription
                         ? 'Escolha a duração da assinatura'
+                        : product.id === 'eberick_builder_2025'
+                        ? 'Escolha a versão'
                         : 'Escolha a opção de licença'}
                     </label>
                     <div className="flex flex-wrap gap-2">
@@ -985,7 +987,9 @@ export const ProductDetail: React.FC = () => {
                                 : 'border-slate-300 text-slate-700 bg-white hover:border-slate-400'
                             }`}
                           >
-                            {opt.label} — {formatPrice(opt.price)}
+                            {product.id === 'eberick_builder_2025' || opt.label.startsWith('Versão')
+                              ? opt.label
+                              : `${opt.label} — ${formatPrice(opt.price)}`}
                           </button>
                         );
                       })}
