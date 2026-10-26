@@ -1,49 +1,93 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import {
   TrustpilotRatingHorizontal,
   TrustGuaranteesPill,
   TrustGuaranteesModal
 } from '../components/TrustBadges';
-import { products, CATEGORIES } from '../data/products';
+import { products } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
 import { 
+  ChevronDown, 
+  Check, 
   Search, 
-  SlidersHorizontal, 
-  Trash2,
-  Infinity,
-  Calendar,
-  Globe,
-  Layers,
-  Compass,
-  Palette,
-  Briefcase,
-  Wrench,
-  Cpu,
-  Activity,
-  LayoutGrid
+  X 
 } from 'lucide-react';
 
-const getCategoryIcon = (category: string) => {
-  switch (category) {
-    case 'Todos':
-      return <Layers className="w-3.5 h-3.5" />;
-    case 'Engenharia e Arquitetura':
-      return <Compass className="w-3.5 h-3.5" />;
-    case 'Design e Criatividade':
-      return <Palette className="w-3.5 h-3.5" />;
-    case 'Escritório e Produtividade':
-      return <Briefcase className="w-3.5 h-3.5" />;
-    case 'Marcenaria e Móveis Planejados':
-      return <Wrench className="w-3.5 h-3.5" />;
-    case 'Projetos Elétricos e Eletrônicos':
-      return <Cpu className="w-3.5 h-3.5" />;
-    case 'Odontologia e CAD Dental':
-      return <Activity className="w-3.5 h-3.5" />;
-    default:
-      return null;
+interface CategoryInfo {
+  title: string;
+  shortDesc: string;
+  fullDesc: string;
+}
+
+const CATEGORY_INFO: Record<string, CategoryInfo> = {
+  'Todos': {
+    title: 'Softwares Profissionais',
+    shortDesc: 'Compre softwares profissionais com ativação permanente e sem mensalidades recorrentes. Tenha acesso às principais ferramentas de engenharia, arquitetura, design gráfico, escritório, marcenaria e odontologia digital com entrega imediata e garantia de funcionamento vitalício.',
+    fullDesc: 'Trabalhe com máxima produtividade e economia adquirindo licenças definitivas com ativação facilitada. Todos os programas acompanham instalador simplificado, entrega digital instantânea via e-mail e WhatsApp, e suporte técnico especializado pronto para auxiliar você em cada etapa de instalação e uso.'
+  },
+  'Engenharia e Arquitetura': {
+    title: 'Engenharia e Arquitetura',
+    shortDesc: 'Compre softwares de engenharia e arquitetura com ativação permanente e sem mensalidades. Tenha acesso às principais ferramentas do mercado como AutoCAD, Revit, SketchUp Pro, Lumion, V-Ray, SolidWorks e AltoQi Eberick com entrega imediata e garantia de funcionamento vitalício.',
+    fullDesc: 'Desenvolva seus projetos civis, estruturais, elétricos, hidrossanitários e maquetes eletrônicas com o máximo de precisão e fluidez. Todos os programas acompanham instalador facilitado, compatibilidade com Windows e suporte técnico especializado para você focar no que realmente importa: seus projetos e clientes.'
+  },
+  'Design e Criatividade': {
+    title: 'Design e Criatividade',
+    shortDesc: 'Softwares profissionais para design gráfico, ilustração vetorial, edição e tratamento fotográfico, modelagem 3D e renderização de alto impacto. Crie artes, identidades visuais e projetos visuais impressionantes sem se preocupar com assinaturas caras.',
+    fullDesc: 'Adquira soluções completas como CorelDRAW Graphics Suite, pacote Adobe completo, After Effects, Cinema 4D e Blender. Licenças com ativação permanente, desempenho fluido no seu computador e suporte técnico dedicado para instalação rápida e descomplicada.'
+  },
+  'Escritório e Produtividade': {
+    title: 'Escritório e Produtividade',
+    shortDesc: 'Soluções corporativas completas para edição de documentos, planilhas avançadas, gerenciamento de projetos e manipulação de arquivos PDF com ativação vitalícia e segurança total.',
+    fullDesc: 'Maximize o rendimento do seu negócio, escritório ou home office com pacotes Office, Adobe Acrobat Pro, gerenciadores de arquivos e utilitários essenciais. Sem taxas ocultas, com ativação definitiva e suporte especializado para manter seus fluxos contínuos.'
+  },
+  'Marcenaria e Móveis Planejados': {
+    title: 'Marcenaria e Móveis Planejados',
+    shortDesc: 'Sistemas completos para projeto de interiores, modelagem de móveis sob medida, planos de corte inteligentes e geração de documentação técnica para marcenarias e indústrias moveleiras.',
+    fullDesc: 'Ferramentas líderes como Promob Plus, Cut Pro, Real Scene e complementos para marcenaria. Reduza o desperdício de chapas de MDF, encante seus clientes com renderizações 3D realistas e acelere orçamentos e fabricação com suporte assistido.'
+  },
+  'Projetos Elétricos e Eletrônicos': {
+    title: 'Projetos Elétricos e Eletrônicos',
+    shortDesc: 'Ferramentas de ponta para esquemáticos elétricos, diagramas unifilares, cabeamento estruturado, automação industrial e simulação eletrônica com confiabilidade técnica rigorosa.',
+    fullDesc: 'Projete quadros de distribuição, instalações prediais e industriais conforme as normas vigentes. Softwares robustos com bibliotecas completas de componentes, dimensionamento ágil e suporte técnico pronto para tirar suas dúvidas e auxiliar na ativação.'
+  },
+  'Odontologia e CAD Dental': {
+    title: 'Odontologia e CAD Dental',
+    shortDesc: 'Plataformas profissionais de design e escaneamento digital para laboratórios de prótese, clínicas odontológicas e especialistas em implantodontia, coroas e alinhadores.',
+    fullDesc: 'Softwares de ponta como Exocad DentalCAD, Maestro 3D e soluções de diagnóstico tomográfico. Eleve o padrão dos seus tratamentos com modelagens anatômicas precisas, integração direta com fresadoras e impressoras 3D, e assistência técnica dedicada para instalação e calibração.'
+  },
+  'Chaves de Ativação': {
+    title: 'Chaves de Ativação',
+    shortDesc: 'Chaves de ativação originais (Product Keys) para sistemas operacionais Windows e pacotes de produtividade. Ativação online e direta junto aos servidores oficiais com garantia vitalícia.',
+    fullDesc: 'Receba sua chave de licença genuína por e-mail e WhatsApp em minutos após a confirmação. Segurança total, garantia vitalícia de funcionamento e validação oficial para manter seus sistemas sempre atualizados e em conformidade.'
   }
 };
+
+type SortOption = 
+  | 'sales_desc'
+  | 'relevance'
+  | 'name_asc'
+  | 'name_desc'
+  | 'price_asc'
+  | 'price_desc'
+  | 'ref_asc'
+  | 'ref_desc';
+
+interface SortItem {
+  id: SortOption;
+  label: string;
+}
+
+const SORT_OPTIONS: SortItem[] = [
+  { id: 'sales_desc', label: 'Mais vendidos' },
+  { id: 'relevance', label: 'Relevância' },
+  { id: 'name_asc', label: 'Nome, A a Z' },
+  { id: 'name_desc', label: 'Nome, Z a A' },
+  { id: 'price_asc', label: 'Preço, menor para maior' },
+  { id: 'price_desc', label: 'Preço, maior para menor' },
+  { id: 'ref_asc', label: 'Referência, A a Z' },
+  { id: 'ref_desc', label: 'Referência, Z a A' },
+];
 
 export const Catalog: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -51,11 +95,15 @@ export const Catalog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>(
     searchParams.get('categoria') || 'Todos'
   );
-  const [selectedOS, setSelectedOS] = useState<'Todos' | 'Windows' | 'macOS'>('Todos');
+  const [sortBy, setSortBy] = useState<SortOption>('sales_desc');
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isGuaranteesModalOpen, setIsGuaranteesModalOpen] = useState(false);
-  
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   // Sync URL search & category to local state if URL changes (e.g., from header mega-menu)
-  React.useEffect(() => {
+  useEffect(() => {
     const q = searchParams.get('q');
     if (q !== null) {
       setSearchTerm(q);
@@ -65,82 +113,100 @@ export const Catalog: React.FC = () => {
     const cat = searchParams.get('categoria');
     if (cat !== null) {
       setSelectedCategory(cat);
+    } else {
+      setSelectedCategory('Todos');
     }
   }, [searchParams]);
 
-  const tabParam = searchParams.get('tab');
-  const activeTab = (tabParam === 'assinaturas' || tabParam === 'chaves' || tabParam === 'vitalicios') ? tabParam : 'todos';
-  const setActiveTab = (tab: 'todos' | 'vitalicios' | 'assinaturas' | 'chaves') => {
-    const newParams = new URLSearchParams(searchParams);
-    if (tab === 'todos') {
-      newParams.delete('tab');
-    } else {
-      newParams.set('tab', tab);
-    }
-    setSearchParams(newParams, { replace: true });
-  };
+  // Click outside listener for the sort dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsSortOpen(false);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsSortOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
-  // Clear all filters
-  const handleClearFilters = () => {
+  // Handle clearing search query
+  const handleClearSearch = () => {
     setSearchTerm('');
-    setSelectedCategory('Todos');
-    setSelectedOS('Todos');
-    
-    // Clear URL parameters
     const newParams = new URLSearchParams(searchParams);
     newParams.delete('q');
-    newParams.delete('categoria');
     setSearchParams(newParams, { replace: true });
   };
 
-  // Total products in active tab
-  const totalTabProducts = useMemo(() => {
-    return products.filter(p => {
-      if (activeTab === 'assinaturas') return !!p.isSubscription;
-      if (activeTab === 'chaves') return p.category === 'Chaves de Ativação';
-      if (activeTab === 'vitalicios') return !p.isSubscription && p.category !== 'Chaves de Ativação';
-      return true; // 'todos'
-    }).length;
-  }, [activeTab]);
+  // Get active category info
+  const categoryInfo = CATEGORY_INFO[selectedCategory] || {
+    title: selectedCategory,
+    shortDesc: `Compre softwares de ${selectedCategory} com ativação permanente e sem mensalidades. Produtos originais com entrega imediata e suporte técnico especializado.`,
+    fullDesc: 'Todos os programas acompanham instalador facilitado, entrega rápida e suporte dedicado para garantir o melhor desempenho dos seus projetos.'
+  };
 
-  // Filtered and searched products
-  const filteredProducts = useMemo(() => {
-    return products
-      .filter((product) => {
-        // 0. Filter by active tab (subscription vs lifetime vs keys)
-        let matchesTab = true;
-        if (activeTab === 'assinaturas') {
-          matchesTab = !!product.isSubscription;
-        } else if (activeTab === 'chaves') {
-          matchesTab = product.category === 'Chaves de Ativação';
-        } else if (activeTab === 'vitalicios') {
-          matchesTab = !product.isSubscription && product.category !== 'Chaves de Ativação';
-        }
-        if (!matchesTab) return false;
-
-        // 1. Text search
+  // Filtered and sorted products
+  const sortedProducts = useMemo(() => {
+    const filtered = products.filter((product) => {
+      // 1. Search term filter
+      if (searchTerm.trim()) {
         const lowerSearch = searchTerm.toLowerCase();
-        const matchesSearch = product.name.toLowerCase().includes(lowerSearch) ||
-                              product.description.toLowerCase().includes(lowerSearch) ||
-                              product.category.toLowerCase().includes(lowerSearch) ||
-                              (product.keywords && product.keywords.some((k: string) => k.toLowerCase().includes(lowerSearch)));
+        const matchesSearch =
+          product.name.toLowerCase().includes(lowerSearch) ||
+          product.description.toLowerCase().includes(lowerSearch) ||
+          product.category.toLowerCase().includes(lowerSearch) ||
+          (product.keywords && product.keywords.some((k: string) => k.toLowerCase().includes(lowerSearch)));
+        if (!matchesSearch) return false;
+      }
 
-        // 2. Category filter
-        const matchesCategory = selectedCategory === 'Todos' || product.category === selectedCategory;
+      // 2. Category filter
+      if (selectedCategory !== 'Todos' && product.category !== selectedCategory) {
+        return false;
+      }
 
-        // 3. OS compatibility filter
-        const matchesOS = selectedOS === 'Todos' || 
-                          product.compatibility === selectedOS || 
-                          product.compatibility === 'Windows e macOS';
+      return true;
+    });
 
-        return matchesSearch && matchesCategory && matchesOS;
-      })
-      .sort((a, b) => {
-        if (a.id === 'autodesk_all_apps') return -1;
-        if (b.id === 'autodesk_all_apps') return 1;
-        return a.name.localeCompare(b.name, 'pt-BR');
-      });
-  }, [searchTerm, selectedCategory, selectedOS, activeTab]);
+    const list = [...filtered];
+
+    switch (sortBy) {
+      case 'sales_desc':
+        return list.sort((a, b) => {
+          const aScore = a.isRecommended ? 1 : 0;
+          const bScore = b.isRecommended ? 1 : 0;
+          if (aScore !== bScore) return bScore - aScore;
+          if (a.id === 'autodesk_all_apps') return -1;
+          if (b.id === 'autodesk_all_apps') return 1;
+          return 0;
+        });
+      case 'relevance':
+        return list;
+      case 'name_asc':
+        return list.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+      case 'name_desc':
+        return list.sort((a, b) => b.name.localeCompare(a.name, 'pt-BR'));
+      case 'price_asc':
+        return list.sort((a, b) => a.price - b.price);
+      case 'price_desc':
+        return list.sort((a, b) => b.price - a.price);
+      case 'ref_asc':
+        return list.sort((a, b) => (a.mpn || a.id).localeCompare(b.mpn || b.id, 'pt-BR'));
+      case 'ref_desc':
+        return list.sort((a, b) => (b.mpn || b.id).localeCompare(a.mpn || a.id, 'pt-BR'));
+      default:
+        return list;
+    }
+  }, [searchTerm, selectedCategory, sortBy]);
+
+  const currentSortItem = SORT_OPTIONS.find((opt) => opt.id === sortBy) || SORT_OPTIONS[0];
 
   return (
     <div className="pt-28 pb-16 bg-slate-50 min-h-screen">
@@ -154,7 +220,12 @@ export const Catalog: React.FC = () => {
           <span>/</span>
           <Link
             to="/catalogo"
-            onClick={() => setSelectedCategory('Todos')}
+            onClick={() => {
+              setSelectedCategory('Todos');
+              const newParams = new URLSearchParams(searchParams);
+              newParams.delete('categoria');
+              setSearchParams(newParams, { replace: true });
+            }}
             className="hover:text-blue-600 transition-colors"
           >
             Catálogo
@@ -173,224 +244,108 @@ export const Catalog: React.FC = () => {
           <TrustGuaranteesPill onOpenModal={() => setIsGuaranteesModalOpen(true)} />
         </div>
 
-        {/* Page Title & Category Description */}
-        <div className="text-left space-y-2 mb-8">
-          <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
-            {selectedCategory === 'Todos'
-              ? activeTab === 'vitalicios'
-                ? 'Licenças Vitalícias'
-                : activeTab === 'assinaturas'
-                ? 'Assinaturas Anuais'
-                : activeTab === 'chaves'
-                ? 'Chaves de Ativação'
-                : 'Catálogo de Softwares Profissionais'
-              : selectedCategory}
+        {/* Category Header: Blue Title + Rich Description */}
+        <div className="text-left mb-6">
+          <h1 className="font-display font-extrabold text-2xl sm:text-3xl md:text-4xl text-[#0066FF] tracking-tight">
+            {categoryInfo.title}
           </h1>
-          <p className="text-slate-600 text-sm sm:text-base max-w-3xl leading-relaxed">
-            {selectedCategory === 'Engenharia e Arquitetura'
-              ? 'Softwares essenciais de CAD, modelagem 3D, cálculos estruturais e documentação técnica para arquitetos, engenheiros e projetistas. Licenças originais de alta precisão com suporte assistido.'
-              : selectedCategory === 'Design e Criatividade'
-              ? 'As melhores ferramentas do mercado para ilustração vetorial, edição e tratamento fotográfico, modelagem e renderização fotorrealista. Produtividade máxima sem mensalidades.'
-              : selectedCategory === 'Escritório e Produtividade'
-              ? 'Soluções corporativas completas para edição de PDFs, pacotes Office e automação de documentos com ativação vitalícia e garantia total de funcionamento.'
-              : selectedCategory === 'Marcenaria e Móveis Planejados'
-              ? 'Sistemas completos para projeto de interiores, plano de corte inteligente e detalhamento técnico de móveis sob medida.'
-              : selectedCategory === 'Projetos Elétricos e Eletrônicos'
-              ? 'Ferramentas líderes para esquemáticos elétricos, automação industrial e simulação eletrônica com confiabilidade profissional.'
-              : selectedCategory === 'Odontologia e CAD Dental'
-              ? 'Plataformas profissionais de design e escaneamento digital para laboratórios de prótese e clínicas odontológicas.'
-              : 'Selecione e adquira os softwares essenciais para o seu desenvolvimento corporativo ou pessoal. Licenças completas, ativadas com facilidade e suporte técnico dedicado.'}
-          </p>
-        </div>
-
-        {/* Tab Switcher (Vitalícios vs Assinaturas) */}
-        <div className="flex justify-start mb-8">
-          <div className="bg-white border border-slate-100 shadow-sm p-2 sm:p-1.5 rounded-2xl flex flex-col sm:flex-row gap-2 w-full sm:w-max shrink-0">
+          <div className="mt-3 text-slate-600 text-sm sm:text-[15px] leading-relaxed max-w-4xl">
+            <p>
+              {categoryInfo.shortDesc}
+              {isDescriptionExpanded && (
+                <span className="block mt-2 text-slate-600">
+                  {categoryInfo.fullDesc}
+                </span>
+              )}
+            </p>
             <button
-              onClick={() => {
-                setActiveTab('todos');
-                setSelectedCategory('Todos');
-              }}
-              className={`px-4 sm:px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
-                activeTab === 'todos'
-                  ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
-                  : 'bg-transparent text-slate-800 border-slate-900 hover:bg-slate-100'
-              }`}
+              type="button"
+              onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+              className="inline-flex items-center text-xs sm:text-sm font-semibold text-[#0066FF] hover:text-blue-700 hover:underline mt-2 transition-colors focus:outline-none"
             >
-              <LayoutGrid className="w-4 h-4 shrink-0" />
-              <span className="whitespace-nowrap">Todos os Softwares</span>
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab('vitalicios');
-                setSelectedCategory('Todos');
-              }}
-              className={`px-4 sm:px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
-                activeTab === 'vitalicios'
-                  ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
-                  : 'bg-transparent text-slate-800 border-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              <Infinity className="w-4 h-4 shrink-0" />
-              <span className="whitespace-nowrap">Licenças Vitalícias</span>
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab('assinaturas');
-                setSelectedCategory('Todos');
-              }}
-              className={`px-4 sm:px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
-                activeTab === 'assinaturas'
-                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-md'
-                  : 'bg-transparent text-indigo-600 border-indigo-600 hover:bg-indigo-50'
-              }`}
-            >
-              <Calendar className="w-4 h-4 shrink-0" />
-              <span className="whitespace-nowrap">Assinaturas</span>
-              <span className={`text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider shadow-sm animate-pulse shrink-0 ${
-                activeTab === 'assinaturas' 
-                  ? 'bg-emerald-400 text-emerald-950' 
-                  : 'bg-emerald-500 text-white ring-2 ring-emerald-500/20'
-              }`}>
-                Novo
-              </span>
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab('chaves');
-                setSelectedCategory('Todos');
-              }}
-              className={`px-4 sm:px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 border ${
-                activeTab === 'chaves'
-                  ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
-                  : 'bg-transparent text-amber-600 border-amber-500 hover:bg-amber-50'
-              }`}
-            >
-              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
-              <span className="whitespace-nowrap">Chaves / Keys</span>
-              <span className={`text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider shadow-sm animate-pulse shrink-0 ${
-                activeTab === 'chaves' 
-                  ? 'bg-emerald-400 text-emerald-950' 
-                  : 'bg-emerald-500 text-white ring-2 ring-emerald-500/20'
-              }`}>
-                Novo
-              </span>
+              {isDescriptionExpanded ? 'Ler menos' : 'Ler mais...'}
             </button>
           </div>
+
+          {/* Search Term active notification (if user searched via header) */}
+          {searchTerm && (
+            <div className="mt-4 flex items-center justify-between bg-blue-50 border border-blue-200/70 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-blue-900 max-w-4xl">
+              <div className="flex items-center gap-2">
+                <Search className="w-4 h-4 text-[#0066FF] shrink-0" />
+                <span>Resultados da busca por: <strong>"{searchTerm}"</strong></span>
+              </div>
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 hover:text-blue-900 bg-white border border-blue-200 px-2.5 py-1 rounded-lg transition-colors shadow-2xs"
+              >
+                <X className="w-3.5 h-3.5" />
+                <span>Limpar busca</span>
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Filters and Search Bar Container */}
-        <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-4 sm:p-6 mb-8 space-y-6">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {/* Search Input */}
-            <div className="relative lg:col-span-2">
-              <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Search className="w-5 h-5 text-slate-400" />
-              </span>
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Buscar software..."
-                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200/80 rounded-2xl text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-accent-blue/20 focus:border-accent-blue transition-all"
-                id="search-input"
-              />
-            </div>
+        {/* Sub-bar: Products Count (Left) & Sort Dropdown (Right) */}
+        <div className="border-y border-slate-200/80 py-3.5 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="text-xs sm:text-sm text-slate-500 font-medium">
+            Exibindo <span className="font-bold text-slate-800">{sortedProducts.length}</span> {sortedProducts.length === 1 ? 'produto' : 'produtos'} na categoria
+          </div>
 
-            {/* Compatibility Selector */}
-            <div className="flex items-center space-x-2 bg-slate-50 border border-slate-200/80 rounded-2xl p-1 animate-fade-in overflow-x-auto scrollbar-none">
-              <span className="text-[11px] sm:text-xs font-bold text-slate-500 pl-2 sm:pl-3 uppercase tracking-wider shrink-0">
-                Sistema:
-              </span>
-              <div className="flex flex-1 gap-1 min-w-max">
-                {(['Todos', 'Windows', 'macOS'] as const).map((os) => {
-                  const getOSIcon = () => {
-                    if (os === 'Windows') {
-                      return (
-                        <svg className="w-3 h-3 fill-current shrink-0" viewBox="0 0 24 24">
-                          <path d="M0 3.449L9.75 2.1v9.45H0V3.449zM0 12.45h9.75v9.45L0 20.551v-8.1zM11.25 1.89L24 0v11.55H11.25V1.89zM11.25 12.45H24v11.55l-12.75-1.89v-9.66z" />
-                        </svg>
-                      );
-                    }
-                    if (os === 'macOS') {
-                      return (
-                        <svg className="w-3.5 h-3.5 fill-current shrink-0 -mt-0.5" viewBox="0 0 24 24">
-                          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.2.67-2.92 1.49-.62.71-1.16 1.85-1.02 2.96 1.1.09 2.23-.55 2.95-1.39z" />
-                        </svg>
-                      );
-                    }
-                    return <Globe className="w-3 h-3 shrink-0" />;
-                  };
+          <div className="flex items-center gap-2 relative self-start sm:self-auto" ref={dropdownRef}>
+            <span className="text-xs sm:text-sm text-slate-500 font-medium whitespace-nowrap">
+              Ordenar por:
+            </span>
+            
+            <button
+              type="button"
+              onClick={() => setIsSortOpen(!isSortOpen)}
+              className="inline-flex items-center justify-between gap-2.5 bg-white border border-slate-300 hover:border-slate-400 text-slate-700 text-xs sm:text-sm font-medium px-3.5 py-2 rounded-xl shadow-xs transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/20 min-w-[170px]"
+              aria-haspopup="listbox"
+              aria-expanded={isSortOpen}
+            >
+              <span className="truncate">{currentSortItem.label}</span>
+              <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ${isSortOpen ? 'rotate-180 text-[#0066FF]' : ''}`} />
+            </button>
 
+            {/* Dropdown Menu matching Screenshot 3 */}
+            {isSortOpen && (
+              <div 
+                className="absolute right-0 top-full mt-1.5 w-60 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 z-30"
+                role="listbox"
+              >
+                {SORT_OPTIONS.map((option) => {
+                  const isSelected = option.id === sortBy;
                   return (
                     <button
-                      key={os}
-                      onClick={() => setSelectedOS(os)}
-                      className={`flex items-center justify-center gap-1.5 py-2 px-3 sm:px-2.5 rounded-xl text-xs font-semibold transition-all ${
-                        selectedOS === os
-                          ? 'bg-slate-900 text-white shadow-sm'
-                          : 'hover:bg-slate-200/55 text-slate-600'
+                      key={option.id}
+                      type="button"
+                      onClick={() => {
+                        setSortBy(option.id);
+                        setIsSortOpen(false);
+                      }}
+                      className={`w-full text-left px-3.5 py-2 text-xs sm:text-sm flex items-center justify-between transition-colors ${
+                        isSelected
+                          ? 'bg-blue-50 text-[#0066FF] font-semibold'
+                          : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-normal'
                       }`}
+                      role="option"
+                      aria-selected={isSelected}
                     >
-                      {getOSIcon()}
-                      <span>{os}</span>
+                      <span>{option.label}</span>
+                      {isSelected && <Check className="w-4 h-4 text-[#0066FF] shrink-0" />}
                     </button>
                   );
                 })}
               </div>
-            </div>
+            )}
           </div>
-
-          {/* Categories Horizontal Scroll */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
-                <SlidersHorizontal className="w-4 h-4 mr-1.5 text-slate-400" />
-                Categorias
-              </span>
-              {(searchTerm || selectedCategory !== 'Todos' || selectedOS !== 'Todos') && (
-                <button
-                  onClick={handleClearFilters}
-                  className="text-xs text-rose-500 font-semibold hover:text-rose-600 flex items-center transition-colors focus:outline-none"
-                >
-                  <Trash2 className="w-3.5 h-3.5 mr-1" />
-                  Limpar filtros
-                </button>
-              )}
-            </div>
-
-            <div className="flex overflow-x-auto pb-2 scrollbar-none -mx-2 px-2 gap-2">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border flex items-center gap-1.5 ${
-                    selectedCategory === cat
-                      ? 'bg-slate-900 border-slate-900 text-white'
-                      : 'bg-slate-50 border-slate-200 hover:border-slate-300 text-slate-600'
-                  }`}
-                >
-                  {getCategoryIcon(cat)}
-                  <span>{cat}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-        </div>
-
-        {/* Results Info */}
-        <div className="mb-6 flex justify-between items-center text-xs text-slate-500">
-          <p>
-            Mostrando <strong>{filteredProducts.length}</strong> de {totalTabProducts} {activeTab === 'assinaturas' ? 'assinaturas' : (activeTab === 'chaves' ? 'chaves' : (activeTab === 'vitalicios' ? 'softwares' : 'produtos'))} encontrados.
-          </p>
         </div>
 
         {/* Products Grid */}
-        {filteredProducts.length > 0 ? (
+        {sortedProducts.length > 0 ? (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8">
-            {filteredProducts.map((product) => (
+            {sortedProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
@@ -403,20 +358,29 @@ export const Catalog: React.FC = () => {
               Nenhum software correspondente encontrado
             </h3>
             <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
-              Tente redefinir seus filtros, buscar por outro termo ou fale com nosso suporte via WhatsApp para verificar a disponibilidade de outras ferramentas.
+              {searchTerm 
+                ? `Não encontramos resultados para "${searchTerm}". Tente buscar por outro termo ou explore outras categorias.`
+                : 'Não encontramos softwares para a seleção atual. Tente selecionar outra categoria ou fale com nosso suporte via WhatsApp.'}
             </p>
             <div className="pt-2">
               <button
-                onClick={handleClearFilters}
-                className="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-bold shadow hover:bg-slate-800 transition-all"
+                type="button"
+                onClick={() => {
+                  handleClearSearch();
+                  setSelectedCategory('Todos');
+                  const newParams = new URLSearchParams();
+                  setSearchParams(newParams, { replace: true });
+                }}
+                className="px-5 py-2.5 bg-[#0066FF] hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all"
               >
-                Limpar todos os filtros
+                Ver todos os softwares
               </button>
             </div>
           </div>
         )}
 
       </div>
+
       {/* Guarantees Modal */}
       <TrustGuaranteesModal
         isOpen={isGuaranteesModalOpen}
