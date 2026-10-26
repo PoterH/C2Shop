@@ -72,7 +72,7 @@ export const AboutPage: React.FC = () => {
   return (
     <div className="pt-28 pb-16 bg-white min-h-screen text-left">
       {/* Top Breadcrumb */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 text-xs text-slate-500">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 text-xs text-slate-500">
         <Link to="/" className="hover:text-slate-800 transition-colors">
           Início
         </Link>

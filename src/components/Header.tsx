@@ -322,7 +322,7 @@ export const Header: React.FC = () => {
       {/* 1. TOP DARK STRIP ("TARJA")                                           */}
       {/* ===================================================================== */}
       <div className="bg-[#0f172a] text-slate-200 text-[11px] sm:text-xs">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-8.5 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-8.5 flex items-center justify-between gap-4">
           {/* Left: Sobre nós | Fale conosco */}
           <div className="flex items-center gap-2.5 font-medium whitespace-nowrap shrink-0">
             <Link to="/sobre-nos" className="hover:text-white transition-colors">
@@ -514,7 +514,7 @@ export const Header: React.FC = () => {
       {/* 2. MAIN HEADER BAR & MEGA-MENU POPUP                                  */}
       {/* ===================================================================== */}
       <div className="relative bg-white" onMouseLeave={handleMegaLeave}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
           {isMobileSearchActive ? (
             /* Active Mobile Search Bar State */
             <div className="flex items-center w-full animate-fade-in">
@@ -702,7 +702,7 @@ export const Header: React.FC = () => {
               : 'opacity-0 -translate-y-2 pointer-events-none'
           }`}
         >
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-1 pb-4">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-1 pb-4">
             {activeCategoryData && (
               <div className="bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-7 grid grid-cols-12 gap-8 text-left">
                 {/* Left 6 Columns: Subcategory Lists + "Ver todos >" */}
