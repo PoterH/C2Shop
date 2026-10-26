@@ -1623,7 +1623,6 @@ export const products: Product[] = [
   {
     id: 'autodesk_all_apps',
     keywords: ['autocad', 'revit', 'maya', 'fusion 360', '3ds max', 'advanced steel', 'inventor', 'autodesk', 'bim', 'cad'],
-    isRecommended: true,
     slug: 'autodesk-all-apps',
     name: 'Autodesk Todos os Aplicativos',
     category: 'Engenharia e Arquitetura',
