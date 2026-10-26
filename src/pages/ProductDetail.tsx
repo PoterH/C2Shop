@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useParams, Link, useSearchParams, useLocation } from 'react-router-dom';
 import { CheckoutModal } from '../components/CheckoutModal';
 import {
-  TrustpilotStarIcon,
   TrustpilotStars,
   TrustpilotLogo,
   TrustGuaranteesModal,
@@ -76,7 +75,7 @@ const TRUSTPILOT_REVIEWS = [
     id: 1,
     author: 'Carlos Eduardo M.',
     timeAgo: 'Há 2 dias',
-    rating: 5,
+    rating: 4,
     title: 'Entrega super rápida e vídeo bem explicativo',
     comment:
       'Recebi o link no e-mail menos de 2 minutos depois do Pix. O vídeo passo a passo facilitou demais a instalação.',
@@ -103,7 +102,7 @@ const TRUSTPILOT_REVIEWS = [
     id: 4,
     author: 'Juliana Costa',
     timeAgo: 'Há 1 semana',
-    rating: 4,
+    rating: 5,
     title: 'Muito bom, recomendo a loja',
     comment:
       'Demorou uns 5 minutinhos para chegar no meu e-mail porque caiu na aba promoções, mas o programa é completo e vitalício.',
@@ -596,17 +595,18 @@ export const ProductDetail: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsGuaranteesModalOpen(true)}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs text-slate-800 transition-all cursor-pointer shadow-2xs"
+            className="inline-flex flex-wrap items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs text-slate-800 transition-all cursor-pointer shadow-2xs"
             title="Ver avaliações verificadas no Trustpilot"
           >
-            <TrustpilotStarIcon className="w-4 h-4 shrink-0" />
-            <span className="font-extrabold text-slate-900">Excelente</span>
+            <span className="text-slate-600 font-medium">O que nossos clientes dizem</span>
+            <span className="font-bold text-slate-900">Excelente</span>
             <TrustpilotStars count={5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
-            <span className="font-bold text-slate-900">4.8 / 5</span>
-            <span className="text-slate-400 hidden sm:inline">•</span>
-            <span className="text-slate-600 hidden sm:inline font-medium">
-              Avaliações no <strong className="text-slate-900 font-bold">Trustpilot</strong>
+            <span className="text-slate-700 font-medium">
+              <strong className="text-slate-900 font-bold">4.8</strong> de 5 baseado em{' '}
+              <span className="underline decoration-slate-400">1.785 avaliações</span>
             </span>
+            <span className="text-slate-300 hidden sm:inline">•</span>
+            <TrustpilotLogo starSize="w-3.5 h-3.5" textSize="text-xs" className="hidden sm:inline-flex" />
           </button>
         </div>
 
@@ -1173,16 +1173,7 @@ export const ProductDetail: React.FC = () => {
                       className="p-4 rounded-xl bg-slate-50/80 border border-slate-100 text-left space-y-2"
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex gap-0.5">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <span
-                              key={star}
-                              className="w-3.5 h-3.5 flex items-center justify-center rounded-[2px] bg-[#00B67A]"
-                            >
-                              <Star className="w-2.5 h-2.5 fill-white text-white" />
-                            </span>
-                          ))}
-                        </div>
+                        <TrustpilotStars count={item.rating ?? 5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
                         <span className="text-[10px] text-slate-500 flex items-center gap-1 font-semibold">
                           <CheckCircle2 className="w-3.5 h-3.5 text-[#00B67A]" /> Verificado no Trustpilot
                         </span>
@@ -1208,16 +1199,7 @@ export const ProductDetail: React.FC = () => {
                       className="p-3 rounded-xl bg-slate-50/70 border border-slate-100 text-left space-y-1.5"
                     >
                       <div className="flex items-center gap-1.5">
-                        <div className="flex gap-0.5">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <span
-                              key={star}
-                              className="w-3.5 h-3.5 flex items-center justify-center rounded-[2px] bg-[#00B67A]"
-                            >
-                              <Star className="w-2.5 h-2.5 fill-white text-white" />
-                            </span>
-                          ))}
-                        </div>
+                        <TrustpilotStars count={item.rating ?? 5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
                         <span className="text-[10px] text-slate-500 flex items-center gap-0.5 font-semibold">
                           <CheckCircle2 className="w-3 h-3 text-[#00B67A]" /> Verificado
                         </span>
@@ -1255,7 +1237,7 @@ export const ProductDetail: React.FC = () => {
               onClick={() => setIsGuaranteesModalOpen(true)}
               className="text-[11px] text-slate-500 hover:text-slate-800 cursor-pointer font-medium"
             >
-              Mostrando nossas avaliações de clientes verificados no <strong>Trustpilot</strong>
+              Exibindo nossas avaliações de 4 & 5 estrelas
             </button>
           </div>
         </div>

@@ -46,17 +46,17 @@ export const TrustpilotStars: React.FC<{
   starSize = 'w-3 h-3',
   className = ''
 }) => (
-  <div className={`inline-flex items-center gap-1 ${className}`}>
+  <div className={`inline-flex items-center gap-0.5 ${className}`}>
     {[1, 2, 3, 4, 5].map((star) => (
       <span
         key={star}
-        className={`${size} flex items-center justify-center rounded-[3px] shadow-2xs ${
-          star <= count ? 'bg-[#00B67A]' : 'bg-slate-200'
+        className={`${size} flex items-center justify-center rounded-[2px] shadow-2xs ${
+          star <= count ? 'bg-[#00B67A]' : 'bg-[#DCDCE6]'
         }`}
       >
         <svg
           viewBox="0 0 20 20"
-          className={`${starSize} ${star <= count ? 'text-white fill-white' : 'text-slate-400 fill-slate-400'}`}
+          className={`${starSize} fill-white text-white`}
         >
           <path d="M10 1.5l2.47 5.01 5.53.8-4 3.9 1 5.51L10 14.12l-5 2.6 1-5.51-4-3.9 5.53-.8L10 1.5z" />
         </svg>
@@ -73,18 +73,18 @@ export const TrustpilotRatingHorizontal: React.FC<{
   <button
     type="button"
     onClick={onOpenModal}
-    className={`group inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100/90 border border-slate-200/90 transition-all cursor-pointer text-left text-xs ${className}`}
+    className={`group inline-flex flex-wrap items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100/90 border border-slate-200/90 transition-all cursor-pointer text-left text-xs ${className}`}
     title="Ver avaliações verificadas no Trustpilot"
   >
-    <TrustpilotStarIcon className="w-4.5 h-4.5 shrink-0" />
-    <span className="font-extrabold text-slate-900">Excelente</span>
+    <span className="text-slate-600 font-medium">O que nossos clientes dizem</span>
+    <span className="font-bold text-slate-900">Excelente</span>
     <TrustpilotStars count={5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
-    <span className="font-bold text-slate-800">4.8 / 5</span>
-    <span className="hidden sm:inline text-slate-400">•</span>
-    <span className="hidden sm:inline text-slate-600 font-medium">
-      <span className="font-bold text-slate-900">+1.780</span> avaliações no{' '}
-      <strong className="text-slate-900 font-bold">Trustpilot</strong>
+    <span className="text-slate-700 font-medium">
+      <strong className="text-slate-900 font-bold">4.8</strong> de 5 baseado em{' '}
+      <span className="underline decoration-slate-400">1.785 avaliações</span>
     </span>
+    <span className="text-slate-300 hidden sm:inline">•</span>
+    <TrustpilotLogo starSize="w-3.5 h-3.5" textSize="text-xs" className="hidden sm:inline-flex" />
   </button>
 );
 
@@ -120,7 +120,7 @@ export const TrustGuaranteesModal: React.FC<{
       title: 'Entrega em menos de 2 minutos e vídeo bem detalhado',
       comment:
         'Paguei pelo Pix e o link do Google Drive chegou no e-mail na mesma hora. O tutorial em vídeo ensina tudo passo a passo sem complicação. Já estou usando no meu trabalho.',
-      rating: 5,
+      rating: 4,
     },
     {
       id: 2,

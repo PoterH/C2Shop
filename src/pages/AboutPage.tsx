@@ -12,7 +12,6 @@ import {
   FileCheck,
   ShieldCheck,
   Mail,
-  Star,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
@@ -24,7 +23,7 @@ const TRUSTPILOT_REVIEWS = [
     id: 1,
     author: 'Carlos Henrique M.',
     timeAgo: 'há 9 horas',
-    rating: 5,
+    rating: 4,
     title: 'Entrega super rápida e suporte nota 10',
     comment: 'Recebi o link no e-mail logo após o Pix e o vídeo explicativo ajudou demais.',
   },
@@ -380,16 +379,7 @@ export const AboutPage: React.FC = () => {
                       className="block p-3 rounded-xl bg-slate-50/70 border border-slate-100 text-left space-y-1.5"
                     >
                       <div className="flex items-center gap-1.5">
-                        <div className="flex gap-0.5">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <span
-                              key={star}
-                              className="w-3.5 h-3.5 flex items-center justify-center rounded-[2px] bg-[#00b67a]"
-                            >
-                              <Star className="w-2.5 h-2.5 fill-white text-white" />
-                            </span>
-                          ))}
-                        </div>
+                        <TrustpilotStars count={item.rating ?? 5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
                         <span className="text-[10px] text-slate-500 flex items-center gap-0.5 font-semibold">
                           <CheckCircle2 className="w-3 h-3 text-[#00b67a]" /> Verificado no Trustpilot
                         </span>
@@ -419,6 +409,16 @@ export const AboutPage: React.FC = () => {
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
+          </div>
+
+          <div className="mt-3 pt-2 border-t border-slate-100 text-center lg:text-left lg:pl-[26%]">
+            <button
+              type="button"
+              onClick={() => setIsGuaranteesModalOpen(true)}
+              className="text-[11px] text-slate-500 hover:text-slate-800 cursor-pointer font-medium"
+            >
+              Exibindo nossas avaliações de 4 & 5 estrelas
+            </button>
           </div>
         </div>
       </div>
