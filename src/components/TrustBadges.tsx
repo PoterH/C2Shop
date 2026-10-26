@@ -1,23 +1,14 @@
 import React from 'react';
 import { ShieldCheck, CheckCircle2, X, Lock, Award, CloudDownload, RefreshCw } from 'lucide-react';
 
-// Official Trustpilot Two-Tone Star (Authentic SVG)
+// Official Trustpilot Two-Tone Star (Authentic Star Logo)
 export const TrustpilotStarIcon: React.FC<{ className?: string }> = ({ className = 'w-5 h-5' }) => (
-  <svg viewBox="0 0 40 40" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Green Background Box */}
-    <rect width="40" height="40" rx="4" fill="#00B67A" />
-    {/* Two-Tone Trustpilot Star */}
-    <path
-      d="M20 7.5L23.8 15.3L32.4 16.5L26.2 22.5L27.7 31L20 26.9L12.3 31L13.8 22.5L7.6 16.5L16.2 15.3L20 7.5Z"
-      fill="#FFFFFF"
-    />
-    {/* Darker green facet on bottom right arm */}
-    <path
-      d="M20 26.9L27.7 31L26.2 22.5L20 20.8V26.9Z"
-      fill="#005128"
-      opacity="0.35"
-    />
-  </svg>
+  <img
+    src="/images/trustpilot-star.png"
+    alt="Trustpilot"
+    className={`inline-block object-contain shrink-0 select-none ${className}`}
+    loading="eager"
+  />
 );
 
 // Trustpilot Logo: Star Icon + "Trustpilot" typography
@@ -34,7 +25,10 @@ export const TrustpilotLogo: React.FC<{ starSize?: string; textSize?: string; cl
   </div>
 );
 
-// Trustpilot 5 Green Squares with White Stars
+// Trustpilot Review Squares:
+// - 5-star reviews use verde escuro (#08ad88) from Image 1
+// - 4-star reviews use verde claro (#7ed957) from Image 2
+// - Inactive star uses light grey (#dcdce6)
 export const TrustpilotStars: React.FC<{
   count?: number;
   size?: string;
@@ -43,27 +37,33 @@ export const TrustpilotStars: React.FC<{
 }> = ({
   count = 5,
   size = 'w-5 h-5',
-  starSize = 'w-3 h-3',
   className = ''
-}) => (
-  <div className={`inline-flex items-center gap-0.5 ${className}`}>
-    {[1, 2, 3, 4, 5].map((star) => (
-      <span
-        key={star}
-        className={`${size} flex items-center justify-center rounded-[2px] shadow-2xs ${
-          star <= count ? 'bg-[#00B67A]' : 'bg-[#DCDCE6]'
-        }`}
-      >
-        <svg
-          viewBox="0 0 20 20"
-          className={`${starSize} fill-white text-white`}
-        >
-          <path d="M10 1.5l2.47 5.01 5.53.8-4 3.9 1 5.51L10 14.12l-5 2.6 1-5.51-4-3.9 5.53-.8L10 1.5z" />
-        </svg>
-      </span>
-    ))}
-  </div>
-);
+}) => {
+  const isFourStar = count === 4;
+
+  return (
+    <div className={`inline-flex items-center gap-0.5 ${className}`}>
+      {[1, 2, 3, 4, 5].map((star) => {
+        const isActive = star <= count;
+        const imgSrc = isActive
+          ? isFourStar
+            ? '/images/trustpilot-star-4.png'
+            : '/images/trustpilot-star-5.png'
+          : '/images/trustpilot-star-inactive.png';
+
+        return (
+          <img
+            key={star}
+            src={imgSrc}
+            alt={isActive ? `${count} estrelas` : 'estrela vazia'}
+            className={`${size} rounded-[2px] object-cover shrink-0 select-none shadow-2xs`}
+            loading="eager"
+          />
+        );
+      })}
+    </div>
+  );
+};
 
 // Horizontal Trustpilot Rating Badge for Page Headers
 export const TrustpilotRatingHorizontal: React.FC<{
@@ -180,7 +180,7 @@ export const TrustGuaranteesModal: React.FC<{
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-display font-black text-slate-900 text-lg">Trustpilot</span>
-                <span className="text-[10px] font-black uppercase tracking-wider bg-[#00B67A]/15 text-[#008254] px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-black uppercase tracking-wider bg-[#08ad88]/15 text-[#067a5f] px-2 py-0.5 rounded-full">
                   Avaliações Verificadas
                 </span>
               </div>
@@ -249,7 +249,7 @@ export const TrustGuaranteesModal: React.FC<{
                 >
                   <div className="flex items-center justify-between gap-2 flex-wrap">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-[#00B67A] text-white font-bold text-xs flex items-center justify-center">
+                      <div className="w-7 h-7 rounded-full bg-[#08ad88] text-white font-bold text-xs flex items-center justify-center">
                         {rev.author[0]}
                       </div>
                       <div>
@@ -268,8 +268,8 @@ export const TrustGuaranteesModal: React.FC<{
                   <p className="text-xs font-extrabold text-slate-900">{rev.title}</p>
                   <p className="text-xs text-slate-600 leading-relaxed">{rev.comment}</p>
 
-                  <div className="pt-1 flex items-center gap-1 text-[10px] font-bold text-[#008254]">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#00B67A]" />
+                  <div className="pt-1 flex items-center gap-1 text-[10px] font-bold text-[#067a5f]">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#08ad88]" />
                     <span>Compra Verificada via Trustpilot</span>
                   </div>
                 </div>

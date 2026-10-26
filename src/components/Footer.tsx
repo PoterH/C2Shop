@@ -280,16 +280,12 @@ export const Footer: React.FC = () => {
               </span>
               <div className="flex flex-wrap gap-3 justify-center lg:justify-end items-center">
                 {/* Selo Oficial Trustpilot */}
-                <div className="flex items-center gap-2 bg-slate-900/60 border border-[#00B67A]/40 rounded-xl px-3 py-1.5 hover:border-[#00B67A] transition-all shadow-sm" title="Avaliações Verificadas no Trustpilot">
-                  <div className="w-6 h-6 rounded bg-[#00B67A] flex items-center justify-center shrink-0">
-                    <svg viewBox="0 0 20 20" className="w-3.5 h-3.5 text-white fill-white">
-                      <path d="M10 1.5l2.47 5.01 5.53.8-4 3.9 1 5.51L10 14.12l-5 2.6 1-5.51-4-3.9 5.53-.8L10 1.5z" />
-                    </svg>
-                  </div>
+                <div className="flex items-center gap-2 bg-slate-900/60 border border-[#08ad88]/40 rounded-xl px-3 py-1.5 hover:border-[#08ad88] transition-all shadow-sm" title="Avaliações Verificadas no Trustpilot">
+                  <img src="/images/trustpilot-star.png" alt="Trustpilot" className="w-6 h-6 object-contain shrink-0" />
                   <div className="text-left">
                     <p className="text-[10px] font-black text-white leading-tight flex items-center gap-1">
                       <span>Trustpilot</span>
-                      <span className="text-[#00B67A] font-extrabold">4.8/5</span>
+                      <span className="text-[#08ad88] font-extrabold">4.8/5</span>
                     </p>
                     <p className="text-[8px] text-slate-400 leading-none mt-0.5">Avaliações Verificadas</p>
                   </div>
