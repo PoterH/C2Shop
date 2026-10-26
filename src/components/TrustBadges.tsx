@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, CheckCircle2, X, Lock, Award, CloudDownload, RefreshCw } from 'lucide-react';
+import { CheckCircle2, X, Lock, Award, CloudDownload, RefreshCw } from 'lucide-react';
 
 // Official Trustpilot Two-Tone Star (Authentic Star Logo)
 export const TrustpilotStarIcon: React.FC<{ className?: string }> = ({ className = 'w-5 h-5' }) => (
@@ -88,20 +88,64 @@ export const TrustpilotRatingHorizontal: React.FC<{
   </button>
 );
 
-// Trust Guarantees Pill (Vitalício • Envio Imediato • Suporte VIP)
+// Trust Guarantees Badges (Uso Vitalício • Ativação Garantida • Entrega Digital)
 export const TrustGuaranteesPill: React.FC<{
   onOpenModal?: () => void;
   className?: string;
 }> = ({ onOpenModal, className = '' }) => (
-  <button
-    type="button"
+  <div
     onClick={onOpenModal}
-    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50/80 hover:bg-emerald-100/80 border border-emerald-200/80 text-emerald-800 text-xs font-bold transition-all cursor-pointer ${className}`}
+    className={`grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3.5 lg:gap-5 items-center text-left cursor-pointer group ${className}`}
     title="Ver garantias de compra segura"
   >
-    <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-    <span>Garantia Vitalícia • Envio Imediato • Suporte VIP</span>
-  </button>
+    {/* Uso Vitalício */}
+    <div className="flex items-center gap-2 sm:gap-2.5 sm:pr-3.5 lg:pr-5 sm:border-r border-slate-200">
+      <img
+        src="/images/icons/badge-seal.png"
+        alt="Uso Vitalício"
+        className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0 select-none group-hover:scale-105 transition-transform"
+        loading="eager"
+      />
+      <div>
+        <p className="text-[11px] sm:text-xs font-bold text-slate-800 leading-tight">Uso Vitalício</p>
+        <p className="text-[9.5px] sm:text-[10px] text-slate-500 leading-snug mt-0.5 whitespace-nowrap">
+          Sem mensalidades recorrentes
+        </p>
+      </div>
+    </div>
+
+    {/* Ativação Garantida */}
+    <div className="flex items-center gap-2 sm:gap-2.5 sm:pr-3.5 lg:pr-5 sm:border-r border-slate-200">
+      <img
+        src="/images/icons/badge-shield.png"
+        alt="Ativação Garantida"
+        className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0 select-none group-hover:scale-105 transition-transform"
+        loading="eager"
+      />
+      <div>
+        <p className="text-[11px] sm:text-xs font-bold text-slate-800 leading-tight">Ativação Garantida</p>
+        <p className="text-[9.5px] sm:text-[10px] text-slate-500 leading-snug mt-0.5 whitespace-nowrap">
+          30 dias de suporte técnico
+        </p>
+      </div>
+    </div>
+
+    {/* Entrega Digital */}
+    <div className="flex items-center gap-2 sm:gap-2.5">
+      <img
+        src="/images/icons/badge-plane.png"
+        alt="Entrega Digital"
+        className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0 select-none group-hover:scale-105 transition-transform"
+        loading="eager"
+      />
+      <div>
+        <p className="text-[11px] sm:text-xs font-bold text-slate-800 leading-tight">Entrega Digital</p>
+        <p className="text-[9.5px] sm:text-[10px] text-slate-500 leading-snug mt-0.5 whitespace-nowrap">
+          Link no seu e-mail e WhatsApp
+        </p>
+      </div>
+    </div>
+  </div>
 );
 
 // Trust & Guarantees Modal with Verified Reviews
