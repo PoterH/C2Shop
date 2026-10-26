@@ -231,7 +231,7 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
         seeAllLink: '/catalogo?categoria=Engenharia+e+Arquitetura',
         items: [
           { name: 'Autodesk AutoCAD (2019 a 2027)', slug: 'autocad-2027-windows' },
-          { name: 'Autodesk Revit 2027', slug: 'revit-2027' },
+          { name: 'Autodesk Revit (2024 a 2027)', slug: 'revit-2027' },
           { name: 'SketchUp Pro (2021 a 2026)', slug: 'sketchup-pro-2026-windows' },
           { name: 'Graphisoft ArchiCAD (28, 29 e 30 BRA)', slug: 'archicad-30-bra' },
           { name: 'Autodesk Civil 3D 2027', slug: 'civil-3d-2027' },

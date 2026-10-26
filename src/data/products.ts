@@ -36,6 +36,7 @@ export interface Product {
   ean13?: string;
   mpn?: string;
   gallery?: string[];
+  driveUrl?: string;
 }
 
 export interface LicenseOption {
@@ -49,6 +50,7 @@ export interface LicenseOption {
   downloadSlug?: string;
   imageUrl?: string;
   gallery?: string[];
+  driveUrl?: string;
 }
 
 
@@ -235,20 +237,79 @@ export const products: Product[] = [
   },
   {
     id: 'revit_2027',
-    keywords: ['autodesk', 'engenharia', 'arquitetura', 'cad', 'bim'],
+    keywords: ['autodesk', 'engenharia', 'arquitetura', 'cad', 'bim', 'revit', '2024', '2025', '2026', '2027'],
     slug: 'revit-2027',
-    name: 'Revit 2027',
+    name: 'Autodesk Revit',
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows',
-    version: '2027 (64-bits)',
-    description: 'Software profissional para projetos BIM, arquitetura, engenharia e construção.',
-    longDescription: 'O Revit 2027 é o principal software focado na metodologia BIM (Building Information Modeling). Ele permite criar projetos de arquitetura, estrutura e instalações elétricas e hidráulicas de forma totalmente integrada. Com esta versão completa e funcional, você gera plantas, cortes, elevações e renderizações realistas a partir de um único modelo 3D unificado.',
-    price: 147.90,
-    originalPrice: 249.90,
-    checkoutUrl: 'https://pay.cakto.com.br/33xszru_453977',
-    imageUrl: '/images/products/revit-2027.png',
+    version: '2024, 2025, 2026 e 2027 (64-bits)',
+    description: 'Software profissional para projetos BIM, arquitetura, engenharia e construção. Escolha sua versão: 2024, 2025, 2026 ou 2027.',
+    longDescription: 'O Autodesk Revit é o principal software focado na metodologia BIM (Building Information Modeling). Ele permite criar projetos de arquitetura, estrutura e instalações elétricas e hidráulicas de forma totalmente integrada. Com esta versão completa e funcional, você gera plantas, cortes, elevações e renderizações realistas a partir de um único modelo 3D unificado. Escolha a versão ideal para o seu fluxo de trabalho (2024, 2025, 2026 ou 2027) com ativação vitalícia e instalação assistida.',
+    price: 137.90,
+    originalPrice: 229.90,
+    checkoutUrl: 'https://pay.cakto.com.br/5tysfn4',
+    imageUrl: '/images/products/revit-cover.png',
+    gallery: [
+      '/images/products/revit-cover.png',
+      '/images/products/revit-2027.png',
+      '/images/products/revit-2026.png',
+      '/images/products/revit-2025.png',
+      '/images/products/revit-2024.png'
+    ],
+    licenseOptions: [
+      {
+        quantity: 2024,
+        platform: 'Windows',
+        year: '2024',
+        label: 'Windows - 2024',
+        price: 137.90,
+        originalPrice: 229.90,
+        checkoutUrl: 'https://pay.cakto.com.br/5tysfn4',
+        downloadSlug: 'revit-2024',
+        imageUrl: '/images/products/revit-2024.png',
+        gallery: ['/images/products/revit-2024.png']
+      },
+      {
+        quantity: 2025,
+        platform: 'Windows',
+        year: '2025',
+        label: 'Windows - 2025',
+        price: 147.90,
+        originalPrice: 239.90,
+        checkoutUrl: 'https://pay.cakto.com.br/3bmarsh',
+        downloadSlug: 'revit-2025',
+        imageUrl: '/images/products/revit-2025.png',
+        gallery: ['/images/products/revit-2025.png']
+      },
+      {
+        quantity: 2026,
+        platform: 'Windows',
+        year: '2026',
+        label: 'Windows - 2026',
+        price: 157.90,
+        originalPrice: 249.90,
+        checkoutUrl: 'https://pay.cakto.com.br/ggozfmn',
+        driveUrl: 'https://drive.google.com/drive/folders/1hzQCGH3TmzdqJm7ySN_aptZNAd86ehzQ?usp=drive_link',
+        downloadSlug: 'revit-2026',
+        imageUrl: '/images/products/revit-2026.png',
+        gallery: ['/images/products/revit-2026.png']
+      },
+      {
+        quantity: 2027,
+        platform: 'Windows',
+        year: '2027',
+        label: 'Windows - 2027',
+        price: 167.90,
+        originalPrice: 269.90,
+        checkoutUrl: 'https://pay.cakto.com.br/33xszru_453977',
+        downloadSlug: 'revit-2027',
+        imageUrl: '/images/products/revit-2027.png',
+        gallery: ['/images/products/revit-2027.png']
+      }
+    ],
     features: [
-      'Versão completa e funcional',
+      'Versão completa e funcional sem restrições',
+      'Metodologia BIM integrada (Arquitetura, Estrutura e MEP)',
       'Acesso vitalício para uso ilimitado',
       'Instalação assistida inclusa',
       'Entrega automática no e-mail após o pagamento',
@@ -1870,6 +1931,9 @@ export const products: Product[] = [
 ];
 
 export function getProductBySlug(slug: string): Product | undefined {
+  if (slug === 'revit' || slug === 'autodesk-revit' || slug === 'revit-2026' || slug === 'revit-2025' || slug === 'revit-2024') {
+    return products.find(p => p.slug === 'revit-2027');
+  }
   if (slug === 'autocad-2027-macos' || slug === 'autodesk-autocad' || slug === 'autocad') {
     return products.find(p => p.slug === 'autocad-2027-windows');
   }
