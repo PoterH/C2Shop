@@ -356,7 +356,7 @@ export const Footer: React.FC = () => {
           {/* Bottom Bar: Copyright & CNPJ */}
           <div className="flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-4">
             <p className="text-center sm:text-left">
-              &copy; {currentYear} C2Tech. Todos os direitos reservados. CNPJ: 00.000.000/0001-00
+              &copy; {currentYear} C2Tech. Todos os direitos reservados.
             </p>
             <div className="text-slate-600 text-[10px]">
               Foco no projeto, tecnologia ao seu alcance.
