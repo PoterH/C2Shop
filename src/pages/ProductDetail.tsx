@@ -820,46 +820,50 @@ export const ProductDetail: React.FC = () => {
 
             {/* 3 Horizontal Trust Badges (Mobile Responsive) */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-2 py-3.5 border-y border-slate-200 text-left bg-slate-50/60 sm:bg-transparent rounded-xl sm:rounded-none px-3.5 sm:px-0">
-              <div className="flex items-center gap-2.5 sm:gap-2 sm:pr-2 sm:border-r border-slate-200">
+              <div className="flex items-center gap-2 sm:gap-2.5 sm:pr-2 sm:border-r border-slate-200">
                 <img
                   src="/images/icons/badge-seal.png"
                   alt="Uso Vitalício"
                   className="w-8 h-8 object-contain shrink-0 select-none"
                   loading="eager"
                 />
-                <div className="leading-tight">
-                  <p className="text-[11px] font-bold text-slate-800">Uso Vitalício</p>
-                  <p className="text-[10px] text-slate-500">Sem mensalidades recorrentes</p>
+                <div>
+                  <p className="text-[11px] font-bold text-slate-800 leading-tight">Uso Vitalício</p>
+                  <p className="text-[9.5px] text-slate-500 leading-snug mt-0.5">
+                    Sem mensalidades recorrentes
+                  </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 sm:gap-2 sm:px-1 sm:border-r border-slate-200">
+              <div className="flex items-center gap-2 sm:gap-2.5 sm:px-1 sm:border-r border-slate-200">
                 <img
                   src="/images/icons/badge-shield.png"
                   alt="Ativação Garantida"
                   className="w-8 h-8 object-contain shrink-0 select-none"
                   loading="eager"
                 />
-                <div className="leading-tight">
-                  <p className="text-[11px] font-bold text-slate-800">
+                <div>
+                  <p className="text-[11px] font-bold text-slate-800 leading-tight">
                     {product.isSubscription ? 'Acesso Oficial' : 'Ativação Garantida'}
                   </p>
-                  <p className="text-[10px] text-slate-500">
+                  <p className="text-[9.5px] text-slate-500 leading-snug mt-0.5">
                     {product.isSubscription ? 'Conta verificada' : '30 dias de suporte técnico'}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 sm:gap-2 sm:pl-1">
+              <div className="flex items-center gap-2 sm:gap-2.5 sm:pl-1">
                 <img
                   src="/images/icons/badge-plane.png"
                   alt="Entrega Digital"
                   className="w-8 h-8 object-contain shrink-0 select-none"
                   loading="eager"
                 />
-                <div className="leading-tight">
-                  <p className="text-[11px] font-bold text-slate-800">Entrega Digital</p>
-                  <p className="text-[10px] text-slate-500">Link no seu e-mail e WhatsApp</p>
+                <div>
+                  <p className="text-[11px] font-bold text-slate-800 leading-tight">Entrega Digital</p>
+                  <p className="text-[9.5px] text-slate-500 leading-snug mt-0.5">
+                    Link no seu e-mail e WhatsApp
+                  </p>
                 </div>
               </div>
             </div>
@@ -905,7 +909,7 @@ export const ProductDetail: React.FC = () => {
                       type="button"
                       className="px-4 py-2 rounded-md text-xs font-bold border-2 border-[#0b5ed7] text-[#0b5ed7] bg-blue-50/40 shadow-xs cursor-default"
                     >
-                      Vitalício (Sem Mensalidade)
+                      Vitalício
                     </button>
                   </div>
                 </div>
