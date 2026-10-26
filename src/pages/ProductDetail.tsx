@@ -569,7 +569,7 @@ export const ProductDetail: React.FC = () => {
         {/* Top Breadcrumb + Top Rating Strip */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-4 mb-6 border-b border-slate-100">
           <nav
-            className="flex items-center flex-wrap gap-1.5 text-xs text-slate-500"
+            className="flex items-center flex-wrap gap-1.5 text-xs text-slate-500 min-w-0"
             aria-label="Breadcrumb"
           >
             <Link to="/" className="hover:text-blue-600 transition-colors">
@@ -587,25 +587,29 @@ export const ProductDetail: React.FC = () => {
               {product.category}
             </Link>
             <span>/</span>
-            <span className="text-slate-900 font-semibold truncate">{product.name}</span>
+            <span className="text-slate-900 font-semibold truncate max-w-[200px] sm:max-w-none">{product.name}</span>
           </nav>
 
           {/* Trustpilot Official Header Rating Bar */}
           <button
             type="button"
             onClick={() => setIsGuaranteesModalOpen(true)}
-            className="inline-flex flex-wrap items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs text-slate-800 transition-all cursor-pointer shadow-2xs"
+            className="inline-flex flex-nowrap items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs text-slate-800 transition-all cursor-pointer shadow-2xs whitespace-nowrap shrink-0 overflow-x-auto scrollbar-none self-start md:self-auto max-w-full"
             title="Ver avaliações verificadas no Trustpilot"
           >
-            <span className="text-slate-600 font-medium">O que nossos clientes dizem</span>
-            <span className="font-bold text-slate-900">Excelente</span>
-            <TrustpilotStars count={5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
-            <span className="text-slate-700 font-medium">
+            <span className="text-slate-600 font-medium whitespace-nowrap">O que nossos clientes dizem</span>
+            <span className="font-bold text-slate-900 whitespace-nowrap">Excelente</span>
+            <div className="shrink-0 inline-flex items-center">
+              <TrustpilotStars count={5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
+            </div>
+            <span className="text-slate-700 font-medium whitespace-nowrap">
               <strong className="text-slate-900 font-bold">4.8</strong> de 5 baseado em{' '}
               <span className="underline decoration-slate-400">1.785 avaliações</span>
             </span>
-            <span className="text-slate-300 hidden sm:inline">•</span>
-            <TrustpilotLogo starSize="w-3.5 h-3.5" textSize="text-xs" className="hidden sm:inline-flex" />
+            <span className="text-slate-300 hidden sm:inline whitespace-nowrap">•</span>
+            <div className="hidden sm:inline-flex shrink-0">
+              <TrustpilotLogo starSize="w-3.5 h-3.5" textSize="text-xs" />
+            </div>
           </button>
         </div>
 
