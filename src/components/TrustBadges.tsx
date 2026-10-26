@@ -79,7 +79,7 @@ export const TrustpilotRatingHorizontal: React.FC<{
     <TrustpilotStarIcon className="w-4.5 h-4.5 shrink-0" />
     <span className="font-extrabold text-slate-900">Excelente</span>
     <TrustpilotStars count={5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
-    <span className="font-bold text-slate-800">4.9 / 5</span>
+    <span className="font-bold text-slate-800">4.8 / 5</span>
     <span className="hidden sm:inline text-slate-400">•</span>
     <span className="hidden sm:inline text-slate-600 font-medium">
       <span className="font-bold text-slate-900">+1.780</span> avaliações no{' '}
@@ -186,7 +186,7 @@ export const TrustGuaranteesModal: React.FC<{
               </div>
               <div className="flex items-center gap-2 mt-0.5">
                 <TrustpilotStars count={5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
-                <span className="text-xs font-extrabold text-slate-800">4.9 / 5</span>
+                <span className="text-xs font-extrabold text-slate-800">4.8 / 5</span>
                 <span className="text-xs text-slate-500 font-medium">(1.782 clientes satisfeitos)</span>
               </div>
             </div>

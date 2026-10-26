@@ -205,7 +205,7 @@ export const ProductDetail: React.FC = () => {
   }, [product]);
 
   const averageRating = useMemo(() => {
-    if (productReviews.length === 0) return '4.9';
+    if (productReviews.length === 0) return '4.8';
     const sum = productReviews.reduce((acc, r) => acc + r.rating, 0);
     return (sum / productReviews.length).toFixed(1);
   }, [productReviews]);
@@ -602,7 +602,7 @@ export const ProductDetail: React.FC = () => {
             <TrustpilotStarIcon className="w-4 h-4 shrink-0" />
             <span className="font-extrabold text-slate-900">Excelente</span>
             <TrustpilotStars count={5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
-            <span className="font-bold text-slate-900">4.9 / 5</span>
+            <span className="font-bold text-slate-900">4.8 / 5</span>
             <span className="text-slate-400 hidden sm:inline">•</span>
             <span className="text-slate-600 hidden sm:inline font-medium">
               Avaliações no <strong className="text-slate-900 font-bold">Trustpilot</strong>

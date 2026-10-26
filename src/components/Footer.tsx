@@ -289,7 +289,7 @@ export const Footer: React.FC = () => {
                   <div className="text-left">
                     <p className="text-[10px] font-black text-white leading-tight flex items-center gap-1">
                       <span>Trustpilot</span>
-                      <span className="text-[#00B67A] font-extrabold">4.9/5</span>
+                      <span className="text-[#00B67A] font-extrabold">4.8/5</span>
                     </p>
                     <p className="text-[8px] text-slate-400 leading-none mt-0.5">Avaliações Verificadas</p>
                   </div>

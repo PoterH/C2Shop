@@ -174,7 +174,7 @@ export const AboutPage: React.FC = () => {
               </h3>
               <p>
                 Nossa credibilidade é comprovada por uma avaliação média de{' '}
-                <strong>4.9/5 estrelas</strong>, conquistada através da satisfação de milhares de
+                <strong>4.8/5 estrelas</strong>, conquistada através da satisfação de milhares de
                 profissionais e escritórios atendidos em todo o Brasil.
               </p>
               <p>
