@@ -22,19 +22,6 @@ html, body {
   scroll-behavior: smooth;
 }
 
-/* Escala e Zoom geral aprimorados para telas desktop / notebook (mantendo o mobile 100% intocado) */
-@media (min-width: 1024px) {
-  html {
-    zoom: 1.08;
-  }
-}
-
-@media (min-width: 1440px) {
-  html {
-    zoom: 1.12;
-  }
-}
-
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
 }

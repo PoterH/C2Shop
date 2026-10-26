@@ -565,7 +565,7 @@ export const ProductDetail: React.FC = () => {
       {/* Inject Schema Markup */}
       <script type="application/ld+json">{JSON.stringify(schemaMarkup)}</script>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Breadcrumb + Top Rating Strip */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-4 mb-6 border-b border-slate-100">
           <nav
@@ -615,7 +615,7 @@ export const ProductDetail: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-12">
           {/* LEFT COLUMN: Product Box Image & Thumbnails */}
           <div className="lg:col-span-6 flex flex-col items-center">
-            <div className="relative w-full max-w-[500px] bg-white rounded-2xl border border-slate-100 p-6 sm:p-8 flex flex-col items-center justify-center min-h-[360px] sm:min-h-[440px] shadow-sm">
+            <div className="relative w-full max-w-[460px] bg-white rounded-2xl border border-slate-100 p-6 sm:p-8 flex flex-col items-center justify-center min-h-[360px] sm:min-h-[410px] shadow-sm">
               {/* Top-left Save Badge */}
               {savingsAmount > 0 && (
                 <div className="absolute top-4 left-4 z-10 bg-[#18b259] text-white text-xs sm:text-sm font-extrabold px-3.5 py-1.5 rounded-md shadow-sm">
@@ -648,7 +648,7 @@ export const ProductDetail: React.FC = () => {
               {activeThumb?.type === 'image' ? (
                 <div className="relative flex flex-col items-center justify-center w-full my-auto pt-4">
                   {activeThumb.imageUrl ? (
-                    <div className="relative w-full max-w-[360px] rounded-2xl overflow-hidden shadow-xl border border-slate-200/70 bg-slate-900">
+                    <div className="relative w-full max-w-[330px] rounded-2xl overflow-hidden shadow-xl border border-slate-200/70 bg-slate-900">
                       <img
                         src={activeThumb.imageUrl}
                         alt={`${product.name} - ${selectedVersionBadge}`}
