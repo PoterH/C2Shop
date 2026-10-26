@@ -65,7 +65,7 @@ export const TrustpilotStars: React.FC<{
   );
 };
 
-// Horizontal Trustpilot Rating Badge for Page Headers
+// Horizontal Trustpilot Rating Badge for Page Headers (Clean & compact, identical to competitor)
 export const TrustpilotRatingHorizontal: React.FC<{
   onOpenModal?: () => void;
   className?: string;
@@ -73,37 +73,34 @@ export const TrustpilotRatingHorizontal: React.FC<{
   <button
     type="button"
     onClick={onOpenModal}
-    className={`group inline-flex flex-wrap items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100/90 border border-slate-200/90 transition-all cursor-pointer text-left text-xs ${className}`}
+    className={`group inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-slate-800 transition-colors cursor-pointer text-left py-1 select-none focus:outline-none ${className}`}
     title="Ver avaliações verificadas no Trustpilot"
   >
-    <span className="text-slate-600 font-medium">O que nossos clientes dizem</span>
-    <span className="font-bold text-slate-900">Excelente</span>
-    <TrustpilotStars count={5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
-    <span className="text-slate-700 font-medium">
-      <strong className="text-slate-900 font-bold">4.8</strong> de 5 baseado em{' '}
-      <span className="underline decoration-slate-400">1.785 avaliações</span>
+    <span className="font-semibold text-slate-900">Excelente</span>
+    <TrustpilotStars count={5} size="w-3.5 h-3.5 sm:w-4 sm:h-4" starSize="w-2.5 h-2.5 sm:w-2.5 sm:h-2.5" />
+    <span className="underline underline-offset-2 decoration-slate-400 hover:decoration-slate-800 text-slate-600 font-medium whitespace-nowrap">
+      1.785 avaliações no
     </span>
-    <span className="text-slate-300 hidden sm:inline">•</span>
-    <TrustpilotLogo starSize="w-3.5 h-3.5" textSize="text-xs" className="hidden sm:inline-flex" />
+    <TrustpilotLogo starSize="w-3.5 h-3.5 sm:w-4 sm:h-4" textSize="text-xs sm:text-sm font-extrabold" />
   </button>
 );
 
-// Trust Guarantees Badges (Uso Vitalício • Ativação Garantida • Entrega Digital)
+// Trust Guarantees Badges Balloon (Uso Vitalício • Ativação Garantida • Entrega Digital)
 export const TrustGuaranteesPill: React.FC<{
   onOpenModal?: () => void;
   className?: string;
 }> = ({ onOpenModal, className = '' }) => (
   <div
     onClick={onOpenModal}
-    className={`grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3.5 lg:gap-5 items-center text-left cursor-pointer group ${className}`}
+    className={`inline-flex flex-col sm:flex-row items-start sm:items-center bg-white border border-slate-200/90 rounded-2xl sm:rounded-full px-3.5 sm:px-5 py-2 sm:py-2.5 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group gap-2.5 sm:gap-3.5 lg:gap-4.5 ${className}`}
     title="Ver garantias de compra segura"
   >
     {/* Uso Vitalício */}
-    <div className="flex items-center gap-2 sm:gap-2.5 sm:pr-3.5 lg:pr-5 sm:border-r border-slate-200">
+    <div className="flex items-center gap-2 sm:gap-2.5 sm:pr-3.5 lg:pr-4.5 sm:border-r border-slate-200">
       <img
         src="/images/icons/badge-seal.png"
         alt="Uso Vitalício"
-        className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0 select-none group-hover:scale-105 transition-transform"
+        className="w-6 h-6 sm:w-7 sm:h-7 object-contain shrink-0 select-none group-hover:scale-105 transition-transform"
         loading="eager"
       />
       <div>
@@ -115,11 +112,11 @@ export const TrustGuaranteesPill: React.FC<{
     </div>
 
     {/* Ativação Garantida */}
-    <div className="flex items-center gap-2 sm:gap-2.5 sm:pr-3.5 lg:pr-5 sm:border-r border-slate-200">
+    <div className="flex items-center gap-2 sm:gap-2.5 sm:pr-3.5 lg:pr-4.5 sm:border-r border-slate-200">
       <img
         src="/images/icons/badge-shield.png"
         alt="Ativação Garantida"
-        className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0 select-none group-hover:scale-105 transition-transform"
+        className="w-6 h-6 sm:w-7 sm:h-7 object-contain shrink-0 select-none group-hover:scale-105 transition-transform"
         loading="eager"
       />
       <div>
@@ -135,7 +132,7 @@ export const TrustGuaranteesPill: React.FC<{
       <img
         src="/images/icons/badge-plane.png"
         alt="Entrega Digital"
-        className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0 select-none group-hover:scale-105 transition-transform"
+        className="w-6 h-6 sm:w-7 sm:h-7 object-contain shrink-0 select-none group-hover:scale-105 transition-transform"
         loading="eager"
       />
       <div>
