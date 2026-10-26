@@ -1,5 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
+import {
+  TrustpilotRatingHorizontal,
+  TrustGuaranteesPill,
+  TrustGuaranteesModal
+} from '../components/TrustBadges';
 import { products, CATEGORIES } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
 import { 
@@ -47,6 +52,7 @@ export const Catalog: React.FC = () => {
     searchParams.get('categoria') || 'Todos'
   );
   const [selectedOS, setSelectedOS] = useState<'Todos' | 'Windows' | 'macOS'>('Todos');
+  const [isGuaranteesModalOpen, setIsGuaranteesModalOpen] = useState(false);
   
   // Sync URL search & category to local state if URL changes (e.g., from header mega-menu)
   React.useEffect(() => {
@@ -140,13 +146,60 @@ export const Catalog: React.FC = () => {
     <div className="pt-28 pb-16 bg-slate-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Page Title */}
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-1.5 text-xs text-slate-500 mb-3">
+          <Link to="/" className="hover:text-blue-600 transition-colors">
+            Home
+          </Link>
+          <span>/</span>
+          <Link
+            to="/catalogo"
+            onClick={() => setSelectedCategory('Todos')}
+            className="hover:text-blue-600 transition-colors"
+          >
+            Catálogo
+          </Link>
+          {selectedCategory !== 'Todos' && (
+            <>
+              <span>/</span>
+              <span className="text-slate-900 font-semibold">{selectedCategory}</span>
+            </>
+          )}
+        </nav>
+
+        {/* Trust Header: Trustpilot Rating (Left) & Guarantees Pill (Right) */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 pb-5 border-b border-slate-200/80">
+          <TrustpilotRatingHorizontal onOpenModal={() => setIsGuaranteesModalOpen(true)} />
+          <TrustGuaranteesPill onOpenModal={() => setIsGuaranteesModalOpen(true)} />
+        </div>
+
+        {/* Page Title & Category Description */}
         <div className="text-left space-y-2 mb-8">
           <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
-            Catálogo de Softwares Profissionais
+            {selectedCategory === 'Todos'
+              ? activeTab === 'vitalicios'
+                ? 'Licenças Vitalícias'
+                : activeTab === 'assinaturas'
+                ? 'Assinaturas Anuais'
+                : activeTab === 'chaves'
+                ? 'Chaves de Ativação'
+                : 'Catálogo de Softwares Profissionais'
+              : selectedCategory}
           </h1>
-          <p className="text-slate-500 text-sm sm:text-base">
-            Selecione e adquira os softwares essenciais para o seu desenvolvimento corporativo ou pessoal.
+          <p className="text-slate-600 text-sm sm:text-base max-w-3xl leading-relaxed">
+            {selectedCategory === 'Engenharia e Arquitetura'
+              ? 'Softwares essenciais de CAD, modelagem 3D, cálculos estruturais e documentação técnica para arquitetos, engenheiros e projetistas. Licenças originais de alta precisão com suporte assistido.'
+              : selectedCategory === 'Design e Criatividade'
+              ? 'As melhores ferramentas do mercado para ilustração vetorial, edição e tratamento fotográfico, modelagem e renderização fotorrealista. Produtividade máxima sem mensalidades.'
+              : selectedCategory === 'Escritório e Produtividade'
+              ? 'Soluções corporativas completas para edição de PDFs, pacotes Office e automação de documentos com ativação vitalícia e garantia total de funcionamento.'
+              : selectedCategory === 'Marcenaria e Móveis Planejados'
+              ? 'Sistemas completos para projeto de interiores, plano de corte inteligente e detalhamento técnico de móveis sob medida.'
+              : selectedCategory === 'Projetos Elétricos e Eletrônicos'
+              ? 'Ferramentas líderes para esquemáticos elétricos, automação industrial e simulação eletrônica com confiabilidade profissional.'
+              : selectedCategory === 'Odontologia e CAD Dental'
+              ? 'Plataformas profissionais de design e escaneamento digital para laboratórios de prótese e clínicas odontológicas.'
+              : 'Selecione e adquira os softwares essenciais para o seu desenvolvimento corporativo ou pessoal. Licenças completas, ativadas com facilidade e suporte técnico dedicado.'}
           </p>
         </div>
 
@@ -364,6 +417,11 @@ export const Catalog: React.FC = () => {
         )}
 
       </div>
+      {/* Guarantees Modal */}
+      <TrustGuaranteesModal
+        isOpen={isGuaranteesModalOpen}
+        onClose={() => setIsGuaranteesModalOpen(false)}
+      />
     </div>
   );
 };

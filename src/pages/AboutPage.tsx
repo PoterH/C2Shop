@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
+  TrustpilotStars,
+  TrustpilotLogo,
+  TrustGuaranteesModal,
+} from '../components/TrustBadges';
+import {
   Award,
   CreditCard,
   Headphones,
@@ -14,7 +19,7 @@ import {
   Scale,
 } from 'lucide-react';
 
-const RECLAME_AQUI_REVIEWS = [
+const TRUSTPILOT_REVIEWS = [
   {
     id: 1,
     author: 'Carlos Henrique M.',
@@ -58,7 +63,8 @@ const RECLAME_AQUI_REVIEWS = [
 ];
 
 export const AboutPage: React.FC = () => {
-  const [reclameSlideIndex, setReclameSlideIndex] = useState(0);
+  const [trustpilotSlideIndex, setTrustpilotSlideIndex] = useState(0);
+  const [isGuaranteesModalOpen, setIsGuaranteesModalOpen] = useState(false);
 
   useEffect(() => {
     document.title = 'Sobre Nós | C2Tech Softwares Profissionais';
@@ -323,42 +329,37 @@ export const AboutPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Bottom Reclame AQUI Carousel Bar (Matching Screenshot 4) */}
+        {/* Bottom Trustpilot Reviews Bar */}
         <div className="my-10 py-6 px-4 sm:px-6 bg-white rounded-2xl border border-slate-200/80 shadow-xs">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             <div className="lg:col-span-3 flex flex-col items-center text-center border-b lg:border-b-0 lg:border-r border-slate-200 pb-4 lg:pb-0 lg:pr-4">
-              <div className="space-y-1.5">
-                <p className="font-display font-extrabold text-lg text-slate-900">Excelente</p>
+              <a
+                href="#trustpilot"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsGuaranteesModalOpen(true);
+                }}
+                className="space-y-2 cursor-pointer group"
+              >
+                <p className="font-display font-extrabold text-xl text-slate-900 tracking-tight">Excellent</p>
                 <div className="flex items-center justify-center gap-1">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <span
-                      key={s}
-                      className="w-6 h-6 bg-[#00b67a] text-white flex items-center justify-center rounded-[3px]"
-                    >
-                      <Star className="w-4 h-4 fill-white text-white" />
-                    </span>
-                  ))}
+                  <TrustpilotStars count={5} size="w-6 h-6" starSize="w-3.5 h-3.5" />
                 </div>
-                <p className="text-[11px] text-slate-500">
-                  Baseado em <span className="underline font-semibold">avaliações verificadas</span>
+                <p className="text-xs text-slate-600">
+                  Based on <span className="underline font-semibold text-slate-900">1,782 reviews</span>
                 </p>
-                <div className="pt-1 flex items-center justify-center gap-1.5">
-                  <span className="w-5 h-5 rounded-full bg-[#00b67a] text-white flex items-center justify-center font-black text-[10px]">
-                    RA
-                  </span>
-                  <span className="font-display font-black text-sm text-slate-900 tracking-tight">
-                    Reclame<span className="text-[#00b67a]">AQUI</span>
-                  </span>
+                <div className="pt-1 flex items-center justify-center">
+                  <TrustpilotLogo starSize="w-5 h-5" textSize="text-base" />
                 </div>
-              </div>
+              </a>
             </div>
 
             <div className="lg:col-span-9 relative flex items-center">
               <button
                 type="button"
                 onClick={() =>
-                  setReclameSlideIndex((prev) =>
-                    prev === 0 ? RECLAME_AQUI_REVIEWS.length - 1 : prev - 1
+                  setTrustpilotSlideIndex((prev) =>
+                    prev === 0 ? TRUSTPILOT_REVIEWS.length - 1 : prev - 1
                   )
                 }
                 className="w-7 h-7 rounded-full border border-slate-300 bg-white text-slate-600 hover:bg-slate-100 flex items-center justify-center shrink-0 mr-2 cursor-pointer"
@@ -370,8 +371,8 @@ export const AboutPage: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5 flex-1 overflow-hidden">
                 {[0, 1, 2, 3].map((offset) => {
                   const item =
-                    RECLAME_AQUI_REVIEWS[
-                      (reclameSlideIndex + offset) % RECLAME_AQUI_REVIEWS.length
+                    TRUSTPILOT_REVIEWS[
+                      (trustpilotSlideIndex + offset) % TRUSTPILOT_REVIEWS.length
                     ];
                   return (
                     <div
@@ -390,7 +391,7 @@ export const AboutPage: React.FC = () => {
                           ))}
                         </div>
                         <span className="text-[10px] text-slate-500 flex items-center gap-0.5 font-semibold">
-                          <CheckCircle2 className="w-3 h-3 text-[#00b67a]" /> Verificado
+                          <CheckCircle2 className="w-3 h-3 text-[#00b67a]" /> Verificado no Trustpilot
                         </span>
                       </div>
 
@@ -410,7 +411,7 @@ export const AboutPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() =>
-                  setReclameSlideIndex((prev) => (prev + 1) % RECLAME_AQUI_REVIEWS.length)
+                  setTrustpilotSlideIndex((prev) => (prev + 1) % TRUSTPILOT_REVIEWS.length)
                 }
                 className="w-7 h-7 rounded-full border border-slate-300 bg-white text-slate-600 hover:bg-slate-100 flex items-center justify-center shrink-0 ml-2 cursor-pointer"
                 aria-label="Próxima avaliação"
@@ -421,6 +422,7 @@ export const AboutPage: React.FC = () => {
           </div>
         </div>
       </div>
+      <TrustGuaranteesModal isOpen={isGuaranteesModalOpen} onClose={() => setIsGuaranteesModalOpen(false)} />
     </div>
   );
 };

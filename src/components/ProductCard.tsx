@@ -163,7 +163,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {/* Version Badge for clarity */}
           <div className="mb-2 sm:mb-4">
             <span className="inline-block bg-slate-100 text-slate-600 text-[9px] sm:text-[11px] font-medium px-1.5 sm:px-2 py-0.5 rounded">
-              Versão: {product.version}
+              {product.version.length > 20 ? product.version.slice(0, 18) + '...' : product.version}
             </span>
           </div>
 

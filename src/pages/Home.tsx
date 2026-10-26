@@ -358,7 +358,7 @@ export const Home: React.FC = () => {
 
           {/* 5. Laptop AutoCAD Mockup (Stretched Wide & Pulled Higher Up) */}
           <div 
-            className="w-full max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-7xl mt-0 md:-mt-2 -mb-28 sm:-mb-44 md:-mb-64 lg:-mb-80 transition-all duration-500 relative z-10"
+            className="w-full max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-7xl mt-0 md:-mt-2 -mb-8 sm:-mb-24 md:-mb-48 lg:-mb-64 transition-all duration-500 relative z-10"
             style={{ transform: 'translate3d(0, calc(var(--scroll-y, 0px) * 0.03), 0)' }}
           >
             <img 
@@ -398,11 +398,11 @@ export const Home: React.FC = () => {
       {/* 2. CONFIDENCE SECTION */}
       <section id="confidence-section" className="py-12 bg-white scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
             {trustBadges.map((badge, i) => (
               <div 
                 key={i} 
-                className="bg-slate-50 rounded-2xl p-5 border border-slate-100 hover:border-slate-200 transition-all duration-300 flex items-start space-x-4 text-left"
+                className="bg-slate-50 rounded-2xl p-4 sm:p-5 border border-slate-100 hover:border-slate-200 transition-all duration-300 flex items-center sm:items-start space-x-3.5 text-left"
               >
                 <div className="p-3 bg-white rounded-xl shadow-sm shrink-0 border border-slate-100">
                   {badge.icon}

@@ -1,6 +1,12 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useParams, Link, useSearchParams, useLocation } from 'react-router-dom';
 import { CheckoutModal } from '../components/CheckoutModal';
+import {
+  TrustpilotStarIcon,
+  TrustpilotStars,
+  TrustpilotLogo,
+  TrustGuaranteesModal,
+} from '../components/TrustBadges';
 import { useCart } from '../context/CartContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { getProductBySlug, products, type LicenseOption } from '../data/products';
@@ -65,7 +71,7 @@ const AVATAR_COLORS = [
   'bg-[#457b9d] text-white',
 ];
 
-const RECLAME_AQUI_REVIEWS = [
+const TRUSTPILOT_REVIEWS = [
   {
     id: 1,
     author: 'Carlos Eduardo M.',
@@ -115,6 +121,7 @@ const RECLAME_AQUI_REVIEWS = [
 
 export const ProductDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
+  const [isGuaranteesModalOpen, setIsGuaranteesModalOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<'recurrent' | 'avulso'>('recurrent');
@@ -122,7 +129,7 @@ export const ProductDetail: React.FC = () => {
   const [quantity, setQuantity] = useState<number>(1);
   const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'activation'>('description');
   const [activeThumbIndex, setActiveThumbIndex] = useState<number>(0);
-  const [reclameSlideIndex, setReclameSlideIndex] = useState<number>(0);
+  const [trustpilotSlideIndex, setTrustpilotSlideIndex] = useState<number>(0);
 
   // Modals for "Faça uma pergunta" & "Escrever uma avaliação"
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
@@ -585,30 +592,22 @@ export const ProductDetail: React.FC = () => {
             <span className="text-slate-900 font-semibold truncate">{product.name}</span>
           </nav>
 
-          {/* Mini Reclame AQUI header rating bar */}
-          <a
-            href="#reclame-aqui"
-            onClick={(e) => e.preventDefault()}
-            className="inline-flex items-center gap-2 text-xs text-slate-700 hover:opacity-90 cursor-pointer"
+          {/* Trustpilot Official Header Rating Bar */}
+          <button
+            type="button"
+            onClick={() => setIsGuaranteesModalOpen(true)}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs text-slate-800 transition-all cursor-pointer shadow-2xs"
+            title="Ver avaliações verificadas no Trustpilot"
           >
-            <span className="font-bold text-slate-900">Excelente</span>
-            <span className="font-bold text-slate-800">{averageRating} de 5</span>
-            <div className="flex items-center gap-0.5">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <span
-                  key={s}
-                  className="w-4 h-4 bg-[#00b67a] text-white flex items-center justify-center rounded-[2px]"
-                >
-                  <Star className="w-2.5 h-2.5 fill-white text-white" />
-                </span>
-              ))}
-            </div>
-            <span className="text-slate-500 hidden sm:inline">Verificado no</span>
-            <span className="inline-flex items-center font-extrabold text-[#00995d] tracking-tight">
-              <ShieldCheck className="w-3.5 h-3.5 mr-0.5 text-[#00b67a]" />
-              ReclameAQUI
+            <TrustpilotStarIcon className="w-4 h-4 shrink-0" />
+            <span className="font-extrabold text-slate-900">Excelente</span>
+            <TrustpilotStars count={5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
+            <span className="font-bold text-slate-900">4.9 / 5</span>
+            <span className="text-slate-400 hidden sm:inline">•</span>
+            <span className="text-slate-600 hidden sm:inline font-medium">
+              Avaliações no <strong className="text-slate-900 font-bold">Trustpilot</strong>
             </span>
-          </a>
+          </button>
         </div>
 
         {/* =================================================================== */}
@@ -820,19 +819,19 @@ export const ProductDetail: React.FC = () => {
               )}
             </div>
 
-            {/* 3 Horizontal Trust Badges (Matching Reference Image) */}
-            <div className="grid grid-cols-3 gap-2 py-3.5 border-y border-slate-200 text-left">
-              <div className="flex items-center gap-2 pr-2 border-r border-slate-100">
+            {/* 3 Horizontal Trust Badges (Mobile Responsive) */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-2 py-3.5 border-y border-slate-200 text-left bg-slate-50/60 sm:bg-transparent rounded-xl sm:rounded-none px-3.5 sm:px-0">
+              <div className="flex items-center gap-2.5 sm:gap-2 sm:pr-2 sm:border-r border-slate-200">
                 <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
                   <Award className="w-4 h-4" />
                 </div>
                 <div className="leading-tight">
                   <p className="text-[11px] font-bold text-slate-800">Uso Vitalício</p>
-                  <p className="text-[10px] text-slate-500">Sem mensalidades</p>
+                  <p className="text-[10px] text-slate-500">Sem mensalidades recorrentes</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 px-1 border-r border-slate-100">
+              <div className="flex items-center gap-2.5 sm:gap-2 sm:px-1 sm:border-r border-slate-200">
                 <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
                   <Monitor className="w-4 h-4" />
                 </div>
@@ -841,18 +840,18 @@ export const ProductDetail: React.FC = () => {
                     {product.isSubscription ? 'Acesso Oficial' : 'Ativação Garantida'}
                   </p>
                   <p className="text-[10px] text-slate-500">
-                    {product.isSubscription ? 'Conta verificada' : '30 dias de suporte'}
+                    {product.isSubscription ? 'Conta verificada' : '30 dias de suporte técnico'}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 pl-1">
+              <div className="flex items-center gap-2.5 sm:gap-2 sm:pl-1">
                 <div className="w-8 h-8 rounded-full bg-sky-50 text-sky-600 flex items-center justify-center shrink-0">
                   <Globe className="w-4 h-4" />
                 </div>
                 <div className="leading-tight">
                   <p className="text-[11px] font-bold text-slate-800">Entrega Digital</p>
-                  <p className="text-[10px] text-slate-500">Direto no seu e-mail</p>
+                  <p className="text-[10px] text-slate-500">Link no seu e-mail e WhatsApp</p>
                 </div>
               </div>
             </div>
@@ -1125,83 +1124,102 @@ export const ProductDetail: React.FC = () => {
         </div>
 
         {/* =================================================================== */}
-        {/* RECLAME AQUI TRUST BAR (Replacing Trustpilot with dead links)        */}
+        {/* TRUSTPILOT OFFICIAL REVIEWS BAR                                     */}
         {/* =================================================================== */}
         <div className="my-10 py-6 px-4 sm:px-6 bg-white rounded-2xl border border-slate-200/80 shadow-xs">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-            {/* Left Summary Column */}
+            {/* Left Summary: Trustpilot Official Card */}
             <div className="lg:col-span-3 flex flex-col items-center text-center border-b lg:border-b-0 lg:border-r border-slate-200 pb-4 lg:pb-0 lg:pr-4">
-              <a
-                href="#reclame-aqui"
-                onClick={(e) => e.preventDefault()}
-                className="space-y-1.5 cursor-pointer group"
+              <button
+                type="button"
+                onClick={() => setIsGuaranteesModalOpen(true)}
+                className="space-y-2 cursor-pointer group text-center"
               >
-                <p className="font-display font-extrabold text-lg text-slate-900">Excelente</p>
+                <p className="font-display font-extrabold text-xl text-slate-900 tracking-tight">Excelente</p>
                 <div className="flex items-center justify-center gap-1">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <span
-                      key={s}
-                      className="w-6 h-6 bg-[#00b67a] text-white flex items-center justify-center rounded-[3px]"
-                    >
-                      <Star className="w-4 h-4 fill-white text-white" />
-                    </span>
-                  ))}
+                  <TrustpilotStars count={5} size="w-6 h-6" starSize="w-3.5 h-3.5" />
                 </div>
-                <p className="text-[11px] text-slate-500">
-                  Baseado em <span className="underline font-semibold">avaliações verificadas</span>
+                <p className="text-xs text-slate-600">
+                  Com base em <span className="underline font-semibold text-slate-900">1.782 avaliações</span>
                 </p>
-                <div className="pt-1 flex items-center justify-center gap-1.5">
-                  <span className="w-5 h-5 rounded-full bg-[#00b67a] text-white flex items-center justify-center font-black text-[10px]">
-                    RA
-                  </span>
-                  <span className="font-display font-black text-sm text-slate-900 tracking-tight">
-                    Reclame<span className="text-[#00b67a]">AQUI</span>
-                  </span>
+                <div className="pt-1 flex items-center justify-center">
+                  <TrustpilotLogo starSize="w-5 h-5" textSize="text-base" />
                 </div>
-              </a>
+              </button>
             </div>
 
-            {/* Right Carousel of 4 Reclame AQUI Store Reviews */}
+            {/* Right Carousel of Store Reviews */}
             <div className="lg:col-span-9 relative flex items-center">
               <button
                 type="button"
                 onClick={() =>
-                  setReclameSlideIndex((prev) =>
-                    prev === 0 ? RECLAME_AQUI_REVIEWS.length - 1 : prev - 1
+                  setTrustpilotSlideIndex((prev) =>
+                    prev === 0 ? TRUSTPILOT_REVIEWS.length - 1 : prev - 1
                   )
                 }
-                className="w-7 h-7 rounded-full border border-slate-300 bg-white text-slate-600 hover:bg-slate-100 flex items-center justify-center shrink-0 mr-2 cursor-pointer"
+                className="w-8 h-8 rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0 mr-2 cursor-pointer shadow-2xs"
                 aria-label="Avaliação anterior"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5 flex-1 overflow-hidden">
+              {/* Mobile (1 card per slide) */}
+              <div className="block sm:hidden flex-1 overflow-hidden">
+                {(() => {
+                  const item = TRUSTPILOT_REVIEWS[trustpilotSlideIndex % TRUSTPILOT_REVIEWS.length];
+                  return (
+                    <div
+                      key={item.id}
+                      className="p-4 rounded-xl bg-slate-50/80 border border-slate-100 text-left space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex gap-0.5">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <span
+                              key={star}
+                              className="w-3.5 h-3.5 flex items-center justify-center rounded-[2px] bg-[#00B67A]"
+                            >
+                              <Star className="w-2.5 h-2.5 fill-white text-white" />
+                            </span>
+                          ))}
+                        </div>
+                        <span className="text-[10px] text-slate-500 flex items-center gap-1 font-semibold">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#00B67A]" /> Verificado no Trustpilot
+                        </span>
+                      </div>
+                      <p className="text-xs font-bold text-slate-900">{item.title}</p>
+                      <p className="text-xs text-slate-600 leading-relaxed">{item.comment}</p>
+                      <p className="text-[10px] text-slate-400 font-medium pt-1">
+                        <span className="font-semibold text-slate-700">{item.author}</span>, {item.timeAgo}
+                      </p>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* Tablet & Desktop (4 cards per slide) */}
+              <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-4 gap-3.5 flex-1 overflow-hidden">
                 {[0, 1, 2, 3].map((offset) => {
                   const item =
-                    RECLAME_AQUI_REVIEWS[(reclameSlideIndex + offset) % RECLAME_AQUI_REVIEWS.length];
+                    TRUSTPILOT_REVIEWS[(trustpilotSlideIndex + offset) % TRUSTPILOT_REVIEWS.length];
                   return (
-                    <a
+                    <div
                       key={item.id}
-                      href="#reclame-aqui"
-                      onClick={(e) => e.preventDefault()}
-                      className="block p-3 rounded-xl bg-slate-50/70 hover:bg-slate-100/70 border border-slate-100 transition-colors text-left space-y-1.5 cursor-pointer"
+                      className="p-3 rounded-xl bg-slate-50/70 border border-slate-100 text-left space-y-1.5"
                     >
                       <div className="flex items-center gap-1.5">
                         <div className="flex gap-0.5">
                           {[1, 2, 3, 4, 5].map((star) => (
                             <span
                               key={star}
-                              className={`w-3.5 h-3.5 flex items-center justify-center rounded-[2px] ${
-                                star <= item.rating ? 'bg-[#00b67a]' : 'bg-slate-300'
-                              }`}
+                              className="w-3.5 h-3.5 flex items-center justify-center rounded-[2px] bg-[#00B67A]"
                             >
                               <Star className="w-2.5 h-2.5 fill-white text-white" />
                             </span>
                           ))}
                         </div>
                         <span className="text-[10px] text-slate-500 flex items-center gap-0.5 font-semibold">
-                          <CheckCircle2 className="w-3 h-3 text-[#00b67a]" /> Verificado
+                          <CheckCircle2 className="w-3 h-3 text-[#00B67A]" /> Verificado
                         </span>
                       </div>
 
@@ -1213,7 +1231,7 @@ export const ProductDetail: React.FC = () => {
                         <span className="font-semibold text-slate-600">{item.author}</span>,{' '}
                         {item.timeAgo}
                       </p>
-                    </a>
+                    </div>
                   );
                 })}
               </div>
@@ -1221,9 +1239,9 @@ export const ProductDetail: React.FC = () => {
               <button
                 type="button"
                 onClick={() =>
-                  setReclameSlideIndex((prev) => (prev + 1) % RECLAME_AQUI_REVIEWS.length)
+                  setTrustpilotSlideIndex((prev) => (prev + 1) % TRUSTPILOT_REVIEWS.length)
                 }
-                className="w-7 h-7 rounded-full border border-slate-300 bg-white text-slate-600 hover:bg-slate-100 flex items-center justify-center shrink-0 ml-2 cursor-pointer"
+                className="w-8 h-8 rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0 ml-2 cursor-pointer shadow-2xs"
                 aria-label="Próxima avaliação"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -1232,13 +1250,13 @@ export const ProductDetail: React.FC = () => {
           </div>
 
           <div className="mt-3 pt-2 border-t border-slate-100 text-center lg:text-left lg:pl-[26%]">
-            <a
-              href="#reclame-aqui"
-              onClick={(e) => e.preventDefault()}
-              className="text-[11px] text-slate-500 hover:text-slate-700 cursor-pointer"
+            <button
+              type="button"
+              onClick={() => setIsGuaranteesModalOpen(true)}
+              className="text-[11px] text-slate-500 hover:text-slate-800 cursor-pointer font-medium"
             >
-              Mostrando nossas avaliações de clientes verificados no Reclame AQUI
-            </a>
+              Mostrando nossas avaliações de clientes verificados no <strong>Trustpilot</strong>
+            </button>
           </div>
         </div>
 
@@ -2653,12 +2671,48 @@ export const ProductDetail: React.FC = () => {
         </div>
       )}
 
+      <TrustGuaranteesModal isOpen={isGuaranteesModalOpen} onClose={() => setIsGuaranteesModalOpen(false)} />
+
       <CheckoutModal
         product={product}
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
         initialSubOption={selectedPlan}
       />
+
+      {/* Sticky Mobile Purchase Bar (Optimized for iPhone / Mobile) */}
+      <div className="fixed bottom-0 left-0 right-0 z-30 sm:hidden bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2.5 flex items-center justify-between gap-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+        <div className="min-w-0">
+          <p className="text-xs font-bold text-slate-900 truncate leading-tight">
+            {product.name}
+          </p>
+          <div className="flex items-baseline gap-1.5 mt-0.5">
+            <span className="font-black text-base text-[#0b5ed7] leading-none">
+              {formattedPrice}
+            </span>
+            {displayOriginalPrice > displayPrice && (
+              <span className="text-[10px] text-slate-400 line-through">
+                {formattedOriginalPrice}
+              </span>
+            )}
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            addToCart(
+              product,
+              selectedLicenseOption ? 'avulso' : selectedPlan,
+              selectedLicenseOption,
+              quantity
+            );
+          }}
+          className="shrink-0 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs py-2.5 px-5 rounded-xl shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+        >
+          <ShoppingCart className="w-4 h-4" />
+          <span>Comprar</span>
+        </button>
+      </div>
     </div>
   );
 };

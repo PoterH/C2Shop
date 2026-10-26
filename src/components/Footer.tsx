@@ -279,6 +279,22 @@ export const Footer: React.FC = () => {
                 Segurança & Parceiros
               </span>
               <div className="flex flex-wrap gap-3 justify-center lg:justify-end items-center">
+                {/* Selo Oficial Trustpilot */}
+                <div className="flex items-center gap-2 bg-slate-900/60 border border-[#00B67A]/40 rounded-xl px-3 py-1.5 hover:border-[#00B67A] transition-all shadow-sm" title="Avaliações Verificadas no Trustpilot">
+                  <div className="w-6 h-6 rounded bg-[#00B67A] flex items-center justify-center shrink-0">
+                    <svg viewBox="0 0 20 20" className="w-3.5 h-3.5 text-white fill-white">
+                      <path d="M10 1.5l2.47 5.01 5.53.8-4 3.9 1 5.51L10 14.12l-5 2.6 1-5.51-4-3.9 5.53-.8L10 1.5z" />
+                    </svg>
+                  </div>
+                  <div className="text-left">
+                    <p className="text-[10px] font-black text-white leading-tight flex items-center gap-1">
+                      <span>Trustpilot</span>
+                      <span className="text-[#00B67A] font-extrabold">4.9/5</span>
+                    </p>
+                    <p className="text-[8px] text-slate-400 leading-none mt-0.5">Avaliações Verificadas</p>
+                  </div>
+                </div>
+
                 {/* Selo Corel Partner */}
                 <div className="flex items-center justify-center bg-white rounded-xl overflow-hidden border border-slate-200/20 hover:border-sky-500/40 transition-all shadow-sm" title="Corel Authorized Partner">
                   <div className="relative w-[100px] h-[42px] flex items-center justify-center">

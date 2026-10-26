@@ -807,6 +807,22 @@ export const Header: React.FC = () => {
           onClick={(e) => e.stopPropagation()}
         >
           <nav className="flex flex-col space-y-3 text-left">
+            {/* Drawer Top Header with Logo and Close Button */}
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <img src="/images/logo.png" alt="C2Tech" className="w-7 h-7 rounded-lg object-cover" />
+                <span className="font-display font-black text-slate-900 text-lg">C2Tech</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 cursor-pointer"
+                aria-label="Fechar menu"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
             <Link
               to="/"
               className="py-2 text-base font-bold text-slate-900 border-b border-slate-100"
