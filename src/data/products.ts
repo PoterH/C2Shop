@@ -456,20 +456,45 @@ export const products: Product[] = [
   {
     id: 'eberick_builder_2025',
     slug: 'eberick-builder-2025',
-    name: 'AltoQi Eberick + Builder 2025 Infinity',
+    name: 'AltoQi Eberick + Builder',
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows',
-    version: '2025.04 (64-bits)',
-    description: 'Solução nacional integrada para cálculo estrutural e projetos de instalações BIM. Inclui todos os módulos avançados e Construtor de Armadura.',
-    longDescription: 'O AltoQi Eberick + Builder 2025 Infinity é o combo definitivo de ferramentas para engenharia civil no Brasil. O Eberick realiza análise estrutural e detalhamento, com os módulos inclusos de: Concreto Armado, Alvenaria Estrutural, Pré-moldados, Perfis metálicos e concreto protendido. O Builder cuida das instalações prediais com os módulos de: Elétrico, Hidráulico, Sanitário, SPDA, Incêndio, Gás, climatização e alvenaria. Além de tudo isso, o pacote já conta com o Construtor de armadura incluso, garantindo detalhamento excepcional em projetos BIM.',
-    price: 367.90,
-    originalPrice: 549.00,
-    checkoutUrl: 'https://pay.cakto.com.br/7jw8eyi_847943',
+    version: '2024.12 Plena e 2025.04 Infinity',
+    description: 'Solução nacional integrada para cálculo estrutural e projetos de instalações BIM. Disponível nas versões Plena 2024.12 e Infinity 2025.04 com Construtor de Armadura.',
+    longDescription: 'O AltoQi Eberick + Builder é o combo definitivo de ferramentas para engenharia civil no Brasil. O Eberick realiza análise estrutural e detalhamento (Concreto Armado, Alvenaria Estrutural, Pré-moldados, Perfis metálicos e Concreto protendido). O Builder cuida das instalações prediais (Elétrico, Hidráulico, Sanitário, SPDA, Incêndio, Gás e Climatização). Escolha entre a versão Plena 2024.12 ou a versão Infinity 2025.04 com Construtor de Armadura incluso.',
+    price: 227.90,
+    originalPrice: 449.00,
+    checkoutUrl: 'https://pay.cakto.com.br/33tbjgj',
     imageUrl: '/images/products/eberick-builder-2025.png',
+    gallery: [
+      '/images/products/eberick-builder-2025.png',
+      '/images/products/eberick-builder-2024-plena.png',
+      '/images/products/eberick-builder-2025-infinity.png'
+    ],
+    licenseOptions: [
+      {
+        quantity: 2024,
+        label: 'Versão Plena 2024.12',
+        price: 227.90,
+        originalPrice: 449.00,
+        checkoutUrl: 'https://pay.cakto.com.br/33tbjgj',
+        downloadSlug: 'eberick-builder-2024-plena',
+        imageUrl: '/images/products/eberick-builder-2024-plena.png'
+      },
+      {
+        quantity: 2025,
+        label: 'Versão Infinity 2025.04',
+        price: 367.90,
+        originalPrice: 549.00,
+        checkoutUrl: 'https://pay.cakto.com.br/7jw8eyi_847943',
+        downloadSlug: 'eberick-builder-2025',
+        imageUrl: '/images/products/eberick-builder-2025-infinity.png'
+      }
+    ],
     features: [
       'Eberick: Concreto, Alvenaria, Pré-moldados, Metálicos e Protendido',
       'Builder: Elétrico, Hidráulico, Sanitário, SPDA, Incêndio, Gás e Clima',
-      'Construtor de armadura 100% incluso',
+      'Opção Plena 2024.12 ou Infinity 2025.04 com Construtor de armadura',
       'Acesso vitalício para uso ilimitado',
       'Instalação assistida inclusa',
       'Entrega automática no e-mail após o pagamento',
@@ -481,7 +506,7 @@ export const products: Product[] = [
       cpu: 'Intel Core i5 / AMD Ryzen 5 ou superior (Recomendado i7/Ryzen 7)',
       ram: '8 GB (Recomendável: 16 GB)',
       gpu: 'Placa dedicada com suporte a OpenGL 3.3',
-      storage: '10 GB de espaço livre'
+      storage: '10 GB de espaço disponível em SSD'
     }
   },
   {
