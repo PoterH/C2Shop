@@ -142,6 +142,7 @@ export const products: Product[] = [
         price: 67.90,
         originalPrice: 129.90,
         checkoutUrl: 'https://pay.cakto.com.br/e76zoav',
+        driveUrl: 'https://drive.google.com/drive/folders/1dxBJGU_lQAdXzSNg2SKlZWDxaLPbtq8e?usp=drive_link',
         downloadSlug: 'autocad-2019-windows',
         imageUrl: '/images/products/autocad-2019-windows.png',
         gallery: ['/images/products/autocad-2019-windows.png']
@@ -154,6 +155,7 @@ export const products: Product[] = [
         price: 117.90,
         originalPrice: 189.90,
         checkoutUrl: 'https://pay.cakto.com.br/89pnrua',
+        driveUrl: 'https://drive.google.com/drive/folders/1Tyq7yNlz5jIzZGP-l6p8CYO9nxIsH1bS?usp=drive_link',
         downloadSlug: 'autocad-2024-windows',
         imageUrl: '/images/products/autocad-2024-windows.png',
         gallery: ['/images/products/autocad-2024-windows.png']
@@ -166,6 +168,7 @@ export const products: Product[] = [
         price: 127.90,
         originalPrice: 209.00,
         checkoutUrl: 'https://pay.cakto.com.br/5d9i7rx',
+        driveUrl: 'https://drive.google.com/drive/folders/1wSjViIX_14R6SbCGP7f_2vPxXbttFi_S?usp=drive_link',
         downloadSlug: 'autocad-2025-windows',
         imageUrl: '/images/products/autocad-2025-windows.png',
         gallery: ['/images/products/autocad-2025-windows.png']
@@ -178,6 +181,7 @@ export const products: Product[] = [
         price: 137.90,
         originalPrice: 224.90,
         checkoutUrl: 'https://pay.cakto.com.br/t38dbcv',
+        driveUrl: 'https://drive.google.com/drive/folders/1dPfNigOwUAm9HzpQJopKDrB-dLKhirt6?usp=drive_link',
         downloadSlug: 'autocad-2026-windows',
         imageUrl: '/images/products/autocad-2026-windows.png',
         gallery: ['/images/products/autocad-2026-windows.png']
@@ -1134,6 +1138,7 @@ export const products: Product[] = [
         price: 57.90,
         originalPrice: 108.90,
         checkoutUrl: 'https://pay.cakto.com.br/3cwhgqy',
+        driveUrl: 'https://drive.google.com/drive/folders/1EZTYmNQQMRlPtidtKx3IQxpK5DU3KfRw?usp=drive_link',
         downloadSlug: 'coreldraw-2022-windows',
         imageUrl: '/images/products/coreldraw-2022-windows.png'
       },
@@ -1145,6 +1150,7 @@ export const products: Product[] = [
         price: 67.90,
         originalPrice: 121.00,
         checkoutUrl: 'https://pay.cakto.com.br/oai5wem',
+        driveUrl: 'https://drive.google.com/drive/folders/1YcJLz4ICNlyukNyPTZy_-oSSlgNkB8YW?usp=drive_link',
         downloadSlug: 'coreldraw-2023-windows',
         imageUrl: '/images/products/coreldraw-2023-windows.png'
       },
@@ -1156,6 +1162,7 @@ export const products: Product[] = [
         price: 77.90,
         originalPrice: 138.90,
         checkoutUrl: 'https://pay.cakto.com.br/3422jba',
+        driveUrl: 'https://drive.google.com/drive/folders/1h0NRYIH_-d66gOEFEORTsuji6Gcy-rer?usp=drive_link',
         downloadSlug: 'coreldraw-2024-windows',
         imageUrl: '/images/products/coreldraw-2024-windows.png'
       },
