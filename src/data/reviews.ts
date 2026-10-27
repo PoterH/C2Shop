@@ -1223,4 +1223,51 @@ export const reviewsData: Record<string, Review[]> = {
       comment: "Instalação tranquila. Obrigado C2Tech."
     }
   ]
+,
+  altoqi_visus_2026: [
+    {
+      author: "Eng. Matheus Guimarães",
+      rating: 5,
+      date: "3 dias atrás",
+      comment: "Excelente para orçamentação e quantitativos BIM. Conectou perfeitamente com os projetos do Eberick 2026 e acelerou muito a elaboração das nossas planilhas de obra."
+    },
+    {
+      author: "Thiago Silveira",
+      rating: 5,
+      date: "1 semana atrás",
+      comment: "Instalação rápida com o tutorial em vídeo, tudo funcionando 100%. O suporte no WhatsApp tirou uma dúvida sobre a exportação IFC na mesma hora."
+    },
+    {
+      author: "Renato Barcellos",
+      rating: 4,
+      date: "2 semanas atrás",
+      comment: "Software muito completo para planejamento 4D/5D. Programa roda muito fluido com os modelos da AltoQi. Recomendo."
+    },
+    {
+      author: "Eng. André F. Costa",
+      rating: 5,
+      date: "1 mês atrás",
+      comment: "Extração de quantitativos precisa e ágil. Economizou dias de trabalho manual na engenharia de custos."
+    }
+  ],
+  '3ds_max_2027': [
+    {
+      author: "Lucas Andrade",
+      rating: 5,
+      date: "2 dias atrás",
+      comment: "Top demais, versão 2027 rodando liso com V-Ray e Corona Renderer. O tutorial em vídeo ajudou muito na ativação."
+    },
+    {
+      author: "Diego F. Martins",
+      rating: 5,
+      date: "5 dias atrás",
+      comment: "Comprei com receio mas me surpreendi. Entrega imediata no email e WhatsApp. Já estou renderizando projetos do escritório."
+    },
+    {
+      author: "Gabriel Sampaio",
+      rating: 4,
+      date: "12 dias atrás",
+      comment: "Muito estável, sem travamentos no Windows 11. Suporte tirou uma dúvida rápida sobre o instalador. Vale cada centavo."
+    }
+  ],
 };

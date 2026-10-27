@@ -329,6 +329,58 @@ export const products: Product[] = [
     }
   },
   {
+    id: '3ds_max_2027',
+    keywords: [
+      '3ds max',
+      '3ds',
+      '3dsmax',
+      'autodesk 3ds max',
+      'autodesk 3ds',
+      '3ds max 2027',
+      'autodesk',
+      '3d',
+      'modelagem',
+      'render',
+      'renderizacao',
+      'animacao',
+      'vray',
+      'coronarender',
+      'design',
+      'arquitetura',
+      '2027'
+    ],
+    slug: 'autodesk-3ds-max-2027',
+    name: 'Autodesk 3ds Max 2027',
+    category: 'Engenharia e Arquitetura',
+    compatibility: 'Windows',
+    version: '2027 (64-bits)',
+    description: 'Software profissional líder mundial para modelagem 3D, animação, efeitos visuais e renderização de maquetes eletrônicas.',
+    longDescription: 'O Autodesk 3ds Max 2027 é a ferramenta padrão da indústria global para modelagem tridimensional, renderização fotorrealista e visualização arquitetônica (ArchViz). Com recursos de última geração para iluminação avançada, texturização PBR, simulações físicas e compatibilidade nativa com os motores V-Ray, Corona Renderer e Arnold, você eleva a qualidade de seus projetos e maquetes ao nível máximo.',
+    price: 167.90,
+    originalPrice: 289.90,
+    checkoutUrl: 'https://pay.cakto.com.br/mz6wwv6',
+    driveUrl: 'https://drive.google.com/drive/folders/1HcPHfbBfsBrf3pjgPAgMuTPSd1ML2QY5?usp=drive_link',
+    imageUrl: '/images/products/3ds-max-2027.png',
+    gallery: [
+      '/images/products/3ds-max-2027.png'
+    ],
+    features: [
+      'Versão completa e funcional sem restrições',
+      'Ativação permanente (vitalícia sem mensalidades)',
+      'Suporte aos principais renderizadores (V-Ray, Corona, Arnold)',
+      'Acompanha vídeo tutorial passo a passo de instalação',
+      'Entrega imediata no e-mail e WhatsApp após a confirmação',
+      'Suporte técnico remoto incluso'
+    ],
+    requirements: {
+      os: 'Windows 11 ou Windows 10 (64-bits) versão 1809 ou superior',
+      cpu: 'Processador Intel Core i5/i7/i9 ou AMD Ryzen 5/7/9 multi-core 64-bits',
+      ram: 'Mínimo 8 GB de RAM (Recomendado: 16 GB a 32 GB)',
+      gpu: 'Placa gráfica dedicada de 4 GB VRAM ou superior compatível com DirectX 12',
+      storage: '10 GB de espaço livre em disco para download e instalação (SSD recomendado)'
+    }
+  },
+  {
     id: 'inventor_pro_2027',
     keywords: ['autodesk', 'engenharia', 'arquitetura', 'cad', 'bim'],
     slug: 'inventor-professional-2027',

@@ -203,24 +203,24 @@ export const ProductDetail: React.FC = () => {
   }, [product]);
 
   const averageRating = useMemo(() => {
-    if (productReviews.length === 0) return '4.8';
+    if (productReviews.length === 0) return '0.0';
     const sum = productReviews.reduce((acc, r) => acc + r.rating, 0);
     return (sum / productReviews.length).toFixed(1);
   }, [productReviews]);
 
   const ratingBreakdown = useMemo(() => {
-    const total = productReviews.length || 1;
+    const total = productReviews.length;
     const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
     productReviews.forEach((r) => {
       const star = Math.min(5, Math.max(1, Math.round(r.rating))) as 1 | 2 | 3 | 4 | 5;
       counts[star] += 1;
     });
     return [
-      { stars: 5, label: 'Excelente', count: counts[5], pct: (counts[5] / total) * 100 },
-      { stars: 4, label: 'Bom', count: counts[4], pct: (counts[4] / total) * 100 },
-      { stars: 3, label: 'Médio', count: counts[3], pct: (counts[3] / total) * 100 },
-      { stars: 2, label: 'Ruim', count: counts[2], pct: (counts[2] / total) * 100 },
-      { stars: 1, label: 'Péssimo', count: counts[1], pct: (counts[1] / total) * 100 },
+      { stars: 5, label: 'Excelente', count: counts[5], pct: total > 0 ? (counts[5] / total) * 100 : 0 },
+      { stars: 4, label: 'Bom', count: counts[4], pct: total > 0 ? (counts[4] / total) * 100 : 0 },
+      { stars: 3, label: 'Médio', count: counts[3], pct: total > 0 ? (counts[3] / total) * 100 : 0 },
+      { stars: 2, label: 'Ruim', count: counts[2], pct: total > 0 ? (counts[2] / total) * 100 : 0 },
+      { stars: 1, label: 'Péssimo', count: counts[1], pct: total > 0 ? (counts[1] / total) * 100 : 0 },
     ];
   }, [productReviews]);
 
