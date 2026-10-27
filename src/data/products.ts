@@ -590,14 +590,14 @@ export const products: Product[] = [
     ],
     licenseOptions: [
       {
-        quantity: 2026,
-        label: 'Versão Infinity 2026.05',
-        price: 627.90,
-        originalPrice: 949.00,
-        checkoutUrl: 'https://pay.cakto.com.br/8x4fckr',
-        driveUrl: 'https://drive.google.com/drive/folders/1Agg7qd7JFCAKsfFdgsoEUnGDMgDnZ_B0?usp=drive_link',
-        downloadSlug: 'eberick-builder-2026-infinity',
-        imageUrl: '/images/products/eberick-builder-2026-infinity.png'
+        quantity: 2024,
+        label: 'Versão Plena 2024.12',
+        price: 227.90,
+        originalPrice: 449.00,
+        checkoutUrl: 'https://pay.cakto.com.br/33tbjgj',
+        driveUrl: 'https://drive.google.com/drive/folders/1AOD3jP7Qkyk5eqx65uBEQMyCYdI1dfNn?usp=drive_link',
+        downloadSlug: 'eberick-builder-2024-plena',
+        imageUrl: '/images/products/eberick-builder-2024-plena.png'
       },
       {
         quantity: 2025,
@@ -609,14 +609,14 @@ export const products: Product[] = [
         imageUrl: '/images/products/eberick-builder-2025-infinity.png'
       },
       {
-        quantity: 2024,
-        label: 'Versão Plena 2024.12',
-        price: 227.90,
-        originalPrice: 449.00,
-        checkoutUrl: 'https://pay.cakto.com.br/33tbjgj',
-        driveUrl: 'https://drive.google.com/drive/folders/1AOD3jP7Qkyk5eqx65uBEQMyCYdI1dfNn?usp=drive_link',
-        downloadSlug: 'eberick-builder-2024-plena',
-        imageUrl: '/images/products/eberick-builder-2024-plena.png'
+        quantity: 2026,
+        label: 'Versão Infinity 2026.05',
+        price: 627.90,
+        originalPrice: 949.00,
+        checkoutUrl: 'https://pay.cakto.com.br/8x4fckr',
+        driveUrl: 'https://drive.google.com/drive/folders/1Agg7qd7JFCAKsfFdgsoEUnGDMgDnZ_B0?usp=drive_link',
+        downloadSlug: 'eberick-builder-2026-infinity',
+        imageUrl: '/images/products/eberick-builder-2026-infinity.png'
       }
     ],
     features: [
@@ -639,14 +639,14 @@ export const products: Product[] = [
   },
   {
     id: 'altoqi_visus_2026',
-    keywords: ['visus', 'altoqi', 'visus 2026', 'eberick', 'builder', 'orcamento', 'planejamento', 'bim', '4d', '5d', 'engenharia', '2026'],
+    keywords: ['visus', 'altoqi', 'visus 2026', 'visus 2026-06', '2026-06', '2026.06', 'altoqi visus 2026-06', 'eberick', 'builder', 'orcamento', 'planejamento', 'bim', '4d', '5d', 'engenharia', '2026'],
     slug: 'altoqi-visus-2026',
-    name: 'AltoQi Visus 2026',
+    name: 'AltoQi Visus 2026-06',
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows',
-    version: '2026.06 (64-bits)',
-    description: 'Plataforma BIM completa da AltoQi para planejamento, quantitativos e orçamentação integrada com Eberick e modelos IFC.',
-    longDescription: 'O AltoQi Visus 2026 (versão 2026.06) é a solução avançada da AltoQi para gestão, planejamento e orçamentação BIM (4D e 5D). Conectado nativamente aos projetos do Eberick e Builder ou arquivos IFC de qualquer plataforma BIM, o Visus automatiza a extração precisa de quantitativos, custos de obra, cronogramas físico-financeiros e simulação de avanço construtivo com precisão profissional.',
+    version: '2026-06 (64-bits)',
+    description: 'Plataforma BIM completa da AltoQi (Versão 2026-06) para planejamento, quantitativos e orçamentação integrada com Eberick e modelos IFC.',
+    longDescription: 'O AltoQi Visus 2026 (Versão 2026-06) é a solução avançada da AltoQi para gestão, planejamento e orçamentação BIM (4D e 5D). Conectado nativamente aos projetos do Eberick e Builder ou arquivos IFC de qualquer plataforma BIM, o Visus automatiza a extração precisa de quantitativos, custos de obra, cronogramas físico-financeiros e simulação de avanço construtivo com precisão profissional.',
     price: 267.90,
     originalPrice: 429.90,
     checkoutUrl: 'https://pay.cakto.com.br/3f5thmj',
@@ -656,7 +656,7 @@ export const products: Product[] = [
       '/images/products/altoqi-visus-2026.png'
     ],
     features: [
-      'Versão completa e funcional da edição 2026.06',
+      'Versão completa e funcional da edição 2026-06',
       'Integração direta com AltoQi Eberick, Builder e modelos IFC',
       'Planejamento 4D e orçamentação 5D automatizada',
       'Acompanha vídeo tutorial passo a passo de instalação',
@@ -763,17 +763,16 @@ export const products: Product[] = [
     ],
     licenseOptions: [
       {
-        quantity: 20271,
-        label: 'Windows - 2027.a',
+        quantity: 20251,
+        label: 'Windows - 2025.d (Todos os Idiomas)',
         platform: 'Windows',
-        year: '2027.a',
-        price: 527.90,
-        originalPrice: 799.00,
-        checkoutUrl: 'https://pay.cakto.com.br/qksobr6',
-        driveUrl: 'https://drive.google.com/drive/folders/1wp0tXGCwPnHHyX2n9oGhvsenjqJwwfgN?usp=drive_link',
-        downloadSlug: 'cypecad-2027',
-        imageUrl: '/images/products/cype-2027.png',
-        gallery: ['/images/products/cype-2027.png']
+        year: '2025.d',
+        price: 247.90,
+        originalPrice: 378.90,
+        checkoutUrl: 'https://pay.cakto.com.br/xzemgyx',
+        downloadSlug: 'cypecad-2025',
+        imageUrl: '/images/products/cypecad-2025.png',
+        gallery: ['/images/products/cypecad-2025.png']
       },
       {
         quantity: 20261,
@@ -788,16 +787,17 @@ export const products: Product[] = [
         gallery: ['/images/products/cypecad-2026.png']
       },
       {
-        quantity: 20251,
-        label: 'Windows - 2025.d (Todos os Idiomas)',
+        quantity: 20271,
+        label: 'Windows - 2027.a',
         platform: 'Windows',
-        year: '2025.d',
-        price: 247.90,
-        originalPrice: 378.90,
-        checkoutUrl: 'https://pay.cakto.com.br/xzemgyx',
-        downloadSlug: 'cypecad-2025',
-        imageUrl: '/images/products/cypecad-2025.png',
-        gallery: ['/images/products/cypecad-2025.png']
+        year: '2027.a',
+        price: 527.90,
+        originalPrice: 799.00,
+        checkoutUrl: 'https://pay.cakto.com.br/qksobr6',
+        driveUrl: 'https://drive.google.com/drive/folders/1wp0tXGCwPnHHyX2n9oGhvsenjqJwwfgN?usp=drive_link',
+        downloadSlug: 'cypecad-2027',
+        imageUrl: '/images/products/cype-2027.png',
+        gallery: ['/images/products/cype-2027.png']
       }
     ],
     features: [
