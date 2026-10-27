@@ -524,27 +524,28 @@ export const products: Product[] = [
     name: 'AltoQi Eberick + Builder',
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows',
-    version: '2024.12 Plena e 2025.04 Infinity',
-    description: 'Solução nacional integrada para cálculo estrutural e projetos de instalações BIM. Disponível nas versões Plena 2024.12 e Infinity 2025.04 com Construtor de Armadura.',
-    longDescription: 'O AltoQi Eberick + Builder é o combo definitivo de ferramentas para engenharia civil no Brasil. O Eberick realiza análise estrutural e detalhamento (Concreto Armado, Alvenaria Estrutural, Pré-moldados, Perfis metálicos e Concreto protendido). O Builder cuida das instalações prediais (Elétrico, Hidráulico, Sanitário, SPDA, Incêndio, Gás e Climatização). Escolha entre a versão Plena 2024.12 ou a versão Infinity 2025.04 com Construtor de Armadura incluso.',
+    version: '2024.12 Plena, 2025.04 e 2026.05 Infinity',
+    description: 'Solução nacional integrada para cálculo estrutural e projetos de instalações BIM. Disponível nas versões Plena 2024.12, Infinity 2025.04 e a nova Infinity 2026.05.',
+    longDescription: 'O AltoQi Eberick + Builder é o combo definitivo de ferramentas para engenharia civil no Brasil. O Eberick realiza análise estrutural e detalhamento (Concreto Armado, Alvenaria Estrutural, Pré-moldados, Perfis metálicos e Concreto protendido). O Builder cuida das instalações prediais (Elétrico, Hidráulico, Sanitário, SPDA, Incêndio, Gás e Climatização). Escolha entre a versão Plena 2024.12, Infinity 2025.04 ou a nova Infinity 2026.05 com Construtor de Armadura incluso.',
     price: 227.90,
     originalPrice: 449.00,
     checkoutUrl: 'https://pay.cakto.com.br/33tbjgj',
-    imageUrl: '/images/products/eberick-builder-2025.png',
+    imageUrl: '/images/products/eberick-builder-2026-infinity.png',
     gallery: [
-      '/images/products/eberick-builder-2025.png',
-      '/images/products/eberick-builder-2024-plena.png',
-      '/images/products/eberick-builder-2025-infinity.png'
+      '/images/products/eberick-builder-2026-infinity.png',
+      '/images/products/eberick-builder-2025-infinity.png',
+      '/images/products/eberick-builder-2024-plena.png'
     ],
     licenseOptions: [
       {
-        quantity: 2024,
-        label: 'Versão Plena 2024.12',
-        price: 227.90,
-        originalPrice: 449.00,
-        checkoutUrl: 'https://pay.cakto.com.br/33tbjgj',
-        downloadSlug: 'eberick-builder-2024-plena',
-        imageUrl: '/images/products/eberick-builder-2024-plena.png'
+        quantity: 2026,
+        label: 'Versão Infinity 2026.05',
+        price: 627.90,
+        originalPrice: 949.00,
+        checkoutUrl: 'https://pay.cakto.com.br/8x4fckr',
+        driveUrl: 'https://drive.google.com/drive/folders/1Agg7qd7JFCAKsfFdgsoEUnGDMgDnZ_B0?usp=drive_link',
+        downloadSlug: 'eberick-builder-2026-infinity',
+        imageUrl: '/images/products/eberick-builder-2026-infinity.png'
       },
       {
         quantity: 2025,
@@ -554,6 +555,16 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/7jw8eyi_847943',
         downloadSlug: 'eberick-builder-2025',
         imageUrl: '/images/products/eberick-builder-2025-infinity.png'
+      },
+      {
+        quantity: 2024,
+        label: 'Versão Plena 2024.12',
+        price: 227.90,
+        originalPrice: 449.00,
+        checkoutUrl: 'https://pay.cakto.com.br/33tbjgj',
+        driveUrl: 'https://drive.google.com/drive/folders/1AOD3jP7Qkyk5eqx65uBEQMyCYdI1dfNn?usp=drive_link',
+        downloadSlug: 'eberick-builder-2024-plena',
+        imageUrl: '/images/products/eberick-builder-2024-plena.png'
       }
     ],
     features: [
@@ -574,6 +585,42 @@ export const products: Product[] = [
       storage: '10 GB de espaço disponível em SSD'
     }
   },
+  {
+    id: 'altoqi_visus_2026',
+    keywords: ['visus', 'altoqi', 'visus 2026', 'eberick', 'builder', 'orcamento', 'planejamento', 'bim', '4d', '5d', 'engenharia', '2026'],
+    slug: 'altoqi-visus-2026',
+    name: 'AltoQi Visus 2026',
+    category: 'Engenharia e Arquitetura',
+    compatibility: 'Windows',
+    version: '2026.06 (64-bits)',
+    description: 'Plataforma BIM completa da AltoQi para planejamento, quantitativos e orçamentação integrada com Eberick e modelos IFC.',
+    longDescription: 'O AltoQi Visus 2026 (versão 2026.06) é a solução avançada da AltoQi para gestão, planejamento e orçamentação BIM (4D e 5D). Conectado nativamente aos projetos do Eberick e Builder ou arquivos IFC de qualquer plataforma BIM, o Visus automatiza a extração precisa de quantitativos, custos de obra, cronogramas físico-financeiros e simulação de avanço construtivo com precisão profissional.',
+    price: 267.90,
+    originalPrice: 429.90,
+    checkoutUrl: 'https://pay.cakto.com.br/3f5thmj',
+    driveUrl: 'https://drive.google.com/drive/folders/1iB-8pJlcggopLS6QUQvee9Ef_SKgrvM2?usp=drive_link',
+    imageUrl: '/images/products/altoqi-visus-2026.png',
+    gallery: [
+      '/images/products/altoqi-visus-2026.png'
+    ],
+    features: [
+      'Versão completa e funcional da edição 2026.06',
+      'Integração direta com AltoQi Eberick, Builder e modelos IFC',
+      'Planejamento 4D e orçamentação 5D automatizada',
+      'Acompanha vídeo tutorial passo a passo de instalação',
+      'Ativação permanente para uso ilimitado sem mensalidades',
+      'Entrega digital imediata via e-mail e WhatsApp',
+      'Suporte técnico remoto incluso'
+    ],
+    requirements: {
+      os: 'Windows 11 ou Windows 10 (64-bits)',
+      cpu: 'Intel Core i5 / AMD Ryzen 5 ou superior (Recomendado i7/Ryzen 7)',
+      ram: '8 GB de memória RAM (Recomendado: 16 GB)',
+      gpu: 'Placa gráfica dedicada compatível com OpenGL 3.3 e DirectX 11/12',
+      storage: '8 GB de espaço livre em disco (SSD recomendado)'
+    }
+  },
+
   {
     id: 'archicad_30',
     keywords: ['archicad', '28', '29', '30', 'bra', 'arquitetura', 'bim', 'graphisoft', 'cad'],
@@ -643,31 +690,38 @@ export const products: Product[] = [
   },
   {
     id: 'cype_2026',
-    keywords: ['cype', 'cypecad', 'cype3d', 'cypetherm', 'arquimedes', 'engenharia', 'arquitetura', 'estrutural', 'bim'],
+    keywords: ['cype', 'cypecad', 'cype 2027', 'cype3d', 'cypetherm', 'arquimedes', 'engenharia', 'arquitetura', 'estrutural', 'bim'],
     slug: 'cypecad-2026',
     name: 'CYPE (Completo)',
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows',
-    version: '2025.d e 2026.a (64-bits)',
+    version: '2025.d, 2026.a e 2027.a (64-bits)',
     description: 'Suíte completa com CYPECAD, CYPE 3D, CYPETHERM, Arquimedes e mais para cálculo estrutural e instalações.',
-    longDescription: 'O pacote CYPE Completo reúne em uma única instalação todos os módulos consagrados da CYPE Ingenieros, incluindo CYPECAD, CYPE 3D, CYPETHERM, Arquimedes, Gerador de Preços e projetos de instalações prediais compatíveis com as normas brasileiras (ABNT NBR). Importante sobre os idiomas: a edição CYPE 2026.a está disponível exclusivamente em Português Brasil (PT-BR), enquanto a edição CYPE 2025.d acompanha suporte a todos os idiomas (Português, Espanhol, Inglês, Francês, entre outros).',
+    longDescription: 'O pacote CYPE Completo reúne em uma única instalação todos os módulos consagrados da CYPE Ingenieros, incluindo CYPECAD, CYPE 3D, CYPETHERM, Arquimedes, Gerador de Preços e projetos de instalações prediais compatíveis com as normas brasileiras (ABNT NBR). Disponível nas versões 2025.d (todos os idiomas), 2026.a (Português Brasil) e a nova versão 2027.a.',
     price: 247.90,
     originalPrice: 378.90,
     checkoutUrl: 'https://pay.cakto.com.br/xzemgyx',
-    imageUrl: '/images/products/cypecad-2026.png',
+    imageUrl: '/images/products/cype-2027.png',
     ean13: '8388917943811',
     mpn: 'CYP-FULL-BR2026-C2',
+    gallery: [
+      '/images/products/cype-2027.png',
+      '/images/products/cypecad-2026.png',
+      '/images/products/cypecad-2025.png'
+    ],
     licenseOptions: [
       {
-        quantity: 20251,
-        label: 'Windows - 2025.d (Todos os Idiomas)',
+        quantity: 20271,
+        label: 'Windows - 2027.a',
         platform: 'Windows',
-        year: '2025.d',
-        price: 247.90,
-        originalPrice: 378.90,
-        checkoutUrl: 'https://pay.cakto.com.br/xzemgyx',
-        downloadSlug: 'cypecad-2025',
-        imageUrl: '/images/products/cypecad-2025.png'
+        year: '2027.a',
+        price: 527.90,
+        originalPrice: 799.00,
+        checkoutUrl: 'https://pay.cakto.com.br/qksobr6',
+        driveUrl: 'https://drive.google.com/drive/folders/1wp0tXGCwPnHHyX2n9oGhvsenjqJwwfgN?usp=drive_link',
+        downloadSlug: 'cypecad-2027',
+        imageUrl: '/images/products/cype-2027.png',
+        gallery: ['/images/products/cype-2027.png']
       },
       {
         quantity: 20261,
@@ -678,7 +732,20 @@ export const products: Product[] = [
         originalPrice: 469.00,
         checkoutUrl: 'https://pay.cakto.com.br/nyooujd_454658',
         downloadSlug: 'cypecad-2026',
-        imageUrl: '/images/products/cypecad-2026.png'
+        imageUrl: '/images/products/cypecad-2026.png',
+        gallery: ['/images/products/cypecad-2026.png']
+      },
+      {
+        quantity: 20251,
+        label: 'Windows - 2025.d (Todos os Idiomas)',
+        platform: 'Windows',
+        year: '2025.d',
+        price: 247.90,
+        originalPrice: 378.90,
+        checkoutUrl: 'https://pay.cakto.com.br/xzemgyx',
+        downloadSlug: 'cypecad-2025',
+        imageUrl: '/images/products/cypecad-2025.png',
+        gallery: ['/images/products/cypecad-2025.png']
       }
     ],
     features: [
@@ -1937,6 +2004,15 @@ export const products: Product[] = [
 ];
 
 export function getProductBySlug(slug: string): Product | undefined {
+  if (slug === '3ds-max' || slug === '3ds-max-2027' || slug === 'autodesk-3ds-max' || slug === '3dsmax') {
+    return products.find(p => p.slug === 'autodesk-3ds-max-2027');
+  }
+  if (slug === 'visus' || slug === 'altoqi-visus' || slug === 'visus-2026') {
+    return products.find(p => p.slug === 'altoqi-visus-2026');
+  }
+  if (slug === 'cypecad-2027' || slug === 'cype-2027') {
+    return products.find(p => p.slug === 'cypecad-2026');
+  }
   if (slug === 'revit' || slug === 'autodesk-revit' || slug === 'revit-2026' || slug === 'revit-2025' || slug === 'revit-2024') {
     return products.find(p => p.slug === 'revit-2027');
   }
