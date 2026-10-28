@@ -73,6 +73,55 @@ const AVATAR_COLORS = [
 ];
 
 
+
+const TRUSTPILOT_REVIEWS_EN = [
+  {
+    id: 1,
+    author: 'Carlos Eduardo M.',
+    timeAgo: '2 days ago',
+    rating: 4,
+    title: 'Super fast delivery and very clear video tutorial',
+    comment:
+      'Received the Google Drive download link in my email in less than 2 minutes. The step-by-step video made installation effortless.',
+  },
+  {
+    id: 2,
+    author: 'Fernanda S. Oliveira',
+    timeAgo: '4 days ago',
+    rating: 5,
+    title: 'Complete software and top-tier support',
+    comment:
+      'This is the second software I bought from C2Tech. Runs smoothly without any monthly fees, team is very helpful.',
+  },
+  {
+    id: 3,
+    author: 'Roberto Almeida Jr.',
+    timeAgo: '1 week ago',
+    rating: 5,
+    title: 'Outstanding value for money',
+    comment:
+      'Installed on my Mac and working like a charm. The video guide shows exactly how to activate without any headaches.',
+  },
+  {
+    id: 4,
+    author: 'Juliana Costa',
+    timeAgo: '1 week ago',
+    rating: 5,
+    title: 'Very good, highly recommend this store',
+    comment:
+      'Took about 5 minutes to arrive in my email because it landed in promotions, but the software is 100% full and lifetime.',
+  },
+  {
+    id: 5,
+    author: 'Marcos Vinícius T.',
+    timeAgo: '2 weeks ago',
+    rating: 5,
+    title: 'Best software store I have ever used',
+    comment:
+      'Guaranteed activation indeed! Had a quick question and they answered me on WhatsApp right away. 10/10.',
+  },
+];
+
 const TRUSTPILOT_REVIEWS_ES = [
   {
     id: 1,
@@ -247,7 +296,7 @@ export const ProductDetail: React.FC = () => {
 
   const { addToCart } = useCart();
   const { language, isInternational, t } = useLanguage();
-  const activeTrustpilotReviews = language === "es" ? TRUSTPILOT_REVIEWS_ES : language === "pt-PT" ? TRUSTPILOT_REVIEWS_PT : TRUSTPILOT_REVIEWS;
+  const activeTrustpilotReviews = language === "en" ? TRUSTPILOT_REVIEWS_EN : language === "es" ? TRUSTPILOT_REVIEWS_ES : language === "pt-PT" ? TRUSTPILOT_REVIEWS_PT : TRUSTPILOT_REVIEWS;
   const { formatPrice } = useCurrency();
   const location = useLocation();
   const hasProcessedCheckoutRef = useRef(false);

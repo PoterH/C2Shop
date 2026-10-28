@@ -266,7 +266,7 @@ export const Catalog: React.FC = () => {
               onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
               className="inline-flex items-center text-xs sm:text-sm font-semibold text-[#0066FF] hover:text-blue-700 hover:underline mt-2 transition-colors focus:outline-none"
             >
-              {isDescriptionExpanded ? (language === 'es' ? 'Leer menos' : 'Ler menos') : (language === 'es' ? 'Leer más...' : 'Ler mais...')}
+              {isDescriptionExpanded ? (language === 'en' ? 'Read less' : language === 'es' ? 'Leer menos' : 'Ler menos') : (language === 'en' ? 'Read more...' : language === 'es' ? 'Leer más...' : 'Ler mais...')}
             </button>
           </div>
 
@@ -275,7 +275,7 @@ export const Catalog: React.FC = () => {
             <div className="mt-4 flex items-center justify-between bg-blue-50 border border-blue-200/70 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-blue-900 max-w-4xl">
               <div className="flex items-center gap-2">
                 <Search className="w-4 h-4 text-[#0066FF] shrink-0" />
-                <span>{language === 'es' ? 'Resultados de la búsqueda por:' : 'Resultados da busca por:'} <strong>"{searchTerm}"</strong></span>
+                <span>{language === 'en' ? 'Search results for:' : language === 'es' ? 'Resultados de la búsqueda por:' : 'Resultados da busca por:'} <strong>"{searchTerm}"</strong></span>
               </div>
               <button
                 type="button"
@@ -283,7 +283,7 @@ export const Catalog: React.FC = () => {
                 className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 hover:text-blue-900 bg-white border border-blue-200 px-2.5 py-1 rounded-lg transition-colors shadow-2xs"
               >
                 <X className="w-3.5 h-3.5" />
-                <span>{language === 'es' ? 'Limpiar búsqueda' : 'Limpar busca'}</span>
+                <span>{language === 'en' ? 'Clear search' : language === 'es' ? 'Limpiar búsqueda' : 'Limpar busca'}</span>
               </button>
             </div>
           )}
@@ -292,7 +292,7 @@ export const Catalog: React.FC = () => {
         {/* Sub-bar: Products Count (Left) & Sort Dropdown (Right) */}
         <div className="border-y border-slate-200/80 py-3.5 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="text-xs sm:text-sm text-slate-500 font-medium">
-            {language === 'es' ? 'Mostrando' : 'Exibindo'} <span className="font-bold text-slate-800">{sortedProducts.length}</span> {sortedProducts.length === 1 ? (language === 'es' ? 'producto' : 'produto') : (language === 'es' ? 'productos' : 'produtos')} {language === 'es' ? 'en la categoría' : 'na categoria'}
+            {language === 'en' ? 'Showing' : language === 'es' ? 'Mostrando' : 'Exibindo'} <span className="font-bold text-slate-800">{sortedProducts.length}</span> {sortedProducts.length === 1 ? (language === 'en' ? 'product' : language === 'es' ? 'producto' : 'produto') : (language === 'en' ? 'products' : language === 'es' ? 'productos' : 'produtos')} {language === 'en' ? 'in category' : language === 'es' ? 'en la categoría' : 'na categoria'}
           </div>
 
           <div className="flex items-center gap-2 relative self-start sm:self-auto" ref={dropdownRef}>
@@ -358,7 +358,7 @@ export const Catalog: React.FC = () => {
               <Search className="w-8 h-8" />
             </div>
             <h3 className="font-display font-bold text-slate-900 text-base sm:text-lg">
-              {language === 'es' ? 'No se encontró ningún software correspondiente' : 'Nenhum software correspondente encontrado'}
+              {language === 'en' ? 'No matching software found' : language === 'es' ? 'No se encontró ningún software correspondiente' : 'Nenhum software correspondente encontrado'}
             </h3>
             <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
               {searchTerm 
@@ -376,7 +376,7 @@ export const Catalog: React.FC = () => {
                 }}
                 className="px-5 py-2.5 bg-[#0066FF] hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all"
               >
-                {language === 'es' ? 'Ver todos los softwares' : 'Ver todos os softwares'}
+                {language === 'en' ? 'View all software' : language === 'es' ? 'Ver todos los softwares' : 'Ver todos os softwares'}
               </button>
             </div>
           </div>

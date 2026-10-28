@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type CurrencyCode = 'BRL' | 'MXN' | 'ARS' | 'CLP' | 'PEN' | 'EUR' | 'MZN';
+export type CurrencyCode = 'BRL' | 'USD';
 
 export interface CurrencyInfo {
   code: CurrencyCode;
@@ -16,69 +16,24 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyInfo> = {
     code: 'BRL',
     symbol: 'R$',
     name: 'Real Brasileiro',
-    country: 'Brasil',
+    country: 'Brasil (R$)',
     locale: 'pt-BR',
     decimals: 2,
   },
-  MXN: {
-    code: 'MXN',
-    symbol: 'MX$',
-    name: 'Peso Mexicano',
-    country: 'México',
-    locale: 'es-MX',
-    decimals: 2,
-  },
-  ARS: {
-    code: 'ARS',
-    symbol: 'AR$',
-    name: 'Peso Argentino',
-    country: 'Argentina',
-    locale: 'es-AR',
-    decimals: 0,
-  },
-  CLP: {
-    code: 'CLP',
-    symbol: 'CLP$',
-    name: 'Peso Chileno',
-    country: 'Chile',
-    locale: 'es-CL',
-    decimals: 0,
-  },
-  PEN: {
-    code: 'PEN',
-    symbol: 'S/',
-    name: 'Sol Peruano',
-    country: 'Peru',
-    locale: 'es-PE',
-    decimals: 2,
-  },
-  EUR: {
-    code: 'EUR',
-    symbol: '€',
-    name: 'Euro',
-    country: 'Portugal',
-    locale: 'pt-PT',
-    decimals: 2,
-  },
-  MZN: {
-    code: 'MZN',
-    symbol: 'MT',
-    name: 'Metical Moçambicano',
-    country: 'Moçambique',
-    locale: 'pt-MZ',
+  USD: {
+    code: 'USD',
+    symbol: '$',
+    name: 'Dólar Americano',
+    country: 'Global / US ($)',
+    locale: 'en-US',
     decimals: 2,
   },
 };
 
-// Fallback exchange rates relative to 1 BRL (updated automatically from live API)
+// Fallback exchange rate (1 BRL = ~0.18 USD)
 const DEFAULT_RATES_FROM_BRL: Record<CurrencyCode, number> = {
   BRL: 1,
-  MXN: 3.54,
-  ARS: 196.5,
-  CLP: 171.8,
-  PEN: 0.66,
-  EUR: 0.162,
-  MZN: 11.15,
+  USD: 0.18,
 };
 
 interface CurrencyContextType {
@@ -94,32 +49,31 @@ const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined
 
 export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currency, setCurrencyState] = useState<CurrencyCode>(() => {
-    const saved = localStorage.getItem('c2tech_currency') as CurrencyCode | null;
-    return saved && CURRENCIES[saved] ? saved : 'BRL';
+    try {
+      const saved = localStorage.getItem('c2tech_currency') as CurrencyCode | null;
+      if (saved && CURRENCIES[saved]) return saved;
+    } catch {}
+    return 'BRL';
   });
 
   const [rates, setRates] = useState<Record<CurrencyCode, number>>(DEFAULT_RATES_FROM_BRL);
 
   useEffect(() => {
     let isMounted = true;
-    // Fetch live BRL exchange rates from public open exchange rate API
+    // Live BRL -> USD exchange rate from free API
     fetch('https://open.er-api.com/v6/latest/BRL')
       .then((res) => res.json())
       .then((data) => {
-        if (isMounted && data && data.rates) {
-          setRates((prev) => ({
+        if (isMounted && data && data.rates && data.rates.USD) {
+          const usdRate = Number(data.rates.USD) || 0.18;
+          setRates({
             BRL: 1,
-            MXN: Number(data.rates.MXN) || prev.MXN,
-            ARS: Number(data.rates.ARS) || prev.ARS,
-            CLP: Number(data.rates.CLP) || prev.CLP,
-            PEN: Number(data.rates.PEN) || prev.PEN,
-            EUR: Number(data.rates.EUR) || prev.EUR,
-            MZN: Number(data.rates.MZN) || prev.MZN,
-          }));
+            USD: usdRate,
+          });
         }
       })
       .catch(() => {
-        // Keep fallback rates if offline
+        // Keep fallback rate
       });
 
     return () => {
@@ -129,31 +83,32 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const setCurrency = (code: CurrencyCode) => {
     setCurrencyState(code);
-    localStorage.setItem('c2tech_currency', code);
+    try {
+      localStorage.setItem('c2tech_currency', code);
+    } catch {}
   };
 
   const convertFromBRL = (amountBRL: number): number => {
-    const rate = rates[currency] || 1;
+    const rate = rates[currency] || (currency === 'USD' ? 0.18 : 1);
     return amountBRL * rate;
   };
 
   const formatPrice = (amountBRL: number): string => {
-    const info = CURRENCIES[currency] || CURRENCIES.BRL;
-    const converted = convertFromBRL(amountBRL);
-
     if (currency === 'BRL') {
-      return converted.toLocaleString('pt-BR', {
+      return amountBRL.toLocaleString('pt-BR', {
         style: 'currency',
         currency: 'BRL',
       });
     }
 
-    const formattedNumber = converted.toLocaleString(info.locale, {
-      minimumFractionDigits: info.decimals,
-      maximumFractionDigits: info.decimals,
+    const rate = rates.USD || 0.18;
+    const convertedUSD = amountBRL * rate;
+    const formatted = convertedUSD.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     });
 
-    return `${info.symbol} ${formattedNumber}`;
+    return `$ ${formatted}`;
   };
 
   return (
@@ -161,7 +116,7 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       value={{
         currency,
         setCurrency,
-        currencyInfo: CURRENCIES[currency],
+        currencyInfo: CURRENCIES[currency] || CURRENCIES.BRL,
         rates,
         convertFromBRL,
         formatPrice,

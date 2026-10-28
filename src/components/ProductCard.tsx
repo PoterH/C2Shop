@@ -195,14 +195,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     {t('for_price')} <span className="text-accent-blue">{formattedPrice}</span>
                   </span>
                   <span className="text-[8px] sm:text-[9px] text-emerald-600 font-semibold uppercase hidden sm:block">
-                    {language === 'es' ? 'Sin mensualidades' : 'Sem mensalidades'}
+                    {language === 'en' ? 'No monthly fees' : language === 'es' ? 'Sin mensualidades' : 'Sem mensalidades'}
                   </span>
                 </>
               )}
             </div>
 
             <span className="text-[8px] sm:text-[10px] text-slate-400 bg-slate-50 border border-slate-100 rounded px-1.5 py-0.5 font-medium shrink-0 self-start sm:self-auto">
-              {isInternational ? (language === 'es' ? 'Tarjeta / Pay' : 'Cartões / Pay') : 'Pix / Cartão'}
+              {isInternational ? (language === 'en' ? 'Card / Pay' : language === 'es' ? 'Tarjeta / Pay' : 'Cartões / Pay') : 'Pix / Cartão'}
             </span>
           </div>
 
@@ -234,7 +234,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 {product.category !== 'Chaves de Ativação' && (
                   <span className="text-emerald-600 text-[9px] sm:text-[11px] font-semibold flex items-center mt-0.5">
                     <Send className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1 shrink-0" />
-                    <span className="truncate">{language === 'es' ? 'Entrega inmediata' : 'Entrega imediata'}</span>
+                    <span className="truncate">{language === 'en' ? 'Instant delivery' : language === 'es' ? 'Entrega inmediata' : 'Entrega imediata'}</span>
                   </span>
                 )}
               </>
@@ -251,7 +251,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             className="flex items-center justify-center py-2.5 px-4 border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors duration-200 w-full"
           >
             <Info className="w-3.5 h-3.5 mr-1.5 text-slate-400" />
-            {language === 'es' ? 'Ver detalles del software' : 'Ver detalhes do software'}
+            {language === 'en' ? 'View software details' : language === 'es' ? 'Ver detalles del software' : 'Ver detalhes do software'}
           </Link>
         ) : (
           <button

@@ -161,7 +161,7 @@ export const TrustGuaranteesModal: React.FC<{
     {
       id: 1,
       author: 'Carlos Eduardo M.',
-      location: language === 'es' ? 'Madrid, ES' : 'São Paulo, SP',
+      location: language === 'en' ? 'New York, US' : language === 'es' ? 'Madrid, ES' : 'São Paulo, SP',
       date: language === 'es' ? 'Hace 2 días' : 'Há 2 dias',
       title: language === 'es' ? 'Entrega en menos de 2 minutos y video bien detallado' : 'Entrega em menos de 2 minutos e vídeo bem detalhado',
       comment: language === 'es'
@@ -172,7 +172,7 @@ export const TrustGuaranteesModal: React.FC<{
     {
       id: 2,
       author: 'Fernanda S. Oliveira',
-      location: language === 'es' ? 'Ciudad de México, MX' : 'Belo Horizonte, MG',
+      location: language === 'en' ? 'Miami, US' : language === 'es' ? 'Ciudad de México, MX' : 'Belo Horizonte, MG',
       date: language === 'es' ? 'Hace 4 días' : 'Há 4 dias',
       title: language === 'es' ? 'Excelente relación calidad-precio y soporte de 10' : 'Excelente custo-benefício e suporte nota 10',
       comment: language === 'es'
@@ -183,7 +183,7 @@ export const TrustGuaranteesModal: React.FC<{
     {
       id: 3,
       author: 'Roberto Almeida Jr.',
-      location: language === 'es' ? 'Buenos Aires, AR' : 'Curitiba, PR',
+      location: language === 'en' ? 'London, UK' : language === 'es' ? 'Buenos Aires, AR' : 'Curitiba, PR',
       date: language === 'es' ? 'Hace 1 semana' : 'Há 1 semana',
       title: language === 'es' ? 'La mejor tienda de licencias digitales' : 'Melhor loja de licenças digitais do Brasil',
       comment: language === 'es'
@@ -232,14 +232,14 @@ export const TrustGuaranteesModal: React.FC<{
               <div className="flex items-center gap-2">
                 <span className="font-display font-black text-slate-900 text-lg">Trustpilot</span>
                 <span className="text-[10px] font-black uppercase tracking-wider bg-[#08ad88]/15 text-[#067a5f] px-2 py-0.5 rounded-full">
-                  {language === 'es' ? 'Opiniones Verificadas' : 'Avaliações Verificadas'}
+                  {language === 'en' ? 'Verified Reviews' : language === 'es' ? 'Opiniones Verificadas' : 'Avaliações Verificadas'}
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-0.5">
                 <TrustpilotStars count={5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
                 <span className="text-xs font-extrabold text-slate-800">4.8 / 5</span>
                 <span className="text-xs text-slate-500 font-medium">
-                  {language === 'es' ? '(1.782 clientes satisfechos)' : '(1.782 clientes satisfeitos)'}
+                  {language === 'en' ? '(1,782 satisfied customers)' : language === 'es' ? '(1.782 clientes satisfechos)' : '(1.782 clientes satisfeitos)'}
                 </span>
               </div>
             </div>
@@ -272,7 +272,7 @@ export const TrustGuaranteesModal: React.FC<{
             <div className="p-3.5 rounded-2xl bg-blue-50/60 border border-blue-100 space-y-1">
               <div className="flex items-center gap-2 text-blue-800 font-bold text-xs">
                 <CloudDownload className="w-4 h-4 text-blue-600 shrink-0" />
-                <span>{language === 'es' ? 'Envío Inmediato' : 'Envio Imediato'}</span>
+                <span>{language === 'en' ? 'Instant Delivery' : language === 'es' ? 'Envío Inmediato' : 'Envio Imediato'}</span>
               </div>
               <p className="text-[11px] text-slate-600 leading-relaxed">
                 {language === 'es'
@@ -284,7 +284,7 @@ export const TrustGuaranteesModal: React.FC<{
             <div className="p-3.5 rounded-2xl bg-amber-50/60 border border-amber-100 space-y-1">
               <div className="flex items-center gap-2 text-amber-800 font-bold text-xs">
                 <RefreshCw className="w-4 h-4 text-amber-600 shrink-0" />
-                <span>{language === 'es' ? '7 Días de Garantía' : '7 Dias de Garantia'}</span>
+                <span>{language === 'en' ? '7-Day Guarantee' : language === 'es' ? '7 Días de Garantía' : '7 Dias de Garantia'}</span>
               </div>
               <p className="text-[11px] text-slate-600 leading-relaxed">
                 {language === 'es'
@@ -355,7 +355,7 @@ export const TrustGuaranteesModal: React.FC<{
             onClick={onClose}
             className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold cursor-pointer transition-colors"
           >
-            {language === 'es' ? 'Entendido' : 'Entendi'}
+            {language === 'en' ? 'Got it' : language === 'es' ? 'Entendido' : 'Entendi'}
           </button>
         </div>
       </div>

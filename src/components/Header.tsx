@@ -25,6 +25,32 @@ import { products } from '../data/products';
 /* ============================================================================
  * INLINE SVG FLAGS (Brazil | Merged MX+AR+CL+PE | Merged PT+MZ)
  * ========================================================================== */
+/** Flag USA for English */
+const FlagUSA: React.FC<{ className?: string }> = ({ className = 'w-5 h-3.5' }) => (
+  <svg
+    viewBox="0 0 28 20"
+    className={`inline-block rounded-[2px] shadow-2xs shrink-0 overflow-hidden ${className}`}
+    aria-label="United States"
+  >
+    <rect width="28" height="20" fill="#b22234" />
+    <rect y="1.54" width="28" height="1.54" fill="#ffffff" />
+    <rect y="4.62" width="28" height="1.54" fill="#ffffff" />
+    <rect y="7.7" width="28" height="1.54" fill="#ffffff" />
+    <rect y="10.78" width="28" height="1.54" fill="#ffffff" />
+    <rect y="13.86" width="28" height="1.54" fill="#ffffff" />
+    <rect y="16.94" width="28" height="1.54" fill="#ffffff" />
+    <rect width="11.2" height="10.8" fill="#3c3b6e" />
+    <circle cx="2.8" cy="2.7" r="0.8" fill="#ffffff" />
+    <circle cx="5.6" cy="2.7" r="0.8" fill="#ffffff" />
+    <circle cx="8.4" cy="2.7" r="0.8" fill="#ffffff" />
+    <circle cx="4.2" cy="5.4" r="0.8" fill="#ffffff" />
+    <circle cx="7.0" cy="5.4" r="0.8" fill="#ffffff" />
+    <circle cx="2.8" cy="8.1" r="0.8" fill="#ffffff" />
+    <circle cx="5.6" cy="8.1" r="0.8" fill="#ffffff" />
+    <circle cx="8.4" cy="8.1" r="0.8" fill="#ffffff" />
+  </svg>
+);
+
 const FlagBrazil: React.FC<{ className?: string }> = ({ className = 'w-5 h-3.5' }) => (
   <svg
     viewBox="0 0 28 20"
@@ -259,6 +285,10 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
 ];
 
 function getMegaCategoryLabel(id: string, label: string, lang: string): string {
+  if (lang === 'en') {
+    if (id === 'multimidia-design') return 'Multimedia';
+    if (id === 'arquitetura-cad') return 'Architecture - CAD 3D';
+  }
   if (lang === 'es') {
     if (id === 'multimidia-design') return 'Multimedia';
     if (id === 'arquitetura-cad') return 'Arquitectura - CAD 3D';
@@ -441,7 +471,9 @@ export const Header: React.FC = () => {
                 className="flex items-center gap-1.5 py-1 cursor-pointer"
                 title={t('region_switch_title')}
               >
-                {language === 'es' ? (
+                {language === 'en' ? (
+                  <FlagUSA className="w-5 h-3.5" />
+                ) : language === 'es' ? (
                   <FlagLatamMerged className="w-5 h-3.5" />
                 ) : language === 'pt-PT' ? (
                   <FlagPtMzMerged className="w-5 h-3.5" />
@@ -490,7 +522,41 @@ export const Header: React.FC = () => {
                     )}
                   </button>
 
-                  {/* 2. Español (Hispanoamérica & España) */}
+                  
+                  {/* 2. English (United States & Global) */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLanguage('en');
+                      setIsFlagOpen(false);
+                    }}
+                    className={`w-full px-3.5 py-2.5 flex items-center justify-between gap-3 text-left border-b border-slate-100 transition-colors cursor-pointer ${
+                      language === 'en' ? 'bg-blue-50/70 font-bold' : 'hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <FlagUSA className="w-6 h-4 shrink-0" />
+                      <div>
+                        <p className="text-xs font-bold text-slate-900 leading-none">
+                          English
+                        </p>
+                        <p className="text-[10px] text-slate-500 mt-0.5">
+                          United States • Global ($ USD)
+                        </p>
+                      </div>
+                    </div>
+                    {language === 'en' ? (
+                      <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
+                        Active
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-semibold text-sky-600 hover:underline shrink-0">
+                        t('switch_badge')
+                      </span>
+                    )}
+                  </button>
+
+                  {/* 3. Español (Hispanoamérica & España) */}
                   <button
                     type="button"
                     onClick={() => {
@@ -508,17 +574,17 @@ export const Header: React.FC = () => {
                           Español
                         </p>
                         <p className="text-[10px] text-slate-500 mt-0.5">
-                          México • Argentina • Chile • Perú • España
+                          Hispanoamérica • España ($ USD)
                         </p>
                       </div>
                     </div>
                     {language === 'es' ? (
                       <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
-                        Activo
+                        {t('active_badge')}
                       </span>
                     ) : (
                       <span className="text-[10px] font-semibold text-sky-600 hover:underline shrink-0">
-                        Cambiar
+                        {t('switch_badge')}
                       </span>
                     )}
                   </button>
@@ -541,17 +607,17 @@ export const Header: React.FC = () => {
                           Português (Portugal)
                         </p>
                         <p className="text-[10px] text-slate-500 mt-0.5">
-                          Portugal • Europa • Moçambique (€)
+                          Portugal • Europa ($ USD)
                         </p>
                       </div>
                     </div>
                     {language === 'pt-PT' ? (
                       <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
-                        Ativo
+                        {t('active_badge')}
                       </span>
                     ) : (
                       <span className="text-[10px] font-semibold text-sky-600 hover:underline shrink-0">
-                        Mudar
+                        {t('switch_badge')}
                       </span>
                     )}
                   </button>
