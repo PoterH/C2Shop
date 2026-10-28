@@ -61,6 +61,98 @@ const BrazilFlagIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-3
   </svg>
 );
 
+const ReviewFlagIcon: React.FC<{ country?: string; className?: string }> = ({
+  country = 'BR',
+  className = 'w-4 h-3',
+}) => {
+  switch (country) {
+    case 'US':
+      return (
+        <svg viewBox="0 0 28 20" className={`inline-block rounded-[2px] shadow-[0_0_1px_rgba(0,0,0,0.3)] shrink-0 overflow-hidden ${className}`} aria-label="United States">
+          <title>United States</title>
+          <rect width="28" height="20" fill="#b22234" />
+          <rect y="1.54" width="28" height="1.54" fill="#ffffff" />
+          <rect y="4.62" width="28" height="1.54" fill="#ffffff" />
+          <rect y="7.7" width="28" height="1.54" fill="#ffffff" />
+          <rect y="10.78" width="28" height="1.54" fill="#ffffff" />
+          <rect y="13.86" width="28" height="1.54" fill="#ffffff" />
+          <rect y="16.94" width="28" height="1.54" fill="#ffffff" />
+          <rect width="11.2" height="10.8" fill="#3c3b6e" />
+          <circle cx="2.8" cy="2.7" r="0.8" fill="#ffffff" />
+          <circle cx="5.6" cy="2.7" r="0.8" fill="#ffffff" />
+          <circle cx="8.4" cy="2.7" r="0.8" fill="#ffffff" />
+          <circle cx="4.2" cy="5.4" r="0.8" fill="#ffffff" />
+          <circle cx="7.0" cy="5.4" r="0.8" fill="#ffffff" />
+          <circle cx="2.8" cy="8.1" r="0.8" fill="#ffffff" />
+          <circle cx="5.6" cy="8.1" r="0.8" fill="#ffffff" />
+          <circle cx="8.4" cy="8.1" r="0.8" fill="#ffffff" />
+        </svg>
+      );
+    case 'ES':
+      return (
+        <svg viewBox="0 0 28 20" className={`inline-block rounded-[2px] shadow-[0_0_1px_rgba(0,0,0,0.3)] shrink-0 overflow-hidden ${className}`} aria-label="España">
+          <title>España</title>
+          <rect width="28" height="5" fill="#AA151B" />
+          <rect y="5" width="28" height="10" fill="#F1BF00" />
+          <rect y="15" width="28" height="5" fill="#AA151B" />
+          <circle cx="7" cy="10" r="2.2" fill="#AA151B" />
+        </svg>
+      );
+    case 'PT':
+      return (
+        <svg viewBox="0 0 28 20" className={`inline-block rounded-[2px] shadow-[0_0_1px_rgba(0,0,0,0.3)] shrink-0 overflow-hidden ${className}`} aria-label="Portugal">
+          <title>Portugal</title>
+          <rect width="11" height="20" fill="#006600" />
+          <rect x="11" width="17" height="20" fill="#FF0000" />
+          <circle cx="11" cy="10" r="3.2" fill="#FFCC00" />
+          <circle cx="11" cy="10" r="1.8" fill="#FFFFFF" />
+        </svg>
+      );
+    case 'MX':
+      return (
+        <svg viewBox="0 0 28 20" className={`inline-block rounded-[2px] shadow-[0_0_1px_rgba(0,0,0,0.3)] shrink-0 overflow-hidden ${className}`} aria-label="México">
+          <title>México</title>
+          <rect width="9.3" height="20" fill="#006847" />
+          <rect x="9.3" width="9.4" height="20" fill="#FFFFFF" />
+          <rect x="18.7" width="9.3" height="20" fill="#CE1126" />
+          <circle cx="14" cy="10" r="2.2" fill="#8C6239" />
+        </svg>
+      );
+    case 'AR':
+      return (
+        <svg viewBox="0 0 28 20" className={`inline-block rounded-[2px] shadow-[0_0_1px_rgba(0,0,0,0.3)] shrink-0 overflow-hidden ${className}`} aria-label="Argentina">
+          <title>Argentina</title>
+          <rect width="28" height="6.6" fill="#74ACDF" />
+          <rect y="6.6" width="28" height="6.8" fill="#FFFFFF" />
+          <rect y="13.4" width="28" height="6.6" fill="#74ACDF" />
+          <circle cx="14" cy="10" r="2" fill="#F6B40E" />
+        </svg>
+      );
+    case 'CO':
+      return (
+        <svg viewBox="0 0 28 20" className={`inline-block rounded-[2px] shadow-[0_0_1px_rgba(0,0,0,0.3)] shrink-0 overflow-hidden ${className}`} aria-label="Colombia">
+          <title>Colombia</title>
+          <rect width="28" height="10" fill="#FCD116" />
+          <rect y="10" width="28" height="5" fill="#003893" />
+          <rect y="15" width="28" height="5" fill="#CE1126" />
+        </svg>
+      );
+    case 'CL':
+      return (
+        <svg viewBox="0 0 28 20" className={`inline-block rounded-[2px] shadow-[0_0_1px_rgba(0,0,0,0.3)] shrink-0 overflow-hidden ${className}`} aria-label="Chile">
+          <title>Chile</title>
+          <rect width="10" height="10" fill="#0039A6" />
+          <rect x="10" width="18" height="10" fill="#FFFFFF" />
+          <rect y="10" width="28" height="10" fill="#D52B1E" />
+          <circle cx="5" cy="5" r="1.8" fill="#FFFFFF" />
+        </svg>
+      );
+    case 'BR':
+    default:
+      return <BrazilFlagIcon className={className} />;
+  }
+};
+
 const AVATAR_COLORS = [
   'bg-[#1f7a8c] text-white',
   'bg-[#52b788] text-white',
@@ -754,7 +846,7 @@ export const ProductDetail: React.FC = () => {
               <TrustpilotStars count={5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
             </div>
             <span className="text-slate-700 font-medium whitespace-nowrap">
-              <strong className="text-slate-900 font-bold">4.8</strong> {t('trustpilot_score_based_on')}{' '}
+              <strong className="text-slate-900 font-bold">{productReviews.length > 0 ? averageRating : '5.0'}</strong> {t('trustpilot_score_based_on')}{' '}
               <span className="underline decoration-slate-400">{t('trustpilot_reviews_count')}</span>
             </span>
             <span className="text-slate-300 hidden sm:inline whitespace-nowrap">•</span>
@@ -2528,10 +2620,10 @@ export const ProductDetail: React.FC = () => {
                           <span className="font-bold text-sm text-slate-900">
                             {review.author}
                           </span>
-                          <BrazilFlagIcon />
+                          <ReviewFlagIcon country={review.country} />
                         </div>
                         <p className="text-[11px] font-bold text-emerald-600">
-                          Compra verificada
+                          {language === 'en' ? 'Verified purchase' : language === 'es' ? 'Compra verificada' : 'Compra verificada'}
                         </p>
                       </div>
 
