@@ -1222,6 +1222,63 @@ export const products: Product[] = [
     }
   },
   {
+    id: 'vectric_aspire_12_5',
+    keywords: [
+      'vectric',
+      'aspire',
+      'vectric aspire',
+      'aspire 12.5',
+      'aspire 12',
+      'aspire pro',
+      'cnc',
+      'router',
+      'router cnc',
+      'marcenaria',
+      'entalhe',
+      'corte 2d',
+      'usinagem 3d',
+      'g-code',
+      'moveis',
+      'relevo',
+      'vector art'
+    ],
+    slug: 'vectric-aspire-pro-12-5',
+    name: 'Vectric Aspire Pro 12.5',
+    category: 'Marcenaria e Móveis Planejados',
+    compatibility: 'Windows',
+    version: '12.5 Pro (64-bits)',
+    description: 'Solução líder mundial para design 2D/3D, usinagem, entalhes ornamentais e geração de percursos para máquinas Router CNC.',
+    longDescription: 'O Vectric Aspire Pro 12.5 é o software definitivo para marceneiros, projetistas de móveis e operadores de Router CNC que buscam precisão e agilidade. Com ferramentas completas de desenho vetorial 2D, modelagem e entalhe tridimensional (relevos 3D), simulação de percurso de ferramenta hiper-realista e nesting automático de chapas (MDF, madeira maciça e acrílico), o software gera com facilidade os arquivos G-code prontos para executar em qualquer controladora CNC do mercado.',
+    price: 187.90,
+    originalPrice: 319.90,
+    checkoutUrl: 'https://pay.cakto.com.br/qtaehri',
+    driveUrl: 'https://drive.google.com/drive/folders/15Bs5e9ozDlJxJ3ynBCKtgeUxVspn2aLK?usp=drive_link',
+    imageUrl: '/images/products/vectric-aspire-12-5-pro.png',
+    gallery: [
+      '/images/products/vectric-aspire-12-5-pro.png'
+    ],
+    ean13: '8388917978202',
+    mpn: 'VASP-PRO-WW125-C2',
+    features: [
+      'Versão 12.5 Pro completa e vitalícia para Windows',
+      'Modelagem 3D avançada para entalhes, relevos e molduras',
+      'Criação e edição vetorial 2D com conversão de imagens para vetores',
+      'Simulação precisa de percursos de usinagem (corte, furação, v-carve e acabamento 3D)',
+      'Otimização inteligente de chapas (Nesting) para economia de materiais',
+      'Compatível com Mach3, GRBL, RichAuto, Syntec e centenas de pós-processadores',
+      'Acompanha vídeo tutorial passo a passo de instalação',
+      'Entrega 100% automática no e-mail e WhatsApp logo após a confirmação',
+      'Garantia de 30 dias e suporte técnico com acesso remoto incluso'
+    ],
+    requirements: {
+      os: 'Windows 11 ou Windows 10 (64-bits)',
+      cpu: 'Processador Intel Core i5 / AMD Ryzen 5 de 2 GHz ou superior',
+      ram: '8 GB de memória RAM (Recomendado: 16 GB)',
+      gpu: 'Placa gráfica compatível com OpenGL 3.3 ou superior (dedicada recomendada)',
+      storage: '5 GB de espaço livre em disco para instalação'
+    }
+  },
+  {
     id: 'coreldraw_2026',
     keywords: ['corel', 'coreldraw', 'vetor', 'design', 'grafico', 'sublimacao', 'grafica', 'x7', 'macos', 'windows'],
     slug: 'coreldraw-graphics-suite-2026',
@@ -2053,6 +2110,9 @@ export const products: Product[] = [
 ];
 
 export function getProductBySlug(slug: string): Product | undefined {
+  if (slug === 'vectric-aspire' || slug === 'vectric-aspire-pro' || slug === 'aspire' || slug === 'vectric' || slug === 'aspire-12-5' || slug === 'aspire-12-5-pro' || slug === 'vectric-aspire-12-5-pro') {
+    return products.find(p => p.slug === 'vectric-aspire-pro-12-5');
+  }
   if (slug === '3ds-max' || slug === '3ds-max-2027' || slug === 'autodesk-3ds-max' || slug === '3dsmax') {
     return products.find(p => p.slug === 'autodesk-3ds-max-2027');
   }

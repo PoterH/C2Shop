@@ -197,6 +197,7 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
         seeAllLink: '/catalogo?categoria=Marcenaria+e+M%C3%B3veis+Planejados',
         items: [
           { name: 'Promob Plus (2024 Enterprise e 2025 Pro)', slug: 'promob-plus-professional-2025' },
+          { name: 'Vectric Aspire Pro 12.5 (CNC Router)', slug: 'vectric-aspire-pro-12-5' },
           { name: 'Rhinoceros 8 3D', slug: 'rhinoceros-8' },
           { name: 'SketchUp Pro (2021 a 2026)', slug: 'sketchup-pro-2026-windows' },
         ],

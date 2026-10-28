@@ -690,6 +690,32 @@ export const reviewsData: Record<string, Review[]> = {
       comment: "Tudo funcionando, recomendo dmais pra quem faz projetos comerciais"
     }
   ],
+    vectric_aspire_12_5: [
+    {
+      author: "Rodrigo M. (Oficina & CNC)",
+      rating: 5,
+      date: "3 dias atrás",
+      comment: "Aspire 12.5 Pro perfeito para a minha router CNC. Geração de percurso e simulação de entalhe 3D funcionando 100%. Recomendo demais!"
+    },
+    {
+      author: "Carlos E. Marceneiro",
+      rating: 5,
+      date: "5 dias atrás",
+      comment: "Instalação super tranquila seguindo o vídeo tutorial. Reconheceu todos os pós-processadores de primeira na minha máquina."
+    },
+    {
+      author: "Ateliê Madeira & Arte",
+      rating: 5,
+      date: "1 semana atrás",
+      comment: "A versão 12.5 está muito mais rápida no cálculo de usinagem e nesting de chapas. Entrega no e-mail foi instantânea."
+    },
+    {
+      author: "Marcos Vinicius B.",
+      rating: 4,
+      date: "2 semanas atrás",
+      comment: "Muito bom software, ativado vitalício sem problemas. Suporte tirou uma dúvida rápida sobre o Mach3."
+    }
+  ],
   promob_professional_2025: [
     {
       author: "Marceneiro Adelson",
