@@ -286,14 +286,66 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
 
 function getMegaCategoryLabel(id: string, label: string, lang: string): string {
   if (lang === 'en') {
+    if (id === 'microsoft-utilitarios') return 'Microsoft';
     if (id === 'multimidia-design') return 'Multimedia';
+    if (id === 'marcenaria-especializados') return 'Woodworking';
     if (id === 'arquitetura-cad') return 'Architecture - CAD 3D';
   }
   if (lang === 'es') {
+    if (id === 'microsoft-utilitarios') return 'Microsoft';
     if (id === 'multimidia-design') return 'Multimedia';
+    if (id === 'marcenaria-especializados') return 'Carpintería';
     if (id === 'arquitetura-cad') return 'Arquitectura - CAD 3D';
   }
   return label;
+}
+
+function getMegaColumnTitle(title: string, lang: string): string {
+  if (lang === 'en') {
+    switch (title) {
+      case 'Microsoft Office & Windows':
+        return 'Microsoft Office & Windows';
+      case 'PDF, Virtualização & Dados':
+        return 'PDF, Virtualization & Data';
+      case 'Design Gráfico & Vetor':
+        return 'Graphic Design & Vector';
+      case 'Edição de Vídeo & Áudio':
+        return 'Video & Audio Editing';
+      case 'Marcenaria & Móveis Planejados':
+        return 'Woodworking & Custom Furniture';
+      case 'Elétrica, Odonto & Engenharia':
+        return 'Electrical, Dental & Engineering';
+      case 'Modelagem CAD & BIM':
+        return 'CAD & BIM Modeling';
+      case 'Cálculo, Estruturas & Render':
+        return 'Structural Analysis & Render';
+      default:
+        return title;
+    }
+  }
+  if (lang === 'es') {
+    switch (title) {
+      case 'Microsoft Office & Windows':
+        return 'Microsoft Office y Windows';
+      case 'PDF, Virtualização & Dados':
+        return 'PDF, Virtualización y Datos';
+      case 'Design Gráfico & Vetor':
+        return 'Diseño Gráfico y Vectorial';
+      case 'Edição de Vídeo & Áudio':
+        return 'Edición de Video y Audio';
+      case 'Marcenaria & Móveis Planejados':
+        return 'Carpintería y Muebles';
+      case 'Elétrica, Odonto & Engenharia':
+        return 'Eléctrica, Odonto e Ingeniería';
+      case 'Modelagem CAD & BIM':
+        return 'Modelado CAD y BIM';
+      case 'Cálculo, Estruturas & Render':
+        return 'Cálculo, Estructuras y Render';
+      default:
+        return title;
+    }
+  }
+  return title;
 }
 
 export const Header: React.FC = () => {
@@ -551,7 +603,7 @@ export const Header: React.FC = () => {
                       </span>
                     ) : (
                       <span className="text-[10px] font-semibold text-sky-600 hover:underline shrink-0">
-                        t('switch_badge')
+                        {t('switch_badge')}
                       </span>
                     )}
                   </button>
@@ -829,7 +881,7 @@ export const Header: React.FC = () => {
                     <div key={idx} className="flex flex-col justify-between space-y-4">
                       <div className="space-y-3">
                         <h4 className="font-display font-extrabold text-sm text-slate-900">
-                          {col.title}
+                          {getMegaColumnTitle(col.title, language)}
                         </h4>
                         <ul className="space-y-2">
                           {col.items.map((item) => (
@@ -852,7 +904,7 @@ export const Header: React.FC = () => {
                           onClick={() => setActiveMegaId(null)}
                           className="inline-flex items-center gap-0.5 text-xs font-bold text-[#0b5ed7] hover:underline"
                         >
-                          <span>Ver todos</span>
+                          <span>{language === 'en' ? 'View all' : 'Ver todos'}</span>
                           <ChevronRight className="w-3.5 h-3.5" />
                         </Link>
                       </div>
@@ -897,7 +949,8 @@ export const Header: React.FC = () => {
                           {prod.name}
                         </p>
                         <span className="text-[11px] font-extrabold text-[#0b5ed7] mt-0.5">
-                          A partir de {formatPrice(prod.price)}
+                          {language === 'en' ? 'Starting at ' : language === 'es' ? 'Desde ' : 'A partir de '}
+                          {formatPrice(prod.price)}
                         </span>
                       </Link>
                     );

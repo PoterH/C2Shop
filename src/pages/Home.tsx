@@ -15,8 +15,11 @@ import {
 } from 'lucide-react';
 import { products, CATEGORIES } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
+import { useLanguage } from '../context/LanguageContext';
+import { translateCategory } from '../utils/i18n';
 
 export const Home: React.FC = () => {
+  const { language } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<string>('Todos');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
@@ -121,23 +124,23 @@ export const Home: React.FC = () => {
   const trustBadges = [
     {
       icon: <Zap className="w-6 h-6 text-sky-500" />,
-      title: 'Entrega imediata',
-      desc: 'Acesso enviado automaticamente para o seu e-mail após a compra.'
+      title: language === 'en' ? 'Immediate delivery' : language === 'es' ? 'Entrega inmediata' : 'Entrega imediata',
+      desc: language === 'en' ? 'Access automatically sent to your email right after purchase.' : language === 'es' ? 'Acceso enviado automáticamente a tu correo tras la compra.' : 'Acesso enviado automaticamente para o seu e-mail após a compra.'
     },
     {
       icon: <Settings className="w-6 h-6 text-emerald-500" />,
-      title: 'Instalação assistida',
-      desc: 'Passo a passo detalhado e suporte remoto dedicado caso precise.'
+      title: language === 'en' ? 'Assisted installation' : language === 'es' ? 'Instalación asistida' : 'Instalação assistida',
+      desc: language === 'en' ? 'Step-by-step guide and dedicated remote support if needed.' : language === 'es' ? 'Paso a paso detallado y soporte remoto dedicado si lo necesitas.' : 'Passo a passo detalhado e suporte remoto dedicado caso precise.'
     },
     {
       icon: <ShieldCheck className="w-6 h-6 text-sky-500" />,
-      title: 'Compra protegida',
-      desc: 'Transações criptografadas e checkout seguro.'
+      title: language === 'en' ? 'Protected purchase' : language === 'es' ? 'Compra protegida' : 'Compra protegida',
+      desc: language === 'en' ? 'Encrypted transactions and secure checkout.' : language === 'es' ? 'Transacciones cifradas y checkout seguro.' : 'Transações criptografadas e checkout seguro.'
     },
     {
       icon: <InfinityIcon className="w-6 h-6 text-emerald-500" />,
-      title: 'Acesso vitalício',
-      desc: 'Pague apenas uma vez e utilize o software sem mensalidades.'
+      title: language === 'en' ? 'Lifetime access' : language === 'es' ? 'Acceso vitalicio' : 'Acesso vitalício',
+      desc: language === 'en' ? 'Pay only once and use the software without subscriptions.' : language === 'es' ? 'Paga solo una vez y usa el software sin mensualidades.' : 'Pague apenas uma vez e utilize o software sem mensalidades.'
     }
   ];
 
@@ -282,7 +285,11 @@ export const Home: React.FC = () => {
               <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=64&h=64&q=80" alt="Cliente 5" />
             </div>
             <span className="text-[11px] font-bold text-sky-400 tracking-wide">
-              +5.000 clientes satisfeitos
+              {language === 'en'
+                ? '+5,000 satisfied customers'
+                : language === 'es'
+                ? '+5.000 clientes satisfechos'
+                : '+5.000 clientes satisfeitos'}
             </span>
           </div>
 
@@ -290,16 +297,36 @@ export const Home: React.FC = () => {
           <div className="space-y-2 md:space-y-3 max-w-5xl text-center">
             <h1 className="font-display text-white tracking-tight leading-[1.08] text-balance">
               <span className="font-light text-2xl sm:text-[34px] md:text-[40px] lg:text-[44px] xl:text-[48px] block text-white/90">
-                Você só foca no projeto.
+                {language === 'en'
+                  ? 'You focus on the project.'
+                  : language === 'es'
+                  ? 'Tú te enfocas en el proyecto.'
+                  : 'Você só foca no projeto.'}
               </span>
               <span className="font-black text-3xl sm:text-[50px] md:text-[62px] lg:text-[70px] xl:text-[74px] block mt-1 sm:mt-1.5">
-                A <span className="bg-gradient-to-r from-[#00d2ff] via-[#0066FF] to-[#0a21a5] bg-clip-text text-transparent">C2Tech</span> cuida do resto.
+                {language === 'en' ? (
+                  <>
+                    <span className="bg-gradient-to-r from-[#00d2ff] via-[#0066FF] to-[#0a21a5] bg-clip-text text-transparent">C2Tech</span> handles the rest.
+                  </>
+                ) : language === 'es' ? (
+                  <>
+                    <span className="bg-gradient-to-r from-[#00d2ff] via-[#0066FF] to-[#0a21a5] bg-clip-text text-transparent">C2Tech</span> cuida del resto.
+                  </>
+                ) : (
+                  <>
+                    A <span className="bg-gradient-to-r from-[#00d2ff] via-[#0066FF] to-[#0a21a5] bg-clip-text text-transparent">C2Tech</span> cuida do resto.
+                  </>
+                )}
               </span>
             </h1>
             
             {/* 3. Sub-headline */}
             <p className="text-slate-400 text-xs sm:text-sm md:text-base lg:text-lg max-w-3xl mx-auto leading-relaxed text-balance">
-              Catálogo completo, área do cliente, entrega automática por e-mail e suporte técnico completo no WhatsApp! Tudo pronto para ativação vitalícia local, no mesmo lugar. E você só paga uma única vez por isso.
+              {language === 'en'
+                ? 'Full catalog, customer portal, automated email delivery and dedicated WhatsApp technical support! Ready for permanent local activation, all in one place. And you only pay once.'
+                : language === 'es'
+                ? 'Catálogo completo, área de cliente, entrega automática por correo y soporte técnico completo en WhatsApp. Todo listo para activación permanente local, en un solo lugar. Y solo pagas una vez.'
+                : 'Catálogo completo, área do cliente, entrega automática por e-mail e suporte técnico completo no WhatsApp! Tudo pronto para ativação vitalícia local, no mesmo lugar. E você só paga uma única vez por isso.'}
             </p>
           </div>
 
@@ -309,23 +336,23 @@ export const Home: React.FC = () => {
               to="/catalogo"
               className="flex items-center justify-center px-5 py-3 md:px-7 md:py-3.5 text-sm md:text-base font-bold text-white bg-accent-blue hover:bg-accent-blue-dark rounded-xl md:rounded-2xl shadow-[0_4px_20px_rgba(2,132,199,0.25)] hover:shadow-[0_4px_25px_rgba(2,132,199,0.35)] transition-all duration-300 group whitespace-nowrap hover:scale-105 active:scale-95"
             >
-              <span>Explorar softwares</span>
+              <span>{language === 'en' ? 'Explore software' : language === 'es' ? 'Explorar softwares' : 'Explorar softwares'}</span>
               <ArrowRight className="w-4.5 h-4.5 ml-2 transition-transform group-hover:translate-x-1" />
             </Link>
             <Link
               to="/catalogo?tab=assinaturas"
               className="flex items-center justify-center px-5 py-3 md:px-7 md:py-3.5 text-sm md:text-base font-bold text-white bg-slate-900/60 backdrop-blur-md hover:bg-slate-900/80 rounded-xl md:rounded-2xl border border-sky-500/30 hover:border-sky-500/60 shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_25px_rgba(2,132,199,0.15)] transition-all duration-300 group whitespace-nowrap hover:scale-105 active:scale-95"
             >
-              <span>Planos de Assinatura</span>
+              <span>{language === 'en' ? 'Subscription Plans' : language === 'es' ? 'Planes de Suscripción' : 'Planos de Assinatura'}</span>
               <span className="ml-2 px-1.5 py-0.5 text-[9px] font-extrabold bg-sky-500 text-white rounded-md uppercase tracking-wider animate-pulse shrink-0">
-                Novo
+                {language === 'en' ? 'NEW' : language === 'es' ? 'NUEVO' : 'Novo'}
               </span>
             </Link>
             <Link
               to="/catalogo?q=microsoft"
               className="flex items-center justify-center px-5 py-3 md:px-7 md:py-3.5 text-sm md:text-base font-bold text-white bg-slate-900/60 backdrop-blur-md hover:bg-slate-900/80 rounded-xl md:rounded-2xl border border-indigo-500/40 hover:border-indigo-500/70 shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_25px_rgba(99,102,241,0.25)] transition-all duration-300 group whitespace-nowrap hover:scale-105 active:scale-95"
             >
-              <span>Ative seu Windows/Office</span>
+              <span>{language === 'en' ? 'Activate your Windows/Office' : language === 'es' ? 'Activa tu Windows/Office' : 'Ative seu Windows/Office'}</span>
               <ArrowRight className="w-4.5 h-4.5 ml-2 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
@@ -333,7 +360,11 @@ export const Home: React.FC = () => {
           {/* Trust Carousel (Below Buttons on all devices) */}
           <div className="flex flex-col items-center justify-center w-full max-w-6xl mt-5 sm:mt-7 mb-1 overflow-hidden relative z-20">
             <p className="text-[10px] sm:text-xs text-slate-400 uppercase tracking-widest font-bold mb-3 sm:mb-4 font-sans">
-              Revendedor Autorizado e Parceiro Oficial
+              {language === 'en'
+                ? 'Authorized Reseller & Official Partner'
+                : language === 'es'
+                ? 'Distribuidor Autorizado y Socio Oficial'
+                : 'Revendedor Autorizado e Parceiro Oficial'}
             </p>
             
             <div 
@@ -424,23 +455,31 @@ export const Home: React.FC = () => {
           {/* Section Header */}
           <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
             <span className="text-[11px] font-extrabold text-accent-blue uppercase tracking-wider">
-              Loja Completa
+              {language === 'en' ? 'Complete Store' : language === 'es' ? 'Tienda Completa' : 'Loja Completa'}
             </span>
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
-              Encontre o software ideal para o seu projeto
+              {language === 'en' ? 'Find the ideal software for your project' : language === 'es' ? 'Encuentra el software ideal para tu proyecto' : 'Encontre o software ideal para o seu projeto'}
             </h2>
             <p className="text-slate-600 text-sm sm:text-base">
-              Explore nossa seleção de ferramentas profissionais de alta performance com licença alternativa e pagamento único.
+              {language === 'en'
+                ? 'Explore our selection of high-performance professional tools with lifetime access and one-time payment.'
+                : language === 'es'
+                ? 'Explora nuestra selección de herramientas profesionales de alto rendimiento con licencia permanente y pago único.'
+                : 'Explore nossa seleção de ferramentas profissionais de alta performance com licença alternativa e pagamento único.'}
             </p>
           </div>
 
           {/* Dynamic Catalog Notice Banner */}
           <div className="max-w-4xl mx-auto mb-8 bg-sky-50/70 border border-sky-100/80 rounded-2xl p-4 text-center flex flex-col md:flex-row items-center justify-center gap-2 text-sky-950 text-sm shadow-sm select-none">
             <span className="font-bold flex items-center justify-center text-accent-blue shrink-0">
-              💡 Apenas Alguns Destaques:
+              {language === 'en' ? '💡 Just A Few Highlights:' : language === 'es' ? '💡 Solo Algunos Destacados:' : '💡 Apenas Alguns Destaques:'}
             </span>
             <span>
-              Esta é uma vitrine rotativa. Temos dezenas de outros softwares profissionais disponíveis em nosso catálogo completo!
+              {language === 'en'
+                ? 'This is a rotating showcase. We have dozens of other professional software available in our full catalog!'
+                : language === 'es'
+                ? 'Este es un escaparate rotativo. ¡Tenemos docenas de otros programas profesionales disponibles en nuestro catálogo completo!'
+                : 'Esta é uma vitrine rotativa. Temos dezenas de outros softwares profissionais disponíveis em nosso catálogo completo!'}
             </span>
           </div>
 
@@ -456,7 +495,7 @@ export const Home: React.FC = () => {
                     : 'bg-white border-slate-200 hover:border-slate-300 text-slate-600'
                 }`}
               >
-                {category}
+                {translateCategory(category, language)}
               </button>
             ))}
           </div>

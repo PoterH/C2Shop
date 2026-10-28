@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, MessageCircle, Shield, FileText } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export const Footer: React.FC = () => {
+  const { language } = useLanguage();
   const currentYear = new Date().getFullYear();
 
   const whatsappNumber = '5581997349300';
@@ -45,10 +47,18 @@ export const Footer: React.FC = () => {
               </Link>
               <div className="space-y-3">
                 <h2 className="text-white text-lg sm:text-xl font-bold font-display tracking-tight leading-snug">
-                  Você foca no projeto. A C2Tech cuida do resto.
+                  {language === 'en'
+                    ? 'You focus on the project. C2Tech handles the rest.'
+                    : language === 'es'
+                    ? 'Tú te enfocas en el proyecto. C2Tech cuida del resto.'
+                    : 'Você foca no projeto. A C2Tech cuida do resto.'}
                 </h2>
                 <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
-                  Oferecemos soluções digitais profissionais com entrega rápida, acesso vitalício e suporte de instalação assistida. Adquira softwares robustos sem assinaturas e sem taxas recorrentes.
+                  {language === 'en'
+                    ? 'We offer professional digital solutions with fast delivery, lifetime access and assisted installation support. Acquire robust software with no subscriptions and no recurring fees.'
+                    : language === 'es'
+                    ? 'Ofrecemos soluciones digitales profesionales con entrega rápida, acceso vitalicio y soporte de instalación asistida. Adquiere software robusto sin suscripciones ni cuotas recurrentes.'
+                    : 'Oferecemos soluções digitais profissionais com entrega rápida, acesso vitalício e suporte de instalação assistida. Adquira softwares robustos sem assinaturas e sem taxas recorrentes.'}
                 </p>
               </div>
               
@@ -328,8 +338,12 @@ export const Footer: React.FC = () => {
                     </svg>
                   </div>
                   <div className="text-left">
-                    <p className="text-[9px] font-extrabold text-white leading-tight uppercase tracking-wider">Compra 100% Segura</p>
-                    <p className="text-[8px] text-slate-450 text-slate-400 leading-none">Criptografia SSL (HTTPS)</p>
+                    <p className="text-[9px] font-extrabold text-white leading-tight uppercase tracking-wider">
+                      {language === 'en' ? '100% Secure Purchase' : 'Compra 100% Segura'}
+                    </p>
+                    <p className="text-[8px] text-slate-450 text-slate-400 leading-none">
+                      {language === 'en' ? 'SSL Encryption (HTTPS)' : language === 'es' ? 'Cifrado SSL (HTTPS)' : 'Criptografia SSL (HTTPS)'}
+                    </p>
                   </div>
                 </div>
 
@@ -341,8 +355,12 @@ export const Footer: React.FC = () => {
                     </svg>
                   </div>
                   <div className="text-left">
-                    <p className="text-[9px] font-extrabold text-white leading-tight uppercase tracking-wider">Loja Protegida</p>
-                    <p className="text-[8px] text-slate-450 text-slate-400 leading-none">Ambiente 100% Seguro</p>
+                    <p className="text-[9px] font-extrabold text-white leading-tight uppercase tracking-wider">
+                      {language === 'en' ? 'Protected Store' : language === 'es' ? 'Tienda Protegida' : 'Loja Protegida'}
+                    </p>
+                    <p className="text-[8px] text-slate-450 text-slate-400 leading-none">
+                      {language === 'en' ? '100% Secure Environment' : language === 'es' ? 'Ambiente 100% Seguro' : 'Ambiente 100% Seguro'}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -355,10 +373,12 @@ export const Footer: React.FC = () => {
           {/* Legal Compliance Text (Licença Alternativa) - Clean styling */}
           <div className="text-[11px] text-slate-500/80 space-y-3 max-w-5xl leading-relaxed">
             <p>
-              <strong>Nota informativa importante:</strong> Os produtos comercializados neste site são fornecidos sob a modalidade de <strong>licença alternativa</strong> para uso pessoal e profissional de forma local. O acesso adquirido é <strong>vitalício</strong> para a versão específica comprada, configurada para funcionamento em máquina local sem necessidade de assinaturas recorrentes ou mensalidades.
-            </p>
-            <p>
-              Não estão inclusos serviços integrados em nuvem ou atualizações automáticas de versão que dependam de servidores de assinatura externa (como armazenamento em nuvem OneDrive, recursos de inteligência artificial online de servidores remotos, ou bibliotecas integradas em nuvem). Os softwares são entregues prontos para uso em suas versões completas e funcionais com instruções detalhadas para auto-instalação ou com auxílio do nosso serviço de suporte remoto quando necessário.
+              <strong>{language === 'en' ? 'Important informative note:' : language === 'es' ? 'Nota informativa importante:' : 'Nota informativa importante:'}</strong>{' '}
+              {language === 'en'
+                ? 'The products sold on this website are provided under an alternative license for personal and professional local use. The purchased access is lifetime for the specific version purchased, configured for local machine use without the need for recurring subscriptions or monthly fees.'
+                : language === 'es'
+                ? 'Los productos comercializados en este sitio web se suministran bajo la modalidad de licencia alternativa para uso personal y profesional de forma local. El acceso adquirido es vitalicio para la versión específica comprada, configurada para funcionamiento en máquina local sin necesidad de suscripciones recurrentes ni mensualidades.'
+                : 'Os produtos comercializados neste site são fornecidos sob a modalidade de licença alternativa para uso pessoal e profissional de forma local. O acesso adquirido é vitalício para a versão específica comprada, configurada para funcionamento em máquina local sem necessidade de assinaturas recorrentes ou mensalidades.'}
             </p>
           </div>
 
@@ -368,10 +388,10 @@ export const Footer: React.FC = () => {
           {/* Bottom Bar: Copyright & CNPJ */}
           <div className="flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-4">
             <p className="text-center sm:text-left">
-              &copy; {currentYear} C2Tech. Todos os direitos reservados.
+              &copy; {currentYear} C2Tech. {language === 'en' ? 'All rights reserved.' : language === 'es' ? 'Todos los derechos reservados.' : 'Todos os direitos reservados.'}
             </p>
             <div className="text-slate-600 text-[10px]">
-              Foco no projeto, tecnologia ao seu alcance.
+              {language === 'en' ? 'Focus on the project, technology within your reach.' : language === 'es' ? 'Foco en el proyecto, tecnología a su alcance.' : 'Foco no projeto, tecnologia ao seu alcance.'}
             </div>
           </div>
 
