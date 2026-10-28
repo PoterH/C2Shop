@@ -7,6 +7,7 @@ import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import { getEffectiveCheckoutUrl } from '../data/internationalCheckouts';
 import { useCurrency } from '../context/CurrencyContext';
+import { translateCategory } from '../utils/i18n';
 
 interface ProductCardProps {
   product: Product;
@@ -14,7 +15,7 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
-  const { isInternational, t } = useLanguage();
+  const { language, isInternational, t } = useLanguage();
   const { formatPrice } = useCurrency();
   const productReviews = reviewsData[product.id] || [];
   const averageRating = productReviews.length > 0
@@ -122,7 +123,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {product.unavailable && (
             <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-[1.5px] z-10 flex items-center justify-center">
               <span className="bg-rose-600 text-white text-xs font-black px-4 py-2.5 rounded-xl uppercase tracking-wider shadow-lg border border-rose-500/30">
-                Temporariamente Indisponível
+                {t('temporarily_unavailable')}
               </span>
             </div>
           )}
@@ -133,7 +134,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {/* Category & OS */}
           <div className="flex items-center justify-between mb-1.5 sm:mb-2">
             <span className="text-[9px] sm:text-[11px] font-bold text-accent-blue uppercase tracking-wider truncate pr-1">
-              {product.category}
+              {translateCategory(product.category, language)}
             </span>
             {renderOSIcon()}
           </div>
@@ -188,20 +189,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               ) : (
                 <>
                   <span className="text-[9px] sm:text-[10px] text-slate-400 line-through">
-                    De {formattedOriginalPrice}
+                    {t('original_price')} {formattedOriginalPrice}
                   </span>
                   <span className="text-base sm:text-xl font-display font-extrabold text-slate-900 tracking-tight leading-none sm:leading-normal">
-                    Por <span className="text-accent-blue">{formattedPrice}</span>
+                    {t('for_price')} <span className="text-accent-blue">{formattedPrice}</span>
                   </span>
                   <span className="text-[8px] sm:text-[9px] text-emerald-600 font-semibold uppercase hidden sm:block">
-                    Sem mensalidades
+                    {language === 'es' ? 'Sin mensualidades' : 'Sem mensalidades'}
                   </span>
                 </>
               )}
             </div>
 
             <span className="text-[8px] sm:text-[10px] text-slate-400 bg-slate-50 border border-slate-100 rounded px-1.5 py-0.5 font-medium shrink-0 self-start sm:self-auto">
-              Pix / Cartão
+              {isInternational ? (language === 'es' ? 'Tarjeta / Pay' : 'Cartões / Pay') : 'Pix / Cartão'}
             </span>
           </div>
 
@@ -227,13 +228,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 ) : (
                   <span className="bg-emerald-50 text-emerald-700 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center border border-emerald-200">
                     <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
-                    Acesso vitalício
+                    {t('badge_lifetime')}
                   </span>
                 )}
                 {product.category !== 'Chaves de Ativação' && (
                   <span className="text-emerald-600 text-[9px] sm:text-[11px] font-semibold flex items-center mt-0.5">
                     <Send className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1 shrink-0" />
-                    <span className="truncate">Entrega imediata FULL</span>
+                    <span className="truncate">{language === 'es' ? 'Entrega inmediata' : 'Entrega imediata'}</span>
                   </span>
                 )}
               </>
@@ -250,7 +251,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             className="flex items-center justify-center py-2.5 px-4 border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors duration-200 w-full"
           >
             <Info className="w-3.5 h-3.5 mr-1.5 text-slate-400" />
-            Ver detalhes do software
+            {language === 'es' ? 'Ver detalles del software' : 'Ver detalhes do software'}
           </Link>
         ) : (
           <button

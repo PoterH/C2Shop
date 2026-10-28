@@ -1,5 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
+import { translateCategory } from '../utils/i18n';
 import {
   TrustpilotRatingHorizontal,
   TrustGuaranteesPill,
@@ -101,6 +103,7 @@ export const Catalog: React.FC = () => {
   const [isGuaranteesModalOpen, setIsGuaranteesModalOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { language, t } = useLanguage();
 
   // Sync URL search & category to local state if URL changes (e.g., from header mega-menu)
   useEffect(() => {
@@ -215,7 +218,7 @@ export const Catalog: React.FC = () => {
         {/* Breadcrumb Navigation */}
         <nav className="flex items-center gap-1.5 text-xs text-slate-500 mb-3">
           <Link to="/" className="hover:text-blue-600 transition-colors">
-            Home
+            {t('breadcrumb_home')}
           </Link>
           <span>/</span>
           <Link
@@ -228,12 +231,12 @@ export const Catalog: React.FC = () => {
             }}
             className="hover:text-blue-600 transition-colors"
           >
-            Catálogo
+            {t('nav_catalog')}
           </Link>
           {selectedCategory !== 'Todos' && (
             <>
               <span>/</span>
-              <span className="text-slate-900 font-semibold">{selectedCategory}</span>
+              <span className="text-slate-900 font-semibold">{translateCategory(selectedCategory, language)}</span>
             </>
           )}
         </nav>
@@ -247,7 +250,7 @@ export const Catalog: React.FC = () => {
         {/* Category Header: Blue Title + Rich Description */}
         <div className="text-left mb-6">
           <h1 className="font-display font-extrabold text-2xl sm:text-3xl md:text-4xl text-[#0066FF] tracking-tight">
-            {categoryInfo.title}
+            {translateCategory(categoryInfo.title, language)}
           </h1>
           <div className="mt-3 text-slate-600 text-sm sm:text-[15px] leading-relaxed max-w-4xl">
             <p>
@@ -263,7 +266,7 @@ export const Catalog: React.FC = () => {
               onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
               className="inline-flex items-center text-xs sm:text-sm font-semibold text-[#0066FF] hover:text-blue-700 hover:underline mt-2 transition-colors focus:outline-none"
             >
-              {isDescriptionExpanded ? 'Ler menos' : 'Ler mais...'}
+              {isDescriptionExpanded ? (language === 'es' ? 'Leer menos' : 'Ler menos') : (language === 'es' ? 'Leer más...' : 'Ler mais...')}
             </button>
           </div>
 
@@ -272,7 +275,7 @@ export const Catalog: React.FC = () => {
             <div className="mt-4 flex items-center justify-between bg-blue-50 border border-blue-200/70 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-blue-900 max-w-4xl">
               <div className="flex items-center gap-2">
                 <Search className="w-4 h-4 text-[#0066FF] shrink-0" />
-                <span>Resultados da busca por: <strong>"{searchTerm}"</strong></span>
+                <span>{language === 'es' ? 'Resultados de la búsqueda por:' : 'Resultados da busca por:'} <strong>"{searchTerm}"</strong></span>
               </div>
               <button
                 type="button"
@@ -280,7 +283,7 @@ export const Catalog: React.FC = () => {
                 className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 hover:text-blue-900 bg-white border border-blue-200 px-2.5 py-1 rounded-lg transition-colors shadow-2xs"
               >
                 <X className="w-3.5 h-3.5" />
-                <span>Limpar busca</span>
+                <span>{language === 'es' ? 'Limpiar búsqueda' : 'Limpar busca'}</span>
               </button>
             </div>
           )}
@@ -289,12 +292,12 @@ export const Catalog: React.FC = () => {
         {/* Sub-bar: Products Count (Left) & Sort Dropdown (Right) */}
         <div className="border-y border-slate-200/80 py-3.5 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="text-xs sm:text-sm text-slate-500 font-medium">
-            Exibindo <span className="font-bold text-slate-800">{sortedProducts.length}</span> {sortedProducts.length === 1 ? 'produto' : 'produtos'} na categoria
+            {language === 'es' ? 'Mostrando' : 'Exibindo'} <span className="font-bold text-slate-800">{sortedProducts.length}</span> {sortedProducts.length === 1 ? (language === 'es' ? 'producto' : 'produto') : (language === 'es' ? 'productos' : 'produtos')} {language === 'es' ? 'en la categoría' : 'na categoria'}
           </div>
 
           <div className="flex items-center gap-2 relative self-start sm:self-auto" ref={dropdownRef}>
             <span className="text-xs sm:text-sm text-slate-500 font-medium whitespace-nowrap">
-              Ordenar por:
+              {language === 'es' ? 'Ordenar por:' : 'Ordenar por:'}
             </span>
             
             <button
@@ -355,7 +358,7 @@ export const Catalog: React.FC = () => {
               <Search className="w-8 h-8" />
             </div>
             <h3 className="font-display font-bold text-slate-900 text-base sm:text-lg">
-              Nenhum software correspondente encontrado
+              {language === 'es' ? 'No se encontró ningún software correspondiente' : 'Nenhum software correspondente encontrado'}
             </h3>
             <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
               {searchTerm 
@@ -373,7 +376,7 @@ export const Catalog: React.FC = () => {
                 }}
                 className="px-5 py-2.5 bg-[#0066FF] hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all"
               >
-                Ver todos os softwares
+                {language === 'es' ? 'Ver todos los softwares' : 'Ver todos os softwares'}
               </button>
             </div>
           </div>

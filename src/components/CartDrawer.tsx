@@ -23,7 +23,7 @@ export const CartDrawer: React.FC = () => {
     total,
     discountPercentage
   } = useCart();
-  const { isInternational, t } = useLanguage();
+  const { language, isInternational, t } = useLanguage();
 
   const [couponInput, setCouponInput] = useState('');
   const [couponFeedback, setCouponFeedback] = useState<{ success: boolean; message: string } | null>(null);
@@ -82,10 +82,10 @@ export const CartDrawer: React.FC = () => {
           <div className="flex items-center space-x-2.5">
             <ShoppingBag className="w-5 h-5 text-accent-blue" />
             <h3 className="font-display font-extrabold text-slate-900 text-lg">
-              Seu Carrinho
+              {t('cart_title')}
             </h3>
             <span className="text-[11px] font-bold text-accent-blue bg-accent-blue/10 px-2 py-0.5 rounded-full">
-              {cartItems.length} {cartItems.length === 1 ? 'item' : 'itens'}
+              {cartItems.length} {cartItems.length === 1 ? 'item' : (language === 'es' ? 'artículos' : 'itens')}
             </span>
           </div>
           <button 
@@ -105,7 +105,7 @@ export const CartDrawer: React.FC = () => {
                 <ShoppingBag className="w-8 h-8 text-slate-400" />
               </div>
               <div className="space-y-1.5 max-w-[260px]">
-                <h4 className="font-display font-bold text-slate-800 text-base">Seu carrinho está vazio</h4>
+                <h4 className="font-display font-bold text-slate-800 text-base">{t('cart_empty')}</h4>
                 <p className="text-slate-400 text-xs">Adicione softwares profissionais ao seu carrinho para aproveitar licenças vitalícias e descontos especiais.</p>
               </div>
               <button
@@ -213,7 +213,7 @@ export const CartDrawer: React.FC = () => {
                       type="text"
                       value={couponInput}
                       onChange={(e) => setCouponInput(e.target.value)}
-                      placeholder="Cupom de Desconto"
+                      placeholder={language === 'es' ? 'Cupón de Descuento' : 'Cupom de Desconto'}
                       className="w-full pl-9 pr-3 py-2.5 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-xs transition-all bg-white outline-none"
                     />
                   </div>
@@ -258,7 +258,7 @@ export const CartDrawer: React.FC = () => {
             {/* Price list breakdown */}
             <div className="space-y-2.5 text-xs text-slate-500">
               <div className="flex justify-between">
-                <span>Subtotal</span>
+                <span>{t('cart_subtotal')}</span>
                 <span className="font-semibold text-slate-800">
                   {formatPrice(subtotal)}
                 </span>
@@ -274,7 +274,7 @@ export const CartDrawer: React.FC = () => {
               )}
 
               <div className="flex justify-between items-center text-sm pt-2.5 border-t border-slate-200/60 text-slate-900 font-bold">
-                <span className="font-display">Total do Pedido</span>
+                <span className="font-display">{t('cart_total')}</span>
                 <span className="font-display font-extrabold text-lg text-slate-950">
                   {formatPrice(total)}
                 </span>

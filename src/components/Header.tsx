@@ -258,6 +258,14 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
   },
 ];
 
+function getMegaCategoryLabel(id: string, label: string, lang: string): string {
+  if (lang === 'es') {
+    if (id === 'multimidia-design') return 'Multimedia';
+    if (id === 'arquitetura-cad') return 'Arquitectura - CAD 3D';
+  }
+  return label;
+}
+
 export const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -276,7 +284,7 @@ export const Header: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems, setIsCartOpen } = useCart();
   const { currency, setCurrency, currencyInfo, formatPrice } = useCurrency();
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
 
   const whatsappNumber = '5581997349300';
   const whatsappMessage = encodeURIComponent(
@@ -329,11 +337,11 @@ export const Header: React.FC = () => {
           {/* Left: Sobre nós | Fale conosco */}
           <div className="flex items-center gap-2.5 font-medium whitespace-nowrap shrink-0">
             <Link to="/sobre-nos" className="hover:text-white transition-colors">
-              Sobre nós
+              {t('top_about_us')}
             </Link>
             <span className="text-slate-600">|</span>
             <Link to="/contato" className="hover:text-white transition-colors">
-              Fale conosco
+              {t('top_contact')}
             </Link>
           </div>
 
@@ -354,7 +362,7 @@ export const Header: React.FC = () => {
               className="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors"
             >
               <CloudDownload className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <span>Entrega Imediata</span>
+              <span>{t('top_instant_delivery')}</span>
             </Link>
 
             <Link
@@ -362,7 +370,7 @@ export const Header: React.FC = () => {
               className="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors"
             >
               <Lock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <span>Pagamento Seguro</span>
+              <span>{t('top_secure_payment')}</span>
             </Link>
           </div>
 
@@ -378,7 +386,7 @@ export const Header: React.FC = () => {
                 type="button"
                 onClick={() => setIsCurrencyOpen((v) => !v)}
                 className="flex items-center gap-1 text-slate-200 hover:text-white font-bold py-1 cursor-pointer whitespace-nowrap"
-                title="Converter moeda de exibição"
+                title={t('currency_switch_title')}
               >
                 <span>{currencyInfo.symbol}</span>
                 <ChevronDown className="w-3 h-3 text-slate-400 shrink-0" />
@@ -393,7 +401,7 @@ export const Header: React.FC = () => {
               >
                 <div className="bg-white text-slate-800 rounded-xl shadow-xl border border-slate-200 py-1.5 overflow-hidden">
                   <div className="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 border-b border-slate-100">
-                    Conversão em Tempo Real
+                    {t('real_time_conversion')}
                   </div>
                   {(Object.keys(CURRENCIES) as CurrencyCode[]).map((code) => {
                     const info = CURRENCIES[code];
@@ -431,7 +439,7 @@ export const Header: React.FC = () => {
                 type="button"
                 onClick={() => setIsFlagOpen((v) => !v)}
                 className="flex items-center gap-1.5 py-1 cursor-pointer"
-                title="Região e Idioma / Region & Language"
+                title={t('region_switch_title')}
               >
                 {language === 'es' ? (
                   <FlagLatamMerged className="w-5 h-3.5" />
@@ -569,7 +577,7 @@ export const Header: React.FC = () => {
                 <input
                   type="text"
                   autoFocus
-                  placeholder="Pesquisar softwares..."
+                  placeholder={t('nav_search_short')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 text-sm bg-slate-100 border-none rounded-xl text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-accent-blue/20"
@@ -596,7 +604,7 @@ export const Header: React.FC = () => {
                     C2Tech
                   </span>
                   <span className="text-[10.5px] font-medium text-slate-500 tracking-tight leading-none mt-1">
-                    Licenças Digitais
+                    {t('brand_subtitle')}
                   </span>
                 </div>
               </Link>
@@ -613,7 +621,7 @@ export const Header: React.FC = () => {
                   }`}
                 >
                   <HomeIcon className="w-3.5 h-3.5 text-slate-800 shrink-0" />
-                  <span>Início</span>
+                  <span>{t('nav_home')}</span>
                 </Link>
 
                 {MEGA_MENU_CATEGORIES.map((cat) => {
@@ -633,7 +641,7 @@ export const Header: React.FC = () => {
                         }`}
                       >
                         {cat.icon}
-                        <span>{cat.label}</span>
+                        <span>{getMegaCategoryLabel(cat.id, cat.label, language)}</span>
                         <ChevronDown
                           className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${
                             isCatOpen ? 'rotate-180 text-[#0b5ed7]' : 'text-slate-500'
@@ -654,7 +662,7 @@ export const Header: React.FC = () => {
                       <input
                         type="text"
                         autoFocus
-                        placeholder="Buscar software..."
+                        placeholder={t('nav_search_short')}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onBlur={() => {
@@ -815,7 +823,7 @@ export const Header: React.FC = () => {
 
                         {savings > 0 && (
                           <span className="inline-block bg-[#d1f4e0] text-[#0f763c] text-[11px] font-extrabold px-2.5 py-1 rounded-md mb-1.5">
-                            Economize -{formatPrice(savings)}
+                            {t('save')} -{formatPrice(savings)}
                           </span>
                         )}
 
@@ -867,18 +875,8 @@ export const Header: React.FC = () => {
               </button>
             </div>
 
-            <Link
-              to="/"
-              className="py-2 text-base font-bold text-slate-900 border-b border-slate-100"
-            >
-              Início
-            </Link>
-            <Link
-              to="/catalogo"
-              className="py-2 text-base font-bold text-[#0b5ed7] border-b border-slate-100"
-            >
-              Ver Todo o Catálogo
-            </Link>
+            <Link to="/" className="py-2 text-base font-bold text-slate-900 border-b border-slate-100">{t('nav_home')}</Link>
+            <Link to="/catalogo" className="py-2 text-base font-bold text-[#0b5ed7] border-b border-slate-100">{t('nav_all')}</Link>
 
             <div className="pt-2 space-y-2">
               <p className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
@@ -892,7 +890,7 @@ export const Header: React.FC = () => {
                 >
                   <span className="flex items-center gap-2">
                     {cat.icon}
-                    {cat.label}
+                    {getMegaCategoryLabel(cat.id, cat.label, language)}
                   </span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </Link>
@@ -906,24 +904,9 @@ export const Header: React.FC = () => {
               >
                 Entrega Imediata & Pagamentos
               </Link>
-              <Link
-                to="/sobre-nos"
-                className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-slate-900"
-              >
-                Sobre Nós
-              </Link>
-              <Link
-                to="/contato"
-                className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-slate-900"
-              >
-                Fale Conosco / Suporte
-              </Link>
-              <Link
-                to="/faq"
-                className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-slate-900"
-              >
-                Perguntas Frequentes (FAQ)
-              </Link>
+              <Link to="/sobre-nos" className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-slate-900">{t('top_about_us')}</Link>
+              <Link to="/contato" className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-slate-900">{t('top_contact')}</Link>
+              <Link to="/faq" className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-slate-900">{t('faq_title')}</Link>
             </div>
 
             <div className="pt-4">

@@ -37,6 +37,7 @@ import {
   Minus,
 } from 'lucide-react';
 import { reviewsData } from '../data/reviews';
+import { translateCategory, translateCompatibility, translateFeature } from '../utils/i18n';
 import { trackEvent } from '../utils/pixel';
 
 const BrazilFlagIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-3' }) => (
@@ -69,6 +70,103 @@ const AVATAR_COLORS = [
   'bg-[#6d597a] text-white',
   'bg-[#2a9d8f] text-white',
   'bg-[#457b9d] text-white',
+];
+
+
+const TRUSTPILOT_REVIEWS_ES = [
+  {
+    id: 1,
+    author: 'Carlos Eduardo M.',
+    timeAgo: 'Hace 2 días',
+    rating: 4,
+    title: 'Entrega súper rápida y video muy explicativo',
+    comment:
+      'Recibí el enlace en el correo en menos de 2 minutos tras el pago. El video paso a paso facilitó muchísimo la instalación.',
+  },
+  {
+    id: 2,
+    author: 'Fernanda S. Oliveira',
+    timeAgo: 'Hace 4 días',
+    rating: 5,
+    title: 'Software completo y soporte de 10',
+    comment:
+      'Ya es el segundo programa que compro en C2Tech. Funciona a la perfección sin mensualidades, equipo muy atento.',
+  },
+  {
+    id: 3,
+    author: 'Roberto Almeida Jr.',
+    timeAgo: 'Hace 1 semana',
+    rating: 5,
+    title: 'Excelente relación calidad-precio',
+    comment:
+      'Instalado en mi Mac y funcionando de maravilla. El tutorial en video muestra exactamente cómo activar sin ningún dolor de cabeza.',
+  },
+  {
+    id: 4,
+    author: 'Juliana Costa',
+    timeAgo: 'Hace 1 semana',
+    rating: 5,
+    title: 'Muy bueno, recomiendo la tienda',
+    comment:
+      'Tardó unos 5 minutos en llegar a mi correo porque cayó en la pestaña promociones, pero el programa es completo y de por vida.',
+  },
+  {
+    id: 5,
+    author: 'Marcos Vinícius T.',
+    timeAgo: 'Hace 2 semanas',
+    rating: 5,
+    title: 'La mejor tienda de software que he probado',
+    comment:
+      '¡Activación garantizada de verdad! Tuve una duda sencilla y me respondieron por WhatsApp enseguida. Nota diez.',
+  },
+];
+
+const TRUSTPILOT_REVIEWS_PT = [
+  {
+    id: 1,
+    author: 'Carlos Eduardo M.',
+    timeAgo: 'Há 2 dias',
+    rating: 4,
+    title: 'Entrega super rápida e vídeo bem explicativo',
+    comment:
+      'Recebi o link no e-mail menos de 2 minutos após o pagamento. O vídeo passo a passo facilitou imenso a instalação.',
+  },
+  {
+    id: 2,
+    author: 'Fernanda S. Oliveira',
+    timeAgo: 'Há 4 dias',
+    rating: 5,
+    title: 'Software completo e apoio nota 10',
+    comment:
+      'Já é o segundo programa que compro na C2Tech. Funciona na perfeição sem mensalidade, equipa muito atenciosa.',
+  },
+  {
+    id: 3,
+    author: 'Roberto Almeida Jr.',
+    timeAgo: 'Há 1 semana',
+    rating: 5,
+    title: 'Excelente relação qualidade-preço',
+    comment:
+      'Instalado no meu Mac a funcionar sem falhas. O tutorial em vídeo mostra exatamente como ativar sem complicações.',
+  },
+  {
+    id: 4,
+    author: 'Juliana Costa',
+    timeAgo: 'Há 1 semana',
+    rating: 5,
+    title: 'Muito bom, recomendo a loja',
+    comment:
+      'Demorou cerca de 5 minutos a chegar ao meu e-mail, mas o programa é completo e vitalício.',
+  },
+  {
+    id: 5,
+    author: 'Marcos Vinícius T.',
+    timeAgo: 'Há 2 semanas',
+    rating: 5,
+    title: 'A melhor loja de software em que já comprei',
+    comment:
+      'Ativação garantida! Tive uma dúvida simples e responderam-me de imediato pelo WhatsApp. Excelente!',
+  },
 ];
 
 const TRUSTPILOT_REVIEWS = [
@@ -148,7 +246,8 @@ export const ProductDetail: React.FC = () => {
   const [fakeReviewComment, setFakeReviewComment] = useState('');
 
   const { addToCart } = useCart();
-  const { isInternational, t } = useLanguage();
+  const { language, isInternational, t } = useLanguage();
+  const activeTrustpilotReviews = language === "es" ? TRUSTPILOT_REVIEWS_ES : language === "pt-PT" ? TRUSTPILOT_REVIEWS_PT : TRUSTPILOT_REVIEWS;
   const { formatPrice } = useCurrency();
   const location = useLocation();
   const hasProcessedCheckoutRef = useRef(false);
@@ -543,21 +642,21 @@ export const ProductDetail: React.FC = () => {
       type: 'video' as const,
       imageUrl: undefined,
       label: 'Vídeo Tutorial',
-      badge: 'VÍDEO',
+      badge: t('thumb_video'),
     },
     {
       id: 101,
       type: 'email' as const,
       imageUrl: undefined,
       label: 'Envio por E-mail',
-      badge: 'E-MAIL',
+      badge: t('thumb_email'),
     },
     {
       id: 102,
       type: 'warranty' as const,
       imageUrl: undefined,
       label: 'Software Vitalício',
-      badge: 'VITALÍCIO',
+      badge: t('thumb_lifetime'),
     },
   ];
 
@@ -576,18 +675,18 @@ export const ProductDetail: React.FC = () => {
             aria-label="Breadcrumb"
           >
             <Link to="/" className="hover:text-blue-600 transition-colors">
-              Início
+              {t('breadcrumb_home')}
             </Link>
             <span>/</span>
             <Link to="/catalogo" className="hover:text-blue-600 transition-colors">
-              Todos os Produtos
+              {t('breadcrumb_all_products')}
             </Link>
             <span>/</span>
             <Link
               to={`/catalogo?categoria=${encodeURIComponent(product.category)}`}
               className="hover:text-blue-600 transition-colors"
             >
-              {product.category}
+              {translateCategory(product.category, language)}
             </Link>
             <span>/</span>
             <span className="text-slate-900 font-semibold truncate max-w-[200px] sm:max-w-none">{product.name}</span>
@@ -600,14 +699,14 @@ export const ProductDetail: React.FC = () => {
             className="inline-flex flex-nowrap items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs text-slate-800 transition-all cursor-pointer shadow-2xs whitespace-nowrap shrink-0 overflow-x-auto scrollbar-none self-start md:self-auto max-w-full"
             title="Ver avaliações verificadas no Trustpilot"
           >
-            <span className="text-slate-600 font-medium whitespace-nowrap">O que nossos clientes dizem</span>
-            <span className="font-bold text-slate-900 whitespace-nowrap">Excelente</span>
+            <span className="text-slate-600 font-medium whitespace-nowrap">{t('trustpilot_what_customers_say')}</span>
+            <span className="font-bold text-slate-900 whitespace-nowrap">{t('trustpilot_excellent')}</span>
             <div className="shrink-0 inline-flex items-center">
               <TrustpilotStars count={5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
             </div>
             <span className="text-slate-700 font-medium whitespace-nowrap">
-              <strong className="text-slate-900 font-bold">4.8</strong> de 5 baseado em{' '}
-              <span className="underline decoration-slate-400">1.785 avaliações</span>
+              <strong className="text-slate-900 font-bold">4.8</strong> {t('trustpilot_score_based_on')}{' '}
+              <span className="underline decoration-slate-400">{t('trustpilot_reviews_count')}</span>
             </span>
             <span className="text-slate-300 hidden sm:inline whitespace-nowrap">•</span>
             <div className="hidden sm:inline-flex shrink-0">
@@ -626,7 +725,7 @@ export const ProductDetail: React.FC = () => {
               {/* Top-left Save Badge */}
               {savingsAmount > 0 && (
                 <div className="absolute top-4 left-4 z-10 bg-[#18b259] text-white text-xs sm:text-sm font-extrabold px-3.5 py-1.5 rounded-md shadow-sm">
-                  Economize {formattedSavings}
+                  {t('save')} {formattedSavings}
                 </div>
               )}
 
@@ -643,10 +742,10 @@ export const ProductDetail: React.FC = () => {
                     <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-amber-950 text-amber-950 rotate-18 translate-y-[1.5px]" />
                   </div>
                   <span className="text-[7.5px] sm:text-[9px] font-black text-amber-950 uppercase leading-none tracking-tight">
-                    SOFTWARE
+                    {t('badge_software')}
                   </span>
                   <span className="text-[8.5px] sm:text-[10px] font-black text-amber-950 uppercase leading-tight mt-0.5 tracking-tight">
-                    VITALÍCIO
+                    {t('badge_lifetime_gold')}
                   </span>
                 </div>
               </div>
@@ -803,8 +902,8 @@ export const ProductDetail: React.FC = () => {
               </h1>
               <p className="text-xs text-slate-500 mt-1">
                 {hasPlatformYearMatrix
-                  ? `Selecionado: ${selectedLicenseOption?.label || 'Windows 2027'} • Versão Completa Vitalícia`
-                  : `${product.version} • Compatível com ${product.compatibility}`}
+                  ? `${t('selected_label')}: ${selectedLicenseOption?.label || 'Windows 2027'} • ${t('full_lifetime_version')}`
+                  : `${product.version} • ${t('compatible_with')} ${translateCompatibility(product.compatibility, language)}`}
               </p>
             </div>
 
@@ -835,9 +934,9 @@ export const ProductDetail: React.FC = () => {
                   loading="eager"
                 />
                 <div>
-                  <p className="text-[11px] font-bold text-slate-800 leading-tight">Uso Vitalício</p>
+                  <p className="text-[11px] font-bold text-slate-800 leading-tight">{t('badge_lifetime')}</p>
                   <p className="text-[9.5px] text-slate-500 leading-snug mt-0.5">
-                    Sem mensalidades recorrentes
+                    {t('badge_lifetime_sub')}
                   </p>
                 </div>
               </div>
@@ -851,10 +950,10 @@ export const ProductDetail: React.FC = () => {
                 />
                 <div>
                   <p className="text-[11px] font-bold text-slate-800 leading-tight">
-                    {product.isSubscription ? 'Acesso Oficial' : 'Ativação Garantida'}
+                    {product.isSubscription ? (language === 'es' ? 'Acceso Oficial' : 'Acesso Oficial') : t('badge_guaranteed')}
                   </p>
                   <p className="text-[9.5px] text-slate-500 leading-snug mt-0.5">
-                    {product.isSubscription ? 'Conta verificada' : '30 dias de suporte técnico'}
+                    {product.isSubscription ? (language === 'es' ? 'Cuenta verificada' : 'Conta verificada') : t('badge_guaranteed_sub')}
                   </p>
                 </div>
               </div>
@@ -867,9 +966,9 @@ export const ProductDetail: React.FC = () => {
                   loading="eager"
                 />
                 <div>
-                  <p className="text-[11px] font-bold text-slate-800 leading-tight">Entrega Digital</p>
+                  <p className="text-[11px] font-bold text-slate-800 leading-tight">{t('badge_digital_delivery')}</p>
                   <p className="text-[9.5px] text-slate-500 leading-snug mt-0.5">
-                    Link no seu e-mail e WhatsApp
+                    {t('badge_digital_delivery_sub')}
                   </p>
                 </div>
               </div>
@@ -882,9 +981,7 @@ export const ProductDetail: React.FC = () => {
               <div className="space-y-4 pt-1">
                 {/* Plataforma */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-slate-700">
-                    Plataforma
-                  </label>
+                  <label className="block text-xs font-semibold text-slate-700">{t('platform')}</label>
                   <div className="flex flex-wrap gap-2">
                     {availablePlatforms.map((plat) => {
                       const isActive = selectedPlatform === plat;
@@ -908,24 +1005,20 @@ export const ProductDetail: React.FC = () => {
 
                 {/* Validade */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-slate-700">
-                    Validade
-                  </label>
+                  <label className="block text-xs font-semibold text-slate-700">{t('validity')}</label>
                   <div className="flex flex-wrap gap-2">
                     <button
                       type="button"
                       className="px-4 py-2 rounded-md text-xs font-bold border-2 border-[#0b5ed7] text-[#0b5ed7] bg-blue-50/40 shadow-xs cursor-default"
                     >
-                      Vitalício
+                      {t('lifetime')}
                     </button>
                   </div>
                 </div>
 
                 {/* Ano / Versão */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-slate-700">
-                    Ano
-                  </label>
+                  <label className="block text-xs font-semibold text-slate-700">{t('year')}</label>
                   <div className="flex flex-wrap gap-2">
                     {availableYearsForPlatform.map((opt) => {
                       const isSelected = selectedLicenseOption?.quantity === opt.quantity;
@@ -952,9 +1045,7 @@ export const ProductDetail: React.FC = () => {
               <div className="space-y-4 pt-1">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-semibold text-slate-700">
-                      Plataforma
-                    </label>
+                    <label className="block text-xs font-semibold text-slate-700">{t('platform')}</label>
                     <div className="flex flex-wrap gap-2">
                       <span className="px-4 py-2 rounded-md text-xs font-bold border-2 border-[#0b5ed7] text-[#0b5ed7] bg-blue-50/40">
                         {product.compatibility}
@@ -963,12 +1054,10 @@ export const ProductDetail: React.FC = () => {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-semibold text-slate-700">
-                      Validade
-                    </label>
+                    <label className="block text-xs font-semibold text-slate-700">{t('validity')}</label>
                     <div className="flex flex-wrap gap-2">
                       <span className="px-4 py-2 rounded-md text-xs font-bold border-2 border-[#0b5ed7] text-[#0b5ed7] bg-blue-50/40">
-                        {product.isSubscription ? 'Assinatura' : 'Vitalício'}
+                        {product.isSubscription ? t('subscription') : t('lifetime')}
                       </span>
                     </div>
                   </div>
@@ -982,7 +1071,7 @@ export const ProductDetail: React.FC = () => {
                         ? 'Escolha a duração da assinatura'
                         : product.id === 'eberick_builder_2025'
                         ? 'Escolha a versão'
-                        : 'Escolha a opção de licença'}
+                        : t('choose_license')}
                     </label>
                     <div className="flex flex-wrap gap-2">
                       {product.licenseOptions.map((opt) => {
@@ -1069,10 +1158,10 @@ export const ProductDetail: React.FC = () => {
                 <div className="flex items-center justify-between gap-2 whitespace-nowrap">
                   <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                     <Monitor className="w-3.5 h-3.5 text-[#0b5ed7] shrink-0" />
-                    <span>Suporte para quantos dispositivos:</span>
+                    <span>{t('device_support_label')}</span>
                   </label>
                   <span className="text-[11px] font-bold text-[#0b5ed7] bg-blue-50 border border-blue-200/80 px-2.5 py-0.5 rounded-full shrink-0">
-                    {quantity === 1 ? '1 Dispositivo' : `${quantity} Dispositivos`}
+                    {quantity === 1 ? t('single_device') : `${quantity} ${t('multiple_devices')}`}
                   </span>
                 </div>
 
@@ -1118,7 +1207,7 @@ export const ProductDetail: React.FC = () => {
                     className="flex-1 bg-[#0b5ed7] hover:bg-[#0a53be] text-white font-bold text-sm py-3 px-6 rounded-md shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
                   >
                     <ShoppingCart className="w-4 h-4" />
-                    <span>Adicionar ao carrinho</span>
+                    <span>{t('add_to_cart')}</span>
                   </button>
                 </div>
 
@@ -1168,12 +1257,12 @@ export const ProductDetail: React.FC = () => {
                 onClick={() => setIsGuaranteesModalOpen(true)}
                 className="space-y-2 cursor-pointer group text-center"
               >
-                <p className="font-display font-extrabold text-xl text-slate-900 tracking-tight">Excelente</p>
+                <p className="font-display font-extrabold text-xl text-slate-900 tracking-tight">{t('trustpilot_excellent')}</p>
                 <div className="flex items-center justify-center gap-1">
                   <TrustpilotStars count={5} size="w-6 h-6" starSize="w-3.5 h-3.5" />
                 </div>
                 <p className="text-xs text-slate-600">
-                  Com base em <span className="underline font-semibold text-slate-900">1.782 avaliações</span>
+                  {t('trustpilot_based_on_bar')} <span className="underline font-semibold text-slate-900">{t('trustpilot_bar_reviews')}</span>
                 </p>
                 <div className="pt-1 flex items-center justify-center">
                   <TrustpilotLogo starSize="w-5 h-5" textSize="text-base" />
@@ -1187,7 +1276,7 @@ export const ProductDetail: React.FC = () => {
                 type="button"
                 onClick={() =>
                   setTrustpilotSlideIndex((prev) =>
-                    prev === 0 ? TRUSTPILOT_REVIEWS.length - 1 : prev - 1
+                    prev === 0 ? activeTrustpilotReviews.length - 1 : prev - 1
                   )
                 }
                 className="w-8 h-8 rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0 mr-2 cursor-pointer shadow-2xs"
@@ -1199,7 +1288,7 @@ export const ProductDetail: React.FC = () => {
               {/* Mobile (1 card per slide) */}
               <div className="block sm:hidden flex-1 overflow-hidden">
                 {(() => {
-                  const item = TRUSTPILOT_REVIEWS[trustpilotSlideIndex % TRUSTPILOT_REVIEWS.length];
+                  const item = activeTrustpilotReviews[trustpilotSlideIndex % activeTrustpilotReviews.length];
                   return (
                     <div
                       key={item.id}
@@ -1208,7 +1297,7 @@ export const ProductDetail: React.FC = () => {
                       <div className="flex items-center justify-between">
                         <TrustpilotStars count={item.rating ?? 5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
                         <span className="text-[10px] text-slate-500 flex items-center gap-1 font-semibold">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#08ad88]" /> Verificado no Trustpilot
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#08ad88]" /> {t('trustpilot_verified')} no Trustpilot
                         </span>
                       </div>
                       <p className="text-xs font-bold text-slate-900">{item.title}</p>
@@ -1225,7 +1314,7 @@ export const ProductDetail: React.FC = () => {
               <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-4 gap-3.5 flex-1 overflow-hidden">
                 {[0, 1, 2, 3].map((offset) => {
                   const item =
-                    TRUSTPILOT_REVIEWS[(trustpilotSlideIndex + offset) % TRUSTPILOT_REVIEWS.length];
+                    activeTrustpilotReviews[(trustpilotSlideIndex + offset) % activeTrustpilotReviews.length];
                   return (
                     <div
                       key={item.id}
@@ -1234,7 +1323,7 @@ export const ProductDetail: React.FC = () => {
                       <div className="flex items-center gap-1.5">
                         <TrustpilotStars count={item.rating ?? 5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
                         <span className="text-[10px] text-slate-500 flex items-center gap-0.5 font-semibold">
-                          <CheckCircle2 className="w-3 h-3 text-[#08ad88]" /> Verificado
+                          <CheckCircle2 className="w-3 h-3 text-[#08ad88]" /> {t('trustpilot_verified')}
                         </span>
                       </div>
 
@@ -1254,7 +1343,7 @@ export const ProductDetail: React.FC = () => {
               <button
                 type="button"
                 onClick={() =>
-                  setTrustpilotSlideIndex((prev) => (prev + 1) % TRUSTPILOT_REVIEWS.length)
+                  setTrustpilotSlideIndex((prev) => (prev + 1) % activeTrustpilotReviews.length)
                 }
                 className="w-8 h-8 rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0 ml-2 cursor-pointer shadow-2xs"
                 aria-label="Próxima avaliação"
@@ -1270,7 +1359,7 @@ export const ProductDetail: React.FC = () => {
               onClick={() => setIsGuaranteesModalOpen(true)}
               className="text-[11px] text-slate-500 hover:text-slate-800 cursor-pointer font-medium"
             >
-              Exibindo nossas avaliações de 4 & 5 estrelas
+              {t('trustpilot_showing_high_ratings')}
             </button>
           </div>
         </div>
@@ -1451,7 +1540,7 @@ export const ProductDetail: React.FC = () => {
               }`}
             >
               <Info className="w-4 h-4" />
-              <span>DESCRIÇÃO</span>
+              <span>{t('tab_description')}</span>
             </button>
 
             <button
@@ -1464,7 +1553,7 @@ export const ProductDetail: React.FC = () => {
               }`}
             >
               <List className="w-4 h-4" />
-              <span>ESPECIFICAÇÕES DO SISTEMA</span>
+              <span>{t('tab_specs')}</span>
             </button>
 
             <button
@@ -1477,7 +1566,7 @@ export const ProductDetail: React.FC = () => {
               }`}
             >
               <FileCheck className="w-4 h-4" />
-              <span>ATIVAÇÃO</span>
+              <span>{t('tab_activation')}</span>
             </button>
           </div>
 
@@ -1511,13 +1600,13 @@ export const ProductDetail: React.FC = () => {
               {/* Detalhes do Produto */}
               <div className="space-y-3">
                 <h3 className="font-display font-extrabold text-base text-slate-900">
-                  Detalhes do produto
+                  {t('product_details_heading')}
                 </h3>
                 <ul className="space-y-2 text-xs sm:text-sm">
                   {product.features.map((feat, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
-                      <span>{feat}</span>
+                      <span>{translateFeature(feat, language)}</span>
                     </li>
                   ))}
                   {product.id !== 'autodesk_all_apps' && (
@@ -1960,7 +2049,7 @@ export const ProductDetail: React.FC = () => {
                   <tbody>
                     <tr className="bg-white border-b border-slate-200/70">
                       <th className="py-3.5 px-4 font-bold text-slate-900 w-1/3 sm:w-1/4 align-top">
-                        Plataforma
+                        {t('spec_platform')}
                       </th>
                       <td className="py-3.5 px-4 text-slate-700">
                         {product.id === 'autocad_2027_win' ||
@@ -1978,7 +2067,7 @@ export const ProductDetail: React.FC = () => {
 
                     <tr className="bg-[#f4f6f8] border-b border-slate-200/70">
                       <th className="py-3.5 px-4 font-bold text-slate-900 align-top">
-                        Gráficos / GPU
+                        {t('spec_gpu')}
                       </th>
                       <td className="py-3.5 px-4 text-slate-700 leading-relaxed">
                         {product.id === 'autocad_2027_win'
@@ -1992,7 +2081,7 @@ export const ProductDetail: React.FC = () => {
 
                     <tr className="bg-white border-b border-slate-200/70">
                       <th className="py-3.5 px-4 font-bold text-slate-900 align-top">
-                        Processador
+                        {t('spec_cpu')}
                       </th>
                       <td className="py-3.5 px-4 text-slate-700 leading-relaxed">
                         {product.id === 'autocad_2027_win'
@@ -2005,7 +2094,7 @@ export const ProductDetail: React.FC = () => {
 
                     <tr className="bg-[#f4f6f8] border-b border-slate-200/70">
                       <th className="py-3.5 px-4 font-bold text-slate-900 align-top">
-                        Espaço em Disco
+                        {t('spec_storage')}
                       </th>
                       <td className="py-3.5 px-4 text-slate-700 leading-relaxed">
                         {product.id === 'autocad_2027_win'
@@ -2018,7 +2107,7 @@ export const ProductDetail: React.FC = () => {
 
                     <tr className="bg-white border-b border-slate-200/70">
                       <th className="py-3.5 px-4 font-bold text-slate-900 align-top">
-                        Memória RAM
+                        {t('spec_ram')}
                       </th>
                       <td className="py-3.5 px-4 text-slate-700 leading-relaxed">
                         {product.id === 'autocad_2027_win'
@@ -2031,7 +2120,7 @@ export const ProductDetail: React.FC = () => {
 
                     <tr className="bg-[#f4f6f8] border-b border-slate-200/70">
                       <th className="py-3.5 px-4 font-bold text-slate-900 align-top">
-                        Sistema Operacional
+                        {t('spec_os')}
                       </th>
                       <td className="py-3.5 px-4 text-slate-700 leading-relaxed">
                         {product.id === 'autocad_2027_win'
@@ -2044,12 +2133,10 @@ export const ProductDetail: React.FC = () => {
 
                     <tr className="bg-white">
                       <th className="py-3.5 px-4 font-bold text-slate-900 align-top">
-                        Outros Requisitos
+                        {t('spec_other')}
                       </th>
                       <td className="py-3.5 px-4 text-slate-700 leading-relaxed">
-                        Conexão com a internet para realizar o download dos arquivos de instalação e
-                        assistir ao vídeo tutorial enviado por e-mail. Após instalado e ativado, o
-                        software funciona 100% offline.
+                        {t('spec_other_desc')}
                       </td>
                     </tr>
                   </tbody>
@@ -2146,7 +2233,7 @@ export const ProductDetail: React.FC = () => {
           <div className="mb-16">
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-display font-extrabold text-xl sm:text-2xl text-slate-900">
-                Na mesma categoria
+                {t('in_same_category')}
               </h2>
               <div className="flex items-center gap-2">
                 <button
@@ -2208,7 +2295,7 @@ export const ProductDetail: React.FC = () => {
 
                       {relSavings > 0 && (
                         <span className="inline-block bg-[#18b259] text-white text-[10px] font-extrabold px-2 py-0.5 rounded mb-2">
-                          Economize {formatPrice(relSavings)}
+                          {t('save')} {formatPrice(relSavings)}
                         </span>
                       )}
 
@@ -2262,14 +2349,14 @@ export const ProductDetail: React.FC = () => {
         {/* =================================================================== */}
         <div className="border border-slate-200 rounded-2xl p-6 sm:p-8 bg-white">
           <h2 className="font-display font-extrabold text-sm sm:text-base text-slate-900 uppercase tracking-wider mb-6">
-            AVALIAÇÕES DO PRODUTO ({productReviews.length})
+            {t('product_reviews_title')} ({productReviews.length})
           </h2>
 
           {/* Top Summary & Progress Bar Box + 2 Action Buttons */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center pb-6 border-b border-slate-200">
             {/* Average Score Box */}
             <div className="lg:col-span-3 flex flex-col items-center justify-center p-5 border border-slate-200 rounded-xl bg-slate-50/50 text-center">
-              <span className="text-xs text-slate-500 font-semibold">Classificação média</span>
+              <span className="text-xs text-slate-500 font-semibold">{t('average_rating_label')}</span>
               <span className="font-display font-black text-4xl sm:text-5xl text-slate-900 my-1">
                 {averageRating}
               </span>
@@ -2329,7 +2416,7 @@ export const ProductDetail: React.FC = () => {
                 className="w-full sm:w-52 py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-md flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
               >
                 <Edit3 className="w-3.5 h-3.5" />
-                <span>Escreva sua avaliação</span>
+                <span>{t('write_review_btn')}</span>
               </button>
 
               <button
@@ -2342,7 +2429,7 @@ export const ProductDetail: React.FC = () => {
                 className="w-full sm:w-52 py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-md flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
               >
                 <MessageSquare className="w-3.5 h-3.5" />
-                <span>Faça uma pergunta</span>
+                <span>{t('ask_question_btn')}</span>
               </button>
             </div>
           </div>
