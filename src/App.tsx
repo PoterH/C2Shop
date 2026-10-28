@@ -15,6 +15,7 @@ import { ThankYouPage } from './pages/ThankYouPage';
 
 import { CartProvider } from './context/CartContext';
 import { CurrencyProvider } from './context/CurrencyContext';
+import { LanguageProvider } from './context/LanguageContext';
 import { CartDrawer } from './components/CartDrawer';
 import { trackPageView } from './utils/pixel';
 import { Analytics } from '@vercel/analytics/react';
@@ -44,7 +45,8 @@ function App() {
 
   return (
     <CurrencyProvider>
-      <CartProvider>
+      <LanguageProvider>
+        <CartProvider>
         <BrowserRouter>
           <ScrollToTop />
           <div className="flex flex-col min-h-screen bg-white text-slate-800 antialiased selection:bg-accent-blue/10 selection:text-accent-blue">
@@ -81,6 +83,7 @@ function App() {
           </div>
         </BrowserRouter>
       </CartProvider>
+      </LanguageProvider>
     </CurrencyProvider>
   );
 }

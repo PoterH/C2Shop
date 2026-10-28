@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Trash2, Tag, ShoppingBag, ShieldCheck, Ticket, AlertCircle } from 'lucide-react';
+import { X, Trash2, Tag, ShoppingBag, ShieldCheck, Ticket, AlertCircle, ExternalLink } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
+import { getEffectiveCheckoutUrl } from '../data/internationalCheckouts';
 import { useCurrency } from '../context/CurrencyContext';
 import { CheckoutModal } from './CheckoutModal';
 
@@ -21,6 +23,7 @@ export const CartDrawer: React.FC = () => {
     total,
     discountPercentage
   } = useCart();
+  const { isInternational, t } = useLanguage();
 
   const [couponInput, setCouponInput] = useState('');
   const [couponFeedback, setCouponFeedback] = useState<{ success: boolean; message: string } | null>(null);
@@ -117,48 +120,64 @@ export const CartDrawer: React.FC = () => {
               {cartItems.map((item) => (
                 <div 
                   key={item.id}
-                  className="flex items-center space-x-3.5 p-3.5 bg-slate-50/50 hover:bg-slate-50 border border-slate-100 rounded-2xl transition-all"
+                  className="p-3.5 bg-slate-50/50 hover:bg-slate-50 border border-slate-100 rounded-2xl transition-all"
                 >
-                  {/* Product Image */}
-                  <div className="w-14 h-14 bg-white border border-slate-100 rounded-xl p-1 overflow-hidden shrink-0 flex items-center justify-center">
-                    <img 
-                      src={item.selectedLicenseOption?.imageUrl || item.imageUrl} 
-                      alt={item.name}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  </div>
-
-                  {/* Product Info */}
-                  <div className="flex-grow min-w-0">
-                    <h4 className="font-display font-bold text-slate-800 text-sm truncate leading-tight">
-                      {item.name} {item.selectedLicenseOption ? `(${item.selectedLicenseOption.label})` : ''}
-                    </h4>
-                    <span className="text-[10px] text-slate-450 text-slate-400 block">
-                      {item.isSubscription 
-                        ? (item.selectedLicenseOption 
-                            ? `Assinatura ${item.selectedLicenseOption.label}` 
-                            : (item.selectedSubOption === 'avulso' ? 'Pagamento Único' : 'Assinatura Mensal'))
-                        : 'Licença vitalícia'} • {item.selectedLicenseOption?.platform || item.compatibility} • {(item.deviceCount || 1) === 1 ? '1 Dispositivo' : `${item.deviceCount} Dispositivos`}
-                    </span>
-                    <div className="font-display font-black text-slate-900 text-sm mt-1">
-                      {item.selectedLicenseOption
-                        ? (formatPrice(item.selectedLicenseOption.price * (item.deviceCount || 1)) + (item.selectedLicenseOption.label.includes('Mensal') ? ' /mês' : ''))
-                        : (item.isSubscription 
-                          ? (item.selectedSubOption === 'avulso' 
-                            ? formatPrice(item.price * (item.deviceCount || 1))
-                            : formatPrice((item.recurrencePrice || item.price) * (item.deviceCount || 1)) + ' /mês')
-                          : formatPrice(item.price * (item.deviceCount || 1)))}
+                  <div className="flex items-center space-x-3.5">
+                    {/* Product Image */}
+                    <div className="w-14 h-14 bg-white border border-slate-100 rounded-xl p-1 overflow-hidden shrink-0 flex items-center justify-center">
+                      <img 
+                        src={item.selectedLicenseOption?.imageUrl || item.imageUrl} 
+                        alt={item.name}
+                        className="max-w-full max-h-full object-contain"
+                      />
                     </div>
+
+                    {/* Product Info */}
+                    <div className="flex-grow min-w-0">
+                      <h4 className="font-display font-bold text-slate-800 text-sm truncate leading-tight">
+                        {item.name} {item.selectedLicenseOption ? `(${item.selectedLicenseOption.label})` : ''}
+                      </h4>
+                      <span className="text-[10px] text-slate-450 text-slate-400 block">
+                        {item.isSubscription 
+                          ? (item.selectedLicenseOption 
+                              ? `Assinatura ${item.selectedLicenseOption.label}` 
+                              : (item.selectedSubOption === 'avulso' ? 'Pagamento Único' : 'Assinatura Mensal'))
+                          : 'Licença vitalícia'} • {item.selectedLicenseOption?.platform || item.compatibility} • {(item.deviceCount || 1) === 1 ? '1 Dispositivo' : `${item.deviceCount} Dispositivos`}
+                      </span>
+                      <div className="font-display font-black text-slate-900 text-sm mt-1">
+                        {item.selectedLicenseOption
+                          ? (formatPrice(item.selectedLicenseOption.price * (item.deviceCount || 1)) + (item.selectedLicenseOption.label.includes('Mensal') ? ' /mês' : ''))
+                          : (item.isSubscription 
+                            ? (item.selectedSubOption === 'avulso' 
+                              ? formatPrice(item.price * (item.deviceCount || 1))
+                              : formatPrice((item.recurrencePrice || item.price) * (item.deviceCount || 1)) + ' /mês')
+                            : formatPrice(item.price * (item.deviceCount || 1)))}
+                      </div>
+                    </div>
+
+                    {/* Remove Button */}
+                    <button
+                      onClick={() => removeFromCart(item.id)}
+                      className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all shrink-0 cursor-pointer"
+                      title="Remover produto"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
 
-                  {/* Remove Button */}
-                  <button
-                    onClick={() => removeFromCart(item.id)}
-                    className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all shrink-0 cursor-pointer"
-                    title="Remover produto"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  {isInternational && (
+                    <div className="mt-2.5 pt-2 border-t border-slate-200/60 flex items-center justify-between gap-2">
+                      <a
+                        href={getEffectiveCheckoutUrl(item, item.selectedLicenseOption, true)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full py-2 px-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 shadow-xs hover:no-underline"
+                      >
+                        <span>{t('cart_pay_now')}</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -264,13 +283,25 @@ export const CartDrawer: React.FC = () => {
 
             {/* CTA checkout button */}
             <div className="space-y-3 pt-1">
-              <button
-                onClick={handleCheckout}
-                disabled={isMixedCart}
-                className="w-full py-4 bg-accent-blue hover:bg-accent-blue-dark text-white font-bold rounded-2xl text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2 cursor-pointer border-none disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <span>Finalizar Compra</span>
-              </button>
+              {isInternational && cartItems.length === 1 ? (
+                <a
+                  href={getEffectiveCheckoutUrl(cartItems[0], cartItems[0].selectedLicenseOption, true)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2 cursor-pointer border-none text-center hover:no-underline"
+                >
+                  <span>{t('cart_checkout')} (Cakto Internacional)</span>
+                  <ExternalLink className="w-4 h-4 ml-1.5" />
+                </a>
+              ) : (
+                <button
+                  onClick={handleCheckout}
+                  disabled={isMixedCart}
+                  className="w-full py-4 bg-accent-blue hover:bg-accent-blue-dark text-white font-bold rounded-2xl text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2 cursor-pointer border-none disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span>{t('cart_checkout')}</span>
+                </button>
+              )}
               
               <div className="flex items-center justify-center space-x-2 text-[10px] text-slate-400">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />

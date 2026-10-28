@@ -37,6 +37,7 @@ export interface Product {
   mpn?: string;
   gallery?: string[];
   driveUrl?: string;
+  internationalCheckoutUrl?: string;
 }
 
 export interface LicenseOption {
@@ -45,6 +46,7 @@ export interface LicenseOption {
   price: number;
   originalPrice?: number;
   checkoutUrl: string;
+  internationalCheckoutUrl?: string;
   platform?: 'Windows' | 'macOS';
   year?: string;
   downloadSlug?: string;

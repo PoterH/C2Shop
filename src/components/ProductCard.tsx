@@ -4,6 +4,8 @@ import { Send, Info, Star, ShoppingCart } from 'lucide-react';
 import type { Product } from '../data/products';
 import { reviewsData } from '../data/reviews';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
+import { getEffectiveCheckoutUrl } from '../data/internationalCheckouts';
 import { useCurrency } from '../context/CurrencyContext';
 
 interface ProductCardProps {
@@ -12,6 +14,7 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
+  const { isInternational, t } = useLanguage();
   const { formatPrice } = useCurrency();
   const productReviews = reviewsData[product.id] || [];
   const averageRating = productReviews.length > 0
@@ -253,13 +256,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <button
             onClick={(e) => {
               e.preventDefault();
-              addToCart(product);
+              if (isInternational && (!product.licenseOptions || product.licenseOptions.length === 0)) {
+                const url = getEffectiveCheckoutUrl(product, undefined, true);
+                window.open(url, '_blank', 'noopener,noreferrer');
+              } else {
+                addToCart(product);
+              }
             }}
             className="flex items-center justify-center w-full py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-xs font-bold text-white transition-all duration-200 shadow-[0_4px_12px_rgba(16,185,129,0.3)] hover:shadow-[0_6px_16px_rgba(16,185,129,0.4)] border-none text-center transform hover:-translate-y-0.5 active:translate-y-0"
             id={`add-to-cart-${product.id}`}
           >
             <ShoppingCart className="w-4 h-4 mr-1.5" />
-            Quero levar
+            {isInternational ? t('want_this') : 'Quero levar'}
           </button>
         )}
       </div>

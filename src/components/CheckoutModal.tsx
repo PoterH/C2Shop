@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   X, 
-  Lock, 
+  Lock,
+  ExternalLink, 
   Copy, 
   Loader2, 
   User, 
@@ -18,6 +19,8 @@ import type { Product } from '../data/products';
 // @ts-ignore
 import EfiPay from 'payment-token-efi';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
+import { getEffectiveCheckoutUrl } from '../data/internationalCheckouts';
 import { trackEvent } from '../utils/pixel';
 
 interface CheckoutModalProps {
@@ -33,6 +36,7 @@ type PaymentMethod = 'pix' | 'card' | 'boleto';
 export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, onClose, initialSubOption }) => {
   const navigate = useNavigate();
   const { cartItems, total, discountAmount, couponCode, clearCart } = useCart();
+  const { isInternational, language } = useLanguage();
   const activeProduct = product || cartItems[0];
   const isDirectProductCheckout = Boolean(product && cartItems.length === 0);
   
@@ -770,8 +774,44 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
               <div className="space-y-4">
                 <h4 className="font-display font-bold text-slate-800 text-sm">
-                  2. Escolha como pagar
+                  {isInternational ? (language === 'es' ? '2. Pago Internacional Cakto' : '2. Pagamento Internacional Cakto') : '2. Escolha como pagar'}
                 </h4>
+
+                {isInternational ? (
+                  <div className="space-y-4 pt-1">
+                    <div className="p-5 bg-sky-50/70 rounded-2xl border border-sky-100 flex flex-col items-center text-center">
+                      <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-3 shadow-xs text-sky-600">
+                        <Lock className="w-6 h-6" />
+                      </div>
+                      <h4 className="text-sm font-bold text-slate-800 mb-1">
+                        {language === 'es' ? 'Checkout Internacional Seguro (Cakto)' : 'Checkout Internacional Seguro (Cakto)'}
+                      </h4>
+                      <p className="text-[11px] text-slate-600 mb-4 px-2 leading-relaxed">
+                        {language === 'es'
+                          ? 'Conversión automática a tu moneda local. Acepta tarjetas internacionales (Visa, Mastercard, Amex), Apple Pay y Google Pay con entrega inmediata por correo.'
+                          : 'Conversão automática de moeda pela Cakto. Aceita cartões internacionais, Apple Pay e Google Pay com entrega imediata por e-mail.'}
+                      </p>
+
+                      {cartItems.map((item) => {
+                        const itemUrl = getEffectiveCheckoutUrl(item, item.selectedLicenseOption, true);
+                        const versionLabel = item.selectedLicenseOption?.label || item.version;
+                        return (
+                          <a
+                            key={item.id}
+                            href={itemUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full py-3.5 mb-2.5 bg-[#0b5ed7] hover:bg-[#0a53be] text-white font-bold rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer hover:no-underline"
+                          >
+                            <span>{language === 'es' ? `Pagar ${item.name} (${versionLabel})` : `Pagar ${item.name} (${versionLabel})`}</span>
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : (
+                  <>
                 
                  {/* Method selector cards */}
                  {(!activeProduct?.isSubscription || subOption === 'avulso' || !!activeProduct?.selectedLicenseOption) ? (
@@ -970,6 +1010,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                       </div>
                     )}
                   </div>
+                )}
+                  </>
                 )}
               </div>
             </div>

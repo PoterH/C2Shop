@@ -7,6 +7,8 @@ import {
   TrustGuaranteesModal,
 } from '../components/TrustBadges';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
+import { getEffectiveCheckoutUrl } from '../data/internationalCheckouts';
 import { useCurrency } from '../context/CurrencyContext';
 import { getProductBySlug, products, type LicenseOption } from '../data/products';
 import {
@@ -146,6 +148,7 @@ export const ProductDetail: React.FC = () => {
   const [fakeReviewComment, setFakeReviewComment] = useState('');
 
   const { addToCart } = useCart();
+  const { isInternational, t } = useLanguage();
   const { formatPrice } = useCurrency();
   const location = useLocation();
   const hasProcessedCheckoutRef = useRef(false);
@@ -1123,21 +1126,31 @@ export const ProductDetail: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    addToCart(
-                      product,
-                      selectedLicenseOption ? 'avulso' : selectedPlan,
-                      selectedLicenseOption,
-                      quantity
-                    );
+                    if (isInternational) {
+                      const effectiveUrl = getEffectiveCheckoutUrl(product, selectedLicenseOption, true);
+                      window.open(effectiveUrl, '_blank', 'noopener,noreferrer');
+                    } else {
+                      addToCart(
+                        product,
+                        selectedLicenseOption ? 'avulso' : selectedPlan,
+                        selectedLicenseOption,
+                        quantity
+                      );
+                    }
                   }}
                   id={`detail-buy-now-${product.id}`}
                   className="w-full bg-slate-950 hover:bg-slate-800 text-white font-bold text-sm py-3.5 px-6 rounded-md shadow-md transition-all cursor-pointer flex items-center justify-center gap-2.5"
                 >
-                  <span>Comprar agora</span>
+                  <span>{isInternational ? t('buy_now') : 'Comprar agora'}</span>
                   <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold bg-white/15 px-2 py-0.5 rounded text-emerald-300">
-                    PIX • CARTÃO
+                    {isInternational ? t('buy_now_badge') : 'PIX • CARTÃO'}
                   </span>
                 </button>
+                {isInternational && (
+                  <p className="text-[11px] text-slate-500 text-center leading-relaxed pt-1">
+                    {t('intl_checkout_hint')}
+                  </p>
+                )}
               </div>
             )}
           </div>
@@ -2702,17 +2715,22 @@ export const ProductDetail: React.FC = () => {
         <button
           type="button"
           onClick={() => {
-            addToCart(
-              product,
-              selectedLicenseOption ? 'avulso' : selectedPlan,
-              selectedLicenseOption,
-              quantity
-            );
+            if (isInternational) {
+              const effectiveUrl = getEffectiveCheckoutUrl(product, selectedLicenseOption, true);
+              window.open(effectiveUrl, '_blank', 'noopener,noreferrer');
+            } else {
+              addToCart(
+                product,
+                selectedLicenseOption ? 'avulso' : selectedPlan,
+                selectedLicenseOption,
+                quantity
+              );
+            }
           }}
           className="shrink-0 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs py-2.5 px-5 rounded-xl shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
         >
           <ShoppingCart className="w-4 h-4" />
-          <span>Comprar</span>
+          <span>{isInternational ? t('buy_now') : 'Comprar'}</span>
         </button>
       </div>
     </div>

@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useCurrency, CURRENCIES, type CurrencyCode } from '../context/CurrencyContext';
+import { useLanguage } from '../context/LanguageContext';
 import { products } from '../data/products';
 
 /* ============================================================================
@@ -275,6 +276,7 @@ export const Header: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems, setIsCartOpen } = useCart();
   const { currency, setCurrency, currencyInfo, formatPrice } = useCurrency();
+  const { language, setLanguage } = useLanguage();
 
   const whatsappNumber = '5581997349300';
   const whatsappMessage = encodeURIComponent(
@@ -429,9 +431,15 @@ export const Header: React.FC = () => {
                 type="button"
                 onClick={() => setIsFlagOpen((v) => !v)}
                 className="flex items-center gap-1.5 py-1 cursor-pointer"
-                title="Região e Idioma"
+                title="Região e Idioma / Region & Language"
               >
-                <FlagBrazil />
+                {language === 'es' ? (
+                  <FlagLatamMerged className="w-5 h-3.5" />
+                ) : language === 'pt-PT' ? (
+                  <FlagPtMzMerged className="w-5 h-3.5" />
+                ) : (
+                  <FlagBrazil className="w-5 h-3.5" />
+                )}
                 <ChevronDown className="w-3 h-3 text-slate-400" />
               </button>
 
@@ -444,66 +452,101 @@ export const Header: React.FC = () => {
               >
                 <div className="bg-white text-slate-800 rounded-xl shadow-xl border border-slate-200 py-1.5 overflow-hidden">
                   <div className="px-3.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 border-b border-slate-100">
-                    Idioma e Região
+                    {language === 'es' ? 'Idioma y Región' : 'Idioma e Região'}
                   </div>
 
-                  {/* 1. Brasil (Ativo) */}
-                  <div className="px-3.5 py-2.5 flex items-center justify-between gap-3 bg-blue-50/50 border-b border-slate-100">
+                  {/* 1. Brasil */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLanguage('pt-BR');
+                      setIsFlagOpen(false);
+                    }}
+                    className={`w-full px-3.5 py-2.5 flex items-center justify-between gap-3 text-left border-b border-slate-100 transition-colors cursor-pointer ${
+                      language === 'pt-BR' ? 'bg-blue-50/70 font-bold' : 'hover:bg-slate-50'
+                    }`}
+                  >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <FlagBrazil className="w-6 h-4 shrink-0" />
                       <div>
                         <p className="text-xs font-extrabold text-slate-900 leading-none">
                           Português (Brasil)
                         </p>
-                        <p className="text-[10px] text-slate-500 mt-0.5">Brasil</p>
+                        <p className="text-[10px] text-slate-500 mt-0.5">Brasil • Moeda R$ (Pix e Cartão)</p>
                       </div>
                     </div>
-                    <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
-                      Ativo
-                    </span>
-                  </div>
+                    {language === 'pt-BR' && (
+                      <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
+                        Ativo
+                      </span>
+                    )}
+                  </button>
 
-                  {/* 2. México, Argentina, Chile e Peru (Em breve em Espanhol -> En breve) */}
-                  <div
-                    className="px-3.5 py-2.5 flex items-center justify-between gap-3 opacity-75 cursor-not-allowed select-none border-b border-slate-100"
-                    title="Disponível em breve para América Latina"
+                  {/* 2. Español (Hispanoamérica & España) */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLanguage('es');
+                      setIsFlagOpen(false);
+                    }}
+                    className={`w-full px-3.5 py-2.5 flex items-center justify-between gap-3 text-left border-b border-slate-100 transition-colors cursor-pointer ${
+                      language === 'es' ? 'bg-blue-50/70 font-bold' : 'hover:bg-slate-50'
+                    }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <FlagLatamMerged className="w-6 h-4 shrink-0" />
                       <div>
-                        <p className="text-xs font-bold text-slate-800 leading-none">
+                        <p className="text-xs font-bold text-slate-900 leading-none">
                           Español
                         </p>
                         <p className="text-[10px] text-slate-500 mt-0.5">
-                          México • Argentina • Chile • Peru
+                          México • Argentina • Chile • Perú • España
                         </p>
                       </div>
                     </div>
-                    <span className="text-[9px] font-extrabold uppercase tracking-wider text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full shrink-0">
-                      En breve
-                    </span>
-                  </div>
+                    {language === 'es' ? (
+                      <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
+                        Activo
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-semibold text-sky-600 hover:underline shrink-0">
+                        Cambiar
+                      </span>
+                    )}
+                  </button>
 
-                  {/* 3. Portugal e Moçambique (Em breve em Português) */}
-                  <div
-                    className="px-3.5 py-2.5 flex items-center justify-between gap-3 opacity-75 cursor-not-allowed select-none"
-                    title="Disponível em breve para Portugal e Moçambique"
+                  {/* 3. Português (Portugal & Europa) */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLanguage('pt-PT');
+                      setIsFlagOpen(false);
+                    }}
+                    className={`w-full px-3.5 py-2.5 flex items-center justify-between gap-3 text-left transition-colors cursor-pointer ${
+                      language === 'pt-PT' ? 'bg-blue-50/70 font-bold' : 'hover:bg-slate-50'
+                    }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <FlagPtMzMerged className="w-6 h-4 shrink-0" />
                       <div>
-                        <p className="text-xs font-bold text-slate-800 leading-none">
-                          Português
+                        <p className="text-xs font-bold text-slate-900 leading-none">
+                          Português (Portugal)
                         </p>
                         <p className="text-[10px] text-slate-500 mt-0.5">
-                          Portugal • Moçambique
+                          Portugal • Europa • Moçambique (€)
                         </p>
                       </div>
                     </div>
-                    <span className="text-[9px] font-extrabold uppercase tracking-wider text-slate-700 bg-slate-200 px-2.5 py-0.5 rounded-full shrink-0">
-                      Em breve
-                    </span>
-                  </div>
+                    {language === 'pt-PT' ? (
+                      <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
+                        Ativo
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-semibold text-sky-600 hover:underline shrink-0">
+                        Mudar
+                      </span>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
