@@ -70,7 +70,7 @@ const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     breadcrumb_all_products: 'Todos os Produtos',
     trustpilot_what_customers_say: 'O que nossos clientes dizem',
     trustpilot_excellent: 'Excelente',
-    trustpilot_score_based_on: '4.8 de 5 baseado em',
+    trustpilot_score_based_on: 'de 5 baseado em',
     trustpilot_reviews_count: '1.785 avaliações',
     trustpilot_reviews_modal_title: 'Ver avaliações verificadas no Trustpilot',
 
@@ -191,7 +191,7 @@ const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     breadcrumb_all_products: 'All Products',
     trustpilot_what_customers_say: 'What our customers say',
     trustpilot_excellent: 'Excellent',
-    trustpilot_score_based_on: '4.8 out of 5 based on',
+    trustpilot_score_based_on: 'out of 5 based on',
     trustpilot_reviews_count: '1,785 reviews',
     trustpilot_reviews_modal_title: 'View verified reviews on Trustpilot',
 
@@ -312,7 +312,7 @@ const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     breadcrumb_all_products: 'Todos los Productos',
     trustpilot_what_customers_say: 'Lo que dicen nuestros clientes',
     trustpilot_excellent: 'Excelente',
-    trustpilot_score_based_on: '4.8 de 5 basado en',
+    trustpilot_score_based_on: 'de 5 basado en',
     trustpilot_reviews_count: '1.785 opiniones',
     trustpilot_reviews_modal_title: 'Ver opiniones verificadas en Trustpilot',
 
@@ -433,7 +433,7 @@ const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     breadcrumb_all_products: 'Todos os Produtos',
     trustpilot_what_customers_say: 'O que dizem os nossos clientes',
     trustpilot_excellent: 'Excelente',
-    trustpilot_score_based_on: '4.8 de 5 baseado em',
+    trustpilot_score_based_on: 'de 5 baseado em',
     trustpilot_reviews_count: '1.785 avaliações',
     trustpilot_reviews_modal_title: 'Ver avaliações verificadas no Trustpilot',
 

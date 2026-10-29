@@ -846,7 +846,7 @@ export const ProductDetail: React.FC = () => {
               <TrustpilotStars count={5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
             </div>
             <span className="text-slate-700 font-medium whitespace-nowrap">
-              <strong className="text-slate-900 font-bold">{productReviews.length > 0 ? averageRating : '5.0'}</strong> {t('trustpilot_score_based_on')}{' '}
+              <strong className="text-slate-900 font-bold">4.8</strong> {t('trustpilot_score_based_on')}{' '}
               <span className="underline decoration-slate-400">{t('trustpilot_reviews_count')}</span>
             </span>
             <span className="text-slate-300 hidden sm:inline whitespace-nowrap">•</span>
