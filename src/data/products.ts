@@ -53,6 +53,7 @@ export interface LicenseOption {
   imageUrl?: string;
   gallery?: string[];
   driveUrl?: string;
+  unavailable?: boolean;
 }
 
 
@@ -1181,6 +1182,7 @@ export const products: Product[] = [
     imageUrl: '/images/products/promob-plus-professional-2025.png',
     ean13: '8388917966100',
     mpn: 'PRMB-PLUS-WW2025-C2',
+    unavailable: true,
     licenseOptions: [
       {
         quantity: 20241,
@@ -1202,7 +1204,8 @@ export const products: Product[] = [
         originalPrice: 458.00,
         checkoutUrl: 'https://pay.cakto.com.br/i5whsbp_853381',
         downloadSlug: 'promob-plus-professional-2025',
-        imageUrl: '/images/products/promob-plus-professional-2025.png'
+        imageUrl: '/images/products/promob-plus-professional-2025.png',
+        unavailable: true
       }
     ],
     notes: 'Nota: A ativação é válida para uso vitalício local.',

@@ -74,7 +74,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     licenseOption?: LicenseOption,
     deviceCount: number = 1
   ) => {
-    if (product.unavailable) return;
+    if (product.unavailable || licenseOption?.unavailable) return;
     
     const chosenOption = licenseOption !== undefined ? licenseOption : (product.licenseOptions && product.licenseOptions.length > 0 ? product.licenseOptions[0] : undefined);
     const chosenSubOption = chosenOption ? 'avulso' : (subOption || 'recurrent');
