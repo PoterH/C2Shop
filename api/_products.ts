@@ -47,7 +47,6 @@ export interface LicenseOption {
   downloadSlug?: string;
   imageUrl?: string;
   gallery?: string[];
-  unavailable?: boolean;
 }
 
 
@@ -899,7 +898,6 @@ export const products: Product[] = [
     originalPrice: 234.90,
     checkoutUrl: 'https://pay.cakto.com.br/fvvtpwg',
     imageUrl: '/images/products/promob-plus-professional-2025.png',
-    unavailable: true,
     licenseOptions: [
       {
         quantity: 20241,
@@ -921,8 +919,7 @@ export const products: Product[] = [
         originalPrice: 458.00,
         checkoutUrl: 'https://pay.cakto.com.br/i5whsbp_853381',
         downloadSlug: 'promob-plus-professional-2025',
-        imageUrl: '/images/products/promob-plus-professional-2025.png',
-        unavailable: true
+        imageUrl: '/images/products/promob-plus-professional-2025.png'
       }
     ],
     notes: 'Nota: A ativação é válida para uso vitalício local.',

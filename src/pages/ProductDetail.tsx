@@ -422,10 +422,8 @@ export const ProductDetail: React.FC = () => {
 
   useEffect(() => {
     if (product?.licenseOptions && product.licenseOptions.length > 0 && !selectedLicenseOption) {
-      // Default to the cheapest available option first
-      const availableOptions = product.licenseOptions.filter((opt) => !opt.unavailable);
-      const candidates = availableOptions.length > 0 ? availableOptions : product.licenseOptions;
-      const cheapestOption = [...candidates].sort((a, b) => a.price - b.price)[0];
+      // Default to the cheapest option first (e.g. AutoCAD Windows 2019 at R$ 67,90)
+      const cheapestOption = [...product.licenseOptions].sort((a, b) => a.price - b.price)[0];
       setSelectedLicenseOption(cheapestOption || product.licenseOptions[0]);
     }
   }, [product, selectedLicenseOption]);
@@ -1170,18 +1168,13 @@ export const ProductDetail: React.FC = () => {
                           key={opt.quantity}
                           type="button"
                           onClick={() => handleSelectYearOption(opt)}
-                          className={`px-4 py-2 rounded-md text-xs font-bold transition-all cursor-pointer border flex items-center gap-1.5 ${
+                          className={`px-4 py-2 rounded-md text-xs font-bold transition-all cursor-pointer border ${
                             isSelected
                               ? 'border-2 border-[#0b5ed7] text-[#0b5ed7] bg-blue-50/40 shadow-xs'
                               : 'border-slate-300 text-slate-700 bg-white hover:border-slate-400'
                           }`}
                         >
-                          <span>{opt.year}</span>
-                          {opt.unavailable && (
-                            <span className="text-[10px] bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded font-bold uppercase">
-                              {language === 'en' ? 'Sold Out' : language === 'es' ? 'Agotado' : 'Esgotado'}
-                            </span>
-                          )}
+                          {opt.year}
                         </button>
                       );
                     })}
@@ -1236,8 +1229,8 @@ export const ProductDetail: React.FC = () => {
                             }`}
                           >
                             {product.id === 'eberick_builder_2025' || opt.label.startsWith('Versão')
-                              ? `${opt.label}${opt.unavailable ? ` (${language === 'en' ? 'Sold Out' : language === 'es' ? 'Agotado' : 'Esgotado'})` : ''}`
-                              : `${opt.label} — ${formatPrice(opt.price)}${opt.unavailable ? ` (${language === 'en' ? 'Sold Out' : language === 'es' ? 'Agotado' : 'Esgotado'})` : ''}`}
+                              ? opt.label
+                              : `${opt.label} — ${formatPrice(opt.price)}`}
                           </button>
                         );
                       })}
@@ -1291,13 +1284,13 @@ export const ProductDetail: React.FC = () => {
             )}
 
             {/* Quantity + Add to Cart + Buy It Now Buttons */}
-            {product.unavailable || selectedLicenseOption?.unavailable ? (
+            {product.unavailable ? (
               <div className="pt-2">
                 <button
                   disabled
                   className="w-full py-3.5 bg-slate-200 text-slate-500 font-bold rounded-lg text-sm uppercase tracking-wider cursor-not-allowed"
                 >
-                  {t('temporarily_unavailable')}
+                  Temporariamente Indisponível
                 </button>
               </div>
             ) : (
@@ -2949,9 +2942,7 @@ export const ProductDetail: React.FC = () => {
         </div>
         <button
           type="button"
-          disabled={product.unavailable || selectedLicenseOption?.unavailable}
           onClick={() => {
-            if (product.unavailable || selectedLicenseOption?.unavailable) return;
             if (isInternational) {
               const effectiveUrl = getEffectiveCheckoutUrl(product, selectedLicenseOption, true);
               window.open(effectiveUrl, '_blank', 'noopener,noreferrer');
@@ -2964,20 +2955,10 @@ export const ProductDetail: React.FC = () => {
               );
             }
           }}
-          className={`shrink-0 font-bold text-xs py-2.5 px-5 rounded-xl shadow-md transition-all flex items-center gap-1.5 ${
-            product.unavailable || selectedLicenseOption?.unavailable
-              ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
-              : 'bg-emerald-500 hover:bg-emerald-600 text-white cursor-pointer active:scale-95'
-          }`}
+          className="shrink-0 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs py-2.5 px-5 rounded-xl shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
         >
           <ShoppingCart className="w-4 h-4" />
-          <span>
-            {product.unavailable || selectedLicenseOption?.unavailable
-              ? t('temporarily_unavailable')
-              : isInternational
-              ? t('buy_now')
-              : 'Comprar'}
-          </span>
+          <span>{isInternational ? t('buy_now') : 'Comprar'}</span>
         </button>
       </div>
     </div>
