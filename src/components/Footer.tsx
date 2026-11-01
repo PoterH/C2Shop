@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, MessageCircle, Shield, FileText } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { SantaHat, FooterGarlandLine } from './ChristmasDecorations';
 
 export const Footer: React.FC = () => {
   const { language } = useLanguage();
@@ -12,7 +13,9 @@ export const Footer: React.FC = () => {
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
   return (
-    <footer className="relative bg-[#020617] text-slate-400 py-16 overflow-hidden z-0 border-t border-slate-950">
+    <footer className="relative bg-[#020617] text-slate-400 pt-20 pb-16 z-0 border-t border-slate-800/90 overflow-x-clip">
+      {/* Guirlanda Natalina Decorativa Sobre a Linha do Footer */}
+      <FooterGarlandLine />
       
       {/* Morphing Glowing Background Blobs (Similar to the Hero) */}
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0">
@@ -38,12 +41,16 @@ export const Footer: React.FC = () => {
             
             {/* Column 1 & 2: Brand Info */}
             <div className="space-y-6 col-span-1 md:col-span-2">
-              <Link to="/" className="inline-block">
-                <img 
-                  src="/images/logo.png" 
-                  alt="Logo C2Tech" 
-                  className="w-10 h-10 rounded-xl object-cover shadow-[0_0_15px_rgba(7,212,243,0.25)] hover:scale-105 transition-transform duration-300" 
-                />
+              <Link to="/" className="inline-block group">
+                <div className="relative inline-block shrink-0">
+                  <img 
+                    src="/images/logo.png" 
+                    alt="Logo C2Tech" 
+                    className="w-10 h-10 rounded-xl object-cover shadow-[0_0_15px_rgba(7,212,243,0.25)] group-hover:scale-105 transition-transform duration-300" 
+                  />
+                  {/* Chapeuzinho Natalino C2Tech */}
+                  <SantaHat className="absolute -top-3.5 -left-3 w-8 h-8 transform -rotate-12 group-hover:rotate-[-6deg] group-hover:scale-105 transition-transform duration-300 z-10" />
+                </div>
               </Link>
               <div className="space-y-3">
                 <h2 className="text-white text-lg sm:text-xl font-bold font-display tracking-tight leading-snug">

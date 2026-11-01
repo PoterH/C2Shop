@@ -21,6 +21,7 @@ import { useCart } from '../context/CartContext';
 import { useCurrency, CURRENCIES, type CurrencyCode } from '../context/CurrencyContext';
 import { useLanguage } from '../context/LanguageContext';
 import { products } from '../data/products';
+import { SantaHat } from './ChristmasDecorations';
 
 /* ============================================================================
  * INLINE SVG FLAGS (Brazil | Merged MX+AR+CL+PE | Merged PT+MZ)
@@ -712,11 +713,15 @@ export const Header: React.FC = () => {
             <>
               {/* Left: Brand Logo + Name (Proportioned & aligned like PrimeLicense) */}
               <Link to="/" className="flex items-center gap-2.5 group shrink-0 whitespace-nowrap">
-                <img
-                  src="/images/logo.png"
-                  alt="Logo C2Tech"
-                  className="w-9 h-9 rounded-xl object-cover shadow-2xs transition-transform duration-300 group-hover:scale-105 shrink-0"
-                />
+                <div className="relative shrink-0">
+                  <img
+                    src="/images/logo.png"
+                    alt="Logo C2Tech"
+                    className="w-9 h-9 rounded-xl object-cover shadow-2xs transition-transform duration-300 group-hover:scale-105 shrink-0"
+                  />
+                  {/* Chapeuzinho Natalino C2Tech */}
+                  <SantaHat className="absolute -top-3.5 -left-2.5 w-7 h-7 transform -rotate-12 group-hover:rotate-[-6deg] group-hover:scale-105 transition-transform duration-300 z-10" />
+                </div>
                 <div className="flex flex-col justify-center">
                   <span className="font-display font-black text-[21px] text-slate-900 tracking-tight leading-none">
                     C2Tech
@@ -981,7 +986,10 @@ export const Header: React.FC = () => {
             {/* Drawer Top Header with Logo and Close Button */}
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <img src="/images/logo.png" alt="C2Tech" className="w-7 h-7 rounded-lg object-cover" />
+                <div className="relative shrink-0">
+                  <img src="/images/logo.png" alt="C2Tech" className="w-7 h-7 rounded-lg object-cover" />
+                  <SantaHat className="absolute -top-2.5 -left-2 w-5.5 h-5.5 transform -rotate-12 z-10" />
+                </div>
                 <span className="font-display font-black text-slate-900 text-lg">C2Tech</span>
               </div>
               <button

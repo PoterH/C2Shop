@@ -17,6 +17,7 @@ import { products, CATEGORIES } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
 import { translateCategory } from '../utils/i18n';
+import { SnowEffect } from '../components/ChristmasDecorations';
 
 export const Home: React.FC = () => {
   const { language } = useLanguage();
@@ -269,6 +270,9 @@ export const Home: React.FC = () => {
           <div className="absolute top-[35%] right-[18%] w-1 h-1 bg-[#00d2ff] rounded-full animate-pulse opacity-50"></div>
           <div className="absolute top-[80%] right-[12%] w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse opacity-30"></div>
         </div>
+
+        {/* Efeito Natalino: Flocos de Neve Caindo no Hero */}
+        <SnowEffect />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3.5 sm:space-y-4 md:space-y-5 flex flex-col items-center">
           
