@@ -49,7 +49,7 @@ export const Footer: React.FC = () => {
                     className="w-10 h-10 rounded-xl object-cover shadow-[0_0_15px_rgba(7,212,243,0.25)] group-hover:scale-105 transition-transform duration-300" 
                   />
                   {/* Chapeuzinho Natalino C2Tech */}
-                  <SantaHat className="absolute -top-3.5 -left-3 w-8 h-8 transform -rotate-12 group-hover:rotate-[-6deg] group-hover:scale-105 transition-transform duration-300 z-10" />
+                  <SantaHat className="absolute -top-[15px] -left-[2px] w-[35px] h-auto drop-shadow-md transition-transform duration-300 group-hover:scale-105 z-10" />
                 </div>
               </Link>
               <div className="space-y-3">

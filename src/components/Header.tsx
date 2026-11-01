@@ -720,7 +720,7 @@ export const Header: React.FC = () => {
                     className="w-9 h-9 rounded-xl object-cover shadow-2xs transition-transform duration-300 group-hover:scale-105 shrink-0"
                   />
                   {/* Chapeuzinho Natalino C2Tech */}
-                  <SantaHat className="absolute -top-3.5 -left-2.5 w-7 h-7 transform -rotate-12 group-hover:rotate-[-6deg] group-hover:scale-105 transition-transform duration-300 z-10" />
+                  <SantaHat className="absolute -top-[13px] -left-[2px] w-[31px] h-auto drop-shadow-md transition-transform duration-300 group-hover:scale-105 z-10" />
                 </div>
                 <div className="flex flex-col justify-center">
                   <span className="font-display font-black text-[21px] text-slate-900 tracking-tight leading-none">
@@ -988,7 +988,7 @@ export const Header: React.FC = () => {
               <div className="flex items-center gap-2">
                 <div className="relative shrink-0">
                   <img src="/images/logo.png" alt="C2Tech" className="w-7 h-7 rounded-lg object-cover" />
-                  <SantaHat className="absolute -top-2.5 -left-2 w-5.5 h-5.5 transform -rotate-12 z-10" />
+                  <SantaHat className="absolute -top-[10px] -left-[2px] w-[25px] h-auto drop-shadow-md z-10" />
                 </div>
                 <span className="font-display font-black text-slate-900 text-lg">C2Tech</span>
               </div>
