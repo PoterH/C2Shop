@@ -48,8 +48,8 @@ export const Footer: React.FC = () => {
                     alt="Logo C2Tech" 
                     className="w-10 h-10 rounded-xl object-cover shadow-[0_0_15px_rgba(7,212,243,0.25)] group-hover:scale-105 transition-transform duration-300" 
                   />
-                  {/* Chapeuzinho Natalino C2Tech: Vestido na ponta direita do ícone */}
-                  <SantaHat className="absolute -top-[13px] -right-[6px] w-[34px] h-auto pointer-events-none drop-shadow-md transition-transform duration-300 transform rotate-[16deg] group-hover:rotate-[21deg] group-hover:scale-105 z-10" />
+                  {/* Chapeuzinho Natalino C2Tech: Perfeitamente vestido na ponta superior esquerda do ícone */}
+                  <SantaHat className="absolute -top-[9px] -left-[8px] w-[30px] h-auto pointer-events-none drop-shadow-md transition-transform duration-300 transform -rotate-[10deg] group-hover:-rotate-[14deg] group-hover:scale-105 z-10" />
                 </div>
               </Link>
               <div className="space-y-3">
