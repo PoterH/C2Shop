@@ -1439,11 +1439,12 @@ export const products: Product[] = [
     longDescription: 'O Adobe Photoshop é o software padrão de ouro mundial para processamento de fotos digitais, fotomontagens complexas com camadas e ilustrações artísticas. Esta versão completa e funcional oferece alto rendimento local para fotógrafos e designers gráficos, disponível para Windows e macOS.',
     price: 97.90,
     originalPrice: 179.90,
-    checkoutUrl: 'https://pay.cakto.com.br/uso8h4c',
+    checkoutUrl: 'https://pay.cakto.com.br/33bi9nb',
+    internationalCheckoutUrl: 'https://pay.cakto.com.br/vpgiw9h',
     imageUrl: '/images/products/adobe-photoshop-2026.png',
     licenseOptions: [
-      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/uso8h4c', downloadSlug: 'adobe-photoshop-2026-windows', imageUrl: '/images/products/adobe-photoshop-2026-windows.png', driveUrl: 'https://drive.google.com/drive/folders/1_idfhrAAsyUoRd8US1rISgzE-P9C9wxI?usp=drive_link' },
-      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/uso8h4c', downloadSlug: 'adobe-photoshop-2026-macos', imageUrl: '/images/products/adobe-photoshop-2026-macos.png', driveUrl: 'https://drive.google.com/drive/folders/144KpBlWwN_ayPPwv3qR0_2HiERenY9xa?usp=drive_link' }
+      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/33bi9nb', internationalCheckoutUrl: 'https://pay.cakto.com.br/vpgiw9h', downloadSlug: 'adobe-photoshop-2026-windows', imageUrl: '/images/products/adobe-photoshop-2026-windows.png', driveUrl: 'https://drive.google.com/drive/folders/1_idfhrAAsyUoRd8US1rISgzE-P9C9wxI?usp=drive_link' },
+      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/vzmbho4', internationalCheckoutUrl: 'https://pay.cakto.com.br/55spj79', downloadSlug: 'adobe-photoshop-2026-macos', imageUrl: '/images/products/adobe-photoshop-2026-macos.png', driveUrl: 'https://drive.google.com/drive/folders/144KpBlWwN_ayPPwv3qR0_2HiERenY9xa?usp=drive_link' }
     ],
     features: [
       'Versão completa e funcional',
@@ -1474,11 +1475,12 @@ export const products: Product[] = [
     longDescription: 'O Adobe Illustrator é o software de design de gráficos vetoriais padrão do setor, permitindo criar logotipos, ícones, desenhos, tipografia e ilustrações complexas para qualquer mídia. Esta versão completa e funcional oferece excelente rendimento local com aceleração de hardware em Windows e macOS.',
     price: 97.90,
     originalPrice: 179.90,
-    checkoutUrl: 'https://pay.cakto.com.br/ebyhwkz',
+    checkoutUrl: 'https://pay.cakto.com.br/3e8vhbk',
+    internationalCheckoutUrl: 'https://pay.cakto.com.br/oabdp5a',
     imageUrl: '/images/products/adobe-illustrator-2026.png',
     licenseOptions: [
-      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/ebyhwkz', downloadSlug: 'adobe-illustrator-2026-windows', imageUrl: '/images/products/adobe-illustrator-2026-windows.png', driveUrl: 'https://drive.google.com/drive/folders/1wfikDovRV2Z6hx8Gibv47zsta5eaxlfE?usp=drive_link' },
-      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/ebyhwkz', downloadSlug: 'adobe-illustrator-2026-macos', imageUrl: '/images/products/adobe-illustrator-2026-macos.png', driveUrl: 'https://drive.google.com/drive/folders/19MVxRgRzyMN5vWE0wpBNdLuZ680jGysm?usp=drive_link' }
+      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/3e8vhbk', internationalCheckoutUrl: 'https://pay.cakto.com.br/oabdp5a', downloadSlug: 'adobe-illustrator-2026-windows', imageUrl: '/images/products/adobe-illustrator-2026-windows.png', driveUrl: 'https://drive.google.com/drive/folders/1wfikDovRV2Z6hx8Gibv47zsta5eaxlfE?usp=drive_link' },
+      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/r9dq6mw', internationalCheckoutUrl: 'https://pay.cakto.com.br/ye23okq', downloadSlug: 'adobe-illustrator-2026-macos', imageUrl: '/images/products/adobe-illustrator-2026-macos.png', driveUrl: 'https://drive.google.com/drive/folders/19MVxRgRzyMN5vWE0wpBNdLuZ680jGysm?usp=drive_link' }
     ],
     features: [
       'Versão completa e funcional',
@@ -1508,11 +1510,12 @@ export const products: Product[] = [
     longDescription: 'O Adobe Premiere Pro é o software líder para edição de vídeo de alto nível em computadores Windows e Mac, oferecendo ferramentas criativas robustas, integração com outros apps e uma engine potente de renderização em tempo real local.',
     price: 97.90,
     originalPrice: 179.90,
-    checkoutUrl: 'https://pay.cakto.com.br/y98ydjt',
+    checkoutUrl: 'https://pay.cakto.com.br/35wxuu6',
+    internationalCheckoutUrl: 'https://pay.cakto.com.br/ppgrgwu',
     imageUrl: '/images/products/adobe-premiere-pro-2026.png',
     licenseOptions: [
-      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/y98ydjt', downloadSlug: 'adobe-premiere-pro-2026-windows', imageUrl: '/images/products/adobe-premiere-pro-2026-windows.png', driveUrl: 'https://drive.google.com/drive/folders/1ouOI2kE9ykUWhbIRKVErLdt8wT-7lUzP?usp=drive_link' },
-      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/y98ydjt', downloadSlug: 'adobe-premiere-pro-2026-macos', imageUrl: '/images/products/adobe-premiere-pro-2026-macos.png', driveUrl: 'https://drive.google.com/drive/folders/1MpniYyk6PpiiGF_pcTtrG3kpX4DS9bG4?usp=drive_link' }
+      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/35wxuu6', internationalCheckoutUrl: 'https://pay.cakto.com.br/ppgrgwu', downloadSlug: 'adobe-premiere-pro-2026-windows', imageUrl: '/images/products/adobe-premiere-pro-2026-windows.png', driveUrl: 'https://drive.google.com/drive/folders/1ouOI2kE9ykUWhbIRKVErLdt8wT-7lUzP?usp=drive_link' },
+      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/8jjtest', internationalCheckoutUrl: 'https://pay.cakto.com.br/mdfqde5', downloadSlug: 'adobe-premiere-pro-2026-macos', imageUrl: '/images/products/adobe-premiere-pro-2026-macos.png', driveUrl: 'https://drive.google.com/drive/folders/1MpniYyk6PpiiGF_pcTtrG3kpX4DS9bG4?usp=drive_link' }
     ],
     features: [
       'Versão completa e funcional',
@@ -1542,11 +1545,12 @@ export const products: Product[] = [
     longDescription: 'O Adobe After Effects é o padrão da indústria para animações e efeitos visuais digitais. Crie introduções profissionais, transições animadas e composições fotorrealistas de forma estável no Windows e Mac.',
     price: 97.90,
     originalPrice: 179.90,
-    checkoutUrl: 'https://pay.cakto.com.br/bm6mauf',
+    checkoutUrl: 'https://pay.cakto.com.br/pd66c62',
+    internationalCheckoutUrl: 'https://pay.cakto.com.br/y3o3wwj',
     imageUrl: '/images/products/adobe-after-effects-2026.png',
     licenseOptions: [
-      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/bm6mauf', downloadSlug: 'adobe-after-effects-2026-windows', imageUrl: '/images/products/adobe-after-effects-2026-windows.png', driveUrl: 'https://drive.google.com/drive/folders/1n7IMbAMrKMrph3SAClqZjA-lWKu7aEef?usp=drive_link' },
-      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/bm6mauf', downloadSlug: 'adobe-after-effects-2026-macos', imageUrl: '/images/products/adobe-after-effects-2026-macos.png', driveUrl: 'https://drive.google.com/drive/folders/1eubskNF0SF_pFKT9Dp2oA1pg1qFxI73g?usp=drive_link' }
+      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/pd66c62', internationalCheckoutUrl: 'https://pay.cakto.com.br/y3o3wwj', downloadSlug: 'adobe-after-effects-2026-windows', imageUrl: '/images/products/adobe-after-effects-2026-windows.png', driveUrl: 'https://drive.google.com/drive/folders/1n7IMbAMrKMrph3SAClqZjA-lWKu7aEef?usp=drive_link' },
+      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/yanciia', internationalCheckoutUrl: 'https://pay.cakto.com.br/b23ppi5', downloadSlug: 'adobe-after-effects-2026-macos', imageUrl: '/images/products/adobe-after-effects-2026-macos.png', driveUrl: 'https://drive.google.com/drive/folders/1eubskNF0SF_pFKT9Dp2oA1pg1qFxI73g?usp=drive_link' }
     ],
     features: [
       'Versão completa e funcional',
@@ -1576,11 +1580,12 @@ export const products: Product[] = [
     longDescription: 'O Adobe Lightroom Classic oferece ferramentas avançadas de tratamento e revelação de fotos, com fluxos eficientes locais para organizar e processar arquivos fotográficos pesados com total precisão em Windows e Mac.',
     price: 97.90,
     originalPrice: 179.90,
-    checkoutUrl: 'https://pay.cakto.com.br/je5uy6x',
+    checkoutUrl: 'https://pay.cakto.com.br/fwwqmba',
+    internationalCheckoutUrl: 'https://pay.cakto.com.br/hkrjs3s',
     imageUrl: '/images/products/adobe-lightroom-classic-2026.png',
     licenseOptions: [
-      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/je5uy6x', downloadSlug: 'adobe-lightroom-classic-2026-windows', imageUrl: '/images/products/adobe-lightroom-classic-2026-windows.png', driveUrl: 'https://drive.google.com/drive/folders/1e496p9h2z0Ri0npC8wKdHDgl19jJtCtz?usp=drive_link' },
-      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/je5uy6x', downloadSlug: 'adobe-lightroom-classic-2026-macos', imageUrl: '/images/products/adobe-lightroom-classic-2026-macos.png', driveUrl: 'https://drive.google.com/drive/folders/1FTcxAAgCbBukIan7lR-6GTQngQZ1mZEQ?usp=drive_link' }
+      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/fwwqmba', internationalCheckoutUrl: 'https://pay.cakto.com.br/hkrjs3s', downloadSlug: 'adobe-lightroom-classic-2026-windows', imageUrl: '/images/products/adobe-lightroom-classic-2026-windows.png', driveUrl: 'https://drive.google.com/drive/folders/1e496p9h2z0Ri0npC8wKdHDgl19jJtCtz?usp=drive_link' },
+      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/gz92etx', internationalCheckoutUrl: 'https://pay.cakto.com.br/k9x8mcc', downloadSlug: 'adobe-lightroom-classic-2026-macos', imageUrl: '/images/products/adobe-lightroom-classic-2026-macos.png', driveUrl: 'https://drive.google.com/drive/folders/1FTcxAAgCbBukIan7lR-6GTQngQZ1mZEQ?usp=drive_link' }
     ],
     features: [
       'Versão completa e funcional',
@@ -1932,11 +1937,12 @@ export const products: Product[] = [
     longDescription: 'O Adobe Acrobat Pro DC oferece as melhores ferramentas para trabalhar com PDFs. Edite textos e imagens diretamente no PDF, converta documentos, crie formulários preenchíveis, e adicione assinaturas digitais com facilidade e segurança. Uma licença vitalícia completa para turbinar a sua produtividade no Windows e Mac.',
     price: 167.90,
     originalPrice: 269.00,
-    checkoutUrl: 'https://pay.cakto.com.br/gm7y7qs',
+    checkoutUrl: 'https://pay.cakto.com.br/bcmzpny',
+    internationalCheckoutUrl: 'https://pay.cakto.com.br/agmzvu9',
     imageUrl: '/images/products/adobe-acrobat-pro.png',
     isSubscription: false,
     licenseOptions: [
-      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 167.90, originalPrice: 269.00, checkoutUrl: 'https://pay.cakto.com.br/gm7y7qs', downloadSlug: 'adobe-acrobat-pro-dc-2026-windows', imageUrl: '/images/products/adobe-acrobat-pro-dc-2026-windows.png', driveUrl: 'https://drive.google.com/drive/folders/1OXYAN30RI857GoCV9MVKZSKZl2tX28De?usp=drive_link' },
+      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 167.90, originalPrice: 269.00, checkoutUrl: 'https://pay.cakto.com.br/bcmzpny', internationalCheckoutUrl: 'https://pay.cakto.com.br/agmzvu9', downloadSlug: 'adobe-acrobat-pro-dc-2026-windows', imageUrl: '/images/products/adobe-acrobat-pro-dc-2026-windows.png', driveUrl: 'https://drive.google.com/drive/folders/1OXYAN30RI857GoCV9MVKZSKZl2tX28De?usp=drive_link' },
       { quantity: 20252, label: 'macOS - 2025', platform: 'macOS', year: '2025', price: 189.90, originalPrice: 299.00, checkoutUrl: 'https://pay.cakto.com.br/gm7y7qs', downloadSlug: 'adobe-acrobat-pro-dc-2025-macos', imageUrl: '/images/products/adobe-acrobat-pro-dc-2025-macos.png', driveUrl: 'https://drive.google.com/drive/folders/1J-z0eMqZrANbm8_GtcYjDku29ctBCFsd?usp=drive_link' }
     ],
     features: [

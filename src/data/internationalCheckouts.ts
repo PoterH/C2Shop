@@ -19,6 +19,14 @@ export const INTERNATIONAL_PRODUCT_CHECKOUTS: Record<string, string> = {
   wondershare_recoverit_13: 'https://pay.cakto.com.br/36sg8ge',
   fl_studio_2025: 'https://pay.cakto.com.br/kuqjs4e',
   filmora_15: 'https://pay.cakto.com.br/3fq3yv4',
+
+  // Adobe Products Default (Windows)
+  photoshop_2026: 'https://pay.cakto.com.br/vpgiw9h',
+  illustrator_2026: 'https://pay.cakto.com.br/oabdp5a',
+  premiere_2026: 'https://pay.cakto.com.br/ppgrgwu',
+  after_effects_2026: 'https://pay.cakto.com.br/y3o3wwj',
+  lightroom_classic_2026: 'https://pay.cakto.com.br/hkrjs3s',
+  adobe_acrobat_pro_2026: 'https://pay.cakto.com.br/agmzvu9',
 };
 
 // Mapping for multi-version products by productId_optionQuantity
@@ -85,6 +93,24 @@ export const INTERNATIONAL_OPTION_CHECKOUTS: Record<string, string> = {
   // Microsoft Office 2024 Pro
   office_25_win_1: 'https://pay.cakto.com.br/9k74men',
   office_25_win_2: 'https://pay.cakto.com.br/78abdwy',
+
+  // Adobe Products
+  photoshop_2026_2026: 'https://pay.cakto.com.br/vpgiw9h',
+  photoshop_2026_20262: 'https://pay.cakto.com.br/55spj79',
+
+  illustrator_2026_2026: 'https://pay.cakto.com.br/oabdp5a',
+  illustrator_2026_20262: 'https://pay.cakto.com.br/ye23okq',
+
+  premiere_2026_2026: 'https://pay.cakto.com.br/ppgrgwu',
+  premiere_2026_20262: 'https://pay.cakto.com.br/mdfqde5',
+
+  after_effects_2026_2026: 'https://pay.cakto.com.br/y3o3wwj',
+  after_effects_2026_20262: 'https://pay.cakto.com.br/b23ppi5',
+
+  lightroom_classic_2026_2026: 'https://pay.cakto.com.br/hkrjs3s',
+  lightroom_classic_2026_20262: 'https://pay.cakto.com.br/k9x8mcc',
+
+  adobe_acrobat_pro_2026_2026: 'https://pay.cakto.com.br/agmzvu9',
 };
 
 // Secondary lookup by downloadSlug (extra safety)
@@ -140,6 +166,24 @@ export const INTERNATIONAL_SLUG_CHECKOUTS: Record<string, string> = {
 
   'office-2024-professional-plus': 'https://pay.cakto.com.br/9k74men',
   'office-2024-professional-mac': 'https://pay.cakto.com.br/78abdwy',
+
+  // Adobe Products
+  'adobe-photoshop-2026-windows': 'https://pay.cakto.com.br/vpgiw9h',
+  'adobe-photoshop-2026-macos': 'https://pay.cakto.com.br/55spj79',
+
+  'adobe-illustrator-2026-windows': 'https://pay.cakto.com.br/oabdp5a',
+  'adobe-illustrator-2026-macos': 'https://pay.cakto.com.br/ye23okq',
+
+  'adobe-premiere-pro-2026-windows': 'https://pay.cakto.com.br/ppgrgwu',
+  'adobe-premiere-pro-2026-macos': 'https://pay.cakto.com.br/mdfqde5',
+
+  'adobe-after-effects-2026-windows': 'https://pay.cakto.com.br/y3o3wwj',
+  'adobe-after-effects-2026-macos': 'https://pay.cakto.com.br/b23ppi5',
+
+  'adobe-lightroom-classic-2026-windows': 'https://pay.cakto.com.br/hkrjs3s',
+  'adobe-lightroom-classic-2026-macos': 'https://pay.cakto.com.br/k9x8mcc',
+
+  'adobe-acrobat-pro-dc-2026-windows': 'https://pay.cakto.com.br/agmzvu9',
 };
 
 /**
