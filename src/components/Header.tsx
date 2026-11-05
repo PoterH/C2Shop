@@ -172,13 +172,13 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
         seeAllLink: '/catalogo?categoria=Escrit%C3%B3rio+e+Produtividade',
         items: [
           { name: 'Adobe Acrobat Pro DC 2026', slug: 'adobe-acrobat-pro-dc-2026' },
-          { name: 'Parallels Desktop 26 (macOS)', slug: 'parallels-desktop-26' },
+          { name: 'Parallels Desktop 27 (macOS)', slug: 'parallels-desktop-27' },
           { name: 'Wondershare PDFelement 12', slug: 'pdfelement-12' },
           { name: 'Wondershare Recoverit 13', slug: 'wondershare-recoverit-13' },
         ],
       },
     ],
-    featuredSlugs: ['office-2024-professional-plus', 'windows-11-pro', 'parallels-desktop-26'],
+    featuredSlugs: ['office-2024-professional-plus', 'windows-11-pro', 'parallels-desktop-27'],
   },
   {
     id: 'multimidia-design',

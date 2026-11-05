@@ -13,7 +13,8 @@ export const INTERNATIONAL_PRODUCT_CHECKOUTS: Record<string, string> = {
   enscape: 'https://pay.cakto.com.br/gh579x5',
   proteus_9: 'https://pay.cakto.com.br/83ewp67',
   exocad_31: 'https://pay.cakto.com.br/ingnn23',
-  parallels_desktop_26: 'https://pay.cakto.com.br/33d45v8',
+  parallels_desktop_26: 'https://pay.cakto.com.br/97u3fwj',
+  parallels_desktop_27: 'https://pay.cakto.com.br/97u3fwj',
   camtasia_2026: 'https://pay.cakto.com.br/f7sm4s6',
   pdfelement_12: 'https://pay.cakto.com.br/msedvrd',
   wondershare_recoverit_13: 'https://pay.cakto.com.br/36sg8ge',
@@ -95,6 +96,10 @@ export const INTERNATIONAL_OPTION_CHECKOUTS: Record<string, string> = {
   office_25_win_1: 'https://pay.cakto.com.br/9k74men',
   office_25_win_2: 'https://pay.cakto.com.br/78abdwy',
 
+  // Parallels Desktop
+  parallels_desktop_26_26: 'https://pay.cakto.com.br/33d45v8',
+  parallels_desktop_26_27: 'https://pay.cakto.com.br/97u3fwj',
+
   // Adobe Products
   photoshop_2026_2026: 'https://pay.cakto.com.br/vpgiw9h',
   photoshop_2026_20262: 'https://pay.cakto.com.br/55spj79',
@@ -168,6 +173,9 @@ export const INTERNATIONAL_SLUG_CHECKOUTS: Record<string, string> = {
 
   'office-2024-professional-plus': 'https://pay.cakto.com.br/9k74men',
   'office-2024-professional-mac': 'https://pay.cakto.com.br/78abdwy',
+
+  'parallels-desktop-26': 'https://pay.cakto.com.br/33d45v8',
+  'parallels-desktop-27': 'https://pay.cakto.com.br/97u3fwj',
 
   // Adobe Products
   'adobe-photoshop-2026-windows': 'https://pay.cakto.com.br/vpgiw9h',

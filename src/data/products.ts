@@ -1668,28 +1668,58 @@ export const products: Product[] = [
   },
   {
     id: 'parallels_desktop_26',
-    slug: 'parallels-desktop-26',
-    name: 'Parallels Desktop 26',
+    slug: 'parallels-desktop-27',
+    name: 'Parallels Desktop',
     category: 'Escritório e Produtividade',
     compatibility: 'macOS',
-    version: 'v26.0 para Mac',
+    version: '26 Standard & 27 Business Edition',
     description: 'Execute Windows e outras aplicações de PC diretamente no seu Mac sem reiniciar.',
-    longDescription: 'O Parallels Desktop 26 para Mac é a solução de virtualização líder de mercado, permitindo que você execute aplicativos do Windows lado a lado com seus aplicativos favoritos do macOS. Compatível nativamente com processadores Apple Silicon (M1/M2/M3/M4) e Intel, esta versão completa oferece desempenho gráfico aprimorado, suporte para DirectX 12 e integração fluida entre sistemas operacionais.',
-    price: 247.90,
+    longDescription: 'O Parallels Desktop para Mac é a solução de virtualização líder de mercado, permitindo que você execute aplicativos do Windows lado a lado com seus aplicativos favoritos do macOS. Disponível nas versões 26 Standard e na nova 27 Business Edition, com compatibilidade nativa com processadores Apple Silicon (M1/M2/M3/M4) e Intel, desempenho gráfico avançado com DirectX 12 e integração fluida entre sistemas operacionais com acesso vitalício.',
+    price: 237.90,
     originalPrice: 389.90,
-    checkoutUrl: 'https://pay.cakto.com.br/iqu3oi2',
-    imageUrl: '/images/products/parallels-desktop-26.png',
+    checkoutUrl: 'https://pay.cakto.com.br/8oornwz',
+    internationalCheckoutUrl: 'https://pay.cakto.com.br/97u3fwj',
+    imageUrl: '/images/products/parallels-desktop-27.png',
+    driveUrl: 'https://drive.google.com/drive/folders/1z6eL7yiGFPsDWAjZdA7Yl5dhK5Q_uz2V?usp=sharing',
+    licenseOptions: [
+      {
+        quantity: 26,
+        label: 'macOS - Versão 26',
+        platform: 'macOS',
+        year: 'Versão 26',
+        price: 237.90,
+        originalPrice: 389.90,
+        checkoutUrl: 'https://pay.cakto.com.br/iqu3oi2',
+        internationalCheckoutUrl: 'https://pay.cakto.com.br/33d45v8',
+        downloadSlug: 'parallels-desktop-26',
+        imageUrl: '/images/products/parallels-desktop-26.png'
+      },
+      {
+        quantity: 27,
+        label: 'macOS - 27 Business Edition',
+        platform: 'macOS',
+        year: '27 Business Edition',
+        price: 247.90,
+        originalPrice: 429.90,
+        checkoutUrl: 'https://pay.cakto.com.br/8oornwz',
+        internationalCheckoutUrl: 'https://pay.cakto.com.br/97u3fwj',
+        downloadSlug: 'parallels-desktop-27',
+        imageUrl: '/images/products/parallels-desktop-27.png',
+        driveUrl: 'https://drive.google.com/drive/folders/1z6eL7yiGFPsDWAjZdA7Yl5dhK5Q_uz2V?usp=sharing'
+      }
+    ],
     features: [
-      'Versão completa e funcional',
-      'Acesso vitalício para uso ilimitado',
-      'Instalação assistida inclusa',
-      'Entrega automática no e-mail após o pagamento',
-      'Suporte remoto quando necessário',
-      'Pronto para uso imediato'
+      'Disponível nas versões 26 Standard e a nova 27 Business Edition',
+      'Compatibilidade nativa com Apple Silicon (M1/M2/M3/M4) e processadores Intel',
+      'Execute Windows e softwares de PC lado a lado no Mac sem reiniciar',
+      'Desempenho gráfico aprimorado com DirectX 12 e Metal',
+      'Versão completa e funcional com acesso vitalício sem mensalidades',
+      'Instalação assistida inclusa e suporte remoto quando necessário',
+      'Entrega automática no e-mail após a confirmação do pagamento'
     ],
     requirements: {
-      os: 'macOS 12 (Monterey) ou superior',
-      cpu: 'Apple Silicon (M1/M2/M3/M4) ou Intel de múltiplos núcleos',
+      os: 'macOS 12 (Monterey), Ventura, Sonoma ou Sequoia',
+      cpu: 'Apple Silicon (M1/M2/M3/M4) ou processador Intel',
       ram: '8 GB (Recomendável: 16 GB ou mais)',
       gpu: 'Suporte nativo a Metal da Apple',
       storage: '600 MB para instalação do Parallels + espaço para máquina virtual (SSD recomendado)'
@@ -2136,6 +2166,9 @@ export function getProductBySlug(slug: string): Product | undefined {
   }
   if (slug === 'vray-7' || slug === 'vray' || slug === 'chaos-vray') {
     return products.find(p => p.slug === 'vray-7-windows');
+  }
+  if (slug === 'parallels-desktop-26' || slug === 'parallels-desktop' || slug === 'parallels') {
+    return products.find(p => p.slug === 'parallels-desktop-27');
   }
   return products.find(p => p.slug === slug);
 }
