@@ -85,6 +85,7 @@ export const INTERNATIONAL_OPTION_CHECKOUTS: Record<string, string> = {
   // Promob Plus
   promob_professional_2025_20241: 'https://pay.cakto.com.br/m2hsa5x',
   promob_professional_2025_20251: 'https://pay.cakto.com.br/3f4gqjz',
+  promob_professional_2025_20261: 'https://pay.cakto.com.br/3bc5zyh',
 
   // Rhinoceros 8
   rhinoceros_8_1: 'https://pay.cakto.com.br/dgr2xz8',
@@ -160,6 +161,7 @@ export const INTERNATIONAL_SLUG_CHECKOUTS: Record<string, string> = {
 
   'promob-plus-enterprise-2024': 'https://pay.cakto.com.br/m2hsa5x',
   'promob-plus-professional-2025': 'https://pay.cakto.com.br/3f4gqjz',
+  'promob-plus-professional-2026': 'https://pay.cakto.com.br/3bc5zyh',
 
   'rhinoceros-8': 'https://pay.cakto.com.br/dgr2xz8',
   'rhinoceros-8-mac': 'https://pay.cakto.com.br/am2bfot',

@@ -1167,20 +1167,20 @@ export const products: Product[] = [
   },
   {
     id: 'promob_professional_2025',
-    keywords: ['promob', 'marcenaria', 'moveis', 'planejados', 'cut pro', 'real scene', 'interiores', '2024', '2025'],
-    slug: 'promob-plus-professional-2025',
+    keywords: ['promob', 'marcenaria', 'moveis', 'planejados', 'cut pro', 'real scene', 'interiores', '2024', '2026', 'v5.60.44.0'],
+    slug: 'promob-plus-professional-2026',
     name: 'Promob Plus',
     category: 'Marcenaria e Móveis Planejados',
     compatibility: 'Windows',
-    version: '2024 Enterprise & 2025 Professional',
-    description: 'Modulação avançada de móveis planejados, planos de corte com Cut Pro e renderização Real Scene.',
-    longDescription: 'O Promob Plus é a solução profissional definitiva para marcenarias, projetistas de móveis planejados e designers de interiores. Disponível nas edições 2024 Enterprise (com Cut Pro e Real Scene 1.0) e 2025 Professional (com Cut Pro, Revest, Real Scene 2.0 e biblioteca atualizada), oferece modulação 3D completa, detalhamento técnico e geração de planos de corte com ativação vitalícia.',
+    version: '2024 Enterprise & 2026 Professional (v5.60.44.0)',
+    description: 'Modulação avançada para móveis planejados com Real Scene 2.0, Cut Pro 2026 integrado e catálogo 3D que se atualiza toda semana.',
+    longDescription: 'O Promob Plus é a solução profissional definitiva para marcenarias, projetistas de móveis planejados e designers de interiores. Disponível nas edições 2024 Enterprise (com Cut Pro e Real Scene 1.0) e a mais recente 2026 Professional v5.60.44.0 (com Real Scene 2.0, Cut Pro 2026 integrado, Revest e catálogo 3D dinâmico que se atualiza semanalmente com novas bibliotecas de acabamentos, ferragens e modulações), oferecendo detalhamento técnico completo e alta precisão para seus projetos com ativação vitalícia.',
     price: 137.90,
     originalPrice: 234.90,
     checkoutUrl: 'https://pay.cakto.com.br/fvvtpwg',
-    imageUrl: '/images/products/promob-plus-professional-2025.png',
+    imageUrl: '/images/products/promob-plus-professional-2026.png',
     ean13: '8388917966100',
-    mpn: 'PRMB-PLUS-WW2025-C2',
+    mpn: 'PRMB-PLUS-WW2026-C2',
     licenseOptions: [
       {
         quantity: 20241,
@@ -1190,30 +1190,34 @@ export const products: Product[] = [
         price: 137.90,
         originalPrice: 234.90,
         checkoutUrl: 'https://pay.cakto.com.br/fvvtpwg',
+        internationalCheckoutUrl: 'https://pay.cakto.com.br/m2hsa5x',
         downloadSlug: 'promob-plus-enterprise-2024',
         imageUrl: '/images/products/promob-enterprise-2024.png'
       },
       {
-        quantity: 20251,
-        label: 'Windows - 2025 Professional',
+        quantity: 20261,
+        label: 'Windows - 2026 Professional (v5.60.44.0)',
         platform: 'Windows',
-        year: '2025 Professional',
-        price: 307.90,
-        originalPrice: 458.00,
-        checkoutUrl: 'https://pay.cakto.com.br/i5whsbp_853381',
-        downloadSlug: 'promob-plus-professional-2025',
-        imageUrl: '/images/products/promob-plus-professional-2025.png'
+        year: '2026 Professional',
+        price: 327.90,
+        originalPrice: 489.00,
+        checkoutUrl: 'https://pay.cakto.com.br/aaddsnu',
+        internationalCheckoutUrl: 'https://pay.cakto.com.br/3bc5zyh',
+        downloadSlug: 'promob-plus-professional-2026',
+        imageUrl: '/images/products/promob-plus-professional-2026.png',
+        driveUrl: 'https://drive.google.com/drive/folders/11wI5uSksi7h_CP4fwQVDulz6hqZvEfoE?usp=sharing'
       }
     ],
     notes: 'Nota: A ativação é válida para uso vitalício local.',
     features: [
-      'Disponível nas versões 2024 Enterprise (Real Scene 1.0) e 2025 Professional (Real Scene 2.0 + Revest)',
-      'Ferramenta Cut Pro inclusa para planos de corte de chapas',
-      'Biblioteca de modulação 3D completa para marcenaria e interiores',
-      'Acesso vitalício sem mensalidades',
-      'Vídeo passo a passo de instalação incluso',
-      'Entrega automática no e-mail após o pagamento',
-      'Suporte técnico garantido por 30 dias'
+      'Disponível nas versões 2024 Enterprise e a nova 2026 Professional (v5.60.44.0)',
+      'Motor de renderização fotorrealista Real Scene 2.0 integrado',
+      'Catálogo 3D dinâmico que se atualiza semanalmente com novas bibliotecas e itens',
+      'Módulo Cut Pro 2026 integrado para otimização e plano de corte de chapas',
+      'Biblioteca de modulação 3D completa para marcenaria e design de interiores',
+      'Versão completa e funcional com acesso vitalício sem mensalidades',
+      'Instalação assistida inclusa e suporte remoto quando necessário',
+      'Entrega automática no e-mail após a confirmação do pagamento'
     ],
     requirements: {
       os: 'Windows 10 ou 11 (64-bits)',
@@ -2115,8 +2119,8 @@ export function getProductBySlug(slug: string): Product | undefined {
   if (slug === 'coreldraw-graphics-suite-2026-macos' || slug === 'coreldraw-graphics-suite' || slug === 'coreldraw') {
     return products.find(p => p.slug === 'coreldraw-graphics-suite-2026');
   }
-  if (slug === 'promob-plus-enterprise-2024' || slug === 'promob-plus' || slug === 'promob') {
-    return products.find(p => p.slug === 'promob-plus-professional-2025');
+  if (slug === 'promob-plus-enterprise-2024' || slug === 'promob-plus-professional-2025' || slug === 'promob-plus' || slug === 'promob') {
+    return products.find(p => p.slug === 'promob-plus-professional-2026');
   }
   if (slug === 'archicad-29-bra' || slug === 'archicad-28-bra' || slug === 'archicad' || slug === 'graphisoft-archicad') {
     return products.find(p => p.slug === 'archicad-30-bra');
