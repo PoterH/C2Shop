@@ -905,44 +905,61 @@ export const products: Product[] = [
   },
   {
     id: 'rhinoceros_8',
-    slug: 'rhinoceros-8',
-    name: 'Rhinoceros 8 (Rhino 3D)',
+    slug: 'rhinoceros-9',
+    name: 'Rhinoceros 9 (Rhino 3D)',
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows e macOS',
-    version: '8 Commercial (Windows e macOS)',
+    version: '9 Commercial & 8 Commercial (Windows e macOS)',
     description: 'Modelador 3D matemático avançado baseado em curvas NURBS para superfícies complexas.',
-    longDescription: 'O Rhinoceros 8 (Rhino 3D) é amplamente utilizado por designers de produtos, engenheiros navais, joalheiros e arquitetos devido ao seu incrível motor matemático baseado em curvas NURBS. Permite criar formas curvas orgânicas com máxima precisão geométrica, além de incluir o Grasshopper integrado para modelagem paramétrica algorítmica.',
+    longDescription: 'O Rhinoceros (Rhino 3D) é amplamente utilizado por designers de produtos, engenheiros navais, joalheiros e arquitetos devido ao seu incrível motor matemático baseado em curvas NURBS. Disponível nas edições Rhinoceros 9 Commercial e Rhinoceros 8 Commercial, permite criar formas curvas orgânicas com máxima precisão geométrica, além de incluir o Grasshopper integrado para modelagem paramétrica algorítmica.',
     price: 167.90,
-    originalPrice: 268.00,
-    checkoutUrl: 'https://pay.cakto.com.br/owkfuvv_850623',
-    imageUrl: '/images/products/rhinoceros-8.png',
+    originalPrice: 289.00,
+    checkoutUrl: 'https://pay.cakto.com.br/339cg7t',
+    internationalCheckoutUrl: 'https://pay.cakto.com.br/3ctrs2o',
+    imageUrl: '/images/products/rhinoceros-9.png',
+    driveUrl: 'https://drive.google.com/drive/folders/1RXd6tR_Ly2OezQVJ94yHBWHR1mkE1UCO?usp=sharing',
     licenseOptions: [
       {
-        quantity: 1,
-        label: 'Windows',
+        quantity: 9,
+        label: 'Windows - Rhinoceros 9 Commercial',
         platform: 'Windows',
-        year: 'Windows',
+        year: '9 Commercial',
+        price: 177.90,
+        originalPrice: 289.00,
+        checkoutUrl: 'https://pay.cakto.com.br/339cg7t',
+        internationalCheckoutUrl: 'https://pay.cakto.com.br/3ctrs2o',
+        downloadSlug: 'rhinoceros-9-windows',
+        imageUrl: '/images/products/rhinoceros-9.png',
+        driveUrl: 'https://drive.google.com/drive/folders/1RXd6tR_Ly2OezQVJ94yHBWHR1mkE1UCO?usp=sharing'
+      },
+      {
+        quantity: 8,
+        label: 'Windows - Rhinoceros 8 Commercial',
+        platform: 'Windows',
+        year: '8 Commercial',
         price: 167.90,
         originalPrice: 268.00,
         checkoutUrl: 'https://pay.cakto.com.br/owkfuvv_850623',
+        internationalCheckoutUrl: 'https://pay.cakto.com.br/dgr2xz8',
         downloadSlug: 'rhinoceros-8',
         imageUrl: '/images/products/rhinoceros-8.png'
       },
       {
         quantity: 2,
-        label: 'macOS',
+        label: 'macOS - Rhinoceros 8 Commercial',
         platform: 'macOS',
-        year: 'macOS',
+        year: '8 Commercial',
         price: 197.90,
         originalPrice: 319.00,
         checkoutUrl: 'https://pay.cakto.com.br/ew26je8',
+        internationalCheckoutUrl: 'https://pay.cakto.com.br/am2bfot',
         downloadSlug: 'rhinoceros-8-mac',
         imageUrl: '/images/products/rhinoceros-8-mac.png'
       }
     ],
     features: [
       'Versão completa e funcional com Grasshopper incluso',
-      'Opções nativas para Windows e macOS',
+      'Opções nativas para Windows (Rhino 9 e 8) e macOS (Rhino 8)',
       'Acesso vitalício para uso ilimitado',
       'Instalação assistida inclusa',
       'Entrega automática no e-mail após o pagamento',
@@ -2155,8 +2172,8 @@ export function getProductBySlug(slug: string): Product | undefined {
   if (slug === 'archicad-29-bra' || slug === 'archicad-28-bra' || slug === 'archicad' || slug === 'graphisoft-archicad') {
     return products.find(p => p.slug === 'archicad-30-bra');
   }
-  if (slug === 'rhinoceros-8-mac' || slug === 'rhino-8-mac' || slug === 'rhino-8' || slug === 'rhinoceros') {
-    return products.find(p => p.slug === 'rhinoceros-8');
+  if (slug === 'rhinoceros-8' || slug === 'rhinoceros-8-mac' || slug === 'rhino-8-mac' || slug === 'rhino-8' || slug === 'rhino-9' || slug === 'rhino' || slug === 'rhinoceros') {
+    return products.find(p => p.slug === 'rhinoceros-9');
   }
   if (slug === 'office-2024-professional-mac' || slug === 'office-2024-mac' || slug === 'office-2024') {
     return products.find(p => p.slug === 'office-2024-professional-plus');
