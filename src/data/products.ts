@@ -1199,7 +1199,7 @@ export const products: Product[] = [
         label: 'Windows - 2026 Professional (v5.60.44.0)',
         platform: 'Windows',
         year: '2026 Professional',
-        price: 327.90,
+        price: 287.90,
         originalPrice: 489.00,
         checkoutUrl: 'https://pay.cakto.com.br/aaddsnu',
         internationalCheckoutUrl: 'https://pay.cakto.com.br/3bc5zyh',
