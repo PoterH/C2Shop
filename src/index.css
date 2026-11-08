@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
-
 @import "tailwindcss";
 
 @theme {
@@ -41,20 +39,7 @@ h1, h2, h3, h4, h5, h6 {
   background: #94a3b8;
 }
 
-@keyframes softPulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.3);
-  }
-  50% {
-    transform: scale(1.018);
-    box-shadow: 0 4px 20px 8px rgba(16, 185, 129, 0);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.3);
-  }
-}
+@keyframes softPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.01); } }
 
 .animate-soft-pulse {
   animation: softPulse 2.8s infinite ease-in-out;
@@ -116,7 +101,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .bg-grid-tech {
   background-size: 44px 44px;
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(0, 102, 255, 0.04) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 102, 255, 0.04) 1px, transparent 1px);
   mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
@@ -192,3 +177,50 @@ h1, h2, h3, h4, h5, h6 {
   transform-origin: center;
 }
 
+
+/* Static vector ornaments keep the festive details sharp without image downloads. */
+.holiday-hero-decor, .holiday-snow { position: absolute; inset: 0; overflow: hidden; pointer-events: none; user-select: none; }
+.holiday-hero-decor { z-index: 2; }
+.holiday-snow { z-index: 3; }
+.holiday-snow i { position: absolute; top: -8px; width: 3px; height: 3px; border-radius: 50%; background: #fff; opacity: 0; animation: holidaySnow 14s linear infinite; animation-play-state: paused; }
+.holiday-snow[data-visible="true"] i { animation-play-state: running; }
+@keyframes holidaySnow { 0% { transform: translate3d(0,0,0); opacity: 0; } 15%,80% { opacity: .4; } 100% { transform: translate3d(25px,700px,0); opacity: 0; } }
+@media (max-width: 639px) {
+  .holiday-snow i:nth-child(n+7) { display: none; }
+  .animate-morph-blob-1, .animate-morph-blob-2, .animate-morph-blob-3 { animation: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html, body { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .holiday-snow { display: none; }
+}
+
+.animate-morph-blob-1, .animate-morph-blob-2, .animate-morph-blob-3 { animation: none; }
+
+/* Seasonal accents stay in the corners and outside the hero's reading area. */
+.brand-hat { position: absolute; width: 89%; height: auto; top: -25%; left: -25%; z-index: 2; pointer-events: none; }
+.holiday-corner { position: absolute; top: 106px; width: clamp(130px, 16vw, 210px); }
+.holiday-corner svg { display: block; width: 100%; height: auto; }
+.holiday-corner-left { left: clamp(16px, 3vw, 64px); }
+.holiday-corner-right { right: clamp(16px, 3vw, 64px); transform: scaleX(-1); }
+@media (max-width: 639px) { .holiday-corner { display: none; } }
+
+.footer-credentials { align-items: start; }
+.footer-credential-panel { min-width: 0; padding: 20px; border: 1px solid #1e2c42; border-radius: 18px; background: linear-gradient(140deg, #101c2d99, #07112199); }
+.footer-payment-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; max-width: 392px; }
+.footer-payment-card { display: flex; align-items: center; justify-content: center; min-width: 0; height: 48px; padding: 9px; border-radius: 10px; border: 1px solid #29384e; background: #111e31; }
+.footer-payment-card svg { width: 100%; height: 100%; max-width: 76px; }
+.footer-payment-card svg text { fill: #e2e8f0; }
+.footer-payment-card[data-payment="boleto"] svg rect { fill: #cbd5e1; }
+.footer-partner-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.footer-trust-slot { grid-column: 1 / -1; display: flex; align-items: center; justify-content: flex-start; padding-bottom: 4px; }
+.footer-partner-card { min-width: 0; height: 80px; display: flex; align-items: center; justify-content: center; border: 1px solid #26354b; border-radius: 12px; padding: 8px; background: #101c2d; }
+.footer-partner-logo { width: 100%; height: 64px; object-fit: contain; filter: brightness(0) invert(1); opacity: .88; }
+.footer-assurance-card { grid-column: span 2; display: flex; align-items: center; gap: 10px; min-width: 0; padding: 12px; border: 1px solid #26354b; border-radius: 12px; background: #0b1829; }
+.footer-assurance-card > div:first-child { flex-shrink: 0; width: 28px; height: 28px; }
+.footer-assurance-card > div:last-child { min-width: 0; }
+.footer-assurance-card p { line-height: 1.5; overflow-wrap: anywhere; }
+@media (min-width: 640px) and (max-width: 1279px) { .footer-assurance-card { grid-column: span 1; } }
+@media (min-width: 1280px) { .footer-partner-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+@media (max-width: 479px) { .footer-payment-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

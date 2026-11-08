@@ -1,3 +1,4 @@
+import { useText } from '../hooks/useText';
 import React from 'react';
 import { trackEvent } from '../utils/pixel';
 
@@ -10,7 +11,8 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
   phoneNumber = '5581997349300', // Substitua pelo seu número real do WhatsApp
   message = 'Olá, tenho interesse em um software da C2Tech e gostaria de tirar uma dúvida.'
 }) => {
-  const encodedMessage = encodeURIComponent(message);
+  const localize = useText();
+  const encodedMessage = encodeURIComponent(localize(message));
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
   return (
@@ -20,12 +22,12 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
       rel="noopener noreferrer"
       onClick={() => trackEvent('Contact', { content_name: 'WhatsApp Flutuante' })}
       className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full shadow-2xl transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-emerald-300 group"
-      aria-label="Falar no WhatsApp"
+      aria-label={localize("Falar no WhatsApp")}
       id="whatsapp-floating-btn"
     >
       {/* Pulse effect */}
       <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping -z-10"></span>
-      
+
       {/* Icon */}
       <svg
         className="w-8 h-8 fill-current"
@@ -37,8 +39,7 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
 
       {/* Tooltip on hover */}
       <span className="absolute right-20 bg-slate-900 text-white text-sm font-medium py-2 px-3 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none border border-slate-700">
-        Tire suas dúvidas
-      </span>
+        {localize("Tire suas dúvidas")}</span>
     </a>
   );
 };

@@ -1,23 +1,22 @@
+import { useText } from '../hooks/useText';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  X, 
+import {
+  X,
   Lock,
-  ExternalLink, 
-  Copy, 
-  Loader2, 
-  User, 
-  Mail, 
-  Phone, 
-  FileText, 
+  ExternalLink,
+  Copy,
+  Loader2,
+  User,
+  Mail,
+  Phone,
+  FileText,
   ChevronLeft,
   CheckCircle2,
   AlertTriangle,
   CreditCard
 } from 'lucide-react';
 import type { Product } from '../data/products';
-// @ts-ignore
-import EfiPay from 'payment-token-efi';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import { getEffectiveCheckoutUrl } from '../data/internationalCheckouts';
@@ -34,15 +33,18 @@ type Step = 'info' | 'payment' | 'pix_waiting' | 'boleto_waiting' | 'success';
 type PaymentMethod = 'pix' | 'card' | 'boleto';
 
 export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, onClose, initialSubOption }) => {
+  const localize = useText();
   const navigate = useNavigate();
   const { cartItems, total, discountAmount, couponCode, clearCart } = useCart();
   const { isInternational, language } = useLanguage();
   const activeProduct = product || cartItems[0];
   const isDirectProductCheckout = Boolean(product && cartItems.length === 0);
-  
+
+  const initialPlan: 'recurrent' | 'avulso' = activeProduct?.selectedLicenseOption ? 'avulso' : activeProduct?.isSubscription ? activeProduct.selectedSubOption || initialSubOption || 'recurrent' : 'avulso';
+
   // Steps & Tabs
   const [currentStep, setCurrentStep] = useState<Step>('info');
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('pix');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(initialPlan === 'recurrent' ? 'card' : 'pix');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -60,31 +62,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   const [email, setEmail] = useState('');
   const [cpfCnpj, setCpfCnpj] = useState('');
   const [phone, setPhone] = useState('');
-  const [subOption, setSubOption] = useState<'recurrent' | 'avulso'>('recurrent');
+  const [subOption, setSubOption] = useState<'recurrent' | 'avulso'>(initialPlan);
   const [termsAccepted, setTermsAccepted] = useState(false);
-
-  // Sincroniza a opção inicial quando o modal abre
-  useEffect(() => {
-    if (isOpen) {
-      if (activeProduct?.selectedLicenseOption) {
-        setSubOption('avulso');
-        setPaymentMethod('pix');
-      } else if (activeProduct?.isSubscription) {
-        let initial = activeProduct.selectedSubOption || initialSubOption || 'recurrent';
-        setSubOption(initial as 'recurrent' | 'avulso');
-        if (initial === 'recurrent') {
-          setPaymentMethod('card');
-        } else {
-          setPaymentMethod('pix');
-        }
-      } else {
-        setSubOption('avulso');
-        setPaymentMethod('pix');
-      }
-    }
-  }, [initialSubOption, isOpen, activeProduct]);
-
-
 
   // Pix Payment Data from API
   const [pixCopyPaste, setPixCopyPaste] = useState('');
@@ -92,7 +71,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   const [copied, setCopied] = useState(false);
 
   // Polling ref
-  const pollingIntervalRef = useRef<any>(null);
+  const pollingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Pix countdown state
   const [timeLeft, setTimeLeft] = useState<number>(600);
@@ -110,7 +89,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   useEffect(() => {
     let timerInterval: any = null;
     if (currentStep === 'pix_waiting') {
-      setTimeLeft(600); // 10 minutos
       timerInterval = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
@@ -308,9 +286,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          products: (isDirectProductCheckout && product ? [product] : cartItems).map(item => ({ 
-            slug: item.slug, 
-            licenseQuantity: item.selectedLicenseOption?.quantity 
+          products: (isDirectProductCheckout && product ? [product] : cartItems).map(item => ({
+            slug: item.slug,
+            licenseQuantity: item.selectedLicenseOption?.quantity
           })),
           coupon: couponCode || null,
           subOption: activeProduct?.isSubscription && !activeProduct?.selectedLicenseOption ? subOption : undefined,
@@ -331,6 +309,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
       setPixCopyPaste(data.copyPaste);
       setPixQrCode(data.qrCodeBase64);
+      setTimeLeft(600);
       setCurrentStep('pix_waiting');
 
       // Track AddPaymentInfo when Pix QR Code is generated
@@ -345,7 +324,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
         value: Number(currentVal.toFixed(2)),
         currency: 'BRL',
       }, `pix_info_${data.txid}`);
-      
+
       // Start status polling
       startPolling(data.txid, Date.now());
     } catch (err: any) {
@@ -359,12 +338,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   // Start polling checkout status
   const startPolling = (txid: string, creationTime: number) => {
     if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
-    
+
     pollingIntervalRef.current = setInterval(async () => {
       try {
         const res = await fetch(`/api/checkout-status?txid=${txid}&created=${creationTime}`);
         const data = await res.json();
-        
+
         if (data.success && data.status === 'CONCLUIDA') {
           if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
 
@@ -383,7 +362,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
             value: Number(finalPaidVal.toFixed(2)),
             currency: 'BRL',
           }, String(txid));
-          
+
           // Dispara o envio de e-mail de confirmação no backend
           try {
             await fetch('/api/send-email', {
@@ -412,7 +391,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
           setSuccessDescription('Sua transação Pix foi processada com sucesso via Efí Bank. Estamos gerando sua licença e enviando os arquivos de acesso para o seu e-mail.');
           setCurrentStep('success');
           clearCart(); // Limpa o carrinho
-          
+
           // Redirect to thank you page after 3 seconds of success screen
           setTimeout(() => {
             onClose();
@@ -456,9 +435,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          products: (isDirectProductCheckout && product ? [product] : cartItems).map(item => ({ 
-            slug: item.slug, 
-            licenseQuantity: item.selectedLicenseOption?.quantity 
+          products: (isDirectProductCheckout && product ? [product] : cartItems).map(item => ({
+            slug: item.slug,
+            licenseQuantity: item.selectedLicenseOption?.quantity
           })),
           coupon: couponCode || null,
           buyer: {
@@ -533,24 +512,23 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
       {/* Floating Modal Wrapper */}
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-lg p-4 pointer-events-none">
-        
+
         {/* Modal Container */}
         <div className="relative w-full bg-white rounded-3xl border border-slate-100 shadow-2xl overflow-hidden flex flex-col max-h-[90dvh] pointer-events-auto">
-        
+
         {/* Header */}
         <div className="p-6 border-b border-slate-100 flex items-center justify-between gap-2 bg-slate-50/50">
           <div className="min-w-0 flex-1">
             <span className="text-[10px] font-bold text-accent-blue uppercase tracking-widest bg-accent-blue/10 px-2 py-0.5 rounded">
-              Checkout Seguro
-            </span>
+              {localize("Checkout Seguro")}</span>
             <h3 className="font-display font-bold text-slate-900 text-lg mt-1 truncate max-w-full">
-              {cartItems.length === 1 ? activeProduct?.name : `${cartItems.length} Softwares`}
+              {localize(cartItems.length === 1 ? activeProduct?.name : `${cartItems.length} Softwares`)}
             </h3>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="shrink-0 p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-            aria-label="Fechar"
+            aria-label={localize("Fechar")}
           >
             <X className="w-5 h-5" />
           </button>
@@ -558,13 +536,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          
+
           {/* Error Banner */}
           {errorMessage && (
             <div className="p-4 bg-red-50 text-red-800 text-xs font-semibold rounded-2xl border border-red-100 flex flex-col gap-3">
               <div className="flex items-start space-x-2">
                 <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-                <p className="text-left leading-normal">{errorMessage}</p>
+                <p className="text-left leading-normal">{localize(errorMessage)}</p>
               </div>
             </div>
           )}
@@ -574,26 +552,24 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
             <div className="space-y-4">
               <div className="space-y-1">
                 <h4 className="font-display font-bold text-slate-800 text-sm">
-                  1. Identificação do Comprador
-                </h4>
+                  {localize("1. Identificação do Comprador")}</h4>
                 <p className="text-slate-500 text-xs">
-                  Os dados abaixo são necessários para emissão da licença e nota fiscal.
-                </p>
+                  {localize("Os dados abaixo são necessários para emissão da licença e nota fiscal.")}</p>
               </div>
 
               {/* List of items in checkout */}
               <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 space-y-3">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Resumo do pedido</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">{localize("Resumo do pedido")}</span>
                 {activeProduct?.isSubscription && !activeProduct?.selectedLicenseOption ? (
                   <div className="space-y-3">
                     <div className="flex justify-between items-center text-xs">
-                      <span className="font-semibold text-slate-700">{activeProduct.name}</span>
+                      <span className="font-semibold text-slate-700">{localize(activeProduct.name)}</span>
                       <span className="font-bold text-slate-900">
-                        {checkoutTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                        {subOption === 'recurrent' && <span className="text-[10px] text-slate-500 font-normal"> /mês</span>}
+                        {localize(checkoutTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))}
+                        {subOption === 'recurrent' && <span className="text-[10px] text-slate-500 font-normal"> {localize(" /mês")}</span>}
                       </span>
                     </div>
-                    
+
                     {/* Compact toggle buttons for plan */}
                     <div className="grid grid-cols-2 gap-2 pt-1">
                       <button
@@ -608,7 +584,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                             : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
                         }`}
                       >
-                        Assinatura Mensal ({activeProduct.recurrencePrice?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })})
+                        {localize("Assinatura Mensal (")}{activeProduct.recurrencePrice?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })})
                       </button>
                       <button
                         type="button"
@@ -622,15 +598,15 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                             : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
                         }`}
                       >
-                        Pagamento Único ({(activeProduct.selectedLicenseOption?.price || activeProduct.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })})
+                        {localize("Pagamento Único (")}{localize((activeProduct.selectedLicenseOption?.price || activeProduct.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))})
                       </button>
                     </div>
 
                     <p className="text-[10px] text-slate-400 leading-relaxed font-medium">
                       {subOption === 'recurrent' ? (
-                        <span>👉 Cobrança recorrente mensal no cartão de crédito via Mercado Pago. Cancele a qualquer momento.</span>
+                        <span>{localize("👉 Cobrança recorrente mensal no cartão de crédito via Mercado Pago. Cancele a qualquer momento.")}</span>
                       ) : (
-                        <span>👉 Licença com pagamento único. Sem mensalidade ou recorrência futura.</span>
+                        <span>{localize("👉 Licença com pagamento único. Sem mensalidade ou recorrência futura.")}</span>
                       )}
                     </p>
                   </div>
@@ -638,17 +614,17 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                   <>
                     {cartItems.map((item) => (
                       <div key={item.id} className="flex justify-between items-center text-xs">
-                        <span className="font-semibold text-slate-700">{item.name} {item.selectedLicenseOption ? `(${item.selectedLicenseOption.label})` : ''}</span>
+                        <span className="font-semibold text-slate-700">{localize(item.name)} {localize(item.selectedLicenseOption ? `(${item.selectedLicenseOption.label})` : '')}</span>
                         <span className="font-bold text-slate-900">
-                          {(item.selectedLicenseOption?.price || item.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                          {item.selectedLicenseOption?.label.includes('Mensal') && <span className="text-[10px] text-slate-500 font-normal"> /mês</span>}
+                          {localize((item.selectedLicenseOption?.price || item.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))}
+                          {item.selectedLicenseOption?.label.includes('Mensal') && <span className="text-[10px] text-slate-500 font-normal"> {localize(" /mês")}</span>}
                         </span>
                       </div>
                     ))}
                     {discountAmount > 0 && (
                       <div className="flex justify-between items-center text-xs text-emerald-600 font-semibold pt-2 border-t border-slate-200/60">
-                        <span>Desconto (10% OFF10)</span>
-                        <span>-{discountAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                        <span>{localize("Desconto (10% OFF10)")}</span>
+                        <span>-{localize(discountAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))}</span>
                       </div>
                     )}
                   </>
@@ -658,14 +634,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
               <div className="space-y-3.5">
                 {/* Nome Completo */}
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Nome Completo</label>
+                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">{localize("Nome Completo")}</label>
                   <div className="relative">
                     <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <input 
+                    <input
                       type="text"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      placeholder="Ex: João Silva Santos"
+                      placeholder={localize("Ex: João Silva Santos")}
                       className="w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all"
                     />
                   </div>
@@ -673,33 +649,33 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
                 {/* Email */}
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">E-mail para entrega</label>
+                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">{localize("E-mail para entrega")}</label>
                   <div className="relative">
                     <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <input 
+                    <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Ex: joao@exemplo.com"
+                      placeholder={localize("Ex: joao@exemplo.com")}
                       className="w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all"
                     />
                   </div>
-                  <p className="text-[10px] text-slate-400">Certifique-se de digitar o e-mail correto para receber os links de acesso instantaneamente.</p>
+                  <p className="text-[10px] text-slate-400">{localize("Certifique-se de digitar o e-mail correto para receber os links de acesso instantaneamente.")}</p>
                 </div>
 
                 {/* Grid CPF e Celular */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div className="space-y-1">
                     <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
-                      CPF ou CNPJ <span className="text-[10px] font-normal text-slate-400 lowercase">(opcional)</span>
+                      {localize("CPF ou CNPJ ")}<span className="text-[10px] font-normal text-slate-400 lowercase">{localize("(opcional)")}</span>
                     </label>
                     <div className="relative">
                       <FileText className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                      <input 
+                      <input
                         type="text"
                         value={cpfCnpj}
                         onChange={(e) => setCpfCnpj(formatCPFOrCNPJ(e.target.value))}
-                        placeholder="Opcional"
+                        placeholder={localize("Opcional")}
                         maxLength={18}
                         className="w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all"
                       />
@@ -708,15 +684,15 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
                   <div className="space-y-1">
                     <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
-                      WhatsApp / Celular <span className="text-[10px] font-normal text-slate-400 lowercase">(opcional)</span>
+                      {localize("WhatsApp / Celular ")}<span className="text-[10px] font-normal text-slate-400 lowercase">{localize("(opcional)")}</span>
                     </label>
                     <div className="relative">
                       <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                      <input 
+                      <input
                         type="text"
                         value={phone}
                         onChange={(e) => setPhone(formatPhone(e.target.value))}
-                        placeholder="Opcional"
+                        placeholder={localize("Opcional")}
                         maxLength={15}
                         className="w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all"
                       />
@@ -729,8 +705,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
               <div className="pt-4">
                 <label className="flex items-start gap-2.5 cursor-pointer group">
                   <div className="relative flex items-center justify-center shrink-0 mt-0.5">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       className="peer appearance-none w-4 h-4 border-2 border-slate-300 rounded bg-white checked:bg-accent-blue checked:border-accent-blue transition-all cursor-pointer"
                       checked={termsAccepted}
                       onChange={(e) => setTermsAccepted(e.target.checked)}
@@ -738,23 +714,21 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                     <CheckCircle2 className="absolute w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
                   </div>
                   <span className="text-[11px] text-slate-500 leading-snug">
-                    Li e concordo com os <a href="/termos" target="_blank" rel="noopener noreferrer" className="text-accent-blue hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>Termos e Condições</a> de compra, uso e suporte.
-                  </span>
+                    {localize("Li e concordo com os ")}<a href="/termos" target="_blank" rel="noopener noreferrer" className="text-accent-blue hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>{localize("Termos e Condições")}</a> {localize(" de compra, uso e suporte.")}</span>
                 </label>
               </div>
 
               {/* Total display & continue */}
               <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-slate-400 uppercase tracking-wider block">Valor total</span>
-                  <span className="text-xl font-display font-black text-slate-900">{formattedPrice}</span>
+                  <span className="text-[10px] text-slate-400 uppercase tracking-wider block">{localize("Valor total")}</span>
+                  <span className="text-xl font-display font-black text-slate-900">{localize(formattedPrice)}</span>
                 </div>
                 <button
                   onClick={handleProceedToPayment}
                   className="px-6 py-3 bg-accent-blue hover:bg-accent-blue-dark text-white font-bold rounded-2xl text-sm transition-all shadow-md cursor-pointer"
                 >
-                  Ir para Pagamento
-                </button>
+                  {localize("Ir para Pagamento")}</button>
               </div>
             </div>
           )}
@@ -762,19 +736,18 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
           {/* STEP 2: Pagamento */}
           {currentStep === 'payment' && (
             <div className="space-y-6">
-              
+
               {/* Back to Info Button */}
-              <button 
-                onClick={() => setCurrentStep('info')} 
+              <button
+                onClick={() => setCurrentStep('info')}
                 className="flex items-center text-xs text-slate-500 hover:text-slate-700 font-semibold"
               >
                 <ChevronLeft className="w-4 h-4 mr-0.5" />
-                Alterar dados pessoais
-              </button>
+                {localize("Alterar dados pessoais")}</button>
 
               <div className="space-y-4">
                 <h4 className="font-display font-bold text-slate-800 text-sm">
-                  {isInternational ? (language === 'es' ? '2. Pago Internacional Cakto' : '2. Pagamento Internacional Cakto') : '2. Escolha como pagar'}
+                  {localize(isInternational ? (language === 'es' ? '2. Pago Internacional Cakto' : '2. Pagamento Internacional Cakto') : '2. Escolha como pagar')}
                 </h4>
 
                 {isInternational ? (
@@ -784,12 +757,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                         <Lock className="w-6 h-6" />
                       </div>
                       <h4 className="text-sm font-bold text-slate-800 mb-1">
-                        {language === 'es' ? 'Checkout Internacional Seguro (Cakto)' : 'Checkout Internacional Seguro (Cakto)'}
+                        {localize(language === 'es' ? 'Checkout Internacional Seguro (Cakto)' : 'Checkout Internacional Seguro (Cakto)')}
                       </h4>
                       <p className="text-[11px] text-slate-600 mb-4 px-2 leading-relaxed">
-                        {language === 'es'
+                        {localize(language === 'es'
                           ? 'Conversión automática a tu moneda local. Acepta tarjetas internacionales (Visa, Mastercard, Amex), Apple Pay y Google Pay con entrega inmediata por correo.'
-                          : 'Conversão automática de moeda pela Cakto. Aceita cartões internacionais, Apple Pay e Google Pay com entrega imediata por e-mail.'}
+                          : 'Conversão automática de moeda pela Cakto. Aceita cartões internacionais, Apple Pay e Google Pay com entrega imediata por e-mail.')}
                       </p>
 
                       {cartItems.map((item) => {
@@ -803,7 +776,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                             rel="noopener noreferrer"
                             className="w-full py-3.5 mb-2.5 bg-[#0b5ed7] hover:bg-[#0a53be] text-white font-bold rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer hover:no-underline"
                           >
-                            <span>{language === 'es' ? `Pagar ${item.name} (${versionLabel})` : `Pagar ${item.name} (${versionLabel})`}</span>
+                            <span>{localize(language === 'es' ? `Pagar ${item.name} (${versionLabel})` : `Pagar ${item.name} (${versionLabel})`)}</span>
                             <ExternalLink className="w-3.5 h-3.5" />
                           </a>
                         );
@@ -812,7 +785,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                   </div>
                 ) : (
                   <>
-                
+
                  {/* Method selector cards */}
                  {(!activeProduct?.isSubscription || subOption === 'avulso' || !!activeProduct?.selectedLicenseOption) ? (
                    <div className="grid grid-cols-3 gap-3 pb-2">
@@ -853,7 +826,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                        {/* Credit Card Icon */}
                        <CreditCard className={`w-5 h-5 ${paymentMethod === 'card' ? 'text-sky-500' : 'text-slate-400'}`} />
 
-                       <span className="text-xs font-bold text-slate-800">Cartão</span>
+                       <span className="text-xs font-bold text-slate-800">{localize("Cartão")}</span>
                      </button>
 
                      {/* Boleto Card */}
@@ -869,29 +842,29 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                        {/* Boleto Icon (FileText) */}
                        <FileText className={`w-5 h-5 ${paymentMethod === 'boleto' ? 'text-amber-500' : 'text-slate-400'}`} />
 
-                       <span className="text-xs font-bold text-slate-800">Boleto</span>
+                       <span className="text-xs font-bold text-slate-800">{localize("Boleto")}</span>
                      </button>
                    </div>
                  ) : (
                    <div className="p-3.5 bg-sky-500/10 text-sky-800 text-xs font-bold rounded-2xl border border-sky-500/20 text-center flex items-center justify-center gap-1.5">
-                     <span>⚡ Assinatura Recorrente via Cartão de Crédito</span>
+                     <span>{localize("⚡ Assinatura Recorrente via Cartão de Crédito")}</span>
                    </div>
                  )}
- 
+
                 {/* Pix Area */}
                 {paymentMethod === 'pix' && (
                   <div className="space-y-4 pt-2">
                     <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-100 text-xs text-slate-700 leading-relaxed space-y-1">
                       <p className="font-bold text-emerald-800 flex items-center">
-                        {activeProduct?.isSubscription ? '⚡ Assinatura Pix Automática' : '⚡ Desconto Exclusivo Pix'}
+                        {localize(activeProduct?.isSubscription ? '⚡ Assinatura Pix Automática' : '⚡ Desconto Exclusivo Pix')}
                       </p>
                       <p>
-                        {activeProduct?.isSubscription 
-                          ? `A ativação do seu plano ${activeProduct.name} será realizada imediatamente após a confirmação do pagamento Pix.` 
-                          : 'Ganhe 2% de desconto exclusivo pagando via Pix! O pagamento é aprovado imediatamente e o acesso será enviado ao seu e-mail em segundos.'}
+                        {localize(activeProduct?.isSubscription
+                          ? `A ativação do seu plano ${activeProduct.name} será realizada imediatamente após a confirmação do pagamento Pix.`
+                          : 'Ganhe 2% de desconto exclusivo pagando via Pix! O pagamento é aprovado imediatamente e o acesso será enviado ao seu e-mail em segundos.')}
                       </p>
                     </div>
- 
+
                     <button
                       onClick={handlePixCheckout}
                       disabled={loading}
@@ -900,10 +873,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                       {loading ? (
                         <>
                           <Loader2 className="w-4 h-4 animate-spin" />
-                          <span>Gerando Pix Seguro...</span>
+                          <span>{localize("Gerando Pix Seguro...")}</span>
                         </>
                       ) : (
-                        <span>Gerar QR Code Pix de {formattedPixPrice}</span>
+                        <span>{localize("Gerar QR Code Pix de ")}{localize(formattedPixPrice)}</span>
                       )}
                     </button>
                   </div>
@@ -914,18 +887,15 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                   <div className="space-y-4 pt-2">
                     <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 text-[11px] text-slate-700 leading-relaxed space-y-1">
                       <p className="font-bold text-amber-800 flex items-center">
-                        📄 Pagamento via Boleto Bancário
-                      </p>
+                        {localize("📄 Pagamento via Boleto Bancário")}</p>
                       <p>
-                        O boleto será gerado com vencimento em até 3 dias úteis. A compensação bancária ocorre de 1 a 2 dias úteis após o pagamento. Seus arquivos de acesso serão enviados automaticamente para o seu e-mail assim que o pagamento for confirmado.
-                      </p>
+                        {localize("O boleto será gerado com vencimento em até 3 dias úteis. A compensação bancária ocorre de 1 a 2 dias úteis após o pagamento. Seus arquivos de acesso serão enviados automaticamente para o seu e-mail assim que o pagamento for confirmado.")}</p>
                     </div>
 
                     {cpfCnpj.replace(/\D/g, '').length !== 11 && cpfCnpj.replace(/\D/g, '').length !== 14 && (
                       <div className="space-y-1 text-left">
                         <label className="text-[11px] font-bold text-slate-600 uppercase tracking-wider block">
-                          Informe seu CPF ou CNPJ (obrigatório apenas para Boleto)
-                        </label>
+                          {localize("Informe seu CPF ou CNPJ (obrigatório apenas para Boleto)")}</label>
                         <div className="relative">
                           <FileText className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                           <input
@@ -948,10 +918,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                       {loading ? (
                         <>
                           <Loader2 className="w-4 h-4 animate-spin" />
-                          <span>Gerando Boleto Seguro...</span>
+                          <span>{localize("Gerando Boleto Seguro...")}</span>
                         </>
                       ) : (
-                        <span>Gerar Boleto de {formattedPrice}</span>
+                        <span>{localize("Gerar Boleto de ")}{localize(formattedPrice)}</span>
                       )}
                     </button>
                   </div>
@@ -966,11 +936,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                           <Lock className="w-6 h-6" />
                         </div>
                         <h4 className="text-sm font-bold text-slate-800 mb-1">
-                          Pagamento Seguro via Cartão
-                        </h4>
+                          {localize("Pagamento Seguro via Cartão")}</h4>
                         <p className="text-[11px] text-slate-500 mb-4 px-2 leading-relaxed">
-                          Para sua total segurança, o pagamento via cartão de crédito é processado diretamente em nossa plataforma blindada externa.
-                        </p>
+                          {localize("Para sua total segurança, o pagamento via cartão de crédito é processado diretamente em nossa plataforma blindada externa.")}</p>
                         <a
                           href={activeProduct?.selectedLicenseOption?.checkoutUrl ? activeProduct.selectedLicenseOption.checkoutUrl : ((activeProduct?.isSubscription && subOption === 'recurrent') ? (activeProduct?.recurrenceCheckoutUrl || activeProduct?.checkoutUrl || '#') : (activeProduct?.checkoutUrl || '#'))}
                           target="_blank"
@@ -985,8 +953,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                           }}
                           className="w-full py-3.5 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs transition-all shadow-md flex items-center justify-center cursor-pointer hover:no-underline"
                         >
-                          Ir para Plataforma de Pagamento Seguro
-                        </a>
+                          {localize("Ir para Plataforma de Pagamento Seguro")}</a>
                       </div>
                     ) : (
                       <div className="p-5 bg-emerald-50 rounded-2xl border border-emerald-100 flex flex-col items-center text-center">
@@ -994,19 +961,16 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                           <CreditCard className="w-6 h-6" />
                         </div>
                         <h4 className="text-sm font-bold text-slate-800 mb-1">
-                          Desconto Especial Liberado! 🎉
-                        </h4>
+                          {localize("Desconto Especial Liberado! 🎉")}</h4>
                         <p className="text-[11px] text-slate-600 mb-4 px-2 leading-relaxed">
-                          Notamos que você selecionou múltiplos softwares! Pagando no cartão de crédito via nosso WhatsApp de vendas, você ganha <strong>10% de desconto adicional</strong> em toda a compra.
-                        </p>
+                          {localize("Notamos que você selecionou múltiplos softwares! Pagando no cartão de crédito via nosso WhatsApp de vendas, você ganha ")}<strong>{localize("10% de desconto adicional")}</strong> {localize(" em toda a compra.")}</p>
                         <a
                           href={`https://wa.me/5581997349300?text=${encodeURIComponent(`Olá! Quero finalizar o pagamento via Cartão de Crédito dos ${cartItems.length} softwares que estão no meu carrinho e garantir os 10% de desconto adicional!`)}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="w-full py-3.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold rounded-xl text-xs transition-all shadow-md flex items-center justify-center cursor-pointer hover:no-underline"
                         >
-                          Finalizar com Desconto no WhatsApp
-                        </a>
+                          {localize("Finalizar com Desconto no WhatsApp")}</a>
                       </div>
                     )}
                   </div>
@@ -1026,42 +990,39 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                     <AlertTriangle className="w-8 h-8" />
                   </div>
                   <div className="space-y-1">
-                    <h5 className="font-display font-bold text-slate-800 text-sm">O tempo para pagamento expirou</h5>
-                    <p className="text-slate-500 text-xs max-w-xs mx-auto">Não se preocupe! Você pode voltar e gerar um novo código ou escolher pagar com cartão.</p>
+                    <h5 className="font-display font-bold text-slate-800 text-sm">{localize("O tempo para pagamento expirou")}</h5>
+                    <p className="text-slate-500 text-xs max-w-xs mx-auto">{localize("Não se preocupe! Você pode voltar e gerar um novo código ou escolher pagar com cartão.")}</p>
                   </div>
                   <button
                     onClick={() => setCurrentStep('payment')}
                     className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition-all cursor-pointer border-none"
                   >
-                    Gerar novo pagamento
-                  </button>
+                    {localize("Gerar novo pagamento")}</button>
                 </div>
               ) : (
                 <>
                   <div className="space-y-2">
                     <span className="bg-emerald-500/10 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-500/10 inline-flex items-center">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
-                      Aguardando Pagamento Pix
-                    </span>
+                      {localize("Aguardando Pagamento Pix")}</span>
                     <h4 className="font-display font-extrabold text-slate-900 text-lg">
-                      Escaneie o QR Code ou Copie o código
-                    </h4>
+                      {localize("Escaneie o QR Code ou Copie o código")}</h4>
                   </div>
 
                   {/* Timer display */}
                   <div className="space-y-1 bg-slate-50 border border-slate-100 p-3 rounded-2xl max-w-[200px] mx-auto">
-                    <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">O QR Code expira em</p>
+                    <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">{localize("O QR Code expira em")}</p>
                     <p className="text-lg font-mono font-bold text-emerald-600">
-                      {formatTime(timeLeft)}
+                      {localize(formatTime(timeLeft))}
                     </p>
                   </div>
 
                   {/* QR Code Container */}
                   <div className="mx-auto w-48 h-48 bg-slate-50 border border-slate-100 rounded-3xl p-3 shadow-inner flex items-center justify-center">
                     {pixQrCode ? (
-                      <img 
+                      <img
                         src={pixQrCode.startsWith('data:') || pixQrCode.startsWith('http') ? pixQrCode : `data:image/png;base64,${pixQrCode}`}
-                        alt="QR Code Pix"
+                        alt={localize("QR Code Pix")}
                         className="w-full h-full object-contain"
                       />
                     ) : (
@@ -1072,8 +1033,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                   {/* Copy Paste Code */}
                   <div className="space-y-2">
                     <p className="text-slate-500 text-xs max-w-sm mx-auto">
-                      Você também pode pagar copiando e colando a chave abaixo no aplicativo do seu banco.
-                    </p>
+                      {localize("Você também pode pagar copiando e colando a chave abaixo no aplicativo do seu banco.")}</p>
                     <div className="flex items-center space-x-2 max-w-sm mx-auto bg-slate-50 border border-slate-200/60 p-2 rounded-2xl">
                       <input
                         type="text"
@@ -1084,10 +1044,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                       <button
                         onClick={handleCopyPix}
                         className="p-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 hover:text-accent-blue rounded-xl transition-all flex items-center justify-center shrink-0 cursor-pointer shadow-sm"
-                        title="Copiar Pix"
+                        title={localize("Copiar Pix")}
                       >
                         {copied ? (
-                          <span className="text-[10px] font-bold text-emerald-600 px-1">Copiado!</span>
+                          <span className="text-[10px] font-bold text-emerald-600 px-1">{localize("Copiado!")}</span>
                         ) : (
                           <Copy className="w-4 h-4" />
                         )}
@@ -1098,7 +1058,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                   {/* Safety badge */}
                   <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 max-w-sm mx-auto flex items-center justify-center space-x-2 text-[11px] text-slate-500">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                    <span>Transação Monitorada pelo Banco Central</span>
+                    <span>{localize("Transação Monitorada pelo Banco Central")}</span>
                   </div>
 
                   {/* Back/Change method button */}
@@ -1113,8 +1073,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                       }}
                       className="text-slate-500 hover:text-slate-700 text-xs font-semibold underline cursor-pointer border-none bg-transparent"
                     >
-                      Voltar e escolher outra forma de pagamento
-                    </button>
+                      {localize("Voltar e escolher outra forma de pagamento")}</button>
                   </div>
                 </>
               )}
@@ -1126,11 +1085,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
             <div className="space-y-6 text-center py-4">
               <div className="space-y-2">
                 <span className="bg-amber-500/10 text-amber-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-amber-500/10 inline-flex items-center">
-                  Boleto Gerado com Sucesso
-                </span>
+                  {localize("Boleto Gerado com Sucesso")}</span>
                 <h4 className="font-display font-extrabold text-slate-900 text-lg">
-                  Copie o código de barras ou imprima o boleto
-                </h4>
+                  {localize("Copie o código de barras ou imprima o boleto")}</h4>
               </div>
 
               {/* PDF Ticket Redirection Button */}
@@ -1143,8 +1100,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                     className="inline-flex items-center justify-center w-full py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl text-xs transition-all shadow-md gap-2"
                   >
                     <FileText className="w-4 h-4" />
-                    Visualizar / Imprimir Boleto
-                  </a>
+                    {localize("Visualizar / Imprimir Boleto")}</a>
                 </div>
               )}
 
@@ -1152,8 +1108,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
               {boletoBarcode && (
                 <div className="space-y-2">
                   <p className="text-slate-555 text-slate-500 text-xs max-w-sm mx-auto">
-                    Você também pode pagar utilizando o código de barras no aplicativo do seu banco:
-                  </p>
+                    {localize("Você também pode pagar utilizando o código de barras no aplicativo do seu banco:")}</p>
                   <div className="flex items-center space-x-2 max-w-sm mx-auto bg-slate-50 border border-slate-200/60 p-2 rounded-2xl">
                     <input
                       type="text"
@@ -1168,10 +1123,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                         setTimeout(() => setCopiedBarcode(false), 2000);
                       }}
                       className="p-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 hover:text-accent-blue rounded-xl transition-all flex items-center justify-center shrink-0 cursor-pointer shadow-sm"
-                      title="Copiar Código de Barras"
+                      title={localize("Copiar Código de Barras")}
                     >
                       {copiedBarcode ? (
-                        <span className="text-[10px] font-bold text-emerald-600 px-1">Copiado!</span>
+                        <span className="text-[10px] font-bold text-emerald-600 px-1">{localize("Copiado!")}</span>
                       ) : (
                         <Copy className="w-4 h-4" />
                       )}
@@ -1182,10 +1137,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
               {/* Instructions */}
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 max-w-sm mx-auto text-[11px] text-slate-500 text-left space-y-1.5">
-                <p className="font-bold text-slate-700">Informações Importantes:</p>
-                <p>• O boleto foi enviado para o seu e-mail: <strong className="text-slate-700">{email}</strong>.</p>
-                <p>• Prazo de compensação: de 1 a 2 dias úteis após o pagamento.</p>
-                <p>• Assim que compensado, os links de acesso serão enviados automaticamente para o seu e-mail.</p>
+                <p className="font-bold text-slate-700">{localize("Informações Importantes:")}</p>
+                <p>{localize("• O boleto foi enviado para o seu e-mail: ")}<strong className="text-slate-700">{localize(email)}</strong>.</p>
+                <p>{localize("• Prazo de compensação: de 1 a 2 dias úteis após o pagamento.")}</p>
+                <p>{localize("• Assim que compensado, os links de acesso serão enviados automaticamente para o seu e-mail.")}</p>
               </div>
 
               {/* Close and Return Button */}
@@ -1197,8 +1152,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                   }}
                   className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition-all cursor-pointer border-none"
                 >
-                  Concluir e Ir para Obrigado
-                </button>
+                  {localize("Concluir e Ir para Obrigado")}</button>
               </div>
             </div>
           )}
@@ -1212,16 +1166,15 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
               <div className="space-y-2">
                 <h4 className="font-display font-extrabold text-slate-900 text-2xl">
-                  {successTitle}
+                  {localize(successTitle)}
                 </h4>
                 <p className="text-slate-600 text-sm max-w-md mx-auto">
-                  {successDescription}
+                  {localize(successDescription)}
                 </p>
               </div>
 
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 max-w-sm mx-auto text-xs text-slate-500">
-                Redirecionando em instantes...
-              </div>
+                {localize("Redirecionando em instantes...")}</div>
             </div>
           )}
 
@@ -1231,7 +1184,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
         {currentStep !== 'success' && (
           <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-center space-x-2 text-[10px] text-slate-450 text-slate-400">
             <Lock className="w-3.5 h-3.5 text-sky-500 shrink-0" />
-            <span>Processado de forma 100% segura e confidencial</span>
+            <span>{localize("Processado de forma 100% segura e confidencial")}</span>
           </div>
         )}
 

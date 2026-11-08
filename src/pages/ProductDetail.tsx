@@ -1,6 +1,8 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { useParams, Link, useSearchParams, useLocation } from 'react-router-dom';
-import { CheckoutModal } from '../components/CheckoutModal';
+import { ReviewComment } from '../components/ReviewComment';
+import { useText } from '../hooks/useText';
+import React, { lazy, Suspense, useEffect, useMemo, useState, useRef } from 'react';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
+const CheckoutModal = lazy(() => import('../components/CheckoutModal').then(module => ({ default: module.CheckoutModal })));
 import {
   TrustpilotStars,
   TrustpilotLogo,
@@ -37,7 +39,7 @@ import {
   Minus,
 } from 'lucide-react';
 import { reviewsData } from '../data/reviews';
-import { translateCategory, translateCompatibility, translateFeature } from '../utils/i18n';
+import { translateCategory, translateCompatibility } from '../utils/i18n';
 import { trackEvent } from '../utils/pixel';
 
 const BrazilFlagIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-3' }) => (
@@ -358,13 +360,17 @@ const TRUSTPILOT_REVIEWS = [
   },
 ];
 
-export const ProductDetail: React.FC = () => {
+const ProductDetailContent: React.FC = () => {
+  const localize = useText();
   const { slug } = useParams<{ slug: string }>();
   const [isGuaranteesModalOpen, setIsGuaranteesModalOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<'recurrent' | 'avulso'>('recurrent');
-  const [selectedLicenseOption, setSelectedLicenseOption] = useState<LicenseOption | undefined>();
+  const [selectedLicenseOption, setSelectedLicenseOption] = useState<LicenseOption | undefined>(() => {
+    const options = getProductBySlug(slug || '')?.licenseOptions;
+    return options?.reduce<LicenseOption | undefined>((cheapest, option) => !cheapest || option.price < cheapest.price ? option : cheapest, undefined);
+  });
   const [quantity, setQuantity] = useState<number>(1);
   const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'activation'>('description');
   const [activeThumbIndex, setActiveThumbIndex] = useState<number>(0);
@@ -390,21 +396,8 @@ export const ProductDetail: React.FC = () => {
   const { language, isInternational, t } = useLanguage();
   const activeTrustpilotReviews = language === "en" ? TRUSTPILOT_REVIEWS_EN : language === "es" ? TRUSTPILOT_REVIEWS_ES : language === "pt-PT" ? TRUSTPILOT_REVIEWS_PT : TRUSTPILOT_REVIEWS;
   const { formatPrice } = useCurrency();
-  const location = useLocation();
   const hasProcessedCheckoutRef = useRef(false);
   const relatedCarouselRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setSelectedPlan('recurrent');
-    setSelectedLicenseOption(undefined);
-    setQuantity(1);
-    setActiveTab('description');
-    setActiveThumbIndex(0);
-  }, [slug]);
-
-  useEffect(() => {
-    hasProcessedCheckoutRef.current = false;
-  }, [location.pathname]);
 
   const product = useMemo(() => {
     if (!slug) return undefined;
@@ -421,14 +414,6 @@ export const ProductDetail: React.FC = () => {
   }, [product]);
 
   useEffect(() => {
-    if (product?.licenseOptions && product.licenseOptions.length > 0 && !selectedLicenseOption) {
-      // Default to the cheapest option first (e.g. AutoCAD Windows 2019 at R$ 67,90)
-      const cheapestOption = [...product.licenseOptions].sort((a, b) => a.price - b.price)[0];
-      setSelectedLicenseOption(cheapestOption || product.licenseOptions[0]);
-    }
-  }, [product, selectedLicenseOption]);
-
-  useEffect(() => {
     if (product) {
       trackEvent('ViewContent', {
         content_name: product.name,
@@ -438,7 +423,7 @@ export const ProductDetail: React.FC = () => {
         currency: 'BRL',
       });
     }
-  }, [product?.id]);
+  }, [product]);
 
   const productReviews = useMemo(() => {
     if (!product) return [];
@@ -480,19 +465,7 @@ export const ProductDetail: React.FC = () => {
   }, [product]);
 
   // Essential Plugins Recommendation Logic
-  const [selectedVrayHost, setSelectedVrayHost] = useState<'SketchUp' | 'Revit' | 'Rhinoceros'>('SketchUp');
-
-  // Pre-select default host for V-Ray based on current software
-  useEffect(() => {
-    if (!product) return;
-    if (product.id === 'revit_2027' || product.slug.includes('revit')) {
-      setSelectedVrayHost('Revit');
-    } else if (product.id === 'rhinoceros_8' || product.slug.includes('rhino')) {
-      setSelectedVrayHost('Rhinoceros');
-    } else {
-      setSelectedVrayHost('SketchUp');
-    }
-  }, [product]);
+  const [selectedVrayHost, setSelectedVrayHost] = useState<'SketchUp' | 'Revit' | 'Rhinoceros'>(() => slug?.includes('revit') ? 'Revit' : slug?.includes('rhino') ? 'Rhinoceros' : 'SketchUp');
 
   const enscapeProduct = useMemo(() => products.find((p) => p.id === 'enscape'), []);
   const vrayProduct = useMemo(() => products.find((p) => p.id === 'vray_7'), []);
@@ -539,23 +512,12 @@ export const ProductDetail: React.FC = () => {
     }
   }, [searchParams, setSearchParams, product, addToCart]);
 
-  // Set document title for SEO
   useEffect(() => {
-    if (product) {
-      const typeLabel = product.isSubscription ? 'Pagamento Recorrente' : 'Acesso Vitalício';
-      document.title = `${product.name} ${typeLabel} | C2Shop`;
-
-      const metaDescription = document.querySelector('meta[name="description"]');
-      if (metaDescription) {
-        const defaultDescription = product.isSubscription
-          ? `Adquira a assinatura do ${product.name} na C2Shop com ativação rápida e suporte assistido. Garantia de funcionamento e atualizações.`
-          : product.category === 'Chaves de Ativação'
-          ? `Adquira a chave de ativação original do ${product.name} na C2Shop com licença permanente. Envio imediato via WhatsApp.`
-          : `Adquira o ${product.name} completo e vitalício na C2Shop. Link de download direto por e-mail com instruções em vídeo passo a passo.`;
-        metaDescription.setAttribute('content', defaultDescription);
-      }
-    }
-  }, [product]);
+    if (!product) return;
+    const typeLabel = product.isSubscription ? t('subscription') : t('lifetime');
+    document.title = localize(product.name) + ' — ' + typeLabel + ' | C2Tech';
+    document.querySelector('meta[name="description"]')?.setAttribute('content', localize(product.description));
+  }, [product, language, localize, t]);
 
   // Platform & Year selection helpers for products with platform/year matrix (like AutoCAD)
   const selectedPlatform: 'Windows' | 'macOS' =
@@ -592,7 +554,7 @@ export const ProductDetail: React.FC = () => {
       price: 87.90,
       originalPrice: 149.90,
       checkoutUrl: 'https://pay.cakto.com.br/t5qr5by_847341',
-      imageUrl: '/images/products/vray-7-windows.png'
+      imageUrl: '/images/products/vray-7-windows.webp'
     };
     addToCart(vrayProduct, 'avulso', targetOption, 1);
   };
@@ -602,19 +564,16 @@ export const ProductDetail: React.FC = () => {
       <div className="pt-24 pb-16 min-h-[70vh] flex items-center justify-center bg-slate-50">
         <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200/80 shadow-md p-8 text-center space-y-4">
           <h2 className="font-display font-extrabold text-2xl text-slate-900">
-            Software não encontrado
-          </h2>
+            {localize("Software não encontrado")}</h2>
           <p className="text-slate-500 text-sm">
-            O produto solicitado não foi encontrado no catálogo da C2Tech ou foi removido.
-          </p>
+            {localize("O produto solicitado não foi encontrado no catálogo da C2Tech ou foi removido.")}</p>
           <div className="pt-2">
             <Link
               to="/catalogo"
               className="inline-flex items-center px-5 py-2.5 bg-accent-blue text-white font-semibold rounded-xl text-sm shadow hover:bg-accent-blue-dark transition-all"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar ao catálogo
-            </Link>
+              {localize("Voltar ao catálogo")}</Link>
           </div>
         </div>
       </div>
@@ -806,31 +765,31 @@ export const ProductDetail: React.FC = () => {
   return (
     <div className="pt-28 pb-20 bg-white min-h-screen text-left font-sans">
       {/* Inject Schema Markup */}
-      <script type="application/ld+json">{JSON.stringify(schemaMarkup)}</script>
+      <script type="application/ld+json">{localize(JSON.stringify(schemaMarkup))}</script>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Breadcrumb + Top Rating Strip */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-4 mb-6 border-b border-slate-100">
           <nav
             className="flex items-center flex-wrap gap-1.5 text-xs text-slate-500 min-w-0"
-            aria-label="Breadcrumb"
+            aria-label={localize("Breadcrumb")}
           >
             <Link to="/" className="hover:text-blue-600 transition-colors">
-              {t('breadcrumb_home')}
+              {localize(t('breadcrumb_home'))}
             </Link>
             <span>/</span>
             <Link to="/catalogo" className="hover:text-blue-600 transition-colors">
-              {t('breadcrumb_all_products')}
+              {localize(t('breadcrumb_all_products'))}
             </Link>
             <span>/</span>
             <Link
               to={`/catalogo?categoria=${encodeURIComponent(product.category)}`}
               className="hover:text-blue-600 transition-colors"
             >
-              {translateCategory(product.category, language)}
+              {localize(translateCategory(product.category, language))}
             </Link>
             <span>/</span>
-            <span className="text-slate-900 font-semibold truncate max-w-[200px] sm:max-w-none">{product.name}</span>
+            <span className="text-slate-900 font-semibold truncate max-w-[200px] sm:max-w-none">{localize(product.name)}</span>
           </nav>
 
           {/* Trustpilot Official Header Rating Bar */}
@@ -866,14 +825,14 @@ export const ProductDetail: React.FC = () => {
               {/* Top-left Save Badge */}
               {savingsAmount > 0 && (
                 <div className="absolute top-4 left-4 z-10 bg-[#18b259] text-white text-xs sm:text-sm font-extrabold px-3.5 py-1.5 rounded-md shadow-sm">
-                  {t('save')} {formattedSavings}
+                  {localize(t('save'))} {localize(formattedSavings)}
                 </div>
               )}
 
               {/* Top-right Gold Lifetime Software Badge */}
               <div
                 className="absolute top-3 right-3 z-10 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-amber-300 via-amber-400 to-amber-600 p-1 shadow-md flex items-center justify-center text-center select-none border-2 border-amber-200"
-                title="Software Vitalício"
+                title={localize("Software Vitalício")}
               >
                 <div className="w-full h-full rounded-full border border-dashed border-amber-900/40 flex flex-col items-center justify-center px-1">
                   {/* 3 Stars in a Mini Arch */}
@@ -883,10 +842,10 @@ export const ProductDetail: React.FC = () => {
                     <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-amber-950 text-amber-950 rotate-18 translate-y-[1.5px]" />
                   </div>
                   <span className="text-[7.5px] sm:text-[9px] font-black text-amber-950 uppercase leading-none tracking-tight">
-                    {t('badge_software')}
+                    {localize(t('badge_software'))}
                   </span>
                   <span className="text-[8.5px] sm:text-[10px] font-black text-amber-950 uppercase leading-tight mt-0.5 tracking-tight">
-                    {t('badge_lifetime_gold')}
+                    {localize(t('badge_lifetime_gold'))}
                   </span>
                 </div>
               </div>
@@ -902,9 +861,9 @@ export const ProductDetail: React.FC = () => {
                         className="w-full h-auto object-cover"
                       />
                       <div className="bg-slate-950/95 text-white px-4 py-2.5 flex items-center justify-between text-xs border-t border-white/10">
-                        <span className="font-bold text-slate-200">{product.name}</span>
+                        <span className="font-bold text-slate-200">{localize(product.name)}</span>
                         <span className="bg-blue-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded">
-                          {selectedVersionBadge}
+                          {localize(selectedVersionBadge)}
                         </span>
                       </div>
                     </div>
@@ -915,23 +874,23 @@ export const ProductDetail: React.FC = () => {
                           C2TECH
                         </span>
                         <span className="text-[10px] font-bold bg-blue-600 text-white px-2 py-0.5 rounded">
-                          {selectedPlatform}
+                          {localize(selectedPlatform)}
                         </span>
                       </div>
                       <div className="my-auto text-center space-y-2">
                         <div className="w-16 h-16 mx-auto rounded-xl bg-rose-600 text-white font-display font-black text-2xl flex items-center justify-center shadow-md">
-                          {product.name.substring(0, 1)}
+                          {localize(product.name.substring(0, 1))}
                         </div>
                         <p className="font-display font-extrabold text-slate-900 text-base leading-snug">
-                          {product.name}
+                          {localize(product.name)}
                         </p>
                         <p className="text-xs font-semibold text-slate-500">
-                          {selectedVersionBadge}
+                          {localize(selectedVersionBadge)}
                         </p>
                       </div>
                       <div className="border-t border-slate-300 pt-2 flex items-center justify-between text-[10px] font-bold text-slate-600">
-                        <span>LICENÇA VITALÍCIA</span>
-                        <span className="text-emerald-600">COMPLETO</span>
+                        <span>{localize("LICENÇA VITALÍCIA")}</span>
+                        <span className="text-emerald-600">{localize("COMPLETO")}</span>
                       </div>
                     </div>
                   )}
@@ -942,18 +901,17 @@ export const ProductDetail: React.FC = () => {
                     <PlayCircle className="w-8 h-8" />
                   </div>
                   <h4 className="font-display font-bold text-lg">
-                    {product.id === 'autodesk_all_apps'
+                    {localize(product.id === 'autodesk_all_apps'
                       ? 'Instruções de Acesso Oficial'
-                      : 'Instruções em Vídeo Passo a Passo'}
+                      : 'Instruções em Vídeo Passo a Passo')}
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    {product.id === 'autodesk_all_apps'
+                    {localize(product.id === 'autodesk_all_apps'
                       ? 'Você recebe um guia passo a passo ensinando a realizar o login na sua conta oficial da Autodesk e baixar qualquer um dos mais de 80 softwares.'
-                      : 'Junto com os arquivos de instalação, você recebe um vídeo tutorial gravado pela nossa equipe mostrando cada clique da instalação e ativação definitiva.'}
+                      : 'Junto com os arquivos de instalação, você recebe um vídeo tutorial gravado pela nossa equipe mostrando cada clique da instalação e ativação definitiva.')}
                   </p>
                   <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full">
-                    <Check className="w-3.5 h-3.5" /> Fácil, rápido e sem complicação
-                  </div>
+                    <Check className="w-3.5 h-3.5" /> {localize(" Fácil, rápido e sem complicação")}</div>
                 </div>
               ) : activeThumb?.type === 'email' ? (
                 <div className="w-full max-w-[340px] bg-slate-900 text-white rounded-2xl p-6 shadow-xl space-y-4 text-center my-auto">
@@ -961,18 +919,17 @@ export const ProductDetail: React.FC = () => {
                     <Mail className="w-8 h-8" />
                   </div>
                   <h4 className="font-display font-bold text-lg">
-                    {product.id === 'autodesk_all_apps'
+                    {localize(product.id === 'autodesk_all_apps'
                       ? 'Login e Senha Oficiais no E-mail'
-                      : 'Link de Download Direto no E-mail'}
+                      : 'Link de Download Direto no E-mail')}
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    {product.id === 'autodesk_all_apps'
+                    {localize(product.id === 'autodesk_all_apps'
                       ? 'Assim que seu pagamento via Pix ou Cartão é confirmado, enviamos as credenciais de acesso oficial (login e senha) diretamente no seu e-mail e WhatsApp.'
-                      : 'Assim que seu pagamento via Pix ou Cartão é confirmado, nosso sistema envia automaticamente o link exclusivo do Google Drive diretamente para o seu e-mail.'}
+                      : 'Assim que seu pagamento via Pix ou Cartão é confirmado, nosso sistema envia automaticamente o link exclusivo do Google Drive diretamente para o seu e-mail.')}
                   </p>
                   <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full">
-                    <CloudDownload className="w-3.5 h-3.5" /> Entrega Rápida e Privada
-                  </div>
+                    <CloudDownload className="w-3.5 h-3.5" /> {localize(" Entrega Rápida e Privada")}</div>
                 </div>
               ) : (
                 <div className="w-full max-w-[340px] bg-slate-900 text-white rounded-2xl p-6 shadow-xl space-y-4 text-center my-auto">
@@ -980,17 +937,17 @@ export const ProductDetail: React.FC = () => {
                     <ShieldCheck className="w-8 h-8" />
                   </div>
                   <h4 className="font-display font-bold text-lg">
-                    {product.id === 'autodesk_all_apps'
+                    {localize(product.id === 'autodesk_all_apps'
                       ? 'Acesso Oficial Garantido'
-                      : 'Funcionamento Vitalício do Software'}
+                      : 'Funcionamento Vitalício do Software')}
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    {product.id === 'autodesk_all_apps'
+                    {localize(product.id === 'autodesk_all_apps'
                       ? 'Conta oficial com acesso irrestrito a todos os softwares da Autodesk (AutoCAD, Revit, Maya, 3ds Max, etc.) no portal manage.autodesk.com.'
-                      : 'O software tem ativação definitiva para funcionar de forma vitalícia, sem mensalidades ou renovações. Além disso, você conta com 30 dias de garantia de suporte técnico para instalação e ativação.'}
+                      : 'O software tem ativação definitiva para funcionar de forma vitalícia, sem mensalidades ou renovações. Além disso, você conta com 30 dias de garantia de suporte técnico para instalação e ativação.')}
                   </p>
                   <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-300 bg-amber-500/10 px-3 py-1 rounded-full">
-                    <Award className="w-3.5 h-3.5" /> {product.id === 'autodesk_all_apps' ? 'Conta Oficial Autodesk' : 'Uso Vitalício • 30 Dias de Suporte'}
+                    <Award className="w-3.5 h-3.5" /> {localize(product.id === 'autodesk_all_apps' ? 'Conta Oficial Autodesk' : 'Uso Vitalício • 30 Dias de Suporte')}
                   </div>
                 </div>
               )}
@@ -1028,7 +985,7 @@ export const ProductDetail: React.FC = () => {
                     </div>
                   )}
                   <span className="text-[8px] font-extrabold text-slate-700 uppercase tracking-tighter truncate w-full text-center">
-                    {thumb.badge}
+                    {localize(thumb.badge)}
                   </span>
                 </button>
               ))}
@@ -1039,28 +996,28 @@ export const ProductDetail: React.FC = () => {
           <div className="lg:col-span-6 space-y-5">
             <div>
               <h1 className="font-display font-extrabold text-2xl sm:text-3xl text-slate-900 tracking-tight">
-                {product.name}
+                {localize(product.name)}
               </h1>
               <p className="text-xs text-slate-500 mt-1">
-                {hasPlatformYearMatrix
+                {localize(hasPlatformYearMatrix
                   ? `${t('selected_label')}: ${selectedLicenseOption?.label || 'Windows 2027'} • ${t('full_lifetime_version')}`
-                  : `${product.version} • ${t('compatible_with')} ${translateCompatibility(product.compatibility, language)}`}
+                  : `${product.version} • ${t('compatible_with')} ${translateCompatibility(product.compatibility, language)}`)}
               </p>
             </div>
 
             {/* Price Row */}
             <div className="flex items-baseline gap-3">
               <span className="font-display font-black text-3xl sm:text-4xl text-[#0b5ed7]">
-                {formattedPrice}
+                {localize(formattedPrice)}
               </span>
               {displayOriginalPrice > displayPrice && (
                 <span className="text-base sm:text-lg text-slate-400 line-through font-semibold">
-                  {formattedOriginalPrice}
+                  {localize(formattedOriginalPrice)}
                 </span>
               )}
               {product.isSubscription && (
                 <span className="text-xs font-bold text-slate-500">
-                  {selectedLicenseOption?.label.includes('Ano') ? '/plano' : '/mês'}
+                  {localize(selectedLicenseOption?.label.includes('Ano') ? '/plano' : '/mês')}
                 </span>
               )}
             </div>
@@ -1069,47 +1026,47 @@ export const ProductDetail: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-2 py-3.5 border-y border-slate-200 text-left bg-slate-50/60 sm:bg-transparent rounded-xl sm:rounded-none px-3.5 sm:px-0">
               <div className="flex items-center gap-2 sm:gap-2.5 sm:pr-2 sm:border-r border-slate-200">
                 <img
-                  src="/images/icons/badge-seal.png"
-                  alt="Uso Vitalício"
+                  src="/images/icons/badge-seal.webp"
+                  alt={localize("Uso Vitalício")}
                   className="w-8 h-8 object-contain shrink-0 select-none"
                   loading="eager"
                 />
                 <div>
-                  <p className="text-[11px] font-bold text-slate-800 leading-tight">{t('badge_lifetime')}</p>
+                  <p className="text-[11px] font-bold text-slate-800 leading-tight">{localize(t('badge_lifetime'))}</p>
                   <p className="text-[9.5px] text-slate-500 leading-snug mt-0.5">
-                    {t('badge_lifetime_sub')}
+                    {localize(t('badge_lifetime_sub'))}
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2 sm:gap-2.5 sm:px-1 sm:border-r border-slate-200">
                 <img
-                  src="/images/icons/badge-shield.png"
-                  alt="Ativação Garantida"
+                  src="/images/icons/badge-shield.webp"
+                  alt={localize("Ativação Garantida")}
                   className="w-8 h-8 object-contain shrink-0 select-none"
                   loading="eager"
                 />
                 <div>
                   <p className="text-[11px] font-bold text-slate-800 leading-tight">
-                    {product.isSubscription ? (language === 'es' ? 'Acceso Oficial' : 'Acesso Oficial') : t('badge_guaranteed')}
+                    {localize(product.isSubscription ? (language === 'es' ? 'Acceso Oficial' : 'Acesso Oficial') : t('badge_guaranteed'))}
                   </p>
                   <p className="text-[9.5px] text-slate-500 leading-snug mt-0.5">
-                    {product.isSubscription ? (language === 'es' ? 'Cuenta verificada' : 'Conta verificada') : t('badge_guaranteed_sub')}
+                    {localize(product.isSubscription ? (language === 'es' ? 'Cuenta verificada' : 'Conta verificada') : t('badge_guaranteed_sub'))}
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2 sm:gap-2.5 sm:pl-1">
                 <img
-                  src="/images/icons/badge-plane.png"
-                  alt="Entrega Digital"
+                  src="/images/icons/badge-plane.webp"
+                  alt={localize("Entrega Digital")}
                   className="w-8 h-8 object-contain shrink-0 select-none"
                   loading="eager"
                 />
                 <div>
-                  <p className="text-[11px] font-bold text-slate-800 leading-tight">{t('badge_digital_delivery')}</p>
+                  <p className="text-[11px] font-bold text-slate-800 leading-tight">{localize(t('badge_digital_delivery'))}</p>
                   <p className="text-[9.5px] text-slate-500 leading-snug mt-0.5">
-                    {t('badge_digital_delivery_sub')}
+                    {localize(t('badge_digital_delivery_sub'))}
                   </p>
                 </div>
               </div>
@@ -1122,7 +1079,7 @@ export const ProductDetail: React.FC = () => {
               <div className="space-y-4 pt-1">
                 {/* Plataforma */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-slate-700">{t('platform')}</label>
+                  <label className="block text-xs font-semibold text-slate-700">{localize(t('platform'))}</label>
                   <div className="flex flex-wrap gap-2">
                     {availablePlatforms.map((plat) => {
                       const isActive = selectedPlatform === plat;
@@ -1137,7 +1094,7 @@ export const ProductDetail: React.FC = () => {
                               : 'border-slate-300 text-slate-700 bg-white hover:border-slate-400'
                           }`}
                         >
-                          {plat}
+                          {localize(plat)}
                         </button>
                       );
                     })}
@@ -1146,20 +1103,20 @@ export const ProductDetail: React.FC = () => {
 
                 {/* Validade */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-slate-700">{t('validity')}</label>
+                  <label className="block text-xs font-semibold text-slate-700">{localize(t('validity'))}</label>
                   <div className="flex flex-wrap gap-2">
                     <button
                       type="button"
                       className="px-4 py-2 rounded-md text-xs font-bold border-2 border-[#0b5ed7] text-[#0b5ed7] bg-blue-50/40 shadow-xs cursor-default"
                     >
-                      {t('lifetime')}
+                      {localize(t('lifetime'))}
                     </button>
                   </div>
                 </div>
 
                 {/* Ano / Versão */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-slate-700">{t('year')}</label>
+                  <label className="block text-xs font-semibold text-slate-700">{localize(t('year'))}</label>
                   <div className="flex flex-wrap gap-2">
                     {availableYearsForPlatform.map((opt) => {
                       const isSelected = selectedLicenseOption?.quantity === opt.quantity;
@@ -1186,19 +1143,19 @@ export const ProductDetail: React.FC = () => {
               <div className="space-y-4 pt-1">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-semibold text-slate-700">{t('platform')}</label>
+                    <label className="block text-xs font-semibold text-slate-700">{localize(t('platform'))}</label>
                     <div className="flex flex-wrap gap-2">
                       <span className="px-4 py-2 rounded-md text-xs font-bold border-2 border-[#0b5ed7] text-[#0b5ed7] bg-blue-50/40">
-                        {product.compatibility}
+                        {localize(product.compatibility)}
                       </span>
                     </div>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-semibold text-slate-700">{t('validity')}</label>
+                    <label className="block text-xs font-semibold text-slate-700">{localize(t('validity'))}</label>
                     <div className="flex flex-wrap gap-2">
                       <span className="px-4 py-2 rounded-md text-xs font-bold border-2 border-[#0b5ed7] text-[#0b5ed7] bg-blue-50/40">
-                        {product.isSubscription ? t('subscription') : t('lifetime')}
+                        {localize(product.isSubscription ? t('subscription') : t('lifetime'))}
                       </span>
                     </div>
                   </div>
@@ -1208,11 +1165,11 @@ export const ProductDetail: React.FC = () => {
                 {product.licenseOptions && product.licenseOptions.length > 0 && (
                   <div className="space-y-1.5">
                     <label className="block text-xs font-semibold text-slate-700">
-                      {product.isSubscription
+                      {localize(product.isSubscription
                         ? 'Escolha a duração da assinatura'
                         : product.id === 'eberick_builder_2025'
                         ? 'Escolha a versão'
-                        : t('choose_license')}
+                        : t('choose_license'))}
                     </label>
                     <div className="flex flex-wrap gap-2">
                       {product.licenseOptions.map((opt) => {
@@ -1228,9 +1185,9 @@ export const ProductDetail: React.FC = () => {
                                 : 'border-slate-300 text-slate-700 bg-white hover:border-slate-400'
                             }`}
                           >
-                            {product.id === 'eberick_builder_2025' || opt.label.startsWith('Versão')
+                            {localize(product.id === 'eberick_builder_2025' || opt.label.startsWith('Versão')
                               ? opt.label
-                              : `${opt.label} — ${formatPrice(opt.price)}`}
+                              : `${opt.label} — ${formatPrice(opt.price)}`)}
                           </button>
                         );
                       })}
@@ -1242,8 +1199,7 @@ export const ProductDetail: React.FC = () => {
                 {product.isSubscription && product.recurrencePrice && !product.licenseOptions && (
                   <div className="space-y-1.5">
                     <label className="block text-xs font-semibold text-slate-700">
-                      Modalidade de Pagamento
-                    </label>
+                      {localize("Modalidade de Pagamento")}</label>
                     <div className="grid grid-cols-2 gap-2.5">
                       <button
                         type="button"
@@ -1255,11 +1211,9 @@ export const ProductDetail: React.FC = () => {
                         }`}
                       >
                         <span className="block text-[11px] font-bold text-slate-800">
-                          Recorrente Mensal
-                        </span>
+                          {localize("Recorrente Mensal")}</span>
                         <span className="text-sm font-black text-[#0b5ed7]">
-                          {formattedRecurrencePrice}/mês
-                        </span>
+                          {formattedRecurrencePrice}{localize("/mês")}</span>
                       </button>
                       <button
                         type="button"
@@ -1271,10 +1225,9 @@ export const ProductDetail: React.FC = () => {
                         }`}
                       >
                         <span className="block text-[11px] font-bold text-slate-800">
-                          Pagamento Único
-                        </span>
+                          {localize("Pagamento Único")}</span>
                         <span className="text-sm font-black text-slate-900">
-                          {formatPrice(product.price)}
+                          {localize(formatPrice(product.price))}
                         </span>
                       </button>
                     </div>
@@ -1290,8 +1243,7 @@ export const ProductDetail: React.FC = () => {
                   disabled
                   className="w-full py-3.5 bg-slate-200 text-slate-500 font-bold rounded-lg text-sm uppercase tracking-wider cursor-not-allowed"
                 >
-                  Temporariamente Indisponível
-                </button>
+                  {localize("Temporariamente Indisponível")}</button>
               </div>
             ) : (
               <div className="space-y-3 pt-2">
@@ -1299,10 +1251,10 @@ export const ProductDetail: React.FC = () => {
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                     <Monitor className="w-3.5 h-3.5 text-[#0b5ed7] shrink-0" />
-                    <span>{t('device_support_label')}</span>
+                    <span>{localize(t('device_support_label'))}</span>
                   </label>
                   <span className="text-[11px] font-bold text-[#0b5ed7] bg-blue-50 border border-blue-200/80 px-2.5 py-0.5 rounded-full shrink-0">
-                    {quantity === 1 ? t('single_device') : `${quantity} ${t('multiple_devices')}`}
+                    {localize(quantity === 1 ? t('single_device') : `${quantity} ${t('multiple_devices')}`)}
                   </span>
                 </div>
 
@@ -1310,13 +1262,13 @@ export const ProductDetail: React.FC = () => {
                   {/* Quantity / Devices Counter (- 1 +) */}
                   <div
                     className="flex items-center border border-slate-300 rounded-md bg-white overflow-hidden shrink-0"
-                    title="Quantidade de dispositivos com suporte"
+                    title={localize("Quantidade de dispositivos com suporte")}
                   >
                     <button
                       type="button"
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                       className="px-3 py-2.5 text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
-                      aria-label="Diminuir número de dispositivos"
+                      aria-label={localize("Diminuir número de dispositivos")}
                     >
                       <Minus className="w-3.5 h-3.5" />
                     </button>
@@ -1327,7 +1279,7 @@ export const ProductDetail: React.FC = () => {
                       type="button"
                       onClick={() => setQuantity((q) => Math.min(10, q + 1))}
                       className="px-3 py-2.5 text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
-                      aria-label="Aumentar número de dispositivos"
+                      aria-label={localize("Aumentar número de dispositivos")}
                     >
                       <Plus className="w-3.5 h-3.5" />
                     </button>
@@ -1348,7 +1300,7 @@ export const ProductDetail: React.FC = () => {
                     className="flex-1 bg-[#0b5ed7] hover:bg-[#0a53be] text-white font-bold text-sm py-3 px-6 rounded-md shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
                   >
                     <ShoppingCart className="w-4 h-4" />
-                    <span>{t('add_to_cart')}</span>
+                    <span>{localize(t('add_to_cart'))}</span>
                   </button>
                 </div>
 
@@ -1371,14 +1323,14 @@ export const ProductDetail: React.FC = () => {
                   id={`detail-buy-now-${product.id}`}
                   className="w-full bg-slate-950 hover:bg-slate-800 text-white font-bold text-sm py-3.5 px-6 rounded-md shadow-md transition-all cursor-pointer flex items-center justify-center gap-2.5"
                 >
-                  <span>{isInternational ? t('buy_now') : 'Comprar agora'}</span>
+                  <span>{localize(isInternational ? t('buy_now') : 'Comprar agora')}</span>
                   <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold bg-white/15 px-2 py-0.5 rounded text-emerald-300">
-                    {isInternational ? t('buy_now_badge') : 'PIX • CARTÃO'}
+                    {localize(isInternational ? t('buy_now_badge') : 'PIX • CARTÃO')}
                   </span>
                 </button>
                 {isInternational && (
                   <p className="text-[11px] text-slate-500 text-center leading-relaxed pt-1">
-                    {t('intl_checkout_hint')}
+                    {localize(t('intl_checkout_hint'))}
                   </p>
                 )}
               </div>
@@ -1519,13 +1471,13 @@ export const ProductDetail: React.FC = () => {
                 <div>
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Plugins Essenciais Recomendados (Windows)</span>
+                    <span>{localize("Plugins Essenciais Recomendados (Windows)")}</span>
                   </div>
                   <h3 className="font-display font-black text-xl sm:text-2xl text-white tracking-tight">
-                    Potencialize seu {hostName} com {supportsVray ? 'Renderizadores Profissionais' : 'Renderização em Tempo Real'}
+                    {localize("Potencialize seu ")}{hostName} {localize(" com ")}{supportsVray ? 'Renderizadores Profissionais' : 'Renderização em Tempo Real'}
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                    O {hostName} é indispensável para arquitetura e projetos 3D. Para transformar seus modelos em imagens e vídeos fotorrealistas de alto impacto para clientes, {supportsVray ? 'estes dois motores de render são indispensáveis:' : 'o plugin Chaos Enscape é indispensável:'}
+                    O {hostName} {localize(" é indispensável para arquitetura e projetos 3D. Para transformar seus modelos em imagens e vídeos fotorrealistas de alto impacto para clientes, ")}{supportsVray ? 'estes dois motores de render são indispensáveis:' : 'o plugin Chaos Enscape é indispensável:'}
                   </p>
                 </div>
               </div>
@@ -1539,36 +1491,33 @@ export const ProductDetail: React.FC = () => {
                   <div className="space-y-3">
                     <div className="flex items-start gap-4">
                       <img
-                        src="/images/products/chaos-enscape-windows.png"
+                        src="/images/products/chaos-enscape-windows.webp"
                         alt="Chaos Enscape"
                         className="w-16 h-16 rounded-xl object-cover bg-slate-800 border border-white/10 shrink-0 shadow-sm"
                       />
                       <div className="min-w-0 flex-1">
                         <div className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded mb-1">
-                          Tempo Real & VR
-                        </div>
+                          {localize("Tempo Real & VR")}</div>
                         <h4 className="font-display font-bold text-base text-white group-hover:text-sky-300 transition-colors">
                           Chaos Enscape
                         </h4>
                         <p className="text-xs text-slate-400 line-clamp-2 mt-0.5">
-                          Renderize instantaneamente enquanto você desenha no {hostName}. Ideal para apresentações ao vivo e passeios virtuais interativos.
-                        </p>
+                          {localize("Renderize instantaneamente enquanto você desenha no ")}{hostName}{localize(". Ideal para apresentações ao vivo e passeios virtuais interativos.")}</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between gap-3">
                     <div>
-                      <span className="text-[10px] text-slate-400 block font-medium">Licença Vitalícia</span>
-                      <span className="font-display font-black text-lg text-emerald-400">R$ 97,90</span>
+                      <span className="text-[10px] text-slate-400 block font-medium">{localize("Licença Vitalícia")}</span>
+                      <span className="font-display font-black text-lg text-emerald-400">{formatPrice(enscapeProduct?.price ?? 97.90)}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Link
                         to="/produto/chaos-enscape-windows"
                         className="px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all"
                       >
-                        Ver Detalhes
-                      </Link>
+                        {localize("Ver Detalhes")}</Link>
                       {enscapeProduct && (
                         <button
                           type="button"
@@ -1576,7 +1525,7 @@ export const ProductDetail: React.FC = () => {
                           className="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
                         >
                           <ShoppingCart className="w-3.5 h-3.5" />
-                          <span>Adicionar</span>
+                          <span>{localize("Adicionar")}</span>
                         </button>
                       )}
                     </div>
@@ -1589,27 +1538,25 @@ export const ProductDetail: React.FC = () => {
                     <div className="space-y-3">
                       <div className="flex items-start gap-4">
                         <img
-                          src="/images/products/vray-7-windows.png"
+                          src="/images/products/vray-7-windows.webp"
                           alt="Chaos V-Ray 7"
                           className="w-16 h-16 rounded-xl object-cover bg-slate-800 border border-white/10 shrink-0 shadow-sm"
                         />
                         <div className="min-w-0 flex-1">
                           <div className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded mb-1">
-                            Fotorrealismo Máximo
-                          </div>
+                            {localize("Fotorrealismo Máximo")}</div>
                           <h4 className="font-display font-bold text-base text-white group-hover:text-amber-300 transition-colors">
                             Chaos V-Ray 7
                           </h4>
                           <p className="text-xs text-slate-400 line-clamp-2 mt-0.5">
-                            O padrão mundial da indústria de arquitetura. Iluminação física, materiais hiper-realistas e render cinematográfico de altíssima precisão.
-                          </p>
+                            {localize("O padrão mundial da indústria de arquitetura. Iluminação física, materiais hiper-realistas e render cinematográfico de altíssima precisão.")}</p>
                         </div>
                       </div>
 
                       {/* Host Software Selector (SketchUp, Revit, Rhinoceros) */}
                       <div className="pt-2 border-t border-white/10">
                         <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
-                          <span>Selecione a versão:</span>
+                          <span>{localize("Selecione a versão:")}</span>
                           <span className="text-amber-300 font-extrabold">{selectedVrayHost}</span>
                         </div>
                         <div className="grid grid-cols-3 gap-1.5">
@@ -1636,16 +1583,15 @@ export const ProductDetail: React.FC = () => {
 
                     <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between gap-3">
                       <div>
-                        <span className="text-[10px] text-slate-400 block font-medium">Licença Vitalícia</span>
-                        <span className="font-display font-black text-lg text-emerald-400">R$ 87,90</span>
+                        <span className="text-[10px] text-slate-400 block font-medium">{localize("Licença Vitalícia")}</span>
+                        <span className="font-display font-black text-lg text-emerald-400">{formatPrice(vrayProduct?.price ?? 87.90)}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Link
                           to="/produto/vray-7-windows"
                           className="px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all"
                         >
-                          Ver Detalhes
-                        </Link>
+                          {localize("Ver Detalhes")}</Link>
                         {vrayProduct && (
                           <button
                             type="button"
@@ -1653,7 +1599,7 @@ export const ProductDetail: React.FC = () => {
                             className="px-3.5 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
                           >
                             <ShoppingCart className="w-3.5 h-3.5" />
-                            <span>Adicionar</span>
+                            <span>{localize("Adicionar")}</span>
                           </button>
                         )}
                       </div>
@@ -1681,7 +1627,7 @@ export const ProductDetail: React.FC = () => {
               }`}
             >
               <Info className="w-4 h-4" />
-              <span>{t('tab_description')}</span>
+              <span>{localize(t('tab_description'))}</span>
             </button>
 
             <button
@@ -1694,7 +1640,7 @@ export const ProductDetail: React.FC = () => {
               }`}
             >
               <List className="w-4 h-4" />
-              <span>{t('tab_specs')}</span>
+              <span>{localize(t('tab_specs'))}</span>
             </button>
 
             <button
@@ -1707,7 +1653,7 @@ export const ProductDetail: React.FC = () => {
               }`}
             >
               <FileCheck className="w-4 h-4" />
-              <span>{t('tab_activation')}</span>
+              <span>{localize(t('tab_activation'))}</span>
             </button>
           </div>
 
@@ -1720,34 +1666,28 @@ export const ProductDetail: React.FC = () => {
               <p className="text-xs sm:text-sm text-slate-800 bg-white/80 p-4 rounded-xl border border-slate-200/80">
                 {product.id === 'autodesk_all_apps' ? (
                   <>
-                    <strong>NOTA IMPORTANTE:</strong> O plano{' '}
-                    <strong>Autodesk Todos os Aplicativos</strong> oferece acesso oficial completo a
-                    mais de 80 softwares oficiais da Autodesk. Você receberá{' '}
-                    <strong>login e senha para entrar em uma conta oficial da Autodesk</strong>{' '}
-                    diretamente no portal oficial <strong>manage.autodesk.com</strong>, com download direto dos instaladores oficiais, atualizações contínuas e suporte prioritário via WhatsApp.
-                  </>
+                    <strong>{localize("NOTA IMPORTANTE:")}</strong> {localize(" O plano")}{localize(' ')}
+                    <strong>{localize("Autodesk Todos os Aplicativos")}</strong> {localize(" oferece acesso oficial completo a mais de 80 softwares oficiais da Autodesk. Você receberá")}{localize(' ')}
+                    <strong>{localize("login e senha para entrar em uma conta oficial da Autodesk")}</strong>{localize(' ')}
+                    {localize("diretamente no portal oficial ")}<strong>manage.autodesk.com</strong>{localize(", com download direto dos instaladores oficiais, atualizações contínuas e suporte prioritário via WhatsApp.")}</>
                 ) : (
                   <>
-                    <strong>NOTA IMPORTANTE:</strong> Esta é uma versão{' '}
-                    <strong>100% completa e vitalícia</strong> do {product.name}, oferecendo todos os
-                    recursos profissionais sem mensalidades ou taxas ocultas. Após a confirmação da
-                    compra, o <strong>link de download direto chega imediatamente no seu e-mail</strong>{' '}
-                    acompanhado de <strong>instruções passo a passo em vídeo</strong> para uma
-                    instalação rápida, segura e definitiva.
-                  </>
+                    <strong>{localize("NOTA IMPORTANTE:")}</strong> {localize(" Esta é uma versão")}{localize(' ')}
+                    <strong>{localize("100% completa e vitalícia")}</strong> {localize(" do ")}{localize(product.name)}{localize(", oferecendo todos os recursos profissionais sem mensalidades ou taxas ocultas. Após a confirmação da compra, o ")}<strong>{localize("link de download direto chega imediatamente no seu e-mail")}</strong>{localize(' ')}
+                    {localize("acompanhado de ")}<strong>{localize("instruções passo a passo em vídeo")}</strong> {localize(" para uma instalação rápida, segura e definitiva.")}</>
                 )}
               </p>
 
               {/* Detalhes do Produto */}
               <div className="space-y-3">
                 <h3 className="font-display font-extrabold text-base text-slate-900">
-                  {t('product_details_heading')}
+                  {localize(t('product_details_heading'))}
                 </h3>
                 <ul className="space-y-2 text-xs sm:text-sm">
                   {product.features.map((feat, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
-                      <span>{translateFeature(feat, language)}</span>
+                      <span>{localize(feat)}</span>
                     </li>
                   ))}
                   {product.id !== 'autodesk_all_apps' && (
@@ -1755,16 +1695,12 @@ export const ProductDetail: React.FC = () => {
                       <li className="flex items-start gap-2">
                         <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
                         <span>
-                          <strong>Instruções em vídeo passo a passo:</strong> tutorial em vídeo claro e
-                          detalhado ensinando a instalar e ativar sem complicação.
-                        </span>
+                          <strong>{localize("Instruções em vídeo passo a passo:")}</strong> {localize(" tutorial em vídeo claro e detalhado ensinando a instalar e ativar sem complicação.")}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
                         <span>
-                          <strong>Garantia de 30 dias de suporte técnico</strong> gratuito via WhatsApp
-                          para instalação e ativação (com funcionamento vitalício do software).
-                        </span>
+                          <strong>{localize("Garantia de 30 dias de suporte técnico")}</strong> {localize(" gratuito via WhatsApp para instalação e ativação (com funcionamento vitalício do software).")}</span>
                       </li>
                     </>
                   )}
@@ -1774,9 +1710,9 @@ export const ProductDetail: React.FC = () => {
               {/* Receba seu software em 3 passos simples */}
               <div className="space-y-4 pt-2 border-t border-slate-200">
                 <h3 className="font-display font-extrabold text-base text-slate-900">
-                  {product.id === 'autodesk_all_apps'
+                  {localize(product.id === 'autodesk_all_apps'
                     ? 'Acesse sua conta oficial em 3 passos simples'
-                    : `Receba seu ${product.name} em 3 passos simples`}
+                    : `Receba seu ${product.name} em 3 passos simples`)}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl pt-2">
                   <div className="flex flex-col items-center text-center space-y-2">
@@ -1786,13 +1722,13 @@ export const ProductDetail: React.FC = () => {
                     <p className="text-xs text-slate-700 font-medium leading-snug">
                       {product.id === 'autodesk_all_apps' ? (
                         <>
-                          Após a compra, receba o <strong>login e senha da conta oficial</strong> diretamente no seu{' '}
-                          <strong>e-mail e WhatsApp</strong>
+                          {localize("Após a compra, receba o ")}<strong>{localize("login e senha da conta oficial")}</strong> {localize(" diretamente no seu")}{localize(' ')}
+                          <strong>{localize("e-mail e WhatsApp")}</strong>
                         </>
                       ) : (
                         <>
-                          Após a compra, receba o <strong>link de download</strong> diretamente no seu{' '}
-                          <strong>e-mail</strong>
+                          {localize("Após a compra, receba o ")}<strong>{localize("link de download")}</strong> {localize(" diretamente no seu")}{localize(' ')}
+                          <strong>{localize("e-mail")}</strong>
                         </>
                       )}
                     </p>
@@ -1805,13 +1741,13 @@ export const ProductDetail: React.FC = () => {
                     <p className="text-xs text-slate-700 font-medium leading-snug">
                       {product.id === 'autodesk_all_apps' ? (
                         <>
-                          Faça login no portal oficial em{' '}
+                          {localize("Faça login no portal oficial em")}{localize(' ')}
                           <strong>manage.autodesk.com</strong>
                         </>
                       ) : (
                         <>
-                          Baixe o software completo junto com as{' '}
-                          <strong>instruções em vídeo passo a passo</strong>
+                          {localize("Baixe o software completo junto com as")}{localize(' ')}
+                          <strong>{localize("instruções em vídeo passo a passo")}</strong>
                         </>
                       )}
                     </p>
@@ -1824,13 +1760,10 @@ export const ProductDetail: React.FC = () => {
                     <p className="text-xs text-slate-700 font-medium leading-snug">
                       {product.id === 'autodesk_all_apps' ? (
                         <>
-                          Baixe e utilize qualquer um dos <strong>mais de 80 softwares Autodesk</strong> oficiais
-                        </>
+                          {localize("Baixe e utilize qualquer um dos ")}<strong>{localize("mais de 80 softwares Autodesk")}</strong> {localize(" oficiais")}</>
                       ) : (
                         <>
-                          Siga o vídeo tutorial e <strong>ative de forma vitalícia</strong> no seu
-                          computador
-                        </>
+                          {localize("Siga o vídeo tutorial e ")}<strong>{localize("ative de forma vitalícia")}</strong> {localize(" no seu computador")}</>
                       )}
                     </p>
                   </div>
@@ -1842,112 +1775,78 @@ export const ProductDetail: React.FC = () => {
                 {product.id === 'autocad_2027_win' ? (
                   <>
                     <h3 className="font-display font-extrabold text-base text-slate-900">
-                      A diferença entre o nosso AutoCAD Completo e o AutoCAD LT
-                    </h3>
+                      {localize("A diferença entre o nosso AutoCAD Completo e o AutoCAD LT")}</h3>
                     <p className="text-xs sm:text-sm text-slate-600">
-                      Ao adquirir na C2Tech, você recebe a edição <strong>AutoCAD Completa</strong>{' '}
-                      (e não a versão limitada LT), garantindo máxima produtividade para projetos de
-                      engenharia, arquitetura e design:
-                    </p>
+                      {localize("Ao adquirir na C2Tech, você recebe a edição ")}<strong>{localize("AutoCAD Completa")}</strong>{localize(' ')}
+                      {localize("(e não a versão limitada LT), garantindo máxima produtividade para projetos de engenharia, arquitetura e design:")}</p>
                     <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
                       <li>
-                        <strong>AutoCAD Completo (Nossa Versão):</strong> Ideal para profissionais e
-                        estudantes que precisam tanto de desenho técnico 2D quanto de{' '}
-                        <strong>modelagem 3D completa</strong>, renderização realista, nuvem de
-                        pontos, automação com rotinas <strong>AutoLISP / LISP</strong>, APIs e
-                        bibliotecas completas de arquitetura, mecânica e elétrica.
-                      </li>
+                        <strong>{localize("AutoCAD Completo (Nossa Versão):")}</strong> {localize(" Ideal para profissionais e estudantes que precisam tanto de desenho técnico 2D quanto de")}{localize(' ')}
+                        <strong>{localize("modelagem 3D completa")}</strong>{localize(", renderização realista, nuvem de pontos, automação com rotinas ")}<strong>AutoLISP / LISP</strong>{localize(", APIs e bibliotecas completas de arquitetura, mecânica e elétrica.")}</li>
                       <li>
-                        <strong>Compatibilidade Total DWG:</strong> Crie, edite e exporte arquivos
-                        nativos `.DWG` e `.DXF` com total precisão, compatível com projetos de
-                        qualquer escritório ou cliente.
-                      </li>
+                        <strong>{localize("Compatibilidade Total DWG:")}</strong> {localize(" Crie, edite e exporte arquivos nativos `.DWG` e `.DXF` com total precisão, compatível com projetos de qualquer escritório ou cliente.")}</li>
                     </ul>
                   </>
                 ) : product.id === 'sketchup_2026_win' ? (
                   <>
                     <h3 className="font-display font-extrabold text-base text-slate-900">
-                      Por que o nosso SketchUp Pro Desktop Completo supera a versão Web / Go?
-                    </h3>
+                      {localize("Por que o nosso SketchUp Pro Desktop Completo supera a versão Web / Go?")}</h3>
                     <p className="text-xs sm:text-sm text-slate-600">
-                      Ao adquirir na C2Tech, você recebe a suíte <strong>SketchUp Pro Desktop Completa</strong>{' '}
-                      (com <strong>LayOut</strong> e <strong>Style Builder</strong> inclusos), essencial para
-                      arquitetos, designers de interiores, marceneiros e engenheiros:
-                    </p>
+                      {localize("Ao adquirir na C2Tech, você recebe a suíte ")}<strong>{localize("SketchUp Pro Desktop Completa")}</strong>{localize(' ')}
+                      {localize("(com ")}<strong>LayOut</strong> e <strong>Style Builder</strong> {localize(" inclusos), essencial para arquitetos, designers de interiores, marceneiros e engenheiros:")}</p>
                     <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
                       <li>
-                        <strong>Suporte Total a Plugins e Renderizadores:</strong> Ao contrário das
-                        edições básicas ou web, o SketchUp Pro Desktop aceita todos os plugins Ruby
-                        (`.rbz`) e funciona perfeitamente com <strong>V-Ray, Enscape, Lumion, D5 Render</strong>{' '}
-                        e blocos dinâmicos.
-                      </li>
+                        <strong>{localize("Suporte Total a Plugins e Renderizadores:")}</strong> {localize(" Ao contrário das edições básicas ou web, o SketchUp Pro Desktop aceita todos os plugins Ruby (`.rbz`) e funciona perfeitamente com ")}<strong>V-Ray, Enscape, Lumion, D5 Render</strong>{localize(' ')}
+                        {localize("e blocos dinâmicos.")}</li>
                       <li>
-                        <strong>LayOut 2D Profissional Incluso:</strong> Transforme seus modelos 3D
-                        em pranchas técnicas executivas 2D com cotas, escalas, cortes, plantas baixas
-                        e exportação direta para `.DWG`, `.DXF` e `.PDF` em alta resolução.
-                      </li>
+                        <strong>{localize("LayOut 2D Profissional Incluso:")}</strong> {localize(" Transforme seus modelos 3D em pranchas técnicas executivas 2D com cotas, escalas, cortes, plantas baixas e exportação direta para `.DWG`, `.DXF` e `.PDF` em alta resolução.")}</li>
                     </ul>
                   </>
                 ) : product.id === 'cype_2026' ? (
                   <>
                     <h3 className="font-display font-extrabold text-base text-slate-900">
-                      O que está incluso no pacote CYPE Completo (2025.d e 2026.a)?
-                    </h3>
+                      {localize("O que está incluso no pacote CYPE Completo (2025.d e 2026.a)?")}</h3>
                     <p className="text-xs sm:text-sm text-slate-600">
-                      Tanto na versão <strong>2025.d</strong> quanto na versão <strong>2026.a</strong>, você
-                      recebe a suíte <strong>CYPE Completa</strong> com todos os módulos desbloqueados,
-                      incluindo:
-                    </p>
+                      {localize("Tanto na versão ")}<strong>2025.d</strong> {localize(" quanto na versão ")}<strong>2026.a</strong>{localize(", você recebe a suíte ")}<strong>{localize("CYPE Completa")}</strong> {localize(" com todos os módulos desbloqueados, incluindo:")}</p>
                     <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
                       <li>
-                        <strong>Programas Inclusos:</strong> <strong>CYPECAD</strong> (concreto armado,
-                        protendido, lajes, vigas, pilares e fundações), <strong>CYPE 3D</strong>{' '}
-                        (estruturas metálicas, galpões, madeira e alumínio),{' '}
-                        <strong>CYPETHERM</strong> (análise térmica e energética),{' '}
-                        <strong>Arquimedes</strong> (orçamentos e banco de preços), além de módulos
-                        de instalações prediais, muros de arrimo e marcos, entre outros.
-                      </li>
+                        <strong>{localize("Programas Inclusos:")}</strong> <strong>CYPECAD</strong> {localize(" (concreto armado, protendido, lajes, vigas, pilares e fundações), ")}<strong>CYPE 3D</strong>{localize(' ')}
+                        {localize("(estruturas metálicas, galpões, madeira e alumínio),")}{localize(' ')}
+                        <strong>CYPETHERM</strong> {localize(" (análise térmica e energética),")}{localize(' ')}
+                        <strong>Arquimedes</strong> {localize(" (orçamentos e banco de preços), além de módulos de instalações prediais, muros de arrimo e marcos, entre outros.")}</li>
                       <li>
-                        <strong>Atenção aos Idiomas de cada versão:</strong> A versão{' '}
-                        <strong>CYPE 2026.a</strong> está disponível exclusivamente em{' '}
-                        <strong>Português Brasil (PT-BR)</strong>, enquanto a versão{' '}
-                        <strong>CYPE 2025.d</strong> possui suporte completo a{' '}
-                        <strong>todas as linguagens</strong> (Português, Espanhol, Inglês, Francês,
-                        Italiano, entre outras).
-                      </li>
+                        <strong>{localize("Atenção aos Idiomas de cada versão:")}</strong> {localize(" A versão")}{localize(' ')}
+                        <strong>CYPE 2026.a</strong> {localize(" está disponível exclusivamente em")}{localize(' ')}
+                        <strong>{localize("Português Brasil (PT-BR)")}</strong>{localize(", enquanto a versão")}{localize(' ')}
+                        <strong>CYPE 2025.d</strong> {localize(" possui suporte completo a")}{localize(' ')}
+                        <strong>{localize("todas as linguagens")}</strong> {localize(" (Português, Espanhol, Inglês, Francês, Italiano, entre outras).")}</li>
                     </ul>
                   </>
                 ) : product.id === 'coreldraw_2026' ? (
                   <>
                     <h3 className="font-display font-extrabold text-base text-slate-900">
-                      O que está incluso no nosso CorelDRAW Graphics Suite Completo?
-                    </h3>
+                      {localize("O que está incluso no nosso CorelDRAW Graphics Suite Completo?")}</h3>
                     <p className="text-xs sm:text-sm text-slate-600">
-                      Ao adquirir na C2Tech, você recebe a suíte <strong>CorelDRAW Graphics Suite Completa</strong>{' '}
-                      para uso local ilimitado (sem bloqueios de tela ou assinaturas mensais), ideal para
-                      gráficas, agências, sublimação, corte a laser e comunicação visual:
-                    </p>
+                      {localize("Ao adquirir na C2Tech, você recebe a suíte ")}<strong>{localize("CorelDRAW Graphics Suite Completa")}</strong>{localize(' ')}
+                      {localize("para uso local ilimitado (sem bloqueios de tela ou assinaturas mensais), ideal para gráficas, agências, sublimação, corte a laser e comunicação visual:")}</p>
                     <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
                       <li>
-                        <strong>Aplicativos Principais Inclusos:</strong> <strong>CorelDRAW</strong>{' '}
-                        (ilustração vetorial e layout de página), <strong>Corel PHOTO-PAINT</strong>{' '}
-                        (edição profissional de imagens e retoque), <strong>Corel PowerTRACE</strong>{' '}
-                        (vetorização rápida de bitmaps por IA) e <strong>Corel Font Manager</strong>.
+                        <strong>{localize("Aplicativos Principais Inclusos:")}</strong> <strong>CorelDRAW</strong>{localize(' ')}
+                        {localize("(ilustração vetorial e layout de página), ")}<strong>Corel PHOTO-PAINT</strong>{localize(' ')}
+                        {localize("(edição profissional de imagens e retoque), ")}<strong>Corel PowerTRACE</strong>{localize(' ')}
+                        {localize("(vetorização rápida de bitmaps por IA) e ")}<strong>Corel Font Manager</strong>.
                       </li>
                       <li>
-                        <strong>Pronto para Impressão e Produção:</strong> Suporte completo a cores
-                        CMYK, Pantone, fechamento de arquivos `.CDR`, `.PDF`, `.EPS`, `.SVG`, `.AI`
-                        e `.PSD` sem restrições de exportação ou salvamento.
-                      </li>
+                        <strong>{localize("Pronto para Impressão e Produção:")}</strong> {localize(" Suporte completo a cores CMYK, Pantone, fechamento de arquivos `.CDR`, `.PDF`, `.EPS`, `.SVG`, `.AI` e `.PSD` sem restrições de exportação ou salvamento.")}</li>
                     </ul>
                   </>
                 ) : (
                   <>
                     <h3 className="font-display font-extrabold text-base text-slate-900">
-                      Sobre o {product.name}
+                      {localize("Sobre o ")}{localize(product.name)}
                     </h3>
                     <p className="text-xs sm:text-sm text-slate-700 whitespace-pre-line">
-                      {product.longDescription}
+                      {localize(product.longDescription)}
                     </p>
                   </>
                 )}
@@ -1956,51 +1855,34 @@ export const ProductDetail: React.FC = () => {
               {/* Compre pelo melhor preço em uma loja confiável */}
               <div className="space-y-3 pt-4 border-t border-slate-200">
                 <h3 className="font-display font-extrabold text-base text-slate-900">
-                  Compre o {product.name} pelo melhor preço na C2Tech
-                </h3>
+                  {localize("Compre o ")}{localize(product.name)} {localize(" pelo melhor preço na C2Tech")}</h3>
                 <p className="text-xs sm:text-sm text-slate-600">
-                  Na C2Tech você garante softwares profissionais completos por uma fração do custo
-                  tradicional, com entrega imediata e suporte real. Veja por que milhares de
-                  clientes confiam em nós:
-                </p>
+                  {localize("Na C2Tech você garante softwares profissionais completos por uma fração do custo tradicional, com entrega imediata e suporte real. Veja por que milhares de clientes confiam em nós:")}</p>
                 <ul className="space-y-2.5 text-xs sm:text-sm">
                   <li className="flex items-start gap-2">
                     <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
                     <span>
-                      <strong>Acesso Vitalício e Completo:</strong> Você paga uma única vez e
-                      utiliza o software completo para sempre, sem cobranças mensais ou anuais
-                      surpresas.
-                    </span>
+                      <strong>{localize("Acesso Vitalício e Completo:")}</strong> {localize(" Você paga uma única vez e utiliza o software completo para sempre, sem cobranças mensais ou anuais surpresas.")}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
                     <span>
-                      <strong>Instruções em Vídeo Inclusas:</strong> Não precisa ser técnico em
-                      informática! Nosso vídeo tutorial mostra exatamente o passo a passo da
-                      instalação do início ao fim.
-                    </span>
+                      <strong>{localize("Instruções em Vídeo Inclusas:")}</strong> {localize(" Não precisa ser técnico em informática! Nosso vídeo tutorial mostra exatamente o passo a passo da instalação do início ao fim.")}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
                     <span>
-                      <strong>Envio Automático por E-mail:</strong> Confirmou o pagamento no Pix ou
-                      Cartão, o link de download chega direto na sua caixa de entrada.
-                    </span>
+                      <strong>{localize("Envio Automático por E-mail:")}</strong> {localize(" Confirmou o pagamento no Pix ou Cartão, o link de download chega direto na sua caixa de entrada.")}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
                     <span>
-                      <strong>Suporte Técnico de 30 Dias Incluso:</strong> Você conta com 30 dias de
-                      garantia de suporte técnico especializado via WhatsApp para auxiliar na
-                      instalação, enquanto o software tem funcionamento vitalício.
-                    </span>
+                      <strong>{localize("Suporte Técnico de 30 Dias Incluso:")}</strong> {localize(" Você conta com 30 dias de garantia de suporte técnico especializado via WhatsApp para auxiliar na instalação, enquanto o software tem funcionamento vitalício.")}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
                     <span>
-                      <strong>Reinstalação Garantida:</strong> O link enviado para o seu e-mail
-                      permanece disponível caso você formate ou troque de computador no futuro.
-                    </span>
+                      <strong>{localize("Reinstalação Garantida:")}</strong> {localize(" O link enviado para o seu e-mail permanece disponível caso você formate ou troque de computador no futuro.")}</span>
                   </li>
                 </ul>
               </div>
@@ -2009,28 +1891,16 @@ export const ProductDetail: React.FC = () => {
               {product.id === 'autocad_2027_win' && (
                 <div className="space-y-3 pt-4 border-t border-slate-200">
                   <h3 className="font-display font-extrabold text-base text-slate-900">
-                    Como escolher entre as edições do AutoCAD (2019, 2024, 2025, 2026 e 2027)
-                  </h3>
+                    {localize("Como escolher entre as edições do AutoCAD (2019, 2024, 2025, 2026 e 2027)")}</h3>
                   <p className="text-xs font-bold text-slate-800">
-                    Considere a compatibilidade do seu computador:
-                  </p>
+                    {localize("Considere a compatibilidade do seu computador:")}</p>
                   <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
                     <li>
-                      <strong>AutoCAD 2019 (Windows):</strong> Excelente escolha para computadores
-                      ou notebooks mais antigos (com 8 GB de RAM ou placas de vídeo integradas). É
-                      extremamente leve, rápido e abre arquivos DWG perfeitamente.
-                    </li>
+                      <strong>{localize("AutoCAD 2019 (Windows):")}</strong> {localize(" Excelente escolha para computadores ou notebooks mais antigos (com 8 GB de RAM ou placas de vídeo integradas). É extremamente leve, rápido e abre arquivos DWG perfeitamente.")}</li>
                     <li>
-                      <strong>AutoCAD 2024 e 2025 (Windows e macOS):</strong> O equilíbrio ideal
-                      entre estabilidade comprovada em escritórios e recursos modernos de automação,
-                      contagem automática de blocos (Count) e janelas flutuantes.
-                    </li>
+                      <strong>{localize("AutoCAD 2024 e 2025 (Windows e macOS):")}</strong> {localize(" O equilíbrio ideal entre estabilidade comprovada em escritórios e recursos modernos de automação, contagem automática de blocos (Count) e janelas flutuantes.")}</li>
                     <li>
-                      <strong>AutoCAD 2026 e 2027 (Windows e macOS):</strong> Recomendados para
-                      máquinas atuais. Trazem o novo motor gráfico acelerado, Smart Blocks com
-                      inteligência artificial, histórico de atividades aprimorado e suporte nativo
-                      otimizado para Windows 11 e chips Apple Silicon (M1, M2, M3 e M4).
-                    </li>
+                      <strong>{localize("AutoCAD 2026 e 2027 (Windows e macOS):")}</strong> {localize(" Recomendados para máquinas atuais. Trazem o novo motor gráfico acelerado, Smart Blocks com inteligência artificial, histórico de atividades aprimorado e suporte nativo otimizado para Windows 11 e chips Apple Silicon (M1, M2, M3 e M4).")}</li>
                   </ul>
                 </div>
               )}
@@ -2038,29 +1908,16 @@ export const ProductDetail: React.FC = () => {
               {product.id === 'sketchup_2026_win' && (
                 <div className="space-y-3 pt-4 border-t border-slate-200">
                   <h3 className="font-display font-extrabold text-base text-slate-900">
-                    Como escolher entre as edições do SketchUp Pro (2021, 2024, 2025 e 2026)
-                  </h3>
+                    {localize("Como escolher entre as edições do SketchUp Pro (2021, 2024, 2025 e 2026)")}</h3>
                   <p className="text-xs font-bold text-slate-800">
-                    Considere a configuração do seu computador e seus plugins favoritos:
-                  </p>
+                    {localize("Considere a configuração do seu computador e seus plugins favoritos:")}</p>
                   <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
                     <li>
-                      <strong>SketchUp Pro 2021 (Windows):</strong> Ideal para PCs ou notebooks mais
-                      modestos (8 GB de RAM ou vídeo integrado) e para quem utiliza bibliotecas de
-                      plugins clássicos. É super leve, estável e consome poucos recursos.
-                    </li>
+                      <strong>{localize("SketchUp Pro 2021 (Windows):")}</strong> {localize(" Ideal para PCs ou notebooks mais modestos (8 GB de RAM ou vídeo integrado) e para quem utiliza bibliotecas de plugins clássicos. É super leve, estável e consome poucos recursos.")}</li>
                     <li>
-                      <strong>SketchUp Pro 2024 e 2025 (Windows e macOS):</strong> Trazem o novo
-                      motor gráfico de alta performance (até 8x mais rápido na navegação de cenas
-                      pesadas), Oclusão Ambiental (Ambient Occlusion) em tempo real e materiais
-                      fotorrealistas PBR.
-                    </li>
+                      <strong>{localize("SketchUp Pro 2024 e 2025 (Windows e macOS):")}</strong> {localize(" Trazem o novo motor gráfico de alta performance (até 8x mais rápido na navegação de cenas pesadas), Oclusão Ambiental (Ambient Occlusion) em tempo real e materiais fotorrealistas PBR.")}</li>
                     <li>
-                      <strong>SketchUp Pro 2026 (Windows e macOS):</strong> A versão mais recente e
-                      avançada, otimizada para Windows 11 e chips Apple Silicon (M1, M2, M3 e M4),
-                      com melhorias de interoperabilidade BIM/IFC, LayOut acelerado e suporte aos
-                      renderizadores mais novos (V-Ray 7 e Enscape).
-                    </li>
+                      <strong>{localize("SketchUp Pro 2026 (Windows e macOS):")}</strong> {localize(" A versão mais recente e avançada, otimizada para Windows 11 e chips Apple Silicon (M1, M2, M3 e M4), com melhorias de interoperabilidade BIM/IFC, LayOut acelerado e suporte aos renderizadores mais novos (V-Ray 7 e Enscape).")}</li>
                   </ul>
                 </div>
               )}
@@ -2068,24 +1925,14 @@ export const ProductDetail: React.FC = () => {
               {product.id === 'cype_2026' && (
                 <div className="space-y-3 pt-4 border-t border-slate-200">
                   <h3 className="font-display font-extrabold text-base text-slate-900">
-                    Como escolher entre o CYPE 2025.d e o CYPE 2026.a
-                  </h3>
+                    {localize("Como escolher entre o CYPE 2025.d e o CYPE 2026.a")}</h3>
                   <p className="text-xs font-bold text-slate-800">
-                    Ambas as versões incluem CYPECAD, CYPE 3D, CYPETHERM, Arquimedes e todos os módulos:
-                  </p>
+                    {localize("Ambas as versões incluem CYPECAD, CYPE 3D, CYPETHERM, Arquimedes e todos os módulos:")}</p>
                   <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
                     <li>
-                      <strong>CYPE 2025.d (Todos os Idiomas):</strong> Excelente custo-benefício e
-                      disponível em <strong>todas as linguagens</strong> (Português, Espanhol,
-                      Inglês, Francês, etc.), ideal tanto para projetos nacionais com normas ABNT NBR
-                      quanto para engenheiros que trabalham com eurocódigos ou idiomas internacionais.
-                    </li>
+                      <strong>{localize("CYPE 2025.d (Todos os Idiomas):")}</strong> {localize(" Excelente custo-benefício e disponível em ")}<strong>{localize("todas as linguagens")}</strong> {localize(" (Português, Espanhol, Inglês, Francês, etc.), ideal tanto para projetos nacionais com normas ABNT NBR quanto para engenheiros que trabalham com eurocódigos ou idiomas internacionais.")}</li>
                     <li>
-                      <strong>CYPE 2026.a (Português Brasil):</strong> A versão mais recente da suíte,
-                      disponível exclusivamente em <strong>Português Brasil (PT-BR)</strong>, com as
-                      últimas atualizações de dimensionamento estrutural, ligações metálicas e
-                      detalhamento de armaduras segundo as normas brasileiras.
-                    </li>
+                      <strong>{localize("CYPE 2026.a (Português Brasil):")}</strong> {localize(" A versão mais recente da suíte, disponível exclusivamente em ")}<strong>{localize("Português Brasil (PT-BR)")}</strong>{localize(", com as últimas atualizações de dimensionamento estrutural, ligações metálicas e detalhamento de armaduras segundo as normas brasileiras.")}</li>
                   </ul>
                 </div>
               )}
@@ -2093,29 +1940,16 @@ export const ProductDetail: React.FC = () => {
               {product.id === 'coreldraw_2026' && (
                 <div className="space-y-3 pt-4 border-t border-slate-200">
                   <h3 className="font-display font-extrabold text-base text-slate-900">
-                    Como escolher entre as edições do CorelDRAW (X7, 2022, 2023, 2024, 2025 e 2026)
-                  </h3>
+                    {localize("Como escolher entre as edições do CorelDRAW (X7, 2022, 2023, 2024, 2025 e 2026)")}</h3>
                   <p className="text-xs font-bold text-slate-800">
-                    Escolha a edição ideal para o seu fluxo de trabalho e computador:
-                  </p>
+                    {localize("Escolha a edição ideal para o seu fluxo de trabalho e computador:")}</p>
                   <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
                     <li>
-                      <strong>CorelDRAW X7 (Windows):</strong> O clássico favorito de gráficas rápidas,
-                      estamparia, sublimação e máquinas de corte (Plotter / Laser). É extremamente
-                      leve, abre instantaneamente até em notebooks básicos com 4 GB de RAM.
-                    </li>
+                      <strong>{localize("CorelDRAW X7 (Windows):")}</strong> {localize(" O clássico favorito de gráficas rápidas, estamparia, sublimação e máquinas de corte (Plotter / Laser). É extremamente leve, abre instantaneamente até em notebooks básicos com 4 GB de RAM.")}</li>
                     <li>
-                      <strong>CorelDRAW 2022, 2023 e 2024 (Windows e macOS):</strong> Excelente
-                      equilíbrio entre leveza e recursos modernos, incluindo exportação multipágina
-                      rápida, visualização de páginas lado a lado, novos pincéis artísticos e suporte
-                      nativo a macOS e Windows 10/11.
-                    </li>
+                      <strong>{localize("CorelDRAW 2022, 2023 e 2024 (Windows e macOS):")}</strong> {localize(" Excelente equilíbrio entre leveza e recursos modernos, incluindo exportação multipágina rápida, visualização de páginas lado a lado, novos pincéis artísticos e suporte nativo a macOS e Windows 10/11.")}</li>
                     <li>
-                      <strong>CorelDRAW 2025 e 2026 (Windows e macOS):</strong> As edições mais
-                      recentes e completas, com aceleração gráfica avançada, vetorização PowerTRACE
-                      aprimorada, catálogo Pantone atualizado e otimização total para Windows 11 e
-                      Macs com processadores Apple Silicon (M1, M2, M3 e M4).
-                    </li>
+                      <strong>{localize("CorelDRAW 2025 e 2026 (Windows e macOS):")}</strong> {localize(" As edições mais recentes e completas, com aceleração gráfica avançada, vetorização PowerTRACE aprimorada, catálogo Pantone atualizado e otimização total para Windows 11 e Macs com processadores Apple Silicon (M1, M2, M3 e M4).")}</li>
                   </ul>
                 </div>
               )}
@@ -2123,41 +1957,31 @@ export const ProductDetail: React.FC = () => {
               {/* FAQ */}
               <div className="space-y-4 pt-4 border-t border-slate-200">
                 <h3 className="font-display font-extrabold text-base text-slate-900">
-                  Perguntas Frequentes (FAQ)
-                </h3>
+                  {localize("Perguntas Frequentes (FAQ)")}</h3>
 
                 <div className="space-y-3 text-xs sm:text-sm">
                   <div>
                     <p className="font-bold text-slate-900">
-                      Como recebo meu software após a compra?
-                    </p>
+                      {localize("Como recebo meu software após a compra?")}</p>
                     <p className="text-slate-600 mt-0.5">
-                      Assim que o pagamento é aprovado (instantâneo via Pix ou Cartão de Crédito),
-                      você recebe automaticamente um e-mail com o botão de download direto no Google
-                      Drive contendo o instalador completo e o vídeo de instruções.
-                    </p>
+                      {localize("Assim que o pagamento é aprovado (instantâneo via Pix ou Cartão de Crédito), você recebe automaticamente um e-mail com o botão de download direto no Google Drive contendo o instalador completo e o vídeo de instruções.")}</p>
                   </div>
 
                   <div>
                     <p className="font-bold text-slate-900">
-                      O software é realmente vitalício? Preciso pagar mensalidade depois?
-                    </p>
+                      {localize("O software é realmente vitalício? Preciso pagar mensalidade depois?")}</p>
                     <p className="text-slate-600 mt-0.5">
-                      {product.isSubscription
+                      {localize(product.isSubscription
                         ? 'Este produto é um plano de assinatura com renovação conforme o período escolhido.'
-                        : 'Sim, é 100% vitalício! Você realiza um único pagamento e utiliza o software completo por tempo indeterminado, sem nunca precisar pagar mensalidades ou anuidades.'}
+                        : 'Sim, é 100% vitalício! Você realiza um único pagamento e utiliza o software completo por tempo indeterminado, sem nunca precisar pagar mensalidades ou anuidades.')}
                     </p>
                   </div>
 
                   <div>
                     <p className="font-bold text-slate-900">
-                      O que fazer se eu tiver dificuldade para instalar ou ativar?
-                    </p>
+                      {localize("O que fazer se eu tiver dificuldade para instalar ou ativar?")}</p>
                     <p className="text-slate-600 mt-0.5">
-                      Além do tutorial em vídeo super detalhado que acompanha o download, você conta
-                      com nosso suporte técnico gratuito via WhatsApp. Nossa equipe auxilia você
-                      passo a passo até o programa estar 100% pronto para uso.
-                    </p>
+                      {localize("Além do tutorial em vídeo super detalhado que acompanha o download, você conta com nosso suporte técnico gratuito via WhatsApp. Nossa equipe auxilia você passo a passo até o programa estar 100% pronto para uso.")}</p>
                   </div>
 
                   {(product.id === 'autocad_2027_win' ||
@@ -2165,14 +1989,9 @@ export const ProductDetail: React.FC = () => {
                     product.id === 'coreldraw_2026') && (
                     <div>
                       <p className="font-bold text-slate-900">
-                        O {product.name} funciona em Mac (Apple M1/M2/M3/M4) e Windows?
-                      </p>
+                        O {localize(product.name)} {localize(" funciona em Mac (Apple M1/M2/M3/M4) e Windows?")}</p>
                       <p className="text-slate-600 mt-0.5">
-                        Sim! Basta selecionar no topo desta página a plataforma desejada (
-                        <strong>Windows</strong> ou <strong>macOS</strong>) e o ano da versão antes
-                        de clicar em comprar. Você receberá exatamente a edição compatível com o seu
-                        sistema operacional.
-                      </p>
+                        {localize("Sim! Basta selecionar no topo desta página a plataforma desejada (")}<strong>Windows</strong> {localize(" ou ")}<strong>macOS</strong>{localize(") e o ano da versão antes de clicar em comprar. Você receberá exatamente a edição compatível com o seu sistema operacional.")}</p>
                     </div>
                   )}
                 </div>
@@ -2190,15 +2009,15 @@ export const ProductDetail: React.FC = () => {
                   <tbody>
                     <tr className="bg-white border-b border-slate-200/70">
                       <th className="py-3.5 px-4 font-bold text-slate-900 w-1/3 sm:w-1/4 align-top">
-                        {t('spec_platform')}
+                        {localize(t('spec_platform'))}
                       </th>
                       <td className="py-3.5 px-4 text-slate-700">
                         {product.id === 'autocad_2027_win' ||
                         product.id === 'sketchup_2026_win' ||
                         product.id === 'coreldraw_2026' ? (
                           <>
-                            <span className="block">Windows (64 bits)</span>
-                            <span className="block">macOS (Intel e Apple Silicon série M)</span>
+                            <span className="block">{localize("Windows (64 bits)")}</span>
+                            <span className="block">{localize("macOS (Intel e Apple Silicon série M)")}</span>
                           </>
                         ) : (
                           product.compatibility
@@ -2208,76 +2027,76 @@ export const ProductDetail: React.FC = () => {
 
                     <tr className="bg-[#f4f6f8] border-b border-slate-200/70">
                       <th className="py-3.5 px-4 font-bold text-slate-900 align-top">
-                        {t('spec_gpu')}
+                        {localize(t('spec_gpu'))}
                       </th>
                       <td className="py-3.5 px-4 text-slate-700 leading-relaxed">
-                        {product.id === 'autocad_2027_win'
+                        {localize(product.id === 'autocad_2027_win'
                           ? 'WINDOWS: Mínimo 2 GB de VRAM com suporte a DirectX 11 (Recomendado: 8 GB de VRAM DirectX 12 para 3D e telas 4K até 3840 x 2160) / MAC: Tela de 1280 x 800 (Recomendado: Retina 2880 x 1800 com placa gráfica nativa Apple Metal).'
                           : product.id === 'sketchup_2026_win'
                           ? 'WINDOWS: Placa de vídeo 3D com no mínimo 1 GB de VRAM compatível com OpenGL 3.1 e DirectX 12 (Recomendado: 4 GB a 8 GB de VRAM dedicada NVIDIA GTX/RTX ou AMD Radeon para cenas complexas) / MAC: Placa gráfica nativa compatível com Apple Metal (Apple M1/M2/M3/M4 ou Radeon Pro).'
                           : product.requirements.gpu ||
-                            'Placa gráfica compatível com DirectX 11/12 ou superior (resolução mínima 1920 x 1080).'}
+                            'Placa gráfica compatível com DirectX 11/12 ou superior (resolução mínima 1920 x 1080).')}
                       </td>
                     </tr>
 
                     <tr className="bg-white border-b border-slate-200/70">
                       <th className="py-3.5 px-4 font-bold text-slate-900 align-top">
-                        {t('spec_cpu')}
+                        {localize(t('spec_cpu'))}
                       </th>
                       <td className="py-3.5 px-4 text-slate-700 leading-relaxed">
-                        {product.id === 'autocad_2027_win'
+                        {localize(product.id === 'autocad_2027_win'
                           ? 'WINDOWS: Processador 64 bits de 2.5–2.9 GHz (base). Recomendado: 3+ GHz (base) ou 4+ GHz (turbo) / MAC: Apple Silicon (M1, M2, M3, M4 Pro/Max) ou Intel Core i7 64 bits.'
                           : product.id === 'sketchup_2026_win'
                           ? 'WINDOWS: Processador Intel ou AMD 64 bits de 2.1+ GHz (Recomendado: 2.8+ GHz ou superior multi-core) / MAC: Apple Silicon (M1, M2, M3, M4) nativo ou Intel Core i5/i7 de 2.1+ GHz.'
-                          : product.requirements.cpu}
+                          : product.requirements.cpu)}
                       </td>
                     </tr>
 
                     <tr className="bg-[#f4f6f8] border-b border-slate-200/70">
                       <th className="py-3.5 px-4 font-bold text-slate-900 align-top">
-                        {t('spec_storage')}
+                        {localize(t('spec_storage'))}
                       </th>
                       <td className="py-3.5 px-4 text-slate-700 leading-relaxed">
-                        {product.id === 'autocad_2027_win'
+                        {localize(product.id === 'autocad_2027_win'
                           ? 'WINDOWS: 10 GB de espaço livre em disco (SSD NVMe recomendado) / MAC: 6 GB a 8 GB de espaço livre em disco para download e instalação.'
                           : product.id === 'sketchup_2026_win'
                           ? 'WINDOWS: Mínimo de 4 GB de espaço livre em disco (SSD recomendado para carregamento rápido de blocos e texturas) / MAC: 4 GB de espaço livre em disco.'
-                          : product.requirements.storage}
+                          : product.requirements.storage)}
                       </td>
                     </tr>
 
                     <tr className="bg-white border-b border-slate-200/70">
                       <th className="py-3.5 px-4 font-bold text-slate-900 align-top">
-                        {t('spec_ram')}
+                        {localize(t('spec_ram'))}
                       </th>
                       <td className="py-3.5 px-4 text-slate-700 leading-relaxed">
-                        {product.id === 'autocad_2027_win'
+                        {localize(product.id === 'autocad_2027_win'
                           ? 'WINDOWS: Requisito básico: 8 GB (2019–2025) / 16 GB (2026–2027) — Recomendado: 16 GB a 32 GB; MAC: Requisito mínimo: 8 GB — Recomendado: 16 GB ou superior.'
                           : product.id === 'sketchup_2026_win'
                           ? 'WINDOWS: Mínimo 8 GB de RAM (4 GB para edição 2021) — Recomendado: 16 GB ou mais para maquetes grandes / MAC: Mínimo 8 GB de RAM — Recomendado: 16 GB de memória unificada.'
-                          : product.requirements.ram}
+                          : product.requirements.ram)}
                       </td>
                     </tr>
 
                     <tr className="bg-[#f4f6f8] border-b border-slate-200/70">
                       <th className="py-3.5 px-4 font-bold text-slate-900 align-top">
-                        {t('spec_os')}
+                        {localize(t('spec_os'))}
                       </th>
                       <td className="py-3.5 px-4 text-slate-700 leading-relaxed">
-                        {product.id === 'autocad_2027_win'
+                        {localize(product.id === 'autocad_2027_win'
                           ? 'WINDOWS: Windows 11 (64-bit) e Windows 10 (64-bit versão 1809 ou superior) / MAC: macOS Sequoia v15, Sonoma v14, Ventura v13 ou Monterey v12.'
                           : product.id === 'sketchup_2026_win'
                           ? 'WINDOWS: Windows 11 (64-bit) e Windows 10 (64-bit) / MAC: macOS Sequoia v15, Sonoma v14, Ventura v13 ou Monterey v12.'
-                          : product.requirements.os}
+                          : product.requirements.os)}
                       </td>
                     </tr>
 
                     <tr className="bg-white">
                       <th className="py-3.5 px-4 font-bold text-slate-900 align-top">
-                        {t('spec_other')}
+                        {localize(t('spec_other'))}
                       </th>
                       <td className="py-3.5 px-4 text-slate-700 leading-relaxed">
-                        {t('spec_other_desc')}
+                        {localize(t('spec_other_desc'))}
                       </td>
                     </tr>
                   </tbody>
@@ -2287,12 +2106,12 @@ export const ProductDetail: React.FC = () => {
               {/* Generic EAN13 and MPN as requested */}
               <div className="pt-2 space-y-1 text-xs text-slate-800">
                 <p>
-                  <strong className="font-extrabold">EAN13</strong>{' '}
-                  {product.ean13 || '8388917939753'}
+                  <strong className="font-extrabold">EAN13</strong>{localize(' ')}
+                  {localize(product.ean13 || '8388917939753')}
                 </p>
                 <p>
-                  <strong className="font-extrabold">MPN</strong>{' '}
-                  {product.mpn || '001N1-WW8644-T480'}
+                  <strong className="font-extrabold">MPN</strong>{localize(' ')}
+                  {localize(product.mpn || '001N1-WW8644-T480')}
                 </p>
               </div>
             </div>
@@ -2304,14 +2123,14 @@ export const ProductDetail: React.FC = () => {
           {activeTab === 'activation' && (
             <div className="space-y-5 text-slate-800 text-sm leading-relaxed py-2">
               <h3 className="font-display font-extrabold text-base sm:text-lg text-slate-950">
-                {product.id === 'autodesk_all_apps'
+                {localize(product.id === 'autodesk_all_apps'
                   ? 'Como acessar sua conta oficial da Autodesk em três passos simples'
-                  : 'Como instalar e ativar seu software em três passos simples'}
+                  : 'Como instalar e ativar seu software em três passos simples')}
               </h3>
               <p className="text-xs sm:text-sm text-slate-700">
-                {product.id === 'autodesk_all_apps'
+                {localize(product.id === 'autodesk_all_apps'
                   ? 'Adquirir o plano Autodesk Todos os Aplicativos na C2Shop garante acesso oficial a mais de 80 softwares. Você recebe suas credenciais exclusivas (login e senha) e acessa diretamente pelo portal oficial seguindo os passos abaixo:'
-                  : 'Adquirir seu software na C2Tech oferece muito mais do que economia financeira; além de garantir a versão completa e vitalícia sem mensalidades, você realiza a instalação e ativação de forma rápida e guiada seguindo os passos abaixo:'}
+                  : 'Adquirir seu software na C2Tech oferece muito mais do que economia financeira; além de garantir a versão completa e vitalícia sem mensalidades, você realiza a instalação e ativação de forma rápida e guiada seguindo os passos abaixo:')}
               </p>
 
               {product.id === 'autodesk_all_apps' ? (
@@ -2319,20 +2138,17 @@ export const ProductDetail: React.FC = () => {
                   <li className="flex items-baseline gap-2.5">
                     <span className="font-display font-extrabold text-base text-slate-950">1.</span>
                     <span>
-                      <strong>Receba login e senha:</strong> Assim que a compra é confirmada, você recebe imediatamente no seu e-mail e WhatsApp os dados de login e senha exclusivos da sua conta oficial da Autodesk.
-                    </span>
+                      <strong>{localize("Receba login e senha:")}</strong> {localize(" Assim que a compra é confirmada, você recebe imediatamente no seu e-mail e WhatsApp os dados de login e senha exclusivos da sua conta oficial da Autodesk.")}</span>
                   </li>
                   <li className="flex items-baseline gap-2.5">
                     <span className="font-display font-extrabold text-base text-slate-950">2.</span>
                     <span>
-                      <strong>Acesse o portal oficial:</strong> Entre diretamente no site oficial da Autodesk em <strong>manage.autodesk.com</strong> utilizando as credenciais recebidas.
-                    </span>
+                      <strong>{localize("Acesse o portal oficial:")}</strong> {localize(" Entre diretamente no site oficial da Autodesk em ")}<strong>manage.autodesk.com</strong> {localize(" utilizando as credenciais recebidas.")}</span>
                   </li>
                   <li className="flex items-baseline gap-2.5">
                     <span className="font-display font-extrabold text-base text-slate-950">3.</span>
                     <span>
-                      <strong>Instale e utilize todos os aplicativos:</strong> Escolha qualquer um dos mais de 80 softwares Autodesk (AutoCAD, Revit, Maya, Inventor, 3ds Max, etc.) e instale diretamente no seu computador com todas as ferramentas e atualizações oficiais liberadas!
-                    </span>
+                      <strong>{localize("Instale e utilize todos os aplicativos:")}</strong> {localize(" Escolha qualquer um dos mais de 80 softwares Autodesk (AutoCAD, Revit, Maya, Inventor, 3ds Max, etc.) e instale diretamente no seu computador com todas as ferramentas e atualizações oficiais liberadas!")}</span>
                   </li>
                 </ol>
               ) : (
@@ -2340,26 +2156,18 @@ export const ProductDetail: React.FC = () => {
                   <li className="flex items-baseline gap-2.5">
                     <span className="font-display font-extrabold text-base text-slate-950">1.</span>
                     <span>
-                      <strong>Compre</strong> seu software na C2Tech e receba imediatamente no seu
-                      e-mail o link de acesso exclusivo ao Google Drive contendo o instalador completo
-                      e todos os arquivos necessários.
-                    </span>
+                      <strong>{localize("Compre")}</strong> {localize(" seu software na C2Tech e receba imediatamente no seu e-mail o link de acesso exclusivo ao Google Drive contendo o instalador completo e todos os arquivos necessários.")}</span>
                   </li>
                   <li className="flex items-baseline gap-2.5">
                     <span className="font-display font-extrabold text-base text-slate-950">2.</span>
                     <span>
-                      <strong>Baixe</strong> os arquivos para o seu computador e abra o{' '}
-                      <strong>vídeo de instruções passo a passo</strong> incluso na pasta, que mostra
-                      na tela exatamente como instalar o programa sem erros.
-                    </span>
+                      <strong>{localize("Baixe")}</strong> {localize(" os arquivos para o seu computador e abra o")}{localize(' ')}
+                      <strong>{localize("vídeo de instruções passo a passo")}</strong> {localize(" incluso na pasta, que mostra na tela exatamente como instalar o programa sem erros.")}</span>
                   </li>
                   <li className="flex items-baseline gap-2.5">
                     <span className="font-display font-extrabold text-base text-slate-950">3.</span>
                     <span>
-                      <strong>Ative</strong> sua licença vitalícia seguindo o vídeo tutorial para
-                      liberar todas as ferramentas permanentemente — e, caso precise de qualquer
-                      ajuda, nosso suporte técnico no WhatsApp está pronto para auxiliar você!
-                    </span>
+                      <strong>{localize("Ative")}</strong> {localize(" sua licença vitalícia seguindo o vídeo tutorial para liberar todas as ferramentas permanentemente — e, caso precise de qualquer ajuda, nosso suporte técnico no WhatsApp está pronto para auxiliar você!")}</span>
                   </li>
                 </ol>
               )}
@@ -2374,14 +2182,14 @@ export const ProductDetail: React.FC = () => {
           <div className="mb-16">
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-display font-extrabold text-xl sm:text-2xl text-slate-900">
-                {t('in_same_category')}
+                {localize(t('in_same_category'))}
               </h2>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => scrollRelated('left')}
                   className="w-8 h-8 rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center cursor-pointer"
-                  aria-label="Anterior"
+                  aria-label={localize("Anterior")}
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
@@ -2389,7 +2197,7 @@ export const ProductDetail: React.FC = () => {
                   type="button"
                   onClick={() => scrollRelated('right')}
                   className="w-8 h-8 rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center cursor-pointer"
-                  aria-label="Próximo"
+                  aria-label={localize("Próximo")}
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -2422,27 +2230,26 @@ export const ProductDetail: React.FC = () => {
                         ) : (
                           <div className="w-24 h-32 bg-slate-900 text-white rounded-lg p-2.5 flex flex-col justify-between text-left">
                             <span className="text-[9px] font-bold text-blue-400">
-                              {rel.compatibility}
+                              {localize(rel.compatibility)}
                             </span>
                             <span className="text-xs font-extrabold leading-tight line-clamp-2">
-                              {rel.name}
+                              {localize(rel.name)}
                             </span>
                             <span className="text-[8px] text-emerald-400 font-bold uppercase">
-                              Vitalício
-                            </span>
+                              {localize("Vitalício")}</span>
                           </div>
                         )}
                       </Link>
 
                       {relSavings > 0 && (
                         <span className="inline-block bg-[#18b259] text-white text-[10px] font-extrabold px-2 py-0.5 rounded mb-2">
-                          {t('save')} {formatPrice(relSavings)}
+                          {localize(t('save'))} {localize(formatPrice(relSavings))}
                         </span>
                       )}
 
                       <Link to={`/produto/${rel.slug}`}>
                         <h3 className="font-display font-bold text-xs sm:text-sm text-slate-900 hover:text-blue-600 transition-colors line-clamp-2 min-h-[36px]">
-                          {rel.name}
+                          {localize(rel.name)}
                         </h3>
                       </Link>
 
@@ -2464,10 +2271,10 @@ export const ProductDetail: React.FC = () => {
                     <div className="pt-3 mt-2 border-t border-slate-100 space-y-2.5">
                       <div className="flex items-baseline gap-1.5">
                         <span className="font-display font-black text-sm text-[#0b5ed7]">
-                          {formatPrice(rel.price)}
+                          {localize(formatPrice(rel.price))}
                         </span>
                         <span className="text-[11px] text-slate-400 line-through">
-                          {formatPrice(rel.originalPrice)}
+                          {localize(formatPrice(rel.originalPrice))}
                         </span>
                       </div>
 
@@ -2475,8 +2282,7 @@ export const ProductDetail: React.FC = () => {
                         to={`/produto/${rel.slug}`}
                         className="block w-full py-2 text-center bg-blue-50 hover:bg-[#0b5ed7] text-[#0b5ed7] hover:text-white font-bold text-xs rounded-md transition-colors"
                       >
-                        Detalhes
-                      </Link>
+                        {localize("Detalhes")}</Link>
                     </div>
                   </div>
                 );
@@ -2490,16 +2296,16 @@ export const ProductDetail: React.FC = () => {
         {/* =================================================================== */}
         <div className="border border-slate-200 rounded-2xl p-6 sm:p-8 bg-white">
           <h2 className="font-display font-extrabold text-sm sm:text-base text-slate-900 uppercase tracking-wider mb-6">
-            {t('product_reviews_title')} ({productReviews.length})
+            {localize(t('product_reviews_title'))} ({productReviews.length})
           </h2>
 
           {/* Top Summary & Progress Bar Box + 2 Action Buttons */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center pb-6 border-b border-slate-200">
             {/* Average Score Box */}
             <div className="lg:col-span-3 flex flex-col items-center justify-center p-5 border border-slate-200 rounded-xl bg-slate-50/50 text-center">
-              <span className="text-xs text-slate-500 font-semibold">{t('average_rating_label')}</span>
+              <span className="text-xs text-slate-500 font-semibold">{localize(t('average_rating_label'))}</span>
               <span className="font-display font-black text-4xl sm:text-5xl text-slate-900 my-1">
-                {averageRating}
+                {localize(averageRating)}
               </span>
               <div className="flex items-center gap-0.5 mb-1">
                 {[1, 2, 3, 4, 5].map((s) => (
@@ -2510,8 +2316,7 @@ export const ProductDetail: React.FC = () => {
                 ))}
               </div>
               <span className="text-[11px] text-slate-500 font-medium">
-                ({productReviews.length} avaliações)
-              </span>
+                ({productReviews.length} {localize(" avaliações)")}</span>
             </div>
 
             {/* 5-Row Rating Progress Bars */}
@@ -2531,7 +2336,7 @@ export const ProductDetail: React.FC = () => {
                     ))}
                   </div>
                   <span className="w-16 text-right text-[11px] text-slate-600 font-medium shrink-0">
-                    {row.label}
+                    {localize(row.label)}
                   </span>
                   <div className="flex-1 h-2.5 bg-slate-200 rounded-full overflow-hidden">
                     <div
@@ -2557,7 +2362,7 @@ export const ProductDetail: React.FC = () => {
                 className="w-full sm:w-52 py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-md flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
               >
                 <Edit3 className="w-3.5 h-3.5" />
-                <span>{t('write_review_btn')}</span>
+                <span>{localize(t('write_review_btn'))}</span>
               </button>
 
               <button
@@ -2570,7 +2375,7 @@ export const ProductDetail: React.FC = () => {
                 className="w-full sm:w-52 py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-md flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
               >
                 <MessageSquare className="w-3.5 h-3.5" />
-                <span>{t('ask_question_btn')}</span>
+                <span>{localize(t('ask_question_btn'))}</span>
               </button>
             </div>
           </div>
@@ -2579,7 +2384,7 @@ export const ProductDetail: React.FC = () => {
           <div className="flex flex-wrap items-center justify-between gap-3 py-4 border-b border-slate-200">
             <div className="flex items-center gap-2">
               <span className="px-3.5 py-1.5 rounded-md bg-amber-400 text-slate-950 font-bold text-xs shadow-2xs">
-                Avaliações ({productReviews.length})
+                {localize("Avaliações (")}{productReviews.length})
               </span>
               <button
                 type="button"
@@ -2589,12 +2394,11 @@ export const ProductDetail: React.FC = () => {
                 }}
                 className="px-3.5 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors cursor-pointer"
               >
-                Perguntas e Respostas
-              </button>
+                {localize("Perguntas e Respostas")}</button>
             </div>
 
             <div className="text-xs text-slate-500 font-medium border border-slate-200 rounded-md px-3 py-1.5 bg-slate-50">
-              Ordenar por: <strong className="text-slate-800">Mais recentes</strong>
+              {localize("Ordenar por: ")}<strong className="text-slate-800">{localize("Mais recentes")}</strong>
             </div>
           </div>
 
@@ -2611,25 +2415,23 @@ export const ProductDetail: React.FC = () => {
                     <div
                       className={`w-10 h-10 rounded-full font-display font-bold text-base flex items-center justify-center shrink-0 select-none shadow-xs ${avatarColor}`}
                     >
-                      {initial}
+                      {localize(initial)}
                     </div>
 
                     <div className="space-y-1.5 flex-1">
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="font-bold text-sm text-slate-900">
-                            {review.author}
+                            {localize(review.author)}
                           </span>
                           <ReviewFlagIcon country={review.country} />
                         </div>
                         <p className="text-[11px] font-bold text-emerald-600">
-                          {language === 'en' ? 'Verified purchase' : language === 'es' ? 'Compra verificada' : 'Compra verificada'}
+                          {localize(language === 'en' ? 'Verified purchase' : language === 'es' ? 'Compra verificada' : 'Compra verificada')}
                         </p>
                       </div>
 
-                      <p className="text-xs sm:text-sm text-slate-700 leading-relaxed pt-1">
-                        {review.comment}
-                      </p>
+                      <div className="text-xs sm:text-sm text-slate-700 leading-relaxed pt-1"><ReviewComment value={review.comment} country={review.country} /></div>
                     </div>
                   </div>
 
@@ -2653,7 +2455,7 @@ export const ProductDetail: React.FC = () => {
                       </span>
                     </div>
                     <span className="text-[11px] text-slate-400 font-medium">
-                      {review.date}
+                      {localize(review.date)}
                     </span>
                   </div>
                 </div>
@@ -2673,7 +2475,7 @@ export const ProductDetail: React.FC = () => {
               type="button"
               onClick={() => setIsQuestionModalOpen(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 cursor-pointer"
-              aria-label="Fechar"
+              aria-label={localize("Fechar")}
             >
               <X className="w-5 h-5" />
             </button>
@@ -2684,71 +2486,61 @@ export const ProductDetail: React.FC = () => {
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <h3 className="font-display font-extrabold text-xl text-slate-900">
-                  Pergunta enviada com sucesso!
-                </h3>
+                  {localize("Pergunta enviada com sucesso!")}</h3>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Sua dúvida foi encaminhada diretamente para nossa equipe em{' '}
-                  <strong>c2tech2025@gmail.com</strong>. Responderemos no seu e-mail o mais rápido
-                  possível!
-                </p>
+                  {localize("Sua dúvida foi encaminhada diretamente para nossa equipe em")}{localize(' ')}
+                  <strong>c2tech2025@gmail.com</strong>{localize(". Responderemos no seu e-mail o mais rápido possível!")}</p>
                 <button
                   type="button"
                   onClick={() => setIsQuestionModalOpen(false)}
                   className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg cursor-pointer"
                 >
-                  Fechar janela
-                </button>
+                  {localize("Fechar janela")}</button>
               </div>
             ) : (
               <form onSubmit={handleQuestionSubmit} className="space-y-4 text-left">
                 <div>
                   <h3 className="font-display font-extrabold text-lg text-slate-900">
-                    Faça uma pergunta
-                  </h3>
+                    {localize("Faça uma pergunta")}</h3>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Tem alguma dúvida sobre o <strong>{product.name}</strong>? Envie abaixo e
-                    responderemos diretamente no seu e-mail.
-                  </p>
+                    {localize("Tem alguma dúvida sobre o ")}<strong>{localize(product.name)}</strong>{localize("? Envie abaixo e responderemos diretamente no seu e-mail.")}</p>
                 </div>
 
                 {questionError && (
                   <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
-                    {questionError}
+                    {localize(questionError)}
                   </div>
                 )}
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Seu nome *
-                  </label>
+                    {localize("Seu nome *")}</label>
                   <input
                     type="text"
                     required
                     value={questionName}
                     onChange={(e) => setQuestionName(e.target.value)}
-                    placeholder="Ex: João Silva"
+                    placeholder={localize("Ex: João Silva")}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm focus:outline-none focus:border-blue-600"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Seu e-mail *
-                  </label>
+                    {localize("Seu e-mail *")}</label>
                   <input
                     type="email"
                     required
                     value={questionEmail}
                     onChange={(e) => setQuestionEmail(e.target.value)}
-                    placeholder="seuemail@exemplo.com"
+                    placeholder={localize("seuemail@exemplo.com")}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm focus:outline-none focus:border-blue-600"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    WhatsApp (opcional)
-                  </label>
+                    {localize("WhatsApp (opcional)")}</label>
                   <input
                     type="tel"
                     value={questionPhone}
@@ -2760,14 +2552,13 @@ export const ProductDetail: React.FC = () => {
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Sua pergunta *
-                  </label>
+                    {localize("Sua pergunta *")}</label>
                   <textarea
                     rows={4}
                     required
                     value={questionText}
                     onChange={(e) => setQuestionText(e.target.value)}
-                    placeholder="Digite sua dúvida sobre instalação, compatibilidade ou funcionamento..."
+                    placeholder={localize("Digite sua dúvida sobre instalação, compatibilidade ou funcionamento...")}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm focus:outline-none focus:border-blue-600 resize-none"
                   />
                 </div>
@@ -2778,15 +2569,14 @@ export const ProductDetail: React.FC = () => {
                     onClick={() => setIsQuestionModalOpen(false)}
                     className="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-50 cursor-pointer"
                   >
-                    Cancelar
-                  </button>
+                    {localize("Cancelar")}</button>
                   <button
                     type="submit"
                     disabled={isSendingQuestion}
                     className="px-5 py-2.5 rounded-lg bg-[#0b5ed7] hover:bg-[#0a53be] text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer disabled:opacity-60"
                   >
                     <Send className="w-3.5 h-3.5" />
-                    <span>{isSendingQuestion ? 'Enviando...' : 'Enviar pergunta'}</span>
+                    <span>{localize(isSendingQuestion ? 'Enviando...' : 'Enviar pergunta')}</span>
                   </button>
                 </div>
               </form>
@@ -2805,7 +2595,7 @@ export const ProductDetail: React.FC = () => {
               type="button"
               onClick={() => setIsFakeReviewModalOpen(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 cursor-pointer"
-              aria-label="Fechar"
+              aria-label={localize("Fechar")}
             >
               <X className="w-5 h-5" />
             </button>
@@ -2816,35 +2606,29 @@ export const ProductDetail: React.FC = () => {
                   <Sparkles className="w-7 h-7" />
                 </div>
                 <h3 className="font-display font-extrabold text-xl text-slate-900">
-                  Avaliação recebida para moderação!
-                </h3>
+                  {localize("Avaliação recebida para moderação!")}</h3>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Obrigado pelo seu feedback! Após a validação do número do pedido em nosso sistema,
-                  sua avaliação será publicada nesta página.
-                </p>
+                  {localize("Obrigado pelo seu feedback! Após a validação do número do pedido em nosso sistema, sua avaliação será publicada nesta página.")}</p>
                 <button
                   type="button"
                   onClick={() => setIsFakeReviewModalOpen(false)}
                   className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-lg cursor-pointer"
                 >
-                  Concluir
-                </button>
+                  {localize("Concluir")}</button>
               </div>
             ) : (
               <form onSubmit={handleFakeReviewSubmit} className="space-y-4 text-left">
                 <div>
                   <h3 className="font-display font-extrabold text-lg text-slate-900">
-                    Escreva sua avaliação
-                  </h3>
+                    {localize("Escreva sua avaliação")}</h3>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Compartilhe sua experiência com o <strong>{product.name}</strong>.
+                    {localize("Compartilhe sua experiência com o ")}<strong>{localize(product.name)}</strong>.
                   </p>
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                    Sua nota *
-                  </label>
+                    {localize("Sua nota *")}</label>
                   <div className="flex items-center gap-1">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
@@ -2867,28 +2651,26 @@ export const ProductDetail: React.FC = () => {
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Seu nome *
-                  </label>
+                    {localize("Seu nome *")}</label>
                   <input
                     type="text"
                     required
                     value={fakeReviewName}
                     onChange={(e) => setFakeReviewName(e.target.value)}
-                    placeholder="Seu nome completo"
+                    placeholder={localize("Seu nome completo")}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm focus:outline-none focus:border-blue-600"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Seu comentário *
-                  </label>
+                    {localize("Seu comentário *")}</label>
                   <textarea
                     rows={3}
                     required
                     value={fakeReviewComment}
                     onChange={(e) => setFakeReviewComment(e.target.value)}
-                    placeholder="Conte como foi a entrega e instalação do software..."
+                    placeholder={localize("Conte como foi a entrega e instalação do software...")}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm focus:outline-none focus:border-blue-600 resize-none"
                   />
                 </div>
@@ -2899,14 +2681,12 @@ export const ProductDetail: React.FC = () => {
                     onClick={() => setIsFakeReviewModalOpen(false)}
                     className="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-50 cursor-pointer"
                   >
-                    Cancelar
-                  </button>
+                    {localize("Cancelar")}</button>
                   <button
                     type="submit"
                     className="px-5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold cursor-pointer"
                   >
-                    Enviar avaliação
-                  </button>
+                    {localize("Enviar avaliação")}</button>
                 </div>
               </form>
             )}
@@ -2916,26 +2696,26 @@ export const ProductDetail: React.FC = () => {
 
       <TrustGuaranteesModal isOpen={isGuaranteesModalOpen} onClose={() => setIsGuaranteesModalOpen(false)} />
 
-      <CheckoutModal
+      <Suspense fallback={null}>{isCheckoutOpen && <CheckoutModal
         product={product}
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
         initialSubOption={selectedPlan}
-      />
+      />}</Suspense>
 
       {/* Sticky Mobile Purchase Bar (Optimized for iPhone / Mobile) */}
       <div className="fixed bottom-0 left-0 right-0 z-30 sm:hidden bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2.5 flex items-center justify-between gap-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
         <div className="min-w-0">
           <p className="text-xs font-bold text-slate-900 truncate leading-tight">
-            {product.name}
+            {localize(product.name)}
           </p>
           <div className="flex items-baseline gap-1.5 mt-0.5">
             <span className="font-black text-base text-[#0b5ed7] leading-none">
-              {formattedPrice}
+              {localize(formattedPrice)}
             </span>
             {displayOriginalPrice > displayPrice && (
               <span className="text-[10px] text-slate-400 line-through">
-                {formattedOriginalPrice}
+                {localize(formattedOriginalPrice)}
               </span>
             )}
           </div>
@@ -2958,9 +2738,15 @@ export const ProductDetail: React.FC = () => {
           className="shrink-0 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs py-2.5 px-5 rounded-xl shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
         >
           <ShoppingCart className="w-4 h-4" />
-          <span>{isInternational ? t('buy_now') : 'Comprar'}</span>
+          <span>{localize(isInternational ? t('buy_now') : 'Comprar')}</span>
         </button>
       </div>
     </div>
   );
+};
+
+// A route change creates fresh product state in one render.
+export const ProductDetail: React.FC = () => {
+  const { slug } = useParams<{ slug: string }>();
+  return <ProductDetailContent key={slug} />;
 };

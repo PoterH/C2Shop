@@ -26,25 +26,16 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<Product[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [couponCode, setCouponCode] = useState('');
-
-  // Load cart from localStorage on mount
-  useEffect(() => {
+  const [cartItems, setCartItems] = useState<Product[]>(() => {
     try {
-      const savedCart = localStorage.getItem('c2shop_cart');
-      const savedCoupon = localStorage.getItem('c2shop_coupon');
-      if (savedCart) {
-        setCartItems(JSON.parse(savedCart));
-      }
-      if (savedCoupon) {
-        setCouponCode(savedCoupon);
-      }
-    } catch (e) {
-      console.error('Error loading cart data from localStorage:', e);
-    }
-  }, []);
+      const saved: unknown = JSON.parse(localStorage.getItem('c2shop_cart') || '[]');
+      return Array.isArray(saved) ? saved.filter((item): item is Product => Boolean(item && typeof item.id === 'string' && typeof item.name === 'string' && typeof item.price === 'number')) : [];
+    } catch { return []; }
+  });
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [couponCode, setCouponCode] = useState(() => {
+    try { return localStorage.getItem('c2shop_coupon') || ''; } catch { return ''; }
+  });
 
   // Save cart to localStorage when changed
   useEffect(() => {
@@ -75,7 +66,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     deviceCount: number = 1
   ) => {
     if (product.unavailable) return;
-    
+
     const chosenOption = licenseOption !== undefined ? licenseOption : (product.licenseOptions && product.licenseOptions.length > 0 ? product.licenseOptions[0] : undefined);
     const chosenSubOption = chosenOption ? 'avulso' : (subOption || 'recurrent');
     const validDeviceCount = Math.max(1, deviceCount);
@@ -84,8 +75,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Check if already in cart
       const exists = prev.find((item) => item.id === product.id);
       if (exists) {
-        return prev.map((item) => 
-          item.id === product.id 
+        return prev.map((item) =>
+          item.id === product.id
             ? {
                 ...item,
                 selectedSubOption: chosenSubOption,
@@ -105,7 +96,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       ];
     });
-    
+
     // Track AddToCart on Facebook Pixel
     const unitPrice = chosenOption
       ? chosenOption.price
@@ -141,9 +132,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (cartItems.length > 1) {
         return { success: true, message: 'Cupom OFF10 aplicado! Desconto de 10% ativo.' };
       } else {
-        return { 
-          success: true, 
-          message: 'Cupom OFF10 inserido. Adicione mais um software para ativar os 10% de desconto!' 
+        return {
+          success: true,
+          message: 'Cupom OFF10 inserido. Adicione mais um software para ativar os 10% de desconto!'
         };
       }
     }
@@ -166,7 +157,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     return sum + item.price * count;
   }, 0);
-  
+
   // Coupon OFF10 only applies when items count > 1
   const discountPercentage = (couponCode === 'OFF10' && cartItems.length > 1) ? 10 : 0;
   const discountAmount = subtotal * (discountPercentage / 100);

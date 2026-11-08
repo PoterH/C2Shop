@@ -1,7 +1,9 @@
+import { useText } from '../hooks/useText';
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, MessageSquare, HelpCircle } from 'lucide-react';
 
 export const FAQPage: React.FC = () => {
+  const localize = useText();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFaq = (index: number) => {
@@ -60,31 +62,28 @@ export const FAQPage: React.FC = () => {
   ];
 
   const whatsappNumber = '5581997349300'; // Substitua pelo seu número real do WhatsApp
-  const whatsappMessage = encodeURIComponent('Olá, tenho uma dúvida e gostaria de falar com a equipe da C2Tech.');
+  const whatsappMessage = encodeURIComponent(localize('Olá, tenho uma dúvida e gostaria de falar com a equipe da C2Tech.'));
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
   return (
     <div className="pt-24 pb-16 bg-slate-50 min-h-screen text-left">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Header */}
         <div className="text-center space-y-4 mb-12">
           <span className="bg-sky-500/10 text-sky-800 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider inline-block">
-            Central de Dúvidas
-          </span>
+            {localize("Central de Dúvidas")}</span>
           <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
-            Perguntas Frequentes (FAQ)
-          </h1>
+            {localize("Perguntas Frequentes (FAQ)")}</h1>
           <p className="text-slate-500 text-sm sm:text-base max-w-xl mx-auto text-center">
-            Esclareça suas dúvidas gerais sobre entrega, licenciamento vitalício, suporte remoto e compatibilidade.
-          </p>
+            {localize("Esclareça suas dúvidas gerais sobre entrega, licenciamento vitalício, suporte remoto e compatibilidade.")}</p>
         </div>
 
         {/* FAQ Accordion List */}
         <div className="space-y-4">
           {faqItems.map((item, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden transition-all duration-200"
             >
               <button
@@ -92,21 +91,21 @@ export const FAQPage: React.FC = () => {
                 className="w-full flex items-center justify-between p-5 text-left font-display font-bold text-slate-900 hover:text-accent-blue transition-colors focus:outline-none"
                 aria-expanded={openIndex === idx}
               >
-                <span className="text-sm sm:text-base pr-4">{item.q}</span>
+                <span className="text-sm sm:text-base pr-4">{localize(item.q)}</span>
                 {openIndex === idx ? (
                   <ChevronUp className="w-5 h-5 text-slate-400 shrink-0" />
                 ) : (
                   <ChevronDown className="w-5 h-5 text-slate-400 shrink-0" />
                 )}
               </button>
-              
-              <div 
+
+              <div
                 className={`transition-all duration-300 ease-in-out overflow-hidden ${
                   openIndex === idx ? 'max-h-96 border-t border-slate-50' : 'max-h-0'
                 }`}
               >
                 <div className="p-5 text-slate-600 text-xs sm:text-sm leading-relaxed bg-slate-50/50">
-                  {item.a}
+                  {localize(item.a)}
                 </div>
               </div>
             </div>
@@ -117,11 +116,9 @@ export const FAQPage: React.FC = () => {
         <div className="mt-12 text-center p-8 bg-white rounded-3xl border border-slate-150 shadow-sm space-y-4 max-w-xl mx-auto">
           <HelpCircle className="w-8 h-8 text-sky-500 mx-auto" />
           <h3 className="font-display font-bold text-slate-900 text-base">
-            Sua dúvida não está listada aqui?
-          </h3>
+            {localize("Sua dúvida não está listada aqui?")}</h3>
           <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
-            Não se preocupe! Fale agora mesmo com nosso atendimento humano no WhatsApp e tire todas as suas dúvidas em minutos.
-          </p>
+            {localize("Não se preocupe! Fale agora mesmo com nosso atendimento humano no WhatsApp e tire todas as suas dúvidas em minutos.")}</p>
           <div className="pt-2">
             <a
               href={whatsappUrl}
@@ -130,8 +127,7 @@ export const FAQPage: React.FC = () => {
               className="inline-flex items-center justify-center px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-xs sm:text-sm transition-all"
             >
               <MessageSquare className="w-4 h-4 mr-2" />
-              Falar no WhatsApp
-            </a>
+              {localize("Falar no WhatsApp")}</a>
           </div>
         </div>
 

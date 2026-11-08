@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { loadTextDictionary, type TextDictionary } from '../utils/localeMessages';
+import { localizeText } from '../utils/localizeText';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { useCurrency, type CurrencyCode } from './CurrencyContext';
 
 import { detectLanguage, type LanguageCode } from '../utils/locale';
@@ -527,6 +529,7 @@ const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
 
 interface LanguageContextType {
   language: LanguageCode;
+  text: (value: string) => string;
   setLanguage: (lang: LanguageCode) => void;
   languageInfo: LanguageInfo;
   isInternational: boolean;
@@ -544,11 +547,11 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     document.documentElement.lang = language;
   }, [language]);
 
-  const setLanguage = (lang: LanguageCode) => {
+  const commitLanguage = (lang: LanguageCode) => {
     setLanguageState(lang);
     try {
       localStorage.setItem('c2tech_language', lang);
-    } catch {}
+    } catch { /* The selected language still works without persistent storage. */ }
 
     // When international (en, es, pt-PT), standardize currency to USD ($)
     if (lang === 'pt-BR') {
@@ -558,19 +561,51 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
-  const isInternational = language !== 'pt-BR';
+  const [dictionaries, setDictionaries] = useState<Partial<Record<'en' | 'es', TextDictionary>>>({});
+  const [translationError, setTranslationError] = useState(false);
+  useEffect(() => {
+    if (language !== 'en' && language !== 'es') return;
+    let active = true;
+    loadTextDictionary(language).then(dictionary => {
+      if (active) setDictionaries(current => ({...current, [language]: dictionary}));
+    }).catch(() => { if (active) setTranslationError(true); });
+    return () => { active = false; };
+  }, [language]);
 
-  const t = (key: string, fallback?: string): string => {
+  const languageRequest = useRef(0);
+  const setLanguage = (lang: LanguageCode) => {
+    const request = ++languageRequest.current;
+    if (lang === 'en' || lang === 'es') {
+      loadTextDictionary(lang).then(dictionary => {
+        if (request !== languageRequest.current) return;
+        setDictionaries(current => ({...current, [lang]: dictionary}));
+        commitLanguage(lang);
+      }).catch(() => setTranslationError(true));
+    } else commitLanguage(lang);
+  };
+  const dictionary = language === 'en' || language === 'es' ? dictionaries[language] : undefined;
+  const text = useCallback((value: string) => localizeText(value, language, dictionary), [language, dictionary]);
+  const t = useCallback((key: string, fallback?: string): string => {
     const dict = TRANSLATIONS[language] || TRANSLATIONS['pt-BR'];
     if (dict[key]) return dict[key];
     const defaultDict = TRANSLATIONS['pt-BR'];
     return defaultDict[key] || fallback || key;
-  };
+  }, [language]);
+
+  if ((language === 'en' || language === 'es') && !dictionary) {
+    return <div className="min-h-screen grid place-content-center bg-slate-50 text-slate-700" role="status">
+      {translationError ? <button onClick={() => window.location.reload()}>{language === 'es' ? 'Reintentar' : 'Retry'}</button> : <span>{language === 'es' ? 'Cargando…' : 'Loading…'}</span>}
+    </div>;
+  }
+
+  const isInternational = language !== 'pt-BR';
+
 
   return (
     <LanguageContext.Provider
       value={{
         language,
+        text,
         setLanguage,
         languageInfo: LANGUAGES[language] || LANGUAGES['pt-BR'],
         isInternational,

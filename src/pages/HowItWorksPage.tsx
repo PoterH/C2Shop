@@ -1,8 +1,10 @@
+import { useText } from '../hooks/useText';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, CreditCard, Mail, Settings, ArrowRight, MessageSquare } from 'lucide-react';
 
 export const HowItWorksPage: React.FC = () => {
+  const localize = useText();
   const steps = [
     {
       icon: <ShoppingBag className="w-8 h-8 text-sky-600" />,
@@ -27,31 +29,28 @@ export const HowItWorksPage: React.FC = () => {
   ];
 
   const whatsappNumber = '5581997349300'; // Substitua pelo seu número real do WhatsApp
-  const whatsappMessage = encodeURIComponent('Olá, gostaria de saber mais sobre o funcionamento da entrega e do suporte da C2Tech.');
+  const whatsappMessage = encodeURIComponent(localize('Olá, gostaria de saber mais sobre o funcionamento da entrega e do suporte da C2Tech.'));
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
   return (
     <div className="pt-24 pb-16 bg-slate-50 min-h-screen text-left">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Header */}
         <div className="text-center space-y-4 mb-16">
           <span className="bg-emerald-500/10 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider inline-block">
-            Processo Simples e Transparente
-          </span>
+            {localize("Processo Simples e Transparente")}</span>
           <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
-            Como funciona a C2Tech?
-          </h1>
+            {localize("Como funciona a C2Tech?")}</h1>
           <p className="text-slate-500 text-sm sm:text-base max-w-xl mx-auto text-center">
-            Entenda detalhadamente cada etapa da sua jornada, desde a escolha do software até a instalação no seu computador.
-          </p>
+            {localize("Entenda detalhadamente cada etapa da sua jornada, desde a escolha do software até a instalação no seu computador.")}</p>
         </div>
 
         {/* Steps Detailed Card List */}
         <div className="space-y-8">
           {steps.map((step, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start"
             >
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 shrink-0">
@@ -59,10 +58,10 @@ export const HowItWorksPage: React.FC = () => {
               </div>
               <div className="space-y-2">
                 <h3 className="font-display font-extrabold text-lg sm:text-xl text-slate-900">
-                  {step.title}
+                  {localize(step.title)}
                 </h3>
                 <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-                  {step.desc}
+                  {localize(step.desc)}
                 </p>
               </div>
             </div>
@@ -72,18 +71,15 @@ export const HowItWorksPage: React.FC = () => {
         {/* Bottom Call to Action banner */}
         <div className="mt-16 bg-slate-900 text-white rounded-3xl p-8 sm:p-10 text-center space-y-6">
           <h2 className="font-display font-extrabold text-2xl sm:text-3xl tracking-tight text-white">
-            Pronto para adquirir seu software profissional?
-          </h2>
+            {localize("Pronto para adquirir seu software profissional?")}</h2>
           <p className="text-slate-400 text-sm sm:text-base max-w-xl mx-auto">
-            Acesso vitalício, pagamento único e suporte de instalação dedicado ao seu dispor.
-          </p>
+            {localize("Acesso vitalício, pagamento único e suporte de instalação dedicado ao seu dispor.")}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
             <Link
               to="/catalogo"
               className="px-6 py-3.5 bg-accent-blue hover:bg-accent-blue-dark text-white font-bold rounded-2xl shadow hover:shadow-lg transition-all flex items-center justify-center"
             >
-              Navegar no catálogo
-              <ArrowRight className="w-5 h-5 ml-2" />
+              {localize("Navegar no catálogo")}<ArrowRight className="w-5 h-5 ml-2" />
             </Link>
             <a
               href={whatsappUrl}
@@ -92,8 +88,7 @@ export const HowItWorksPage: React.FC = () => {
               className="px-6 py-3.5 bg-slate-800 hover:bg-slate-755 text-slate-200 hover:text-white font-bold rounded-2xl border border-slate-700 transition-all flex items-center justify-center"
             >
               <MessageSquare className="w-5 h-5 text-emerald-500 mr-2" />
-              Tirar dúvidas no WhatsApp
-            </a>
+              {localize("Tirar dúvidas no WhatsApp")}</a>
           </div>
         </div>
 

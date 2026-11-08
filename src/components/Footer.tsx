@@ -1,3 +1,4 @@
+import { useText } from '../hooks/useText';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, MessageCircle, Shield, FileText } from 'lucide-react';
@@ -5,18 +6,19 @@ import { useLanguage } from '../context/LanguageContext';
 import { SantaHat, FooterGarlandLine } from './ChristmasDecorations';
 
 export const Footer: React.FC = () => {
+  const localize = useText();
   const { language } = useLanguage();
   const currentYear = new Date().getFullYear();
 
   const whatsappNumber = '5581997349300';
-  const whatsappMessage = encodeURIComponent('Olá, tenho interesse em um software da C2Tech e gostaria de tirar uma dúvida.');
+  const whatsappMessage = encodeURIComponent(localize('Olá, tenho interesse em um software da C2Tech e gostaria de tirar uma dúvida.'));
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
   return (
-    <footer className="relative bg-[#020617] text-slate-400 pt-20 pb-16 z-0 border-t border-slate-800/90 overflow-x-clip">
+    <footer className="relative bg-[#020617] text-slate-400 pt-28 pb-16 z-0 border-t border-slate-800/90 overflow-x-clip">
       {/* Guirlanda Natalina Decorativa Sobre a Linha do Footer */}
       <FooterGarlandLine />
-      
+
       {/* Morphing Glowing Background Blobs (Similar to the Hero) */}
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0">
         <div className="absolute -bottom-20 -left-20 w-[350px] h-[350px] md:w-[500px] md:h-[500px] opacity-40">
@@ -25,7 +27,7 @@ export const Footer: React.FC = () => {
         <div className="absolute -bottom-10 -right-20 w-[350px] h-[350px] md:w-[500px] md:h-[500px] opacity-40">
           <div className="w-full h-full bg-gradient-to-tr from-[#0066FF]/18 via-[#00d2ff]/15 to-[#0a21a5]/18 rounded-full blur-[80px] md:blur-[120px] animate-morph-blob-2"></div>
         </div>
-        
+
         {/* Subtle Tech Grid Overlay */}
         <div className="absolute inset-0 bg-grid-tech opacity-40"></div>
         <div className="absolute inset-0 bg-dot-tech opacity-30"></div>
@@ -33,42 +35,42 @@ export const Footer: React.FC = () => {
 
       {/* Main Container */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Glassmorphism Card Wrapper */}
         <div className="bg-slate-950/40 backdrop-blur-xl border border-slate-800/60 rounded-3xl p-8 md:p-12 shadow-2xl">
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
-            
+
             {/* Column 1 & 2: Brand Info */}
             <div className="space-y-6 col-span-1 md:col-span-2">
               <Link to="/" className="inline-block group">
-                <div className="relative inline-block shrink-0">
-                  <img 
-                    src="/images/logo.png" 
-                    alt="Logo C2Tech" 
-                    className="w-10 h-10 rounded-xl object-cover shadow-[0_0_15px_rgba(7,212,243,0.25)] group-hover:scale-105 transition-transform duration-300" 
+                <div className="brand-logo relative inline-flex shrink-0">
+                  <img
+                    src="/images/logo.webp"
+                    alt="Logo C2Tech"
+                    className="w-10 h-10 rounded-xl object-cover shadow-[0_0_15px_rgba(7,212,243,0.25)] group-hover:scale-105 transition-transform duration-300"
                   />
                   {/* Chapeuzinho Natalino C2Tech: Perfeitamente vestido na ponta superior esquerda do ícone */}
-                  <SantaHat className="absolute -top-[9px] -left-[8px] w-[30px] h-auto pointer-events-none drop-shadow-md transition-transform duration-300 transform -rotate-[10deg] group-hover:-rotate-[14deg] group-hover:scale-105 z-10" />
+                  <SantaHat className="brand-hat" />
                 </div>
               </Link>
               <div className="space-y-3">
                 <h2 className="text-white text-lg sm:text-xl font-bold font-display tracking-tight leading-snug">
-                  {language === 'en'
+                  {localize(language === 'en'
                     ? 'You focus on the project. C2Tech handles the rest.'
                     : language === 'es'
                     ? 'Tú te enfocas en el proyecto. C2Tech cuida del resto.'
-                    : 'Você foca no projeto. A C2Tech cuida do resto.'}
+                    : 'Você foca no projeto. A C2Tech cuida do resto.')}
                 </h2>
                 <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
-                  {language === 'en'
+                  {localize(language === 'en'
                     ? 'We offer professional digital solutions with fast delivery, lifetime access and assisted installation support. Acquire robust software with no subscriptions and no recurring fees.'
                     : language === 'es'
                     ? 'Ofrecemos soluciones digitales profesionales con entrega rápida, acceso vitalicio y soporte de instalación asistida. Adquiere software robusto sin suscripciones ni cuotas recurrentes.'
-                    : 'Oferecemos soluções digitais profissionais com entrega rápida, acesso vitalício e suporte de instalação assistida. Adquira softwares robustos sem assinaturas e sem taxas recorrentes.'}
+                    : 'Oferecemos soluções digitais profissionais com entrega rápida, acesso vitalício e suporte de instalação assistida. Adquira softwares robustos sem assinaturas e sem taxas recorrentes.')}
                 </p>
               </div>
-              
+
               {/* Circular Social Buttons with Glassmorphism */}
               <div className="flex items-center gap-3 pt-2">
                 <a
@@ -76,7 +78,7 @@ export const Footer: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-11 h-11 rounded-full bg-slate-950/50 hover:bg-emerald-500/10 border border-slate-800 hover:border-emerald-500/40 flex items-center justify-center transition-all duration-300 text-slate-400 hover:text-emerald-400 group shadow-sm"
-                  aria-label="WhatsApp Suporte"
+                  aria-label={localize("WhatsApp Suporte")}
                 >
                   <MessageCircle className="w-5 h-5 transition-transform group-hover:scale-110" />
                 </a>
@@ -110,37 +112,31 @@ export const Footer: React.FC = () => {
 
             {/* Column 3: Atalhos */}
             <div className="space-y-4">
-              <h3 className="text-white font-semibold font-display text-base tracking-tight">Atalhos</h3>
+              <h3 className="text-white font-semibold font-display text-base tracking-tight">{localize("Atalhos")}</h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
                   <Link to="/" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    Início
-                  </Link>
+                    {localize("Início")}</Link>
                 </li>
                 <li>
                   <Link to="/catalogo" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    Catálogo de Softwares
-                  </Link>
+                    {localize("Catálogo de Softwares")}</Link>
                 </li>
                 <li>
                   <Link to="/sobre-nos" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    Sobre Nós
-                  </Link>
+                    {localize("Sobre Nós")}</Link>
                 </li>
                 <li>
                   <Link to="/entrega-e-pagamento" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    Entrega e Pagamento Seguro
-                  </Link>
+                    {localize("Entrega e Pagamento Seguro")}</Link>
                 </li>
                 <li>
                   <Link to="/contato" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    Fale Conosco / Suporte
-                  </Link>
+                    {localize("Fale Conosco / Suporte")}</Link>
                 </li>
                 <li>
                   <Link to="/faq" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    FAQ / Dúvidas
-                  </Link>
+                    {localize("FAQ / Dúvidas")}</Link>
                 </li>
               </ul>
             </div>
@@ -152,21 +148,19 @@ export const Footer: React.FC = () => {
                 <li>
                   <Link to="/termos" className="flex items-center hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
                     <FileText className="w-4 h-4 mr-2 text-slate-500" />
-                    Termos de Uso
-                  </Link>
+                    {localize("Termos de Uso")}</Link>
                 </li>
                 <li>
                   <Link to="/privacidade" className="flex items-center hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
                     <Shield className="w-4 h-4 mr-2 text-slate-500" />
-                    Política de Privacidade
-                  </Link>
+                    {localize("Política de Privacidade")}</Link>
                 </li>
               </ul>
             </div>
 
             {/* Column 5: Contato & Info */}
             <div className="space-y-4">
-              <h3 className="text-white font-semibold font-display text-base tracking-tight">Fale conosco</h3>
+              <h3 className="text-white font-semibold font-display text-base tracking-tight">{localize("Fale conosco")}</h3>
               <ul className="space-y-3 text-sm">
                 <li className="flex items-center">
                   <Mail className="w-4 h-4 mr-2 text-slate-500" />
@@ -178,11 +172,9 @@ export const Footer: React.FC = () => {
                   <div className="flex flex-col gap-2">
                     <span className="flex items-center text-xs">
                       <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
-                      Servidores Online
-                    </span>
+                      {localize("Servidores Online")}</span>
                     <span className="flex items-center text-xs text-slate-500">
-                      SSL Criptografado
-                    </span>
+                      {localize("SSL Criptografado")}</span>
                   </div>
                 </li>
               </ul>
@@ -191,15 +183,14 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Payment Methods & Security Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8 pt-8 border-t border-slate-800/60">
+          <div className="footer-credentials grid grid-cols-1 lg:grid-cols-2 gap-6 my-8 pt-8 border-t border-slate-800/60">
             {/* Left: Payment Methods */}
-            <div className="space-y-3 text-center lg:text-left">
+            <div className="footer-credential-panel space-y-4 text-left">
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block font-sans">
-                Meios de Pagamento
-              </span>
-              <div className="flex flex-wrap gap-2.5 justify-center lg:justify-start items-center">
+                {localize("Meios de Pagamento")}</span>
+              <div className="footer-payment-grid">
                 {/* Pix */}
-                <div className="h-8 w-14 bg-white rounded-lg border border-slate-200/50 flex items-center justify-center p-1 hover:scale-105 transition-all duration-200 shadow-sm" title="Pix">
+                <div className="footer-payment-card" title="Pix">
                   <svg viewBox="0 0 72 32" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
                     <g transform="translate(8, 3)">
                       <path d="M13.2 2.1c-.2-.2-.5-.2-.7 0L7.3 7.3c-.3.3-.3.8 0 1.1l5.2 5.2c.2.2.5.2.7 0l5.2-5.2c.3-.3.3-.8 0-1.1L13.2 2.1zm-6.8 6.8c-.2-.2-.5-.2-.7 0L.5 14.1c-.3.3-.3.8 0 1.1l5.2 5.2c.2.2.5.2.7 0l5.2-5.2c.3-.3.3-.8 0-1.1l-5.2-5.2zm13.6 0c-.2-.2-.5-.2-.7 0l-5.2 5.2c-.3.3-.3.8 0 1.1l5.2 5.2c.2.2.5.2.7 0l5.2-5.2c.3-.3.3-.8 0-1.1l-5.2-5.2zm-6.8 6.8c-.2-.2-.5-.2-.7 0l-5.2 5.2c-.3.3-.3.8 0 1.1l5.2 5.2c.2.2.5.2.7 0l5.2-5.2c.3-.3.3-.8 0-1.1l-5.2-5.2z" fill="#32BCAD" />
@@ -208,7 +199,7 @@ export const Footer: React.FC = () => {
                   </svg>
                 </div>
                 {/* Mastercard */}
-                <div className="h-8 w-14 bg-white rounded-lg border border-slate-200/50 flex items-center justify-center p-1 hover:scale-105 transition-all duration-200 shadow-sm" title="Mastercard">
+                <div className="footer-payment-card" title="Mastercard">
                   <svg viewBox="0 0 85 50" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="28" cy="25" r="21" fill="#FF1E00" />
                     <circle cx="56" cy="25" r="21" fill="#FF9900" />
@@ -219,7 +210,7 @@ export const Footer: React.FC = () => {
                   </svg>
                 </div>
                 {/* Visa */}
-                <div className="h-8 w-14 bg-white rounded-lg border border-slate-200/50 flex items-center justify-center p-1 hover:scale-105 transition-all duration-200 shadow-sm" title="Visa">
+                <div className="footer-payment-card" title="Visa">
                   <svg viewBox="0 0 100 32" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
                     <g transform="skewX(-12) translate(10, 0)">
                       <path d="M5 6 L18 6 L12 18 L2 18 Z" fill="#F7A21C" />
@@ -228,7 +219,7 @@ export const Footer: React.FC = () => {
                   </svg>
                 </div>
                 {/* Amex */}
-                <div className="h-8 w-14 bg-white rounded-lg border border-slate-200/50 flex items-center justify-center p-1.5 hover:scale-105 transition-all duration-200 shadow-sm" title="American Express">
+                <div className="footer-payment-card" title="American Express">
                   <svg viewBox="0 0 50 50" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
                     <rect width="50" height="50" rx="3" fill="#0077A6" />
                     <text x="25" y="18" fill="#FFFFFF" fontFamily="sans-serif" fontWeight="900" fontSize="5.5" textAnchor="middle" letterSpacing="0.2">AMERICAN</text>
@@ -238,7 +229,7 @@ export const Footer: React.FC = () => {
                   </svg>
                 </div>
                 {/* PayPal */}
-                <div className="h-8 w-14 bg-white rounded-lg border border-slate-200/50 flex items-center justify-center p-1 hover:scale-105 transition-all duration-200 shadow-sm" title="PayPal">
+                <div className="footer-payment-card" title="PayPal">
                   <svg viewBox="0 0 110 32" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
                     <g transform="skewX(-12) translate(8, 0)">
                       <g transform="translate(0, 2)">
@@ -251,14 +242,14 @@ export const Footer: React.FC = () => {
                   </svg>
                 </div>
                 {/* Hipercard */}
-                <div className="h-8 w-14 bg-white rounded-lg border border-slate-200/50 flex items-center justify-center p-1 hover:scale-105 transition-all duration-200 shadow-sm" title="Hipercard">
+                <div className="footer-payment-card" title="Hipercard">
                   <svg viewBox="0 0 120 45" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
                     <rect x="10" y="6" width="100" height="33" rx="6" fill="#B0101A" transform="skewX(-14)" />
                     <text x="58" y="27" fill="#FFFFFF" fontFamily="sans-serif" fontWeight="950" fontStyle="italic" fontSize="14" textAnchor="middle" letterSpacing="-0.5">Hipercard</text>
                   </svg>
                 </div>
                 {/* Elo */}
-                <div className="h-8 w-14 bg-white rounded-lg border border-slate-200/50 flex items-center justify-center p-1 hover:scale-105 transition-all duration-200 shadow-sm" title="Elo">
+                <div className="footer-payment-card" title="Elo">
                   <svg viewBox="0 0 50 50" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="25" cy="25" r="23" fill="#111111" />
                     <text x="14" y="32" fill="#FFFFFF" fontFamily="sans-serif" fontWeight="900" fontSize="16" letterSpacing="-0.5">el</text>
@@ -270,7 +261,7 @@ export const Footer: React.FC = () => {
                   </svg>
                 </div>
                 {/* Boleto */}
-                <div className="h-8 w-14 bg-white rounded-lg border border-slate-200/50 flex items-center justify-center p-1 hover:scale-105 transition-all duration-200 shadow-sm" title="Boleto Bancário">
+                <div className="footer-payment-card" data-payment="boleto" title={localize("Boleto Bancário")}>
                   <svg viewBox="0 0 65 50" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
                     <g transform="translate(8, 6) scale(0.7)">
                       <rect x="0" y="0" width="6" height="32" fill="#000" />
@@ -283,19 +274,19 @@ export const Footer: React.FC = () => {
                       <rect x="54" y="0" width="3" height="32" fill="#000" />
                       <rect x="60" y="0" width="6" height="32" fill="#000" />
                     </g>
-                    <text x="32.5" y="36" fill="#000000" fontFamily="sans-serif" fontWeight="900" fontSize="6.5" textAnchor="middle" letterSpacing="-0.1">Boleto</text>
-                    <text x="32.5" y="43" fill="#000000" fontFamily="sans-serif" fontWeight="900" fontSize="6.5" textAnchor="middle" letterSpacing="-0.1">Bancário</text>
+                    <text x="32.5" y="36" fill="#000000" fontFamily="sans-serif" fontWeight="900" fontSize="6.5" textAnchor="middle" letterSpacing="-0.1">{localize("Boleto")}</text>
+                    <text x="32.5" y="43" fill="#000000" fontFamily="sans-serif" fontWeight="900" fontSize="6.5" textAnchor="middle" letterSpacing="-0.1">{localize("Bancário")}</text>
                   </svg>
                 </div>
               </div>
             </div>
 
             {/* Right: Security Certificates & Partners */}
-            <div className="space-y-3 text-center lg:text-right">
+            <div className="footer-credential-panel space-y-4 text-left">
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block font-sans">
-                Segurança & Parceiros
-              </span>
-              <div className="flex flex-wrap gap-3 justify-center lg:justify-end items-center">
+                {localize("Segurança & Parceiros")}</span>
+              <div className="footer-partner-grid">
+                <div className="footer-trust-slot">
                 {/* Selo Oficial Trustpilot */}
                 <div className="flex items-center gap-2 bg-slate-900/60 border border-[#08ad88]/40 rounded-xl px-3 py-1.5 hover:border-[#08ad88] transition-all shadow-sm" title="Avaliações Verificadas no Trustpilot">
                   <img src="/images/trustpilot-star.png" alt="Trustpilot" className="w-6 h-6 object-contain shrink-0" />
@@ -308,36 +299,38 @@ export const Footer: React.FC = () => {
                   </div>
                 </div>
 
+                </div>
+
                 {/* Selo Corel Partner */}
-                <div className="flex items-center justify-center bg-white rounded-xl overflow-hidden border border-slate-200/20 hover:border-sky-500/40 transition-all shadow-sm" title="Corel Authorized Partner">
-                  <div className="relative w-[100px] h-[42px] flex items-center justify-center">
-                    <img src="/images/corel-partner.png" alt="Corel Authorized Partner" className="w-[150%] h-[150%] object-contain scale-[1.6]" />
-                  </div>
+                <div className="footer-partner-card" title="Corel Authorized Partner">
+                  <svg viewBox="36 57 348 108" className="footer-partner-logo" role="img" aria-label="Corel Authorized Partner" focusable="false">
+                    <image href="/images/corel-partner.webp" width="420" height="236" />
+                  </svg>
                 </div>
 
                 {/* Selo Autodesk */}
-                <div className="flex items-center justify-center bg-white rounded-xl overflow-hidden border border-slate-200/20 hover:border-sky-500/40 transition-all shadow-sm" title="Autodesk Authorized Reseller">
-                  <div className="relative w-[120px] h-[42px] flex items-center justify-center">
-                    <img src="/images/autodesk-reseller.png" alt="Autodesk Authorized Reseller" className="w-[110%] h-[110%] object-contain scale-[1.15]" />
-                  </div>
+                <div className="footer-partner-card" title="Autodesk Authorized Reseller">
+                  <svg viewBox="56 75 307 86" className="footer-partner-logo" role="img" aria-label="Autodesk Authorized Reseller" focusable="false">
+                    <image href="/images/autodesk-reseller.webp" width="420" height="236" />
+                  </svg>
                 </div>
 
                 {/* Selo Microsoft Partner */}
-                <div className="flex items-center justify-center bg-white rounded-xl overflow-hidden border border-slate-200/20 hover:border-sky-500/40 transition-all shadow-sm" title="Microsoft Partner Network">
-                  <div className="relative w-[110px] h-[42px] flex items-center justify-center">
-                    <img src="/images/microsoft-partner.png" alt="Microsoft Partner Network" className="w-[140%] h-[140%] object-contain scale-[1.35]" />
-                  </div>
+                <div className="footer-partner-card" title="Microsoft Partner Network">
+                  <svg viewBox="77 71 264 84" className="footer-partner-logo" role="img" aria-label="Microsoft Partner Network" focusable="false">
+                    <image href="/images/microsoft-partner.webp" width="420" height="236" />
+                  </svg>
                 </div>
 
                 {/* Selo Promob Authorized Reseller */}
-                <div className="flex items-center justify-center bg-white rounded-xl overflow-hidden border border-slate-200/20 hover:border-sky-500/40 transition-all shadow-sm" title="Promob Authorized Reseller">
-                  <div className="relative w-[120px] h-[42px] flex items-center justify-center">
-                    <img src="/images/promob-reseller.png" alt="Promob Authorized Reseller" className="w-[130%] h-[130%] object-contain scale-[1.25]" />
-                  </div>
+                <div className="footer-partner-card" title="Promob Authorized Reseller">
+                  <svg viewBox="53 65 319 107" className="footer-partner-logo" role="img" aria-label="Promob Authorized Reseller" focusable="false">
+                    <image href="/images/promob-reseller.webp" width="420" height="236" />
+                  </svg>
                 </div>
 
                 {/* Selo Compra 100% Segura */}
-                <div className="flex items-center space-x-2.5 bg-slate-900/40 border border-emerald-500/20 rounded-2xl px-4 py-2 hover:border-emerald-500/40 transition-colors shadow-sm">
+                <div className="footer-assurance-card border-emerald-500/20">
                   <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400">
                     <svg viewBox="0 0 24 24" className="w-4.5 h-4.5 stroke-current fill-none" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
@@ -346,16 +339,16 @@ export const Footer: React.FC = () => {
                   </div>
                   <div className="text-left">
                     <p className="text-[9px] font-extrabold text-white leading-tight uppercase tracking-wider">
-                      {language === 'en' ? '100% Secure Purchase' : 'Compra 100% Segura'}
+                      {localize(language === 'en' ? '100% Secure Purchase' : 'Compra 100% Segura')}
                     </p>
                     <p className="text-[8px] text-slate-450 text-slate-400 leading-none">
-                      {language === 'en' ? 'SSL Encryption (HTTPS)' : language === 'es' ? 'Cifrado SSL (HTTPS)' : 'Criptografia SSL (HTTPS)'}
+                      {localize(language === 'en' ? 'SSL Encryption (HTTPS)' : language === 'es' ? 'Cifrado SSL (HTTPS)' : 'Criptografia SSL (HTTPS)')}
                     </p>
                   </div>
                 </div>
 
                 {/* Selo Loja Protegida */}
-                <div className="flex items-center space-x-2.5 bg-slate-900/40 border border-sky-500/20 rounded-2xl px-4 py-2 hover:border-sky-500/40 transition-colors shadow-sm">
+                <div className="footer-assurance-card border-sky-500/20">
                   <div className="w-8 h-8 rounded-full bg-sky-500/10 flex items-center justify-center text-sky-400">
                     <svg viewBox="0 0 24 24" className="w-4.5 h-4.5 stroke-current fill-none" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -363,10 +356,10 @@ export const Footer: React.FC = () => {
                   </div>
                   <div className="text-left">
                     <p className="text-[9px] font-extrabold text-white leading-tight uppercase tracking-wider">
-                      {language === 'en' ? 'Protected Store' : language === 'es' ? 'Tienda Protegida' : 'Loja Protegida'}
+                      {localize(language === 'en' ? 'Protected Store' : language === 'es' ? 'Tienda Protegida' : 'Loja Protegida')}
                     </p>
                     <p className="text-[8px] text-slate-450 text-slate-400 leading-none">
-                      {language === 'en' ? '100% Secure Environment' : language === 'es' ? 'Ambiente 100% Seguro' : 'Ambiente 100% Seguro'}
+                      {localize(language === 'en' ? '100% Secure Environment' : language === 'es' ? 'Ambiente 100% Seguro' : 'Ambiente 100% Seguro')}
                     </p>
                   </div>
                 </div>
@@ -380,12 +373,12 @@ export const Footer: React.FC = () => {
           {/* Legal Compliance Text (Licença Alternativa) - Clean styling */}
           <div className="text-[11px] text-slate-500/80 space-y-3 max-w-5xl leading-relaxed">
             <p>
-              <strong>{language === 'en' ? 'Important informative note:' : language === 'es' ? 'Nota informativa importante:' : 'Nota informativa importante:'}</strong>{' '}
-              {language === 'en'
+              <strong>{localize(language === 'en' ? 'Important informative note:' : language === 'es' ? 'Nota informativa importante:' : 'Nota informativa importante:')}</strong>{localize(' ')}
+              {localize(language === 'en'
                 ? 'The products sold on this website are provided under an alternative license for personal and professional local use. The purchased access is lifetime for the specific version purchased, configured for local machine use without the need for recurring subscriptions or monthly fees.'
                 : language === 'es'
                 ? 'Los productos comercializados en este sitio web se suministran bajo la modalidad de licencia alternativa para uso personal y profesional de forma local. El acceso adquirido es vitalicio para la versión específica comprada, configurada para funcionamiento en máquina local sin necesidad de suscripciones recurrentes ni mensualidades.'
-                : 'Os produtos comercializados neste site são fornecidos sob a modalidade de licença alternativa para uso pessoal e profissional de forma local. O acesso adquirido é vitalício para a versão específica comprada, configurada para funcionamento em máquina local sem necessidade de assinaturas recorrentes ou mensalidades.'}
+                : 'Os produtos comercializados neste site são fornecidos sob a modalidade de licença alternativa para uso pessoal e profissional de forma local. O acesso adquirido é vitalício para a versão específica comprada, configurada para funcionamento em máquina local sem necessidade de assinaturas recorrentes ou mensalidades.')}
             </p>
           </div>
 
@@ -395,10 +388,10 @@ export const Footer: React.FC = () => {
           {/* Bottom Bar: Copyright & CNPJ */}
           <div className="flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-4">
             <p className="text-center sm:text-left">
-              &copy; {currentYear} C2Tech. {language === 'en' ? 'All rights reserved.' : language === 'es' ? 'Todos los derechos reservados.' : 'Todos os direitos reservados.'}
+              &copy; {currentYear} C2Tech. {localize(language === 'en' ? 'All rights reserved.' : language === 'es' ? 'Todos los derechos reservados.' : 'Todos os direitos reservados.')}
             </p>
             <div className="text-slate-600 text-[10px]">
-              {language === 'en' ? 'Focus on the project, technology within your reach.' : language === 'es' ? 'Foco en el proyecto, tecnología a su alcance.' : 'Foco no projeto, tecnologia ao seu alcance.'}
+              {localize(language === 'en' ? 'Focus on the project, technology within your reach.' : language === 'es' ? 'Foco en el proyecto, tecnología a su alcance.' : 'Foco no projeto, tecnologia ao seu alcance.')}
             </div>
           </div>
 

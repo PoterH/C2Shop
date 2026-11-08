@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import { useText } from '../hooks/useText';
+import React, { lazy, Suspense, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Trash2, Tag, ShoppingBag, ShieldCheck, Ticket, AlertCircle, ExternalLink } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import { getEffectiveCheckoutUrl } from '../data/internationalCheckouts';
 import { useCurrency } from '../context/CurrencyContext';
-import { CheckoutModal } from './CheckoutModal';
+const CheckoutModal = lazy(() => import('./CheckoutModal').then(module => ({ default: module.CheckoutModal })));
 
 export const CartDrawer: React.FC = () => {
+  const localize = useText();
   const navigate = useNavigate();
   const { formatPrice } = useCurrency();
   const {
@@ -36,7 +38,7 @@ export const CartDrawer: React.FC = () => {
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
     if (!couponInput.trim()) return;
-    
+
     const result = applyCoupon(couponInput);
     setCouponFeedback(result);
     if (result.success) {
@@ -62,17 +64,17 @@ export const CartDrawer: React.FC = () => {
   return (
     <>
       {/* Backdrop */}
-      <div 
+      <div
         className={`fixed inset-0 z-50 transition-all duration-300 ${
-          isCartOpen 
-            ? 'bg-slate-950/40 backdrop-blur-[4px] pointer-events-auto' 
+          isCartOpen
+            ? 'bg-slate-950/40 backdrop-blur-[4px] pointer-events-auto'
             : 'bg-slate-950/0 backdrop-blur-none pointer-events-none'
         }`}
         onClick={() => setIsCartOpen(false)}
       />
 
       {/* Sliding Drawer Container */}
-      <div 
+      <div
         className={`fixed right-0 top-0 bottom-0 z-50 w-full max-w-md bg-white border-l border-slate-100 shadow-2xl flex flex-col h-full transition-transform duration-300 ease-out transform ${
           isCartOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
@@ -82,16 +84,16 @@ export const CartDrawer: React.FC = () => {
           <div className="flex items-center space-x-2.5">
             <ShoppingBag className="w-5 h-5 text-accent-blue" />
             <h3 className="font-display font-extrabold text-slate-900 text-lg">
-              {t('cart_title')}
+              {localize(t('cart_title'))}
             </h3>
             <span className="text-[11px] font-bold text-accent-blue bg-accent-blue/10 px-2 py-0.5 rounded-full">
-              {cartItems.length} {cartItems.length === 1 ? 'item' : (language === 'es' ? 'artículos' : 'itens')}
+              {cartItems.length} {localize(cartItems.length === 1 ? 'item' : (language === 'es' ? 'artículos' : 'itens'))}
             </span>
           </div>
-          <button 
+          <button
             onClick={() => setIsCartOpen(false)}
             className="p-2 rounded-xl text-slate-400 hover:text-slate-650 hover:bg-slate-100 transition-colors cursor-pointer"
-            aria-label="Fechar carrinho"
+            aria-label={localize("Fechar carrinho")}
           >
             <X className="w-5 h-5" />
           </button>
@@ -105,28 +107,27 @@ export const CartDrawer: React.FC = () => {
                 <ShoppingBag className="w-8 h-8 text-slate-400" />
               </div>
               <div className="space-y-1.5 max-w-[260px]">
-                <h4 className="font-display font-bold text-slate-800 text-base">{t('cart_empty')}</h4>
-                <p className="text-slate-400 text-xs">Adicione softwares profissionais ao seu carrinho para aproveitar licenças vitalícias e descontos especiais.</p>
+                <h4 className="font-display font-bold text-slate-800 text-base">{localize(t('cart_empty'))}</h4>
+                <p className="text-slate-400 text-xs">{localize("Adicione softwares profissionais ao seu carrinho para aproveitar licenças vitalícias e descontos especiais.")}</p>
               </div>
               <button
                 onClick={handleGoToCatalog}
                 className="px-6 py-3 bg-accent-blue hover:bg-accent-blue-dark text-white font-bold rounded-2xl text-xs transition-all shadow-md cursor-pointer border-none"
               >
-                Explorar Softwares
-              </button>
+                {localize("Explorar Softwares")}</button>
             </div>
           ) : (
             <div className="space-y-3.5">
               {cartItems.map((item) => (
-                <div 
+                <div
                   key={item.id}
                   className="p-3.5 bg-slate-50/50 hover:bg-slate-50 border border-slate-100 rounded-2xl transition-all"
                 >
                   <div className="flex items-center space-x-3.5">
                     {/* Product Image */}
                     <div className="w-14 h-14 bg-white border border-slate-100 rounded-xl p-1 overflow-hidden shrink-0 flex items-center justify-center">
-                      <img 
-                        src={item.selectedLicenseOption?.imageUrl || item.imageUrl} 
+                      <img
+                        src={item.selectedLicenseOption?.imageUrl || item.imageUrl}
                         alt={item.name}
                         className="max-w-full max-h-full object-contain"
                       />
@@ -135,23 +136,23 @@ export const CartDrawer: React.FC = () => {
                     {/* Product Info */}
                     <div className="flex-grow min-w-0">
                       <h4 className="font-display font-bold text-slate-800 text-sm truncate leading-tight">
-                        {item.name} {item.selectedLicenseOption ? `(${item.selectedLicenseOption.label})` : ''}
+                        {localize(item.name)} {localize(item.selectedLicenseOption ? `(${item.selectedLicenseOption.label})` : '')}
                       </h4>
                       <span className="text-[10px] text-slate-450 text-slate-400 block">
-                        {item.isSubscription 
-                          ? (item.selectedLicenseOption 
-                              ? `Assinatura ${item.selectedLicenseOption.label}` 
+                        {localize(item.isSubscription
+                          ? (item.selectedLicenseOption
+                              ? `Assinatura ${item.selectedLicenseOption.label}`
                               : (item.selectedSubOption === 'avulso' ? 'Pagamento Único' : 'Assinatura Mensal'))
-                          : 'Licença vitalícia'} • {item.selectedLicenseOption?.platform || item.compatibility} • {(item.deviceCount || 1) === 1 ? '1 Dispositivo' : `${item.deviceCount} Dispositivos`}
+                          : 'Licença vitalícia')} • {localize(item.selectedLicenseOption?.platform || item.compatibility)} • {localize((item.deviceCount || 1) === 1 ? '1 Dispositivo' : `${item.deviceCount} Dispositivos`)}
                       </span>
                       <div className="font-display font-black text-slate-900 text-sm mt-1">
-                        {item.selectedLicenseOption
+                        {localize(item.selectedLicenseOption
                           ? (formatPrice(item.selectedLicenseOption.price * (item.deviceCount || 1)) + (item.selectedLicenseOption.label.includes('Mensal') ? ' /mês' : ''))
-                          : (item.isSubscription 
-                            ? (item.selectedSubOption === 'avulso' 
+                          : (item.isSubscription
+                            ? (item.selectedSubOption === 'avulso'
                               ? formatPrice(item.price * (item.deviceCount || 1))
                               : formatPrice((item.recurrencePrice || item.price) * (item.deviceCount || 1)) + ' /mês')
-                            : formatPrice(item.price * (item.deviceCount || 1)))}
+                            : formatPrice(item.price * (item.deviceCount || 1))))}
                       </div>
                     </div>
 
@@ -159,7 +160,7 @@ export const CartDrawer: React.FC = () => {
                     <button
                       onClick={() => removeFromCart(item.id)}
                       className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all shrink-0 cursor-pointer"
-                      title="Remover produto"
+                      title={localize("Remover produto")}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -173,7 +174,7 @@ export const CartDrawer: React.FC = () => {
                         rel="noopener noreferrer"
                         className="w-full py-2 px-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 shadow-xs hover:no-underline"
                       >
-                        <span>{t('cart_pay_now')}</span>
+                        <span>{localize(t('cart_pay_now'))}</span>
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     </div>
@@ -192,13 +193,11 @@ export const CartDrawer: React.FC = () => {
               <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 text-[11px] text-amber-800 leading-relaxed flex items-start gap-2.5">
                 <AlertCircle className="w-5 h-5 text-amber-550 shrink-0 mt-0.5" />
                 <div className="space-y-1">
-                  <p className="font-bold text-amber-900">Carrinho Misto Detectado</p>
+                  <p className="font-bold text-amber-900">{localize("Carrinho Misto Detectado")}</p>
                   <p>
-                    Por motivos de cobrança recorrente no cartão, você não pode misturar assinaturas e licenças vitalícias no mesmo pedido.
-                  </p>
+                    {localize("Por motivos de cobrança recorrente no cartão, você não pode misturar assinaturas e licenças vitalícias no mesmo pedido.")}</p>
                   <p className="font-semibold text-amber-950">
-                    Remova um dos tipos para continuar.
-                  </p>
+                    {localize("Remova um dos tipos para continuar.")}</p>
                 </div>
               </div>
             )}
@@ -221,12 +220,11 @@ export const CartDrawer: React.FC = () => {
                     type="submit"
                     className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition-all cursor-pointer border-none shrink-0"
                   >
-                    Aplicar
-                  </button>
+                    {localize("Aplicar")}</button>
                 </form>
                 {couponFeedback && (
                   <p className={`text-[10px] font-semibold ${couponFeedback.success ? 'text-emerald-600' : 'text-red-500'}`}>
-                    {couponFeedback.message}
+                    {localize(couponFeedback.message)}
                   </p>
                 )}
               </div>
@@ -234,14 +232,13 @@ export const CartDrawer: React.FC = () => {
               <div className="flex items-center justify-between p-2.5 bg-emerald-50 rounded-xl border border-emerald-100 text-xs">
                 <div className="flex items-center space-x-2 text-emerald-800 font-semibold">
                   <Ticket className="w-4 h-4" />
-                  <span>Cupom {couponCode} Ativo</span>
+                  <span>{localize("Cupom ")}{localize(couponCode)} {localize(" Ativo")}</span>
                 </div>
                 <button
                   onClick={handleRemoveCoupon}
                   className="text-red-500 hover:text-red-750 font-bold transition-colors cursor-pointer bg-transparent border-none text-[11px]"
                 >
-                  Remover
-                </button>
+                  {localize("Remover")}</button>
               </div>
             )}
 
@@ -250,33 +247,32 @@ export const CartDrawer: React.FC = () => {
               <div className="p-3 bg-amber-50 rounded-xl border border-amber-105 text-[11px] text-amber-800 leading-relaxed flex items-start space-x-1.5">
                 <AlertCircle className="w-4 h-4 text-amber-550 shrink-0 mt-0.5" />
                 <p>
-                  O cupom <strong>OFF10</strong> só concede 10% de desconto a partir de <strong>2 softwares</strong> no carrinho. Adicione mais um item para ativá-lo!
-                </p>
+                  {localize("O cupom ")}<strong>OFF10</strong> {localize(" só concede 10% de desconto a partir de ")}<strong>{localize("2 softwares")}</strong> {localize(" no carrinho. Adicione mais um item para ativá-lo!")}</p>
               </div>
             )}
 
             {/* Price list breakdown */}
             <div className="space-y-2.5 text-xs text-slate-500">
               <div className="flex justify-between">
-                <span>{t('cart_subtotal')}</span>
+                <span>{localize(t('cart_subtotal'))}</span>
                 <span className="font-semibold text-slate-800">
-                  {formatPrice(subtotal)}
+                  {localize(formatPrice(subtotal))}
                 </span>
               </div>
 
               {discountPercentage > 0 && (
                 <div className="flex justify-between text-emerald-600 font-semibold">
-                  <span>Desconto (10% OFF10)</span>
+                  <span>{localize("Desconto (10% OFF10)")}</span>
                   <span>
-                    -{formatPrice(discountAmount)}
+                    -{localize(formatPrice(discountAmount))}
                   </span>
                 </div>
               )}
 
               <div className="flex justify-between items-center text-sm pt-2.5 border-t border-slate-200/60 text-slate-900 font-bold">
-                <span className="font-display">{t('cart_total')}</span>
+                <span className="font-display">{localize(t('cart_total'))}</span>
                 <span className="font-display font-extrabold text-lg text-slate-950">
-                  {formatPrice(total)}
+                  {localize(formatPrice(total))}
                 </span>
               </div>
             </div>
@@ -290,7 +286,7 @@ export const CartDrawer: React.FC = () => {
                   rel="noopener noreferrer"
                   className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2 cursor-pointer border-none text-center hover:no-underline"
                 >
-                  <span>{t('cart_checkout')} (Cakto Internacional)</span>
+                  <span>{localize(t('cart_checkout'))} {localize(" (Cakto Internacional)")}</span>
                   <ExternalLink className="w-4 h-4 ml-1.5" />
                 </a>
               ) : (
@@ -299,13 +295,13 @@ export const CartDrawer: React.FC = () => {
                   disabled={isMixedCart}
                   className="w-full py-4 bg-accent-blue hover:bg-accent-blue-dark text-white font-bold rounded-2xl text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2 cursor-pointer border-none disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span>{t('cart_checkout')}</span>
+                  <span>{localize(t('cart_checkout'))}</span>
                 </button>
               )}
-              
+
               <div className="flex items-center justify-center space-x-2 text-[10px] text-slate-400">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Garantia de Checkout 100% Criptografado</span>
+                <span>{localize("Garantia de Checkout 100% Criptografado")}</span>
               </div>
             </div>
           </div>
@@ -314,10 +310,10 @@ export const CartDrawer: React.FC = () => {
 
       {/* Render Checkout Modal if isCheckoutOpen is true */}
       {isCheckoutOpen && (
-        <CheckoutModal 
-          isOpen={isCheckoutOpen} 
-          onClose={() => setIsCheckoutOpen(false)} 
-        />
+        <Suspense fallback={null}>{isCheckoutOpen && <CheckoutModal
+          isOpen={isCheckoutOpen}
+          onClose={() => setIsCheckoutOpen(false)}
+        />}</Suspense>
       )}
     </>
   );

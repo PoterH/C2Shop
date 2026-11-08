@@ -1,3 +1,4 @@
+import { useText } from '../hooks/useText';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Send, Info, Star, ShoppingCart } from 'lucide-react';
@@ -14,6 +15,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const localize = useText();
   const { addToCart } = useCart();
   const { language, isInternational, t } = useLanguage();
   const { formatPrice } = useCurrency();
@@ -69,8 +71,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <div className="relative group bg-white rounded-3xl border border-slate-100 hover:border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full">
       {product.isRecommended && (
         <div className="absolute -top-3 left-4 z-20 bg-red-600 text-white text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg shadow-[0_4px_12px_rgba(220,38,38,0.4)] flex items-center gap-1 border border-red-500">
-          <Star className="w-3.5 h-3.5 fill-current" /> RECOMENDADO
-        </div>
+          <Star className="w-3.5 h-3.5 fill-current" /> {localize(" RECOMENDADO")}</div>
       )}
       <Link to={`/produto/${product.slug}`} className="flex flex-col flex-1 hover:no-underline text-inherit">
         {/* Product Image / Visual Area */}
@@ -86,7 +87,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <>
               {/* Soft Decorative Gradient in Background */}
               <div className="absolute inset-0 bg-radial from-slate-100 to-slate-50 group-hover:scale-105 transition-transform duration-500"></div>
-              
+
               {/* Mockup software card representation */}
               <div className="relative w-28 h-32 bg-slate-900 text-white rounded-xl shadow-lg border border-slate-700/50 flex flex-col justify-between p-3.5 transform group-hover:-translate-y-1.5 transition-transform duration-300">
                 <div className="flex justify-between items-start">
@@ -94,24 +95,23 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     C2
                   </span>
                   <span className="bg-white/10 text-white/90 text-[8px] font-bold px-1.5 py-0.5 rounded uppercase">
-                    {product.compatibility}
+                    {localize(product.compatibility)}
                   </span>
                 </div>
-                
+
                 <div className="my-2 flex flex-col">
                   <span className="text-xs font-semibold leading-tight line-clamp-2 text-slate-200">
-                    {product.name}
+                    {localize(product.name)}
                   </span>
                   <span className="text-[9px] text-accent-blue font-medium mt-0.5">
-                    v{product.version.split(' ')[0]}
+                    v{localize(product.version.split(' ')[0])}
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between border-t border-white/10 pt-1.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
                   <span className="text-[7px] text-white/60 font-semibold tracking-wider uppercase">
-                    Vitalício
-                  </span>
+                    {localize("Vitalício")}</span>
                 </div>
               </div>
             </>
@@ -123,7 +123,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {product.unavailable && (
             <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-[1.5px] z-10 flex items-center justify-center">
               <span className="bg-rose-600 text-white text-xs font-black px-4 py-2.5 rounded-xl uppercase tracking-wider shadow-lg border border-rose-500/30">
-                {t('temporarily_unavailable')}
+                {localize(t('temporarily_unavailable'))}
               </span>
             </div>
           )}
@@ -134,14 +134,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {/* Category & OS */}
           <div className="flex items-center justify-between mb-1.5 sm:mb-2">
             <span className="text-[9px] sm:text-[11px] font-bold text-accent-blue uppercase tracking-wider truncate pr-1">
-              {translateCategory(product.category, language)}
+              {localize(translateCategory(product.category, language))}
             </span>
             {renderOSIcon()}
           </div>
 
           {/* Title */}
           <h3 className="font-display font-bold text-sm sm:text-lg leading-tight sm:leading-normal text-slate-900 group-hover:text-accent-blue transition-colors duration-200 mb-1">
-            {product.name}
+            {localize(product.name)}
           </h3>
 
           {/* Rating Summary */}
@@ -159,7 +159,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   />
                 ))}
               </div>
-              <span className="font-bold text-slate-700">{averageRating}</span>
+              <span className="font-bold text-slate-700">{localize(averageRating)}</span>
               <span className="text-slate-400">({productReviews.length})</span>
             </div>
           )}
@@ -167,7 +167,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {/* Version Badge for clarity */}
           <div className="mb-2 sm:mb-4">
             <span className="inline-block bg-slate-100 text-slate-600 text-[9px] sm:text-[11px] font-medium px-1.5 sm:px-2 py-0.5 rounded">
-              {product.version.length > 20 ? product.version.slice(0, 18) + '...' : product.version}
+              {localize(product.version.length > 20 ? product.version.slice(0, 18) + '...' : product.version)}
             </span>
           </div>
 
@@ -177,32 +177,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               {product.isSubscription ? (
                 <>
                   <span className="text-[9px] sm:text-[10px] text-slate-400 font-medium">
-                    {product.recurrencePrice ? `Único: ${formattedPrice}` : `De: ${formattedOriginalPrice}`}
+                    {localize(product.recurrencePrice ? `Único: ${formattedPrice}` : `De: ${formattedOriginalPrice}`)}
                   </span>
                   <span className="text-base sm:text-xl font-display font-extrabold text-slate-900 tracking-tight leading-none sm:leading-normal">
-                    Por: <span className="text-purple-600">{product.recurrencePrice ? formattedRecurrencePrice : formattedPrice}</span><span className="text-[10px] sm:text-xs text-slate-500 font-normal">/mês</span>
+                    {localize("Por: ")}<span className="text-purple-600">{product.recurrencePrice ? formattedRecurrencePrice : formattedPrice}</span><span className="text-[10px] sm:text-xs text-slate-500 font-normal">{localize("/mês")}</span>
                   </span>
                   <span className="text-[8px] sm:text-[9px] text-emerald-600 font-bold uppercase tracking-wider hidden sm:block">
-                    Desconto na assinatura
-                  </span>
+                    {localize("Desconto na assinatura")}</span>
                 </>
               ) : (
                 <>
                   <span className="text-[9px] sm:text-[10px] text-slate-400 line-through">
-                    {t('original_price')} {formattedOriginalPrice}
+                    {localize(t('original_price'))} {localize(formattedOriginalPrice)}
                   </span>
                   <span className="text-base sm:text-xl font-display font-extrabold text-slate-900 tracking-tight leading-none sm:leading-normal">
-                    {t('for_price')} <span className="text-accent-blue">{formattedPrice}</span>
+                    {localize(t('for_price'))} <span className="text-accent-blue">{localize(formattedPrice)}</span>
                   </span>
                   <span className="text-[8px] sm:text-[9px] text-emerald-600 font-semibold uppercase hidden sm:block">
-                    {language === 'en' ? 'No monthly fees' : language === 'es' ? 'Sin mensualidades' : 'Sem mensalidades'}
+                    {localize(language === 'en' ? 'No monthly fees' : language === 'es' ? 'Sin mensualidades' : 'Sem mensalidades')}
                   </span>
                 </>
               )}
             </div>
 
             <span className="text-[8px] sm:text-[10px] text-slate-400 bg-slate-50 border border-slate-100 rounded px-1.5 py-0.5 font-medium shrink-0 self-start sm:self-auto">
-              {isInternational ? (language === 'en' ? 'Card / Pay' : language === 'es' ? 'Tarjeta / Pay' : 'Cartões / Pay') : 'Pix / Cartão'}
+              {localize(isInternational ? (language === 'en' ? 'Card / Pay' : language === 'es' ? 'Tarjeta / Pay' : 'Cartões / Pay') : 'Pix / Cartão')}
             </span>
           </div>
 
@@ -211,30 +210,28 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             {product.unavailable ? (
               <span className="bg-rose-50 text-rose-700 text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center border border-rose-200 uppercase tracking-wider">
                 <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-rose-500 mr-1.5 animate-pulse"></span>
-                Indisponível
-              </span>
+                {localize("Indisponível")}</span>
             ) : product.isSubscription ? (
               <span className="bg-purple-50 text-purple-700 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center border border-purple-200">
                 <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-purple-500 mr-1.5 animate-pulse"></span>
-                {product.id === 'autodesk_all_apps' ? 'Produto original' : 'Plano mensal'}
+                {localize(product.id === 'autodesk_all_apps' ? 'Produto original' : 'Plano mensal')}
               </span>
             ) : (
               <>
                 {product.category === 'Chaves de Ativação' ? (
                   <span className="bg-amber-50 text-amber-700 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center border border-amber-200">
                     <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-amber-500 mr-1.5"></span>
-                    Chave original
-                  </span>
+                    {localize("Chave original")}</span>
                 ) : (
                   <span className="bg-emerald-50 text-emerald-700 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center border border-emerald-200">
                     <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
-                    {t('badge_lifetime')}
+                    {localize(t('badge_lifetime'))}
                   </span>
                 )}
                 {product.category !== 'Chaves de Ativação' && (
                   <span className="text-emerald-600 text-[9px] sm:text-[11px] font-semibold flex items-center mt-0.5">
                     <Send className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1 shrink-0" />
-                    <span className="truncate">{language === 'en' ? 'Instant delivery' : language === 'es' ? 'Entrega inmediata' : 'Entrega imediata'}</span>
+                    <span className="truncate">{localize(language === 'en' ? 'Instant delivery' : language === 'es' ? 'Entrega inmediata' : 'Entrega imediata')}</span>
                   </span>
                 )}
               </>
@@ -251,7 +248,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             className="flex items-center justify-center py-2.5 px-4 border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors duration-200 w-full"
           >
             <Info className="w-3.5 h-3.5 mr-1.5 text-slate-400" />
-            {language === 'en' ? 'View software details' : language === 'es' ? 'Ver detalles del software' : 'Ver detalhes do software'}
+            {localize(language === 'en' ? 'View software details' : language === 'es' ? 'Ver detalles del software' : 'Ver detalhes do software')}
           </Link>
         ) : (
           <button
@@ -268,12 +265,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             id={`add-to-cart-${product.id}`}
           >
             <ShoppingCart className="w-4 h-4 mr-1.5" />
-            {isInternational ? t('want_this') : 'Quero levar'}
+            {localize(isInternational ? t('want_this') : 'Quero levar')}
           </button>
         )}
       </div>
     </div>
   );
 };
-
-

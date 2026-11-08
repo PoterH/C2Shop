@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useText } from '../hooks/useText';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, MapPin, MessageCircle, CheckCircle2, Clock } from 'lucide-react';
 
 export const ContactPage: React.FC = () => {
+  const localize = useText();
   const [subject, setSubject] = useState('Atendimento ao Cliente / Dúvidas');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -13,16 +15,10 @@ export const ContactPage: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState('');
 
   const whatsappNumber = '5581997349300';
-  const whatsappMessage = encodeURIComponent(
-    'Olá, vim pela página de Contato da C2Tech e gostaria de atendimento.'
-  );
+  const whatsappMessage = encodeURIComponent(localize('Olá, vim pela página de Contato da C2Tech e gostaria de atendimento.'));
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
-  useEffect(() => {
-    document.title = 'Fale Conosco | Central de Atendimento C2Tech';
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !message.trim()) {
       setErrorMsg('Por favor, preencha seu e-mail e sua mensagem.');
@@ -73,23 +69,19 @@ export const ContactPage: React.FC = () => {
       {/* Top Breadcrumb */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 text-xs text-slate-500">
         <Link to="/" className="hover:text-slate-800 transition-colors">
-          Início
-        </Link>
+          {localize("Início")}</Link>
         <span className="mx-1.5 text-slate-300">/</span>
-        <span className="text-[#0b5ed7] font-semibold">Fale conosco</span>
+        <span className="text-[#0b5ed7] font-semibold">{localize("Fale conosco")}</span>
       </div>
 
       {/* Dark Navy Hero Banner */}
       <div className="bg-[#0f212e] text-white py-14 sm:py-16 px-4 text-center">
         <div className="max-w-3xl mx-auto space-y-3">
           <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-[#2196f3] tracking-tight">
-            Fale Conosco
-          </h1>
+            {localize("Fale Conosco")}</h1>
           <p className="text-slate-200 text-xs sm:text-sm leading-relaxed max-w-xl mx-auto">
-            Precisa de ajuda?
-            <br />
-            Estamos prontos para responder todas as suas dúvidas e auxiliar na sua instalação.
-          </p>
+            {localize("Precisa de ajuda?")}<br />
+            {localize("Estamos prontos para responder todas as suas dúvidas e auxiliar na sua instalação.")}</p>
         </div>
       </div>
 
@@ -106,10 +98,9 @@ export const ContactPage: React.FC = () => {
               WhatsApp
             </h2>
             <p className="text-xs text-slate-600">
-              Das 09:00 às 22:00 (Seg a Dom — Horário de Brasília)
-            </p>
+              {localize("Das 09:00 às 22:00 (Seg a Dom — Horário de Brasília)")}</p>
             <p className="text-[11px] text-slate-500 mt-0.5 mb-5">
-              Tempo médio de resposta menor que{' '}
+              {localize("Tempo médio de resposta menor que")}{localize(' ')}
               <span className="text-[#0b5ed7] font-bold underline">10 min</span>
             </p>
             <a
@@ -118,8 +109,7 @@ export const ContactPage: React.FC = () => {
               rel="noopener noreferrer"
               className="px-6 py-2.5 bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs rounded-lg border border-sky-300 shadow-2xs transition-all"
             >
-              Enviar mensagem
-            </a>
+              {localize("Enviar mensagem")}</a>
           </div>
 
           {/* Card 2: E-mail */}
@@ -128,21 +118,18 @@ export const ContactPage: React.FC = () => {
               <Mail className="w-6 h-6" />
             </div>
             <h2 className="font-display font-extrabold text-base text-slate-900 mb-1.5">
-              E-mail
-            </h2>
+              {localize("E-mail")}</h2>
             <p className="text-xs text-slate-600">
-              Das 09:00 às 22:00 (Seg a Dom — Horário de Brasília)
-            </p>
+              {localize("Das 09:00 às 22:00 (Seg a Dom — Horário de Brasília)")}</p>
             <p className="text-[11px] text-slate-500 mt-0.5 mb-5">
-              Tempo médio de resposta menor que{' '}
+              {localize("Tempo médio de resposta menor que")}{localize(' ')}
               <span className="text-[#0b5ed7] font-bold underline">30 min</span>
             </p>
             <a
               href="#formulario-contato"
               className="px-6 py-2.5 bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs rounded-lg border border-sky-300 shadow-2xs transition-all"
             >
-              Enviar um e-mail
-            </a>
+              {localize("Enviar um e-mail")}</a>
           </div>
         </div>
 
@@ -156,22 +143,21 @@ export const ContactPage: React.FC = () => {
           {/* Left Column: Store Information */}
           <div className="lg:col-span-5 rounded-lg overflow-hidden border border-slate-200 bg-[#f4f6f8]">
             <div className="bg-[#1b1b1b] text-white px-5 py-3 text-xs font-extrabold uppercase tracking-wider">
-              INFORMAÇÕES DA LOJA
-            </div>
+              {localize("INFORMAÇÕES DA LOJA")}</div>
             <div className="p-6 space-y-5 text-xs text-slate-700">
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-slate-800 shrink-0 mt-0.5" />
                 <div className="space-y-0.5 leading-relaxed">
                   <p className="font-bold text-slate-900">C2Tech Soluções Digitais</p>
-                  <p>Distribuição Digital de Softwares Profissionais</p>
-                  <p>Atendimento Nacional — Brasil</p>
+                  <p>{localize("Distribuição Digital de Softwares Profissionais")}</p>
+                  <p>{localize("Atendimento Nacional — Brasil")}</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3 border-t border-slate-200/80 pt-4">
                 <MessageCircle className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
-                  <p className="text-slate-500">WhatsApp de Suporte e Vendas:</p>
+                  <p className="text-slate-500">{localize("WhatsApp de Suporte e Vendas:")}</p>
                   <a
                     href={whatsappUrl}
                     target="_blank"
@@ -180,14 +166,14 @@ export const ContactPage: React.FC = () => {
                   >
                     +55 (81) 99734-9300
                   </a>
-                  <p className="text-[11px] text-slate-500">Atendimento rápido e suporte remoto</p>
+                  <p className="text-[11px] text-slate-500">{localize("Atendimento rápido e suporte remoto")}</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3 border-t border-slate-200/80 pt-4">
                 <Mail className="w-4 h-4 text-slate-800 shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
-                  <p className="text-slate-500">Envie-nos um e-mail:</p>
+                  <p className="text-slate-500">{localize("Envie-nos um e-mail:")}</p>
                   <a
                     href="mailto:c2tech2025@gmail.com"
                     className="font-bold text-slate-900 hover:text-[#0b5ed7] transition-colors"
@@ -200,8 +186,8 @@ export const ContactPage: React.FC = () => {
               <div className="flex items-start gap-3 border-t border-slate-200/80 pt-4">
                 <Clock className="w-4 h-4 text-slate-800 shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
-                  <p className="text-slate-500">Horário de Suporte Técnico:</p>
-                  <p className="font-bold text-slate-900">Segunda a Domingo, das 09:00 às 22:00</p>
+                  <p className="text-slate-500">{localize("Horário de Suporte Técnico:")}</p>
+                  <p className="font-bold text-slate-900">{localize("Segunda a Domingo, das 09:00 às 22:00")}</p>
                 </div>
               </div>
             </div>
@@ -215,36 +201,30 @@ export const ContactPage: React.FC = () => {
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <h3 className="font-display font-extrabold text-xl text-slate-900">
-                  Mensagem enviada com sucesso!
-                </h3>
+                  {localize("Mensagem enviada com sucesso!")}</h3>
                 <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
-                  Recebemos sua solicitação em <strong>c2tech2025@gmail.com</strong> e nossa equipe
-                  responderá o mais breve possível. Se preferir atendimento imediato, chame no nosso
-                  WhatsApp!
-                </p>
+                  {localize("Recebemos sua solicitação em ")}<strong>c2tech2025@gmail.com</strong> {localize(" e nossa equipe responderá o mais breve possível. Se preferir atendimento imediato, chame no nosso WhatsApp!")}</p>
                 <div className="pt-2 flex flex-wrap justify-center gap-3">
                   <button
                     type="button"
                     onClick={() => setSentSuccess(false)}
                     className="px-5 py-2.5 rounded-lg border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
                   >
-                    Enviar outra mensagem
-                  </button>
+                    {localize("Enviar outra mensagem")}</button>
                   <a
                     href={whatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-5 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-xs font-bold text-white"
                   >
-                    Chamar no WhatsApp agora
-                  </a>
+                    {localize("Chamar no WhatsApp agora")}</a>
                 </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 {errorMsg && (
                   <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-xs font-semibold text-rose-700">
-                    {errorMsg}
+                    {localize(errorMsg)}
                   </div>
                 )}
 
@@ -255,29 +235,26 @@ export const ContactPage: React.FC = () => {
                     className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-white border border-slate-300 rounded text-slate-700 focus:outline-none focus:border-[#0b5ed7]"
                   >
                     <option value="Atendimento ao Cliente / Dúvidas">
-                      Atendimento ao Cliente / Dúvidas
-                    </option>
+                      {localize("Atendimento ao Cliente / Dúvidas")}</option>
                     <option value="Suporte Técnico / Instalação">
-                      Suporte Técnico / Auxílio na Instalação
-                    </option>
+                      {localize("Suporte Técnico / Auxílio na Instalação")}</option>
                     <option value="Reenvio de Link de Download">
-                      Reenvio de Link de Download
-                    </option>
-                    <option value="Pagamentos e Pedidos">Pagamentos e Pedidos</option>
+                      {localize("Reenvio de Link de Download")}</option>
+                    <option value="Pagamentos e Pedidos">{localize("Pagamentos e Pedidos")}</option>
                   </select>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <input
                     type="text"
-                    placeholder="Seu nome"
+                    placeholder={localize("Seu nome")}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-white border border-slate-300 rounded text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#0b5ed7]"
                   />
                   <input
                     type="tel"
-                    placeholder="Seu WhatsApp (opcional)"
+                    placeholder={localize("Seu WhatsApp (opcional)")}
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-white border border-slate-300 rounded text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#0b5ed7]"
@@ -288,7 +265,7 @@ export const ContactPage: React.FC = () => {
                   <input
                     type="email"
                     required
-                    placeholder="seuemail@gmail.com"
+                    placeholder={localize('seuemail@gmail.com')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-white border border-slate-300 rounded text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#0b5ed7]"
@@ -299,7 +276,7 @@ export const ContactPage: React.FC = () => {
                   <textarea
                     rows={5}
                     required
-                    placeholder="Como podemos ajudar você?"
+                    placeholder={localize("Como podemos ajudar você?")}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-white border border-slate-300 rounded text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#0b5ed7] resize-y"
@@ -313,13 +290,13 @@ export const ContactPage: React.FC = () => {
                       <span className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center">
                         <CheckCircle2 className="w-3.5 h-3.5" />
                       </span>
-                      <span className="text-xs font-bold">Verificado!</span>
+                      <span className="text-xs font-bold">{localize("Verificado!")}</span>
                     </div>
                     <div className="text-right leading-none">
                       <span className="text-[9px] font-extrabold text-amber-400 block uppercase">
                         SSL SECURE
                       </span>
-                      <span className="text-[8px] text-slate-400">C2Tech Protegido</span>
+                      <span className="text-[8px] text-slate-400">{localize("C2Tech Protegido")}</span>
                     </div>
                   </div>
                 </div>
@@ -330,7 +307,7 @@ export const ContactPage: React.FC = () => {
                     disabled={isSending}
                     className="px-6 py-2.5 bg-[#1b1b1b] hover:bg-slate-800 text-white font-bold text-xs rounded transition-colors cursor-pointer disabled:opacity-60"
                   >
-                    {isSending ? 'Enviando...' : 'Enviar'}
+                    {localize(isSending ? 'Enviando...' : 'Enviar')}
                   </button>
                 </div>
               </form>

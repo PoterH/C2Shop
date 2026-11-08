@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useText } from '../hooks/useText';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   TrustpilotStars,
@@ -62,30 +63,25 @@ const TRUSTPILOT_REVIEWS = [
 ];
 
 export const AboutPage: React.FC = () => {
+  const localize = useText();
   const [trustpilotSlideIndex, setTrustpilotSlideIndex] = useState(0);
   const [isGuaranteesModalOpen, setIsGuaranteesModalOpen] = useState(false);
 
-  useEffect(() => {
-    document.title = 'Sobre Nós | C2Tech Softwares Profissionais';
-  }, []);
-
-  return (
+return (
     <div className="pt-28 pb-16 bg-white min-h-screen text-left">
       {/* Top Breadcrumb */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 text-xs text-slate-500">
         <Link to="/" className="hover:text-slate-800 transition-colors">
-          Início
-        </Link>
+          {localize("Início")}</Link>
         <span className="mx-1.5 text-slate-300">/</span>
-        <span className="text-[#0b5ed7] font-semibold">Sobre nós</span>
+        <span className="text-[#0b5ed7] font-semibold">{localize("Sobre nós")}</span>
       </div>
 
       {/* Dark Navy Hero Banner */}
       <div className="bg-[#0f212e] text-white py-12 sm:py-14 px-4">
         <div className="max-w-5xl mx-auto">
           <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-[#2196f3] tracking-tight">
-            Sobre Nós
-          </h1>
+            {localize("Sobre Nós")}</h1>
         </div>
       </div>
 
@@ -98,28 +94,28 @@ export const AboutPage: React.FC = () => {
             <div className="flex flex-col items-center md:items-end space-y-4 w-full max-w-[200px]">
               <div className="w-full bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-center shadow-2xs h-16 overflow-hidden">
                 <img
-                  src="/images/microsoft-partner.png"
+                  src="/images/microsoft-partner.webp"
                   alt="Microsoft Partner"
                   className="h-12 object-contain scale-125"
                 />
               </div>
               <div className="w-full bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-center shadow-2xs h-16 overflow-hidden">
                 <img
-                  src="/images/autodesk-reseller.png"
+                  src="/images/autodesk-reseller.webp"
                   alt="Autodesk Partner"
                   className="h-11 object-contain"
                 />
               </div>
               <div className="w-full bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-center shadow-2xs h-16 overflow-hidden">
                 <img
-                  src="/images/corel-partner.png"
+                  src="/images/corel-partner.webp"
                   alt="Corel Partner"
                   className="h-12 object-contain scale-125"
                 />
               </div>
               <div className="w-full bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-center shadow-2xs h-16 overflow-hidden">
                 <img
-                  src="/images/promob-reseller.png"
+                  src="/images/promob-reseller.webp"
                   alt="Promob Partner"
                   className="h-11 object-contain"
                 />
@@ -132,7 +128,7 @@ export const AboutPage: React.FC = () => {
                 <div className="w-full h-full rounded-full border border-dashed border-amber-950/40 flex flex-col items-center justify-center text-amber-950">
                   <Scale className="w-8 h-8 mb-0.5 stroke-[2]" />
                   <span className="text-[8px] font-black uppercase tracking-wider">C2TECH</span>
-                  <span className="text-[7px] font-bold uppercase">VERIFICADO</span>
+                  <span className="text-[7px] font-bold uppercase">{localize("VERIFICADO")}</span>
                 </div>
               </div>
             </div>
@@ -142,68 +138,48 @@ export const AboutPage: React.FC = () => {
           <div className="md:col-span-8 space-y-6 text-xs sm:text-sm text-slate-700 leading-relaxed">
             <div className="space-y-3">
               <h2 className="font-display font-extrabold text-lg sm:text-xl text-slate-900">
-                Softwares completos. Preços acessíveis. Confiança real.
-              </h2>
+                {localize("Softwares completos. Preços acessíveis. Confiança real.")}</h2>
               <p>
-                A <strong>C2Tech</strong> nasceu com uma missão clara: tornar{' '}
+                A <strong>C2Tech</strong> {localize(" nasceu com uma missão clara: tornar")}{localize(' ')}
                 <strong>
-                  softwares profissionais de engenharia, arquitetura, design e produtividade
-                  acessíveis para todos
-                </strong>
-                , sem mensalidades abusivas e sem surpresas desagradáveis.
-              </p>
+                  {localize("softwares profissionais de engenharia, arquitetura, design e produtividade acessíveis para todos")}</strong>
+                {localize(", sem mensalidades abusivas e sem surpresas desagradáveis.")}</p>
               <p>
-                Observamos um mercado onde estudantes, engenheiros, arquitetos, marceneiros e
-                designers muitas vezes precisam escolher entre pagar assinaturas anuais caríssimas
-                ou arriscar seus computadores em sites inseguros. Por isso criamos uma alternativa
-                sólida, baseada em valores claros:
-              </p>
+                {localize("Observamos um mercado onde estudantes, engenheiros, arquitetos, marceneiros e designers muitas vezes precisam escolher entre pagar assinaturas anuais caríssimas ou arriscar seus computadores em sites inseguros. Por isso criamos uma alternativa sólida, baseada em valores claros:")}</p>
               <ul className="list-disc pl-5 space-y-1.5 font-semibold text-slate-900">
-                <li>Softwares 100% completos, testados e livres de vírus</li>
-                <li>Funcionamento vitalício real (pagamento único, sem mensalidades)</li>
-                <li>Preços justos e acessíveis para a realidade brasileira</li>
-                <li>Suporte técnico humano, rápido e especializado via WhatsApp</li>
+                <li>{localize("Softwares 100% completos, testados e livres de vírus")}</li>
+                <li>{localize("Funcionamento vitalício real (pagamento único, sem mensalidades)")}</li>
+                <li>{localize("Preços justos e acessíveis para a realidade brasileira")}</li>
+                <li>{localize("Suporte técnico humano, rápido e especializado via WhatsApp")}</li>
               </ul>
-              <p>Esses princípios guiam cada decisão e cada atendimento que realizamos.</p>
+              <p>{localize("Esses princípios guiam cada decisão e cada atendimento que realizamos.")}</p>
             </div>
 
             <div className="space-y-2.5 pt-2">
               <h3 className="font-display font-extrabold text-base sm:text-lg text-slate-900">
-                A confiança do cliente em primeiro lugar
-              </h3>
+                {localize("A confiança do cliente em primeiro lugar")}</h3>
               <p>
-                Nossa credibilidade é comprovada por uma avaliação média de{' '}
-                <strong>4.8/5 estrelas</strong>, conquistada através da satisfação de milhares de
-                profissionais e escritórios atendidos em todo o Brasil.
-              </p>
+                {localize("Nossa credibilidade é comprovada por uma avaliação média de")}{localize(' ')}
+                <strong>{localize("4.8/5 estrelas")}</strong>{localize(", conquistada através da satisfação de milhares de profissionais e escritórios atendidos em todo o Brasil.")}</p>
               <p>
-                Com nosso catálogo especializado em soluções como{' '}
+                {localize("Com nosso catálogo especializado em soluções como")}{localize(' ')}
                 <strong>
                   AutoCAD, Revit, SketchUp Pro, CYPE, Eberick + Builder, Promob, CorelDRAW, Pacote
                   Adobe e Microsoft Office
                 </strong>
-                , garantimos conhecimento técnico profundo e suporte qualificado para entregar a
-                versão ideal para cada computador (Windows ou Mac).
-              </p>
+                {localize(", garantimos conhecimento técnico profundo e suporte qualificado para entregar a versão ideal para cada computador (Windows ou Mac).")}</p>
             </div>
 
             <div className="space-y-2.5 pt-2">
               <h3 className="font-display font-extrabold text-base sm:text-lg text-slate-900">
-                Por que nossos preços são tão competitivos?
-              </h3>
+                {localize("Por que nossos preços são tão competitivos?")}</h3>
               <p>
-                Conseguimos oferecer valores altamente acessíveis graças ao nosso modelo de
-                distribuição 100% digital e automatizado: você recebe diretamente no seu e-mail os
-                arquivos de instalação completos hospedados em nossos servidores de alta velocidade
-                no Google Drive, acompanhados de <strong>vídeo tutorial passo a passo</strong>{' '}
-                gravado pela nossa própria equipe técnica.
-              </p>
+                {localize("Conseguimos oferecer valores altamente acessíveis graças ao nosso modelo de distribuição 100% digital e automatizado: você recebe diretamente no seu e-mail os arquivos de instalação completos hospedados em nossos servidores de alta velocidade no Google Drive, acompanhados de ")}<strong>{localize("vídeo tutorial passo a passo")}</strong>{localize(' ')}
+                {localize("gravado pela nossa própria equipe técnica.")}</p>
               <p>
-                Sem custos de mídia física, frete ou intermediários comerciais, você adquire o
-                software completo com desempenho integral, pronto para trabalhar offline e com{' '}
+                {localize("Sem custos de mídia física, frete ou intermediários comerciais, você adquire o software completo com desempenho integral, pronto para trabalhar offline e com")}{localize(' ')}
                 <Link to="/entrega-e-pagamento" className="text-[#0b5ed7] font-bold hover:underline">
-                  garantia de 30 dias de suporte técnico assistido
-                </Link>
+                  {localize("garantia de 30 dias de suporte técnico assistido")}</Link>
                 .
               </p>
             </div>
@@ -215,8 +191,7 @@ export const AboutPage: React.FC = () => {
         {/* Section: Why choose C2Tech? (6 Cards Grid matching Screenshot 4) */}
         <div className="space-y-8">
           <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-slate-900 text-center">
-            Por que escolher a C2Tech?
-          </h2>
+            {localize("Por que escolher a C2Tech?")}</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Card 1 */}
@@ -225,14 +200,10 @@ export const AboutPage: React.FC = () => {
                 <Award className="w-6 h-6" />
               </div>
               <h3 className="font-display font-extrabold text-base text-slate-900 leading-snug">
-                Software Completo
-                <br />e Vitalício
-              </h3>
+                {localize("Software Completo")}<br />{localize("e Vitalício")}</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Nossos softwares são <strong>100% completos e vitalícios</strong>. Cada produto
-                acompanha <strong>download direto no Google Drive</strong> e tutorial em vídeo,
-                garantindo <strong>integridade, segurança</strong> e{' '}
-                <strong>instalação descomplicada</strong>.
+                {localize("Nossos softwares são ")}<strong>{localize("100% completos e vitalícios")}</strong>{localize(". Cada produto acompanha ")}<strong>{localize("download direto no Google Drive")}</strong> {localize(" e tutorial em vídeo, garantindo ")}<strong>{localize("integridade, segurança")}</strong> e{localize(' ')}
+                <strong>{localize("instalação descomplicada")}</strong>.
               </p>
             </div>
 
@@ -242,14 +213,11 @@ export const AboutPage: React.FC = () => {
                 <CreditCard className="w-6 h-6" />
               </div>
               <h3 className="font-display font-extrabold text-base text-slate-900 leading-snug">
-                Pagamentos
-                <br />
-                Seguros
-              </h3>
+                {localize("Pagamentos")}<br />
+                {localize("Seguros")}</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Todas as <strong>transações</strong> são protegidas por{' '}
-                <strong>criptografia SSL</strong> e processadas por plataformas líderes no Brasil
-                como <strong>Efí Bank (Pix)</strong> e <strong>Cakto (Cartões de Crédito)</strong>.
+                {localize("Todas as ")}<strong>{localize("transações")}</strong> {localize(" são protegidas por")}{localize(' ')}
+                <strong>{localize("criptografia SSL")}</strong> {localize(" e processadas por plataformas líderes no Brasil como ")}<strong>Efí Bank (Pix)</strong> e <strong>{localize("Cakto (Cartões de Crédito)")}</strong>.
               </p>
             </div>
 
@@ -259,15 +227,12 @@ export const AboutPage: React.FC = () => {
                 <Headphones className="w-6 h-6" />
               </div>
               <h3 className="font-display font-extrabold text-base text-slate-900 leading-snug">
-                Suporte Técnico
-                <br />
-                Gratuito
-              </h3>
+                {localize("Suporte Técnico")}<br />
+                {localize("Gratuito")}</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Nossa equipe de <strong>especialistas</strong> está disponível via{' '}
-                <strong>WhatsApp, e-mail ou acesso remoto</strong> durante 30 dias para apoiar você
-                em cada etapa — <strong>instalação, ativação</strong> ou{' '}
-                <strong>configuração</strong>.
+                {localize("Nossa equipe de ")}<strong>{localize("especialistas")}</strong> {localize(" está disponível via")}{localize(' ')}
+                <strong>{localize("WhatsApp, e-mail ou acesso remoto")}</strong> {localize(" durante 30 dias para apoiar você em cada etapa — ")}<strong>{localize("instalação, ativação")}</strong> {localize(" ou")}{localize(' ')}
+                <strong>{localize("configuração")}</strong>.
               </p>
             </div>
 
@@ -277,17 +242,13 @@ export const AboutPage: React.FC = () => {
                 <FileCheck className="w-6 h-6" />
               </div>
               <h3 className="font-display font-extrabold text-base text-slate-900 leading-snug">
-                Garantia de
-                <br />
-                30 Dias
-              </h3>
+                {localize("Garantia de")}<br />
+                {localize("30 Dias")}</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Você tem <strong>30 dias de garantia de suporte técnico</strong> para solicitar{' '}
-                <strong>auxílio remoto, substituição</strong> ou <strong>reembolso</strong> caso o
-                software não funcione no seu equipamento. Veja os detalhes em nossos{' '}
+                {localize("Você tem ")}<strong>{localize("30 dias de garantia de suporte técnico")}</strong> {localize(" para solicitar")}{localize(' ')}
+                <strong>{localize("auxílio remoto, substituição")}</strong> {localize(" ou ")}<strong>{localize("reembolso")}</strong> {localize(" caso o software não funcione no seu equipamento. Veja os detalhes em nossos")}{localize(' ')}
                 <Link to="/termos" className="text-[#0b5ed7] font-bold hover:underline">
-                  Termos e Garantia
-                </Link>
+                  {localize("Termos e Garantia")}</Link>
                 .
               </p>
             </div>
@@ -298,15 +259,10 @@ export const AboutPage: React.FC = () => {
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <h3 className="font-display font-extrabold text-base text-slate-900 leading-snug">
-                Proteção Total ao
-                <br />
-                Comprador
-              </h3>
+                {localize("Proteção Total ao")}<br />
+                {localize("Comprador")}</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Cada pedido conta com a <strong>Proteção ao Comprador C2Tech</strong>, assegurando a
-                entrega imediata dos arquivos verificados e disponibilidade do link caso você
-                precise reinstalar após formatar o PC.
-              </p>
+                {localize("Cada pedido conta com a ")}<strong>{localize("Proteção ao Comprador C2Tech")}</strong>{localize(", assegurando a entrega imediata dos arquivos verificados e disponibilidade do link caso você precise reinstalar após formatar o PC.")}</p>
             </div>
 
             {/* Card 6 */}
@@ -315,15 +271,12 @@ export const AboutPage: React.FC = () => {
                 <Mail className="w-6 h-6" />
               </div>
               <h3 className="font-display font-extrabold text-base text-slate-900 leading-snug">
-                Entrega Imediata
-                <br />
-                no E-mail
-              </h3>
+                {localize("Entrega Imediata")}<br />
+                {localize("no E-mail")}</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                O link de download é enviado <strong>automaticamente por e-mail 24h por dia</strong>
-                , poucos segundos após a confirmação do pagamento. Sempre incluímos{' '}
-                <strong>instruções passo a passo em vídeo</strong> para instalação rápida e fácil.
-              </p>
+                {localize("O link de download é enviado ")}<strong>{localize("automaticamente por e-mail 24h por dia")}</strong>
+                {localize(", poucos segundos após a confirmação do pagamento. Sempre incluímos")}{localize(' ')}
+                <strong>{localize("instruções passo a passo em vídeo")}</strong> {localize(" para instalação rápida e fácil.")}</p>
             </div>
           </div>
         </div>

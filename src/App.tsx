@@ -1,17 +1,18 @@
-import { useEffect, useRef } from 'react';
+import { PageMetadata } from './components/PageMetadata';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
-import { Home } from './pages/Home';
-import { Catalog } from './pages/Catalog';
-import { ProductDetail } from './pages/ProductDetail';
-import { DeliveryPaymentPage } from './pages/DeliveryPaymentPage';
-import { ContactPage } from './pages/ContactPage';
-import { AboutPage } from './pages/AboutPage';
-import { FAQPage } from './pages/FAQPage';
-import { TermsPage } from './pages/TermsPage';
-import { PrivacyPage } from './pages/PrivacyPage';
-import { ThankYouPage } from './pages/ThankYouPage';
+const Home = lazy(() => import('./pages/Home').then(module => ({ default: module.Home })));
+const Catalog = lazy(() => import('./pages/Catalog').then(module => ({ default: module.Catalog })));
+const ProductDetail = lazy(() => import('./pages/ProductDetail').then(module => ({ default: module.ProductDetail })));
+const DeliveryPaymentPage = lazy(() => import('./pages/DeliveryPaymentPage').then(module => ({ default: module.DeliveryPaymentPage })));
+const ContactPage = lazy(() => import('./pages/ContactPage').then(module => ({ default: module.ContactPage })));
+const AboutPage = lazy(() => import('./pages/AboutPage').then(module => ({ default: module.AboutPage })));
+const FAQPage = lazy(() => import('./pages/FAQPage').then(module => ({ default: module.FAQPage })));
+const TermsPage = lazy(() => import('./pages/TermsPage').then(module => ({ default: module.TermsPage })));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then(module => ({ default: module.PrivacyPage })));
+const ThankYouPage = lazy(() => import('./pages/ThankYouPage').then(module => ({ default: module.ThankYouPage })));
 
 import { CartProvider } from './context/CartContext';
 import { CurrencyProvider } from './context/CurrencyContext';
@@ -38,23 +39,20 @@ function ScrollToTop() {
 }
 
 function App() {
-  // Set default page title
-  useEffect(() => {
-    document.title = 'C2Tech | Softwares Profissionais com Acesso Vitalício';
-  }, []);
-
-  return (
+return (
     <CurrencyProvider>
       <LanguageProvider>
         <CartProvider>
         <BrowserRouter>
           <ScrollToTop />
+          <PageMetadata />
           <div className="flex flex-col min-h-screen bg-white text-slate-800 antialiased selection:bg-accent-blue/10 selection:text-accent-blue">
             {/* Sticky Header */}
             <Header />
-            
+
             {/* Main Content Area */}
             <main className="flex-grow">
+              <Suspense fallback={<div className="min-h-[60vh] pt-32 flex justify-center" role="status" aria-label="Loading"><span className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/catalogo" element={<Catalog />} />
@@ -68,12 +66,13 @@ function App() {
                 <Route path="/termos" element={<TermsPage />} />
                 <Route path="/privacidade" element={<PrivacyPage />} />
                 <Route path="/obrigado" element={<ThankYouPage />} />
-                
+
                 {/* Fallback route - redirect to home */}
                 <Route path="*" element={<Home />} />
               </Routes>
+              </Suspense>
             </main>
-            
+
             {/* Footer */}
             <Footer />
 

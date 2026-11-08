@@ -1,3 +1,4 @@
+import { useText } from '../hooks/useText';
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -349,7 +350,8 @@ function getMegaColumnTitle(title: string, lang: string): string {
   return title;
 }
 
-export const Header: React.FC = () => {
+const HeaderContent: React.FC = () => {
+  const localize = useText();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isDesktopSearchOpen, setIsDesktopSearchOpen] = useState(false);
@@ -370,9 +372,7 @@ export const Header: React.FC = () => {
   const { language, setLanguage, t } = useLanguage();
 
   const whatsappNumber = '5581997349300';
-  const whatsappMessage = encodeURIComponent(
-    'Olá, tenho interesse em um software da C2Tech e gostaria de tirar uma dúvida.'
-  );
+  const whatsappMessage = encodeURIComponent(localize('Olá, tenho interesse em um software da C2Tech e gostaria de tirar uma dúvida.'));
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
   const handleSearch = (e: React.FormEvent) => {
@@ -386,13 +386,9 @@ export const Header: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    setIsOpen(false);
-    setIsMobileSearchActive(false);
-    setActiveMegaId(null);
-    setIsCurrencyOpen(false);
-    setIsFlagOpen(false);
-  }, [location.pathname, location.search]);
+  useEffect(() => () => {
+    if (megaCloseTimeoutRef.current) window.clearTimeout(megaCloseTimeoutRef.current);
+  }, []);
 
   const handleMegaEnter = (id: string) => {
     if (megaCloseTimeoutRef.current) {
@@ -420,11 +416,11 @@ export const Header: React.FC = () => {
           {/* Left: Sobre nós | Fale conosco */}
           <div className="flex items-center gap-2.5 font-medium whitespace-nowrap shrink-0">
             <Link to="/sobre-nos" className="hover:text-white transition-colors">
-              {t('top_about_us')}
+              {localize(t('top_about_us'))}
             </Link>
             <span className="text-slate-600">|</span>
             <Link to="/contato" className="hover:text-white transition-colors">
-              {t('top_contact')}
+              {localize(t('top_contact'))}
             </Link>
           </div>
 
@@ -445,7 +441,7 @@ export const Header: React.FC = () => {
               className="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors"
             >
               <CloudDownload className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <span>{t('top_instant_delivery')}</span>
+              <span>{localize(t('top_instant_delivery'))}</span>
             </Link>
 
             <Link
@@ -453,7 +449,7 @@ export const Header: React.FC = () => {
               className="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors"
             >
               <Lock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <span>{t('top_secure_payment')}</span>
+              <span>{localize(t('top_secure_payment'))}</span>
             </Link>
           </div>
 
@@ -462,8 +458,8 @@ export const Header: React.FC = () => {
             {/* Currency Switcher */}
             <div
               className="relative"
-              onMouseEnter={() => setIsCurrencyOpen(true)}
-              onMouseLeave={() => setIsCurrencyOpen(false)}
+              onPointerEnter={(event) => { if (event.pointerType === 'mouse') setIsCurrencyOpen(true); }}
+              onPointerLeave={(event) => { if (event.pointerType === 'mouse') setIsCurrencyOpen(false); }}
             >
               <button
                 type="button"
@@ -471,20 +467,20 @@ export const Header: React.FC = () => {
                 className="flex items-center gap-1 text-slate-200 hover:text-white font-bold py-1 cursor-pointer whitespace-nowrap"
                 title={t('currency_switch_title')}
               >
-                <span>{currencyInfo.symbol}</span>
+                <span>{localize(currencyInfo.symbol)}</span>
                 <ChevronDown className="w-3 h-3 text-slate-400 shrink-0" />
               </button>
 
               <div
                 className={`absolute right-0 top-full pt-1 w-56 z-50 transition-all duration-200 origin-top-right ${
                   isCurrencyOpen
-                    ? 'opacity-100 translate-y-0 pointer-events-auto'
-                    : 'opacity-0 -translate-y-1 pointer-events-none'
+                    ? 'visible opacity-100 translate-y-0 pointer-events-auto'
+                    : 'invisible opacity-0 -translate-y-1 pointer-events-none'
                 }`}
               >
                 <div className="bg-white text-slate-800 rounded-xl shadow-xl border border-slate-200 py-1.5 overflow-hidden">
                   <div className="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 border-b border-slate-100">
-                    {t('real_time_conversion')}
+                    {localize(t('real_time_conversion'))}
                   </div>
                   {(Object.keys(CURRENCIES) as CurrencyCode[]).map((code) => {
                     const info = CURRENCIES[code];
@@ -502,9 +498,9 @@ export const Header: React.FC = () => {
                         }`}
                       >
                         <span>
-                          {info.country} ({info.code})
+                          {localize(info.country)} ({localize(info.code)})
                         </span>
-                        <span className="font-extrabold text-slate-900">{info.symbol}</span>
+                        <span className="font-extrabold text-slate-900">{localize(info.symbol)}</span>
                       </button>
                     );
                   })}
@@ -515,8 +511,8 @@ export const Header: React.FC = () => {
             {/* Flag / Region Switcher */}
             <div
               className="relative"
-              onMouseEnter={() => setIsFlagOpen(true)}
-              onMouseLeave={() => setIsFlagOpen(false)}
+              onPointerEnter={(event) => { if (event.pointerType === 'mouse') setIsFlagOpen(true); }}
+              onPointerLeave={(event) => { if (event.pointerType === 'mouse') setIsFlagOpen(false); }}
             >
               <button
                 type="button"
@@ -539,13 +535,13 @@ export const Header: React.FC = () => {
               <div
                 className={`absolute right-0 top-full pt-1 w-80 max-w-[calc(100vw-2rem)] z-50 transition-all duration-200 origin-top-right ${
                   isFlagOpen
-                    ? 'opacity-100 translate-y-0 pointer-events-auto'
-                    : 'opacity-0 -translate-y-1 pointer-events-none'
+                    ? 'visible opacity-100 translate-y-0 pointer-events-auto'
+                    : 'invisible opacity-0 -translate-y-1 pointer-events-none'
                 }`}
               >
                 <div className="bg-white text-slate-800 rounded-xl shadow-xl border border-slate-200 py-1.5 overflow-hidden">
                   <div className="px-3.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 border-b border-slate-100">
-                    {language === 'es' ? 'Idioma y Región' : 'Idioma e Região'}
+                    {localize(language === 'es' ? 'Idioma y Región' : 'Idioma e Região')}
                   </div>
 
                   {/* 1. Brasil */}
@@ -565,17 +561,16 @@ export const Header: React.FC = () => {
                         <p className="text-xs font-extrabold text-slate-900 leading-none">
                           Português (Brasil)
                         </p>
-                        <p className="text-[10px] text-slate-500 mt-0.5">Brasil • Moeda R$ (Pix e Cartão)</p>
+                        <p className="text-[10px] text-slate-500 mt-0.5">{localize("Brasil • Moeda R$ (Pix e Cartão)")}</p>
                       </div>
                     </div>
                     {language === 'pt-BR' && (
                       <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
-                        Ativo
-                      </span>
+                        {localize("Ativo")}</span>
                     )}
                   </button>
 
-                  
+
                   {/* 2. English (United States & Global) */}
                   <button
                     type="button"
@@ -604,7 +599,7 @@ export const Header: React.FC = () => {
                       </span>
                     ) : (
                       <span className="text-[10px] font-semibold text-sky-600 hover:underline shrink-0">
-                        {t('switch_badge')}
+                        {localize(t('switch_badge'))}
                       </span>
                     )}
                   </button>
@@ -633,11 +628,11 @@ export const Header: React.FC = () => {
                     </div>
                     {language === 'es' ? (
                       <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
-                        {t('active_badge')}
+                        {localize(t('active_badge'))}
                       </span>
                     ) : (
                       <span className="text-[10px] font-semibold text-sky-600 hover:underline shrink-0">
-                        {t('switch_badge')}
+                        {localize(t('switch_badge'))}
                       </span>
                     )}
                   </button>
@@ -666,11 +661,11 @@ export const Header: React.FC = () => {
                     </div>
                     {language === 'pt-PT' ? (
                       <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
-                        {t('active_badge')}
+                        {localize(t('active_badge'))}
                       </span>
                     ) : (
                       <span className="text-[10px] font-semibold text-sky-600 hover:underline shrink-0">
-                        {t('switch_badge')}
+                        {localize(t('switch_badge'))}
                       </span>
                     )}
                   </button>
@@ -706,28 +701,28 @@ export const Header: React.FC = () => {
                 onClick={() => setIsMobileSearchActive(false)}
                 className="ml-3 text-xs font-bold text-slate-600 hover:text-slate-900"
               >
-                {t('nav_search_cancel')}
+                {localize(t('nav_search_cancel'))}
               </button>
             </div>
           ) : (
             <>
               {/* Left: Brand Logo + Name (Proportioned & aligned like PrimeLicense) */}
               <Link to="/" className="flex items-center gap-2.5 group shrink-0 whitespace-nowrap">
-                <div className="relative shrink-0">
+                <div className="brand-logo relative shrink-0">
                   <img
-                    src="/images/logo.png"
+                    src="/images/logo.webp"
                     alt="Logo C2Tech"
                     className="w-9 h-9 rounded-xl object-cover shadow-2xs transition-transform duration-300 group-hover:scale-105 shrink-0"
                   />
                   {/* Chapeuzinho Natalino C2Tech: Perfeitamente vestido na ponta superior esquerda do ícone */}
-                  <SantaHat className="absolute -top-[8px] -left-[7px] w-[27px] h-auto pointer-events-none drop-shadow-md transition-transform duration-300 transform -rotate-[10deg] group-hover:-rotate-[14deg] group-hover:scale-105 z-10" />
+                  <SantaHat className="brand-hat" />
                 </div>
                 <div className="flex flex-col justify-center">
                   <span className="font-display font-black text-[21px] text-slate-900 tracking-tight leading-none">
                     C2Tech
                   </span>
                   <span className="text-[10.5px] font-medium text-slate-500 tracking-tight leading-none mt-1">
-                    {t('brand_subtitle')}
+                    {localize(t('brand_subtitle'))}
                   </span>
                 </div>
               </Link>
@@ -744,7 +739,7 @@ export const Header: React.FC = () => {
                   }`}
                 >
                   <HomeIcon className="w-3.5 h-3.5 text-slate-800 shrink-0" />
-                  <span>{t('nav_home')}</span>
+                  <span>{localize(t('nav_home'))}</span>
                 </Link>
 
                 {MEGA_MENU_CATEGORIES.map((cat) => {
@@ -764,7 +759,7 @@ export const Header: React.FC = () => {
                         }`}
                       >
                         {cat.icon}
-                        <span>{getMegaCategoryLabel(cat.id, cat.label, language)}</span>
+                        <span>{localize(getMegaCategoryLabel(cat.id, cat.label, language))}</span>
                         <ChevronDown
                           className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${
                             isCatOpen ? 'rotate-180 text-[#0b5ed7]' : 'text-slate-500'
@@ -796,7 +791,7 @@ export const Header: React.FC = () => {
                       <button
                         type="submit"
                         className="absolute right-2.5 text-slate-500 hover:text-slate-800 cursor-pointer"
-                        aria-label="Pesquisar"
+                        aria-label={localize("Pesquisar")}
                       >
                         <Search className="w-3.5 h-3.5" />
                       </button>
@@ -806,8 +801,8 @@ export const Header: React.FC = () => {
                       type="button"
                       onClick={() => setIsDesktopSearchOpen(true)}
                       className="p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
-                      aria-label="Pesquisar"
-                      title="Pesquisar softwares"
+                      aria-label={localize("Pesquisar")}
+                      title={localize("Pesquisar softwares")}
                     >
                       <Search className="w-4 h-4" />
                     </button>
@@ -819,7 +814,7 @@ export const Header: React.FC = () => {
                   type="button"
                   onClick={() => setIsMobileSearchActive(true)}
                   className="md:hidden p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"
-                  aria-label="Pesquisar"
+                  aria-label={localize("Pesquisar")}
                 >
                   <Search className="w-5 h-5" />
                 </button>
@@ -828,7 +823,7 @@ export const Header: React.FC = () => {
                 <Link
                   to="/contato"
                   className="hidden sm:block p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"
-                  title="Central de Atendimento e Suporte"
+                  title={localize("Central de Atendimento e Suporte")}
                 >
                   <User className="w-4 h-4" />
                 </Link>
@@ -838,7 +833,7 @@ export const Header: React.FC = () => {
                   type="button"
                   onClick={() => setIsCartOpen(true)}
                   className="flex items-center gap-1.5 px-2 py-1.5 text-slate-700 hover:text-slate-950 hover:bg-slate-100 rounded-full transition-colors cursor-pointer whitespace-nowrap shrink-0"
-                  aria-label="Carrinho de compras"
+                  aria-label={localize("Carrinho de compras")}
                 >
                   <ShoppingCart className="w-4 h-4 shrink-0" />
                   <span className="text-[13px] font-medium text-slate-600 whitespace-nowrap leading-none">
@@ -851,7 +846,7 @@ export const Header: React.FC = () => {
                   type="button"
                   onClick={() => setIsOpen(!isOpen)}
                   className="xl:hidden p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-                  aria-label="Menu principal"
+                  aria-label={localize("Menu principal")}
                 >
                   {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                 </button>
@@ -873,8 +868,8 @@ export const Header: React.FC = () => {
           onMouseLeave={handleMegaLeave}
           className={`hidden xl:block absolute left-0 right-0 top-full z-50 transition-all duration-250 ease-out origin-top ${
             activeCategoryData
-              ? 'opacity-100 translate-y-0 pointer-events-auto'
-              : 'opacity-0 -translate-y-2 pointer-events-none'
+              ? 'visible opacity-100 translate-y-0 pointer-events-auto'
+              : 'invisible opacity-0 -translate-y-2 pointer-events-none'
           }`}
         >
           <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-1 pb-4">
@@ -886,7 +881,7 @@ export const Header: React.FC = () => {
                     <div key={idx} className="flex flex-col justify-between space-y-4">
                       <div className="space-y-3">
                         <h4 className="font-display font-extrabold text-sm text-slate-900">
-                          {getMegaColumnTitle(col.title, language)}
+                          {localize(getMegaColumnTitle(col.title, language))}
                         </h4>
                         <ul className="space-y-2">
                           {col.items.map((item) => (
@@ -896,7 +891,7 @@ export const Header: React.FC = () => {
                                 onClick={() => setActiveMegaId(null)}
                                 className="text-xs text-slate-600 hover:text-[#0b5ed7] hover:translate-x-0.5 inline-block transition-all font-medium"
                               >
-                                {item.name}
+                                {localize(item.name)}
                               </Link>
                             </li>
                           ))}
@@ -909,7 +904,7 @@ export const Header: React.FC = () => {
                           onClick={() => setActiveMegaId(null)}
                           className="inline-flex items-center gap-0.5 text-xs font-bold text-[#0b5ed7] hover:underline"
                         >
-                          <span>{language === 'en' ? 'View all' : 'Ver todos'}</span>
+                          <span>{localize(language === 'en' ? 'View all' : 'Ver todos')}</span>
                           <ChevronRight className="w-3.5 h-3.5" />
                         </Link>
                       </div>
@@ -939,23 +934,23 @@ export const Header: React.FC = () => {
                             />
                           ) : (
                             <div className="w-20 h-28 bg-slate-900 text-white rounded-lg flex items-center justify-center font-bold text-xs p-2">
-                              {prod.name}
+                              {localize(prod.name)}
                             </div>
                           )}
                         </div>
 
                         {savings > 0 && (
                           <span className="inline-block bg-[#d1f4e0] text-[#0f763c] text-[11px] font-extrabold px-2.5 py-1 rounded-md mb-1.5">
-                            {t('save')} -{formatPrice(savings)}
+                            {localize(t('save'))} -{localize(formatPrice(savings))}
                           </span>
                         )}
 
                         <p className="text-xs font-bold text-slate-800 group-hover:text-[#0b5ed7] transition-colors line-clamp-2 leading-snug">
-                          {prod.name}
+                          {localize(prod.name)}
                         </p>
                         <span className="text-[11px] font-extrabold text-[#0b5ed7] mt-0.5">
-                          {language === 'en' ? 'Starting at ' : language === 'es' ? 'Desde ' : 'A partir de '}
-                          {formatPrice(prod.price)}
+                          {localize(language === 'en' ? 'Starting at ' : language === 'es' ? 'Desde ' : 'A partir de ')}
+                          {localize(formatPrice(prod.price))}
                         </span>
                       </Link>
                     );
@@ -972,7 +967,7 @@ export const Header: React.FC = () => {
       {/* ===================================================================== */}
       <div
         className={`fixed inset-0 top-[100px] z-30 xl:hidden bg-slate-900/30 backdrop-blur-xs transition-opacity duration-300 ${
-          isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          isOpen ? 'visible opacity-100 pointer-events-auto' : 'invisible opacity-0 pointer-events-none'
         }`}
         onClick={() => setIsOpen(false)}
       >
@@ -986,9 +981,9 @@ export const Header: React.FC = () => {
             {/* Drawer Top Header with Logo and Close Button */}
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <div className="relative shrink-0">
-                  <img src="/images/logo.png" alt="C2Tech" className="w-7 h-7 rounded-lg object-cover" />
-                  <SantaHat className="absolute -top-[7px] -left-[6px] w-[21px] h-auto pointer-events-none drop-shadow-md z-10 transform -rotate-[10deg]" />
+                <div className="brand-logo relative shrink-0">
+                  <img src="/images/logo.webp" alt="C2Tech" className="w-7 h-7 rounded-lg object-cover" />
+                  <SantaHat className="brand-hat" />
                 </div>
                 <span className="font-display font-black text-slate-900 text-lg">C2Tech</span>
               </div>
@@ -996,19 +991,18 @@ export const Header: React.FC = () => {
                 type="button"
                 onClick={() => setIsOpen(false)}
                 className="p-1.5 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 cursor-pointer"
-                aria-label="Fechar menu"
+                aria-label={localize("Fechar menu")}
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <Link to="/" className="py-2 text-base font-bold text-slate-900 border-b border-slate-100">{t('nav_home')}</Link>
-            <Link to="/catalogo" className="py-2 text-base font-bold text-[#0b5ed7] border-b border-slate-100">{t('nav_all')}</Link>
+            <Link to="/" className="py-2 text-base font-bold text-slate-900 border-b border-slate-100">{localize(t('nav_home'))}</Link>
+            <Link to="/catalogo" className="py-2 text-base font-bold text-[#0b5ed7] border-b border-slate-100">{localize(t('nav_all'))}</Link>
 
             <div className="pt-2 space-y-2">
               <p className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
-                Categorias
-              </p>
+                {localize("Categorias")}</p>
               {MEGA_MENU_CATEGORIES.map((cat) => (
                 <Link
                   key={cat.id}
@@ -1017,7 +1011,7 @@ export const Header: React.FC = () => {
                 >
                   <span className="flex items-center gap-2">
                     {cat.icon}
-                    {getMegaCategoryLabel(cat.id, cat.label, language)}
+                    {localize(getMegaCategoryLabel(cat.id, cat.label, language))}
                   </span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </Link>
@@ -1029,11 +1023,10 @@ export const Header: React.FC = () => {
                 to="/entrega-e-pagamento"
                 className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-slate-900"
               >
-                Entrega Imediata & Pagamentos
-              </Link>
-              <Link to="/sobre-nos" className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-slate-900">{t('top_about_us')}</Link>
-              <Link to="/contato" className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-slate-900">{t('top_contact')}</Link>
-              <Link to="/faq" className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-slate-900">{t('faq_title')}</Link>
+                {localize("Entrega Imediata & Pagamentos")}</Link>
+              <Link to="/sobre-nos" className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-slate-900">{localize(t('top_about_us'))}</Link>
+              <Link to="/contato" className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-slate-900">{localize(t('top_contact'))}</Link>
+              <Link to="/faq" className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-slate-900">{localize(t('faq_title'))}</Link>
             </div>
 
             <div className="pt-4">
@@ -1052,4 +1045,9 @@ export const Header: React.FC = () => {
       </div>
     </header>
   );
+};
+
+export const Header: React.FC = () => {
+  const location = useLocation();
+  return <HeaderContent key={location.pathname + location.search} />;
 };

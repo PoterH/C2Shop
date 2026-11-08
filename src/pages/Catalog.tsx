@@ -1,3 +1,4 @@
+import { useText } from '../hooks/useText';
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
@@ -9,11 +10,11 @@ import {
 } from '../components/TrustBadges';
 import { products } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
-import { 
-  ChevronDown, 
-  Check, 
-  Search, 
-  X 
+import {
+  ChevronDown,
+  Check,
+  Search,
+  X
 } from 'lucide-react';
 
 interface CategoryInfo {
@@ -65,7 +66,7 @@ const CATEGORY_INFO: Record<string, CategoryInfo> = {
   }
 };
 
-type SortOption = 
+type SortOption =
   | 'sales_desc'
   | 'relevance'
   | 'name_asc'
@@ -92,11 +93,10 @@ const SORT_OPTIONS: SortItem[] = [
 ];
 
 export const Catalog: React.FC = () => {
+  const localize = useText();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
-  const [selectedCategory, setSelectedCategory] = useState<string>(
-    searchParams.get('categoria') || 'Todos'
-  );
+  const searchTerm = searchParams.get('q') || '';
+  const selectedCategory = searchParams.get('categoria') || 'Todos';
   const [sortBy, setSortBy] = useState<SortOption>('sales_desc');
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
@@ -104,22 +104,6 @@ export const Catalog: React.FC = () => {
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { language, t } = useLanguage();
-
-  // Sync URL search & category to local state if URL changes (e.g., from header mega-menu)
-  useEffect(() => {
-    const q = searchParams.get('q');
-    if (q !== null) {
-      setSearchTerm(q);
-    } else {
-      setSearchTerm('');
-    }
-    const cat = searchParams.get('categoria');
-    if (cat !== null) {
-      setSelectedCategory(cat);
-    } else {
-      setSelectedCategory('Todos');
-    }
-  }, [searchParams]);
 
   // Click outside listener for the sort dropdown
   useEffect(() => {
@@ -143,7 +127,6 @@ export const Catalog: React.FC = () => {
 
   // Handle clearing search query
   const handleClearSearch = () => {
-    setSearchTerm('');
     const newParams = new URLSearchParams(searchParams);
     newParams.delete('q');
     setSearchParams(newParams, { replace: true });
@@ -158,6 +141,8 @@ export const Catalog: React.FC = () => {
 
   // Filtered and sorted products
   const sortedProducts = useMemo(() => {
+    const searchTerm = searchParams.get('q') || '';
+    const selectedCategory = searchParams.get('categoria') || 'Todos';
     const filtered = products.filter((product) => {
       // 1. Search term filter
       if (searchTerm.trim()) {
@@ -207,36 +192,35 @@ export const Catalog: React.FC = () => {
       default:
         return list;
     }
-  }, [searchTerm, selectedCategory, sortBy]);
+  }, [searchParams, sortBy]);
 
   const currentSortItem = SORT_OPTIONS.find((opt) => opt.id === sortBy) || SORT_OPTIONS[0];
 
   return (
     <div className="pt-28 pb-16 bg-slate-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Breadcrumb Navigation */}
         <nav className="flex items-center gap-1.5 text-xs text-slate-500 mb-3">
           <Link to="/" className="hover:text-blue-600 transition-colors">
-            {t('breadcrumb_home')}
+            {localize(t('breadcrumb_home'))}
           </Link>
           <span>/</span>
           <Link
             to="/catalogo"
             onClick={() => {
-              setSelectedCategory('Todos');
               const newParams = new URLSearchParams(searchParams);
               newParams.delete('categoria');
               setSearchParams(newParams, { replace: true });
             }}
             className="hover:text-blue-600 transition-colors"
           >
-            {t('nav_catalog')}
+            {localize(t('nav_catalog'))}
           </Link>
           {selectedCategory !== 'Todos' && (
             <>
               <span>/</span>
-              <span className="text-slate-900 font-semibold">{translateCategory(selectedCategory, language)}</span>
+              <span className="text-slate-900 font-semibold">{localize(translateCategory(selectedCategory, language))}</span>
             </>
           )}
         </nav>
@@ -252,14 +236,14 @@ export const Catalog: React.FC = () => {
         {/* Category Header: Blue Title + Rich Description */}
         <div className="text-left mb-6">
           <h1 className="font-display font-extrabold text-2xl sm:text-3xl md:text-4xl text-[#0066FF] tracking-tight">
-            {translateCategory(categoryInfo.title, language)}
+            {localize(translateCategory(categoryInfo.title, language))}
           </h1>
           <div className="mt-3 text-slate-600 text-sm sm:text-[15px] leading-relaxed max-w-4xl">
             <p>
-              {categoryInfo.shortDesc}
+              {localize(categoryInfo.shortDesc)}
               {isDescriptionExpanded && (
                 <span className="block mt-2 text-slate-600">
-                  {categoryInfo.fullDesc}
+                  {localize(categoryInfo.fullDesc)}
                 </span>
               )}
             </p>
@@ -268,7 +252,7 @@ export const Catalog: React.FC = () => {
               onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
               className="inline-flex items-center text-xs sm:text-sm font-semibold text-[#0066FF] hover:text-blue-700 hover:underline mt-2 transition-colors focus:outline-none"
             >
-              {isDescriptionExpanded ? (language === 'en' ? 'Read less' : language === 'es' ? 'Leer menos' : 'Ler menos') : (language === 'en' ? 'Read more...' : language === 'es' ? 'Leer más...' : 'Ler mais...')}
+              {localize(isDescriptionExpanded ? (language === 'en' ? 'Read less' : language === 'es' ? 'Leer menos' : 'Ler menos') : (language === 'en' ? 'Read more...' : language === 'es' ? 'Leer más...' : 'Ler mais...'))}
             </button>
           </div>
 
@@ -277,7 +261,7 @@ export const Catalog: React.FC = () => {
             <div className="mt-4 flex items-center justify-between bg-blue-50 border border-blue-200/70 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-blue-900 max-w-4xl">
               <div className="flex items-center gap-2">
                 <Search className="w-4 h-4 text-[#0066FF] shrink-0" />
-                <span>{language === 'en' ? 'Search results for:' : language === 'es' ? 'Resultados de la búsqueda por:' : 'Resultados da busca por:'} <strong>"{searchTerm}"</strong></span>
+                <span>{localize(language === 'en' ? 'Search results for:' : language === 'es' ? 'Resultados de la búsqueda por:' : 'Resultados da busca por:')} <strong>"{localize(searchTerm)}"</strong></span>
               </div>
               <button
                 type="button"
@@ -285,7 +269,7 @@ export const Catalog: React.FC = () => {
                 className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 hover:text-blue-900 bg-white border border-blue-200 px-2.5 py-1 rounded-lg transition-colors shadow-2xs"
               >
                 <X className="w-3.5 h-3.5" />
-                <span>{language === 'en' ? 'Clear search' : language === 'es' ? 'Limpiar búsqueda' : 'Limpar busca'}</span>
+                <span>{localize(language === 'en' ? 'Clear search' : language === 'es' ? 'Limpiar búsqueda' : 'Limpar busca')}</span>
               </button>
             </div>
           )}
@@ -294,14 +278,14 @@ export const Catalog: React.FC = () => {
         {/* Sub-bar: Products Count (Left) & Sort Dropdown (Right) */}
         <div className="border-y border-slate-200/80 py-3.5 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="text-xs sm:text-sm text-slate-500 font-medium">
-            {language === 'en' ? 'Showing' : language === 'es' ? 'Mostrando' : 'Exibindo'} <span className="font-bold text-slate-800">{sortedProducts.length}</span> {sortedProducts.length === 1 ? (language === 'en' ? 'product' : language === 'es' ? 'producto' : 'produto') : (language === 'en' ? 'products' : language === 'es' ? 'productos' : 'produtos')} {language === 'en' ? 'in category' : language === 'es' ? 'en la categoría' : 'na categoria'}
+            {localize(language === 'en' ? 'Showing' : language === 'es' ? 'Mostrando' : 'Exibindo')} <span className="font-bold text-slate-800">{sortedProducts.length}</span> {localize(sortedProducts.length === 1 ? (language === 'en' ? 'product' : language === 'es' ? 'producto' : 'produto') : (language === 'en' ? 'products' : language === 'es' ? 'productos' : 'produtos'))} {localize(language === 'en' ? 'in category' : language === 'es' ? 'en la categoría' : 'na categoria')}
           </div>
 
           <div className="flex items-center gap-2 relative self-start sm:self-auto" ref={dropdownRef}>
             <span className="text-xs sm:text-sm text-slate-500 font-medium whitespace-nowrap">
-              {language === 'es' ? 'Ordenar por:' : 'Ordenar por:'}
+              {localize(language === 'es' ? 'Ordenar por:' : 'Ordenar por:')}
             </span>
-            
+
             <button
               type="button"
               onClick={() => setIsSortOpen(!isSortOpen)}
@@ -309,13 +293,13 @@ export const Catalog: React.FC = () => {
               aria-haspopup="listbox"
               aria-expanded={isSortOpen}
             >
-              <span className="truncate">{currentSortItem.label}</span>
+              <span className="truncate">{localize(currentSortItem.label)}</span>
               <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ${isSortOpen ? 'rotate-180 text-[#0066FF]' : ''}`} />
             </button>
 
             {/* Dropdown Menu matching Screenshot 3 */}
             {isSortOpen && (
-              <div 
+              <div
                 className="absolute right-0 top-full mt-1.5 w-60 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 z-30"
                 role="listbox"
               >
@@ -337,7 +321,7 @@ export const Catalog: React.FC = () => {
                       role="option"
                       aria-selected={isSelected}
                     >
-                      <span>{option.label}</span>
+                      <span>{localize(option.label)}</span>
                       {isSelected && <Check className="w-4 h-4 text-[#0066FF] shrink-0" />}
                     </button>
                   );
@@ -360,25 +344,24 @@ export const Catalog: React.FC = () => {
               <Search className="w-8 h-8" />
             </div>
             <h3 className="font-display font-bold text-slate-900 text-base sm:text-lg">
-              {language === 'en' ? 'No matching software found' : language === 'es' ? 'No se encontró ningún software correspondiente' : 'Nenhum software correspondente encontrado'}
+              {localize(language === 'en' ? 'No matching software found' : language === 'es' ? 'No se encontró ningún software correspondiente' : 'Nenhum software correspondente encontrado')}
             </h3>
             <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
-              {searchTerm 
+              {localize(searchTerm
                 ? `Não encontramos resultados para "${searchTerm}". Tente buscar por outro termo ou explore outras categorias.`
-                : 'Não encontramos softwares para a seleção atual. Tente selecionar outra categoria ou fale com nosso suporte via WhatsApp.'}
+                : 'Não encontramos softwares para a seleção atual. Tente selecionar outra categoria ou fale com nosso suporte via WhatsApp.')}
             </p>
             <div className="pt-2">
               <button
                 type="button"
                 onClick={() => {
                   handleClearSearch();
-                  setSelectedCategory('Todos');
                   const newParams = new URLSearchParams();
                   setSearchParams(newParams, { replace: true });
                 }}
                 className="px-5 py-2.5 bg-[#0066FF] hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all"
               >
-                {language === 'en' ? 'View all software' : language === 'es' ? 'Ver todos los softwares' : 'Ver todos os softwares'}
+                {localize(language === 'en' ? 'View all software' : language === 'es' ? 'Ver todos los softwares' : 'Ver todos os softwares')}
               </button>
             </div>
           </div>

@@ -1,184 +1,58 @@
-import React, { useMemo } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
-/**
- * ============================================================================
- * 1. SANTA HAT (Gorro de Papai Noel de Foto Real para a Logo C2Tech)
- * ============================================================================
- * Gorro de Papai Noel fotorrealista em veludo vermelho macio com dobra natural,
- * borda de pelúcia branca e pompom fofo com transparência perfeita.
- */
-export const SantaHat: React.FC<{ className?: string }> = ({
-  className = 'w-8 h-auto',
-}) => {
-  return (
-    <img
-      src="/images/santa-hat.png"
-      alt="Gorro de Natal"
-      className={`shrink-0 pointer-events-none select-none drop-shadow-md ${className}`}
-      aria-hidden="true"
-    />
-  );
-};
+export const SantaHat = memo(function SantaHat({className = ''}: {className?: string}) {
+  return <svg viewBox="0 0 64 52" className={className} aria-hidden="true" focusable="false">
+    <path d="M14 34C10 19 23 5 39 7C26 8 19 16 10 19L8 14C22-5 45-4 50 23Z" fill="#c92940" />
+    <path d="M17 28C18 17 28 9 39 7C24 6 15 17 14 28Z" fill="#ef5866" />
+    <path d="M15 37Q31 26 49 24" fill="none" stroke="#fff7ed" strokeWidth="9" strokeLinecap="round" />
+    <circle cx="8" cy="18" r="6" fill="#fff7ed" />
+  </svg>;
+});
 
-/**
- * ============================================================================
- * 2. SNOW EFFECT (Efeito de Flocos de Neve Caindo no Hero)
- * ============================================================================
- * Flocos de neve elegantes, leves e de alto desempenho (60 FPS) que flutuam
- * continuamente sobre o fundo escuro do hero da página.
- */
-interface SnowflakeConfig {
-  id: number;
-  left: number; // 0% to 100%
-  size: number; // 2px to 8px
-  duration: number; // seconds
-  delay: number; // negative delay so snow is already mid-air
-  driftStart: number; // px
-  driftEnd: number; // px
-  opacity: number;
-  isCrystal: boolean;
+// The observer pauses the only continuous decoration when the hero is offscreen.
+export const SnowEffect = memo(function SnowEffect() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+  return <div ref={ref} className="holiday-snow" data-visible={visible} aria-hidden="true">
+    {Array.from({length: 12}, (_, i) => <i key={i} style={{left: `${5 + i * 8}%`, animationDelay: `${-i * 1.7}s`, animationDuration: `${12 + i % 5}s`}} />)}
+  </div>;
+});
+
+function HolidayCorner() {
+  return <svg viewBox="0 0 240 150" fill="none" focusable="false">
+    <path d="M10 15Q80 30 209 8" stroke="#416d59" strokeWidth="3" strokeLinecap="round" />
+    <path d="m28 19-17 15m29-13L22 44m34-21L39 46m34-22L58 48m34-24L82 46m29-24-6 20m26-22-2 18m24-22 3 17m18-20 9 15m-142-9L32 4m25 19L51 6m24 17L73 5m20 18L96 5m17 16 6-17m13 15 8-16m13 13 10-14" stroke="#315b48" strokeWidth="3" strokeLinecap="round" />
+    <path d="M72 25v49" stroke="#c9aa6d" strokeWidth="1" />
+    <rect x="66" y="71" width="12" height="8" rx="2" fill="#c9aa6d" />
+    <circle cx="72" cy="102" r="25" fill="#a92d42" />
+    <path d="M49 94q23 14 46 0m-46 16q23-14 46 0" stroke="#e3bf7b" strokeWidth="1.3" />
+    <path d="M58 85a21 21 0 0 0-7 16" stroke="#ed9ca3" strokeWidth="2" strokeLinecap="round" />
+    <circle cx="132" cy="20" r="3" fill="#ddbf85" /><circle cx="187" cy="12" r="3" fill="#ddbf85" />
+  </svg>;
 }
 
-export const SnowEffect: React.FC = () => {
-  const snowflakes = useMemo<SnowflakeConfig[]>(() => {
-    const flakes: SnowflakeConfig[] = [];
-    const count = 42;
-    
-    let seed = 12345;
-    const rnd = () => {
-      seed = (seed * 9301 + 49297) % 233280;
-      return seed / 233280;
-    };
+export const HolidayHeroDecor = memo(function HolidayHeroDecor() {
+  return <div className="holiday-hero-decor" aria-hidden="true">
+    <div className="holiday-corner holiday-corner-left"><HolidayCorner /></div>
+    <div className="holiday-corner holiday-corner-right"><HolidayCorner /></div>
+  </div>;
+});
 
-    for (let i = 0; i < count; i++) {
-      const isCrystal = i % 7 === 0;
-      const size = isCrystal ? 10 + rnd() * 6 : 2.5 + rnd() * 4.5;
-      const duration = 6 + rnd() * 7;
-      const delay = -(rnd() * duration);
-      const driftStart = -15 + rnd() * 30;
-      const driftEnd = driftStart + (-25 + rnd() * 50);
-      const opacity = 0.35 + rnd() * 0.55;
+export const ChristmasWreath = memo(function ChristmasWreath({className = 'w-24 h-24'}: {className?: string}) {
+  return <svg viewBox="0 0 100 100" className={className} aria-hidden="true" focusable="false">
+    <circle cx="50" cy="50" r="33" fill="none" stroke="#195d4c" strokeWidth="17" />
+    <circle cx="50" cy="50" r="35" fill="none" stroke="#43816a" strokeWidth="11" strokeDasharray="2 6" />
+    {[0,60,120,180,240,300].map(a=><g key={a} transform={`rotate(${a} 50 50)`}><circle cx="50" cy="17" r="4" fill="#e6c385" /><circle cx="42" cy="21" r="2" fill="#a72e41" /></g>)}
+    <path d="M50 18C21-4 20 35 50 22c30 13 29-26 0-4Z" fill="#c74251" />
+    <path d="m46 21-9 22 11-5 3 8 4-24Z" fill="#b43143" />
+  </svg>;
+});
 
-      flakes.push({
-        id: i,
-        left: (i / count) * 100 + (-2 + rnd() * 4),
-        size,
-        duration,
-        delay,
-        driftStart,
-        driftEnd,
-        opacity,
-        isCrystal,
-      });
-    }
-
-    return flakes;
-  }, []);
-
-  return (
-    <div
-      className="absolute inset-0 pointer-events-none select-none overflow-hidden z-10"
-      aria-hidden="true"
-    >
-      {snowflakes.map((flake) => (
-        <span
-          key={flake.id}
-          className="absolute top-0 animate-snowfall will-change-transform block"
-          style={
-            {
-              left: `${flake.left}%`,
-              '--snow-duration': `${flake.duration}s`,
-              '--snow-delay': `${flake.delay}s`,
-              '--snow-drift-start': `${flake.driftStart}px`,
-              '--snow-drift-end': `${flake.driftEnd}px`,
-              '--snow-opacity': flake.opacity,
-              '--snow-rot': `${flake.isCrystal ? 360 : 0}deg`,
-            } as React.CSSProperties
-          }
-        >
-          {flake.isCrystal ? (
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#ffffff"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              style={{
-                width: `${flake.size}px`,
-                height: `${flake.size}px`,
-                filter: 'drop-shadow(0 0 3px rgba(255, 255, 255, 0.75))',
-                opacity: flake.opacity,
-              }}
-            >
-              <line x1="12" y1="2" x2="12" y2="22" />
-              <line x1="3.34" y1="7" x2="20.66" y2="17" />
-              <line x1="3.34" y1="17" x2="20.66" y2="7" />
-              <polyline points="9 4 12 7 15 4" />
-              <polyline points="9 20 12 17 15 20" />
-              <polyline points="5 10 8 10 9 7" />
-              <polyline points="19 14 16 14 15 17" />
-              <polyline points="5 14 8 14 9 17" />
-              <polyline points="19 10 16 10 15 7" />
-            </svg>
-          ) : (
-            <span
-              className="block rounded-full bg-white"
-              style={{
-                width: `${flake.size}px`,
-                height: `${flake.size}px`,
-                boxShadow:
-                  flake.size > 4
-                    ? '0 0 6px 1px rgba(255, 255, 255, 0.8), 0 0 12px 2px rgba(0, 210, 255, 0.4)'
-                    : '0 0 4px rgba(255, 255, 255, 0.7)',
-                opacity: flake.opacity,
-              }}
-            />
-          )}
-        </span>
-      ))}
-    </div>
-  );
-};
-
-/**
- * ============================================================================
- * 3. CHRISTMAS WREATH (Guirlanda Natalina de Foto Real)
- * ============================================================================
- * Imagem fotográfica de alta resolução de uma guirlanda de Natal circular,
- * com ramos de pinheiro natural, laço de cetim vermelho brilhante, bolas
- * natalinas douradas e vermelhas, azevinhos e luzes quentes.
- */
-export const ChristmasWreath: React.FC<{ className?: string }> = ({
-  className = 'w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36',
-}) => {
-  return (
-    <img
-      src="/images/christmas-wreath.png"
-      alt="Guirlanda de Natal"
-      className={`object-contain pointer-events-none select-none drop-shadow-[0_8px_20px_rgba(0,0,0,0.65)] ${className}`}
-      aria-hidden="true"
-    />
-  );
-};
-
-/**
- * ============================================================================
- * 4. FOOTER GARLAND LINE (Guirlanda Natalina Sobre a Linha do Footer)
- * ============================================================================
- * Repousa exatamente centralizada sobre a linha superior divisória do footer,
- * apenas com a belíssima guirlanda de foto real e um suave brilho aconchegante,
- * sem linhas ou festões artificiais.
- */
-export const FooterGarlandLine: React.FC = () => {
-  return (
-    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none select-none flex items-center justify-center">
-      {/* Brilho quente suave e aconchegante atrás da guirlanda */}
-      <div className="absolute w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-r from-red-600/25 via-amber-400/30 to-emerald-500/25 blur-2xl pointer-events-none"></div>
-
-      {/* Guirlanda de Foto Real Central */}
-      <div className="relative z-10 transform hover:scale-105 transition-transform duration-300">
-        <ChristmasWreath className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32" />
-      </div>
-    </div>
-  );
-};
+export const FooterGarlandLine = memo(function FooterGarlandLine() {
+  return <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20 pointer-events-none" aria-hidden="true"><ChristmasWreath className="w-16 h-16" /></div>;
+});
