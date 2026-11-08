@@ -22,6 +22,7 @@ import { useCart } from '../context/CartContext';
 import { useCurrency, CURRENCIES, type CurrencyCode } from '../context/CurrencyContext';
 import { useLanguage } from '../context/LanguageContext';
 import { products } from '../data/products';
+import { catalogLink } from '../data/catalogNavigation';
 import { SantaHat } from './ChristmasDecorations';
 
 /* ============================================================================
@@ -156,11 +157,11 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
     id: 'microsoft-utilitarios',
     label: 'Microsoft',
     icon: <LayoutGrid className="w-4 h-4 text-slate-700 shrink-0" />,
-    categoryFilter: 'Escritório e Produtividade',
+    categoryFilter: 'Microsoft',
     columns: [
       {
         title: 'Microsoft Office & Windows',
-        seeAllLink: '/catalogo?categoria=Escrit%C3%B3rio+e+Produtividade',
+        seeAllLink: catalogLink('Microsoft Office & Windows'),
         items: [
           { name: 'Office 2024 Professional Plus (Win)', slug: 'office-2024-professional-plus' },
           { name: 'Office 2024 LTSC Professional (Mac)', slug: 'office-2024-professional-mac' },
@@ -170,7 +171,7 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       },
       {
         title: 'PDF, Virtualização & Dados',
-        seeAllLink: '/catalogo?categoria=Escrit%C3%B3rio+e+Produtividade',
+        seeAllLink: catalogLink('PDF, Virtualização & Dados'),
         items: [
           { name: 'Adobe Acrobat Pro DC 2026', slug: 'adobe-acrobat-pro-dc-2026' },
           { name: 'Parallels Desktop 27 (macOS)', slug: 'parallels-desktop-27' },
@@ -185,11 +186,11 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
     id: 'multimidia-design',
     label: 'Multimídia',
     icon: <Video className="w-4 h-4 text-slate-700 shrink-0" />,
-    categoryFilter: 'Design e Criatividade',
+    categoryFilter: 'Multimídia',
     columns: [
       {
         title: 'Design Gráfico & Vetor',
-        seeAllLink: '/catalogo?categoria=Design+e+Criatividade',
+        seeAllLink: catalogLink('Design Gráfico & Vetor'),
         items: [
           { name: 'CorelDRAW Graphics Suite (X7 a 2026)', slug: 'coreldraw-graphics-suite-2026' },
           { name: 'Adobe Photoshop 2026', slug: 'adobe-photoshop-2026' },
@@ -199,13 +200,13 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       },
       {
         title: 'Edição de Vídeo & Áudio',
-        seeAllLink: '/catalogo?categoria=Design+e+Criatividade',
+        seeAllLink: catalogLink('Edição de Vídeo & Áudio'),
         items: [
           { name: 'Adobe Premiere Pro 2026', slug: 'adobe-premiere-pro-2026' },
           { name: 'Adobe After Effects 2026', slug: 'adobe-after-effects-2026' },
           { name: 'Wondershare Filmora 15', slug: 'filmora-15' },
           { name: 'TechSmith Camtasia 2026', slug: 'camtasia-2026' },
-          { name: 'FL Studio Producer Edition 2025', slug: 'fl-studio-2025' },
+          { name: 'FL Studio Producer Edition 2025', slug: 'fl-studio-2025-producer-edition' },
         ],
       },
     ],
@@ -219,11 +220,11 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
     id: 'marcenaria-especializados',
     label: 'Marcenaria',
     icon: <Wrench className="w-4 h-4 text-slate-700 shrink-0" />,
-    categoryFilter: 'Marcenaria e Móveis Planejados',
+    categoryFilter: 'Marcenaria',
     columns: [
       {
         title: 'Marcenaria & Móveis Planejados',
-        seeAllLink: '/catalogo?categoria=Marcenaria+e+M%C3%B3veis+Planejados',
+        seeAllLink: catalogLink('Marcenaria & Móveis Planejados'),
         items: [
           { name: 'Promob Plus (2024 Enterprise e 2026 Pro)', slug: 'promob-plus-professional-2026' },
           { name: 'Vectric Aspire Pro 12.5 (CNC Router)', slug: 'vectric-aspire-pro-12-5' },
@@ -233,7 +234,7 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       },
       {
         title: 'Elétrica, Odonto & Engenharia',
-        seeAllLink: '/catalogo',
+        seeAllLink: catalogLink('Elétrica, Odonto & Engenharia'),
         items: [
           { name: 'Proteus 9 Professional Design Suite', slug: 'proteus-9-professional' },
           { name: 'ExoCAD DentalCAD 3.1 Rijeka', slug: 'exocad-dentalcad-31-rijeka' },
@@ -254,11 +255,11 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
     id: 'arquitetura-cad',
     label: 'Arquitetura - CAD 3D',
     icon: <Compass className="w-4 h-4 text-slate-700 shrink-0" />,
-    categoryFilter: 'Engenharia e Arquitetura',
+    categoryFilter: 'Arquitetura - CAD 3D',
     columns: [
       {
         title: 'Modelagem CAD & BIM',
-        seeAllLink: '/catalogo?categoria=Engenharia+e+Arquitetura',
+        seeAllLink: catalogLink('Modelagem CAD & BIM'),
         items: [
           { name: 'Autodesk AutoCAD (2019 a 2027)', slug: 'autocad-2027-windows' },
           { name: 'Autodesk Revit (2024 a 2027)', slug: 'revit-2027' },
@@ -270,9 +271,9 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
       },
       {
         title: 'Cálculo, Estruturas & Render',
-        seeAllLink: '/catalogo?categoria=Engenharia+e+Arquitetura',
+        seeAllLink: catalogLink('Cálculo, Estruturas & Render'),
         items: [
-          { name: 'AltoQi Eberick + Builder 2025', slug: 'eberick-builder-2025' },
+          { name: 'AltoQi Eberick + Builder (2024 a 2026)', slug: 'eberick-builder-2025' },
           { name: 'CYPE Completo (2025.d e 2026.a)', slug: 'cypecad-2026' },
           { name: 'SolidWorks 2026 Premium', slug: 'solidworks-2026' },
           { name: 'Tekla Structures 2026', slug: 'tekla-structures-2026' },
@@ -751,7 +752,7 @@ const HeaderContent: React.FC = () => {
                       className="relative shrink-0"
                     >
                       <Link
-                        to={`/catalogo?categoria=${encodeURIComponent(cat.categoryFilter)}`}
+                        to={catalogLink(cat.categoryFilter)}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-semibold whitespace-nowrap transition-all ${
                           isCatOpen
                             ? 'bg-white text-[#0b5ed7] shadow-2xs'
@@ -1004,9 +1005,9 @@ const HeaderContent: React.FC = () => {
               <p className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
                 {localize("Categorias")}</p>
               {MEGA_MENU_CATEGORIES.map((cat) => (
+                <div key={cat.id}>
                 <Link
-                  key={cat.id}
-                  to={`/catalogo?categoria=${encodeURIComponent(cat.categoryFilter)}`}
+                  to={catalogLink(cat.categoryFilter)}
                   className="flex items-center justify-between py-2 text-sm font-semibold text-slate-700 hover:text-[#0b5ed7] border-b border-slate-50"
                 >
                   <span className="flex items-center gap-2">
@@ -1015,6 +1016,8 @@ const HeaderContent: React.FC = () => {
                   </span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </Link>
+                {cat.columns.map(col => <Link key={col.title} to={col.seeAllLink} className="block py-2 pl-6 text-xs text-slate-600 hover:text-blue-600">{localize(getMegaColumnTitle(col.title, language))}</Link>)}
+                </div>
               ))}
             </div>
 

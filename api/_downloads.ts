@@ -55,6 +55,7 @@ export const DOWNLOAD_LINKS: Record<string, string> = {
   'eberick-builder-2024-plena': 'https://drive.google.com/drive/folders/1AOD3jP7Qkyk5eqx65uBEQMyCYdI1dfNn?usp=drive_link',
   'eberick-builder-2025': 'https://drive.google.com/open?id=10KvPsuZ4coEQ6RIirgdVnvr4wewhNrrS',
   'eberick-builder-2025-infinity': 'https://drive.google.com/open?id=10KvPsuZ4coEQ6RIirgdVnvr4wewhNrrS',
+  'eberick-builder-2026-infinity': 'https://drive.google.com/drive/folders/1Agg7qd7JFCAKsfFdgsoEUnGDMgDnZ_B0?usp=drive_link',
   'promob-plus-enterprise-2024': 'https://drive.google.com/open?id=1hUueGl_fSGuGTotnA0VXC_4cobtByGMO',
   'sketchup-pro-2026-macos': 'https://drive.google.com/open?id=1gd1UbFonFAHG3bemYyrxP4byrlHXZhQD',
   'sketchup-pro-2024-macos': 'https://drive.google.com/drive/folders/15_oYDzLdec_Mr-XycqvmYt1vsxGAy3xD?usp=drive_link',

@@ -61,6 +61,8 @@ export const CATEGORIES = [
   'Engenharia e Arquitetura',
   'Design e Criatividade',
   'Escritório e Produtividade',
+  'PDF, Virtualização & Dados',
+  'Chaves de Ativação',
   'Marcenaria e Móveis Planejados',
   'Projetos Elétricos e Eletrônicos',
   'Odontologia e CAD Dental'
@@ -578,9 +580,9 @@ export const products: Product[] = [
     name: 'AltoQi Eberick + Builder',
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows',
-    version: '2024.12 Plena, 2025.04 e 2026.05 Infinity',
-    description: 'Solução nacional integrada para cálculo estrutural e projetos de instalações BIM. Disponível nas versões Plena 2024.12, Infinity 2025.04 e a nova Infinity 2026.05.',
-    longDescription: 'O AltoQi Eberick + Builder é o combo definitivo de ferramentas para engenharia civil no Brasil. O Eberick realiza análise estrutural e detalhamento (Concreto Armado, Alvenaria Estrutural, Pré-moldados, Perfis metálicos e Concreto protendido). O Builder cuida das instalações prediais (Elétrico, Hidráulico, Sanitário, SPDA, Incêndio, Gás e Climatização). Escolha entre a versão Plena 2024.12, Infinity 2025.04 ou a nova Infinity 2026.05 com Construtor de Armadura incluso.',
+    version: '2024.12 Plena, 2025.04 e 2026.09 Infinity',
+    description: 'Solução nacional integrada para cálculo estrutural e projetos de instalações BIM. Disponível nas versões Plena 2024.12, Infinity 2025.04 e a nova Infinity 2026.09.',
+    longDescription: 'O AltoQi Eberick + Builder é o combo definitivo de ferramentas para engenharia civil no Brasil. O Eberick realiza análise estrutural e detalhamento (Concreto Armado, Alvenaria Estrutural, Pré-moldados, Perfis metálicos e Concreto protendido). O Builder cuida das instalações prediais (Elétrico, Hidráulico, Sanitário, SPDA, Incêndio, Gás e Climatização). Escolha entre a versão Plena 2024.12, Infinity 2025.04 ou a nova Infinity 2026.09 com Construtor de Armadura incluso.',
     price: 227.90,
     originalPrice: 449.00,
     checkoutUrl: 'https://pay.cakto.com.br/33tbjgj',
@@ -612,9 +614,9 @@ export const products: Product[] = [
       },
       {
         quantity: 2026,
-        label: 'Versão Infinity 2026.05',
-        price: 627.90,
-        originalPrice: 949.00,
+        label: 'Versão Infinity 2026.09',
+        price: 507.90,
+        originalPrice: 849.00,
         checkoutUrl: 'https://pay.cakto.com.br/8x4fckr',
         driveUrl: 'https://drive.google.com/drive/folders/1Agg7qd7JFCAKsfFdgsoEUnGDMgDnZ_B0?usp=drive_link',
         downloadSlug: 'eberick-builder-2026-infinity',
@@ -624,7 +626,7 @@ export const products: Product[] = [
     features: [
       'Eberick: Concreto, Alvenaria, Pré-moldados, Metálicos e Protendido',
       'Builder: Elétrico, Hidráulico, Sanitário, SPDA, Incêndio, Gás e Clima',
-      'Opção Plena 2024.12 ou Infinity 2025.04 com Construtor de armadura',
+      'Opções Plena 2024.12, Infinity 2025.04 ou Infinity 2026.09 com Construtor de armadura',
       'Acesso vitalício para uso ilimitado',
       'Instalação assistida inclusa',
       'Entrega automática no e-mail após o pagamento',
@@ -1687,7 +1689,7 @@ export const products: Product[] = [
     id: 'parallels_desktop_26',
     slug: 'parallels-desktop-27',
     name: 'Parallels Desktop',
-    category: 'Escritório e Produtividade',
+    category: 'PDF, Virtualização & Dados',
     compatibility: 'macOS',
     version: '26 Standard & 27 Business Edition',
     description: 'Execute Windows e outras aplicações de PC diretamente no seu Mac sem reiniciar.',
@@ -1775,7 +1777,7 @@ export const products: Product[] = [
     id: 'pdfelement_12',
     slug: 'pdfelement-12',
     name: 'Wondershare PDFelement Professional 12',
-    category: 'Escritório e Produtividade',
+    category: 'PDF, Virtualização & Dados',
     compatibility: 'Windows',
     version: '12.0.2',
     description: 'Editor de PDF completo e profissional para editar, converter, assinar e ler arquivos PDF.',
@@ -1804,7 +1806,7 @@ export const products: Product[] = [
     id: 'wondershare_recoverit_13',
     slug: 'wondershare-recoverit-13',
     name: 'Wondershare Recoverit 13',
-    category: 'Escritório e Produtividade',
+    category: 'PDF, Virtualização & Dados',
     compatibility: 'Windows',
     version: '13.0.0',
     description: 'Software profissional de recuperação de dados e restauração de arquivos excluídos.',
@@ -1981,7 +1983,7 @@ export const products: Product[] = [
     keywords: ['adobe', 'acrobat', 'pro', 'dc', 'pdf', 'editor', 'leitor', 'mac', '2024', '2025', '2026'],
     slug: 'adobe-acrobat-pro-dc-2026',
     name: 'Adobe Acrobat Pro DC',
-    category: 'Design e Criatividade',
+    category: 'PDF, Virtualização & Dados',
     compatibility: 'Windows e macOS',
     version: '2026 (Windows) | 2025 (macOS)',
     description: 'A solução completa em PDF. Crie, edite, converta e assine documentos com a ferramenta oficial da Adobe para Windows (2026) e Mac (2025).',
@@ -2150,6 +2152,9 @@ export function getProductBySlug(slug: string): Product | undefined {
   }
   if (slug === 'visus' || slug === 'altoqi-visus' || slug === 'visus-2026') {
     return products.find(p => p.slug === 'altoqi-visus-2026');
+  }
+  if (slug === 'eberick' || slug === 'eberick-builder' || slug === 'eberick-builder-2026' || slug === 'eberick-2026' || slug === 'eberick-2025') {
+    return products.find(p => p.slug === 'eberick-builder-2025');
   }
   if (slug === 'cypecad-2027' || slug === 'cype-2027') {
     return products.find(p => p.slug === 'cypecad-2026');

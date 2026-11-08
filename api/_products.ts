@@ -375,17 +375,17 @@ export const products: Product[] = [
     name: 'AltoQi Eberick + Builder',
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows',
-    version: '2024.12 Plena e 2025.04 Infinity',
-    description: 'Solução nacional integrada para cálculo estrutural e projetos de instalações BIM. Disponível nas versões Plena 2024.12 e Infinity 2025.04 com Construtor de Armadura.',
-    longDescription: 'O AltoQi Eberick + Builder é o combo definitivo de ferramentas para engenharia civil no Brasil. O Eberick realiza análise estrutural e detalhamento (Concreto Armado, Alvenaria Estrutural, Pré-moldados, Perfis metálicos e Concreto protendido). O Builder cuida das instalações prediais (Elétrico, Hidráulico, Sanitário, SPDA, Incêndio, Gás e Climatização). Escolha entre a versão Plena 2024.12 ou a versão Infinity 2025.04 com Construtor de Armadura incluso.',
+    version: '2024.12 Plena, 2025.04 e 2026.09 Infinity',
+    description: 'Solução nacional integrada para cálculo estrutural e projetos de instalações BIM. Disponível nas versões Plena 2024.12, Infinity 2025.04 e a nova Infinity 2026.09.',
+    longDescription: 'O AltoQi Eberick + Builder é o combo definitivo de ferramentas para engenharia civil no Brasil. O Eberick realiza análise estrutural e detalhamento (Concreto Armado, Alvenaria Estrutural, Pré-moldados, Perfis metálicos e Concreto protendido). O Builder cuida das instalações prediais (Elétrico, Hidráulico, Sanitário, SPDA, Incêndio, Gás e Climatização). Escolha entre a versão Plena 2024.12, Infinity 2025.04 ou a nova Infinity 2026.09 com Construtor de Armadura incluso.',
     price: 227.90,
     originalPrice: 449.00,
     checkoutUrl: 'https://pay.cakto.com.br/33tbjgj',
-    imageUrl: '/images/products/eberick-builder-2025.png',
+    imageUrl: '/images/products/eberick-builder-2026-infinity.webp',
     gallery: [
-      '/images/products/eberick-builder-2025.png',
-      '/images/products/eberick-builder-2024-plena.png',
-      '/images/products/eberick-builder-2025-infinity.png'
+      '/images/products/eberick-builder-2026-infinity.webp',
+      '/images/products/eberick-builder-2025-infinity.webp',
+      '/images/products/eberick-builder-2024-plena.webp'
     ],
     licenseOptions: [
       {
@@ -394,8 +394,9 @@ export const products: Product[] = [
         price: 227.90,
         originalPrice: 449.00,
         checkoutUrl: 'https://pay.cakto.com.br/33tbjgj',
+        driveUrl: 'https://drive.google.com/drive/folders/1AOD3jP7Qkyk5eqx65uBEQMyCYdI1dfNn?usp=drive_link',
         downloadSlug: 'eberick-builder-2024-plena',
-        imageUrl: '/images/products/eberick-builder-2024-plena.png'
+        imageUrl: '/images/products/eberick-builder-2024-plena.webp'
       },
       {
         quantity: 2025,
@@ -404,13 +405,23 @@ export const products: Product[] = [
         originalPrice: 549.00,
         checkoutUrl: 'https://pay.cakto.com.br/7jw8eyi_847943',
         downloadSlug: 'eberick-builder-2025',
-        imageUrl: '/images/products/eberick-builder-2025-infinity.png'
+        imageUrl: '/images/products/eberick-builder-2025-infinity.webp'
+      },
+      {
+        quantity: 2026,
+        label: 'Versão Infinity 2026.09',
+        price: 507.90,
+        originalPrice: 849.00,
+        checkoutUrl: 'https://pay.cakto.com.br/8x4fckr',
+        driveUrl: 'https://drive.google.com/drive/folders/1Agg7qd7JFCAKsfFdgsoEUnGDMgDnZ_B0?usp=drive_link',
+        downloadSlug: 'eberick-builder-2026-infinity',
+        imageUrl: '/images/products/eberick-builder-2026-infinity.webp'
       }
     ],
     features: [
       'Eberick: Concreto, Alvenaria, Pré-moldados, Metálicos e Protendido',
       'Builder: Elétrico, Hidráulico, Sanitário, SPDA, Incêndio, Gás e Clima',
-      'Opção Plena 2024.12 ou Infinity 2025.04 com Construtor de armadura',
+      'Opções Plena 2024.12, Infinity 2025.04 ou Infinity 2026.09 com Construtor de armadura',
       'Acesso vitalício para uso ilimitado',
       'Instalação assistida inclusa',
       'Entrega automática no e-mail após o pagamento',
@@ -1734,6 +1745,9 @@ export const products: Product[] = [
 ];
 
 export function getProductBySlug(slug: string): Product | undefined {
+  if (slug === 'eberick' || slug === 'eberick-builder' || slug === 'eberick-builder-2026' || slug === 'eberick-2026' || slug === 'eberick-2025') {
+    return products.find(p => p.slug === 'eberick-builder-2025');
+  }
   if (slug === 'autocad-2027-macos' || slug === 'autodesk-autocad' || slug === 'autocad') {
     return products.find(p => p.slug === 'autocad-2027-windows');
   }
