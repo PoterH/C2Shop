@@ -1,0 +1,797 @@
+{
+  "results": [
+    {
+      "locale": "pt-BR",
+      "width": 320,
+      "route": "/",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-BR",
+      "width": 320,
+      "route": "/catalogo",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-BR",
+      "width": 320,
+      "route": "/catalogo?q=not-a-product-12345",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-BR",
+      "width": 320,
+      "route": "/sobre-nos",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-BR",
+      "width": 320,
+      "route": "/contato",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-BR",
+      "width": 320,
+      "route": "/faq",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-BR",
+      "width": 320,
+      "route": "/entrega-e-pagamento",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-BR",
+      "width": 320,
+      "route": "/termos",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-BR",
+      "width": 320,
+      "route": "/privacidade",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-BR",
+      "width": 320,
+      "route": "/obrigado",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-BR",
+      "width": 320,
+      "route": "/produto/autocad-2027-windows",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-BR",
+      "width": 768,
+      "route": "/",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-BR",
+      "width": 768,
+      "route": "/catalogo",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-BR",
+      "width": 768,
+      "route": "/catalogo?q=not-a-product-12345",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-BR",
+      "width": 768,
+      "route": "/sobre-nos",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-BR",
+      "width": 768,
+      "route": "/contato",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-BR",
+      "width": 768,
+      "route": "/faq",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-BR",
+      "width": 768,
+      "route": "/entrega-e-pagamento",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-BR",
+      "width": 768,
+      "route": "/termos",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-BR",
+      "width": 768,
+      "route": "/privacidade",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-BR",
+      "width": 768,
+      "route": "/obrigado",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-BR",
+      "width": 768,
+      "route": "/produto/autocad-2027-windows",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-BR",
+      "width": 1440,
+      "route": "/",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-BR",
+      "width": 1440,
+      "route": "/catalogo",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-BR",
+      "width": 1440,
+      "route": "/catalogo?q=not-a-product-12345",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-BR",
+      "width": 1440,
+      "route": "/sobre-nos",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-BR",
+      "width": 1440,
+      "route": "/contato",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-BR",
+      "width": 1440,
+      "route": "/faq",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-BR",
+      "width": 1440,
+      "route": "/entrega-e-pagamento",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-BR",
+      "width": 1440,
+      "route": "/termos",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-BR",
+      "width": 1440,
+      "route": "/privacidade",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-BR",
+      "width": 1440,
+      "route": "/obrigado",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-BR",
+      "width": 1440,
+      "route": "/produto/autocad-2027-windows",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-PT",
+      "width": 320,
+      "route": "/",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-PT",
+      "width": 320,
+      "route": "/catalogo",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-PT",
+      "width": 320,
+      "route": "/catalogo?q=not-a-product-12345",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-PT",
+      "width": 320,
+      "route": "/sobre-nos",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-PT",
+      "width": 320,
+      "route": "/contato",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-PT",
+      "width": 320,
+      "route": "/faq",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-PT",
+      "width": 320,
+      "route": "/entrega-e-pagamento",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-PT",
+      "width": 320,
+      "route": "/termos",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-PT",
+      "width": 320,
+      "route": "/privacidade",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-PT",
+      "width": 320,
+      "route": "/obrigado",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-PT",
+      "width": 320,
+      "route": "/produto/autocad-2027-windows",
+      "widthActual": 320
+    },
+    {
+      "locale": "pt-PT",
+      "width": 768,
+      "route": "/",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-PT",
+      "width": 768,
+      "route": "/catalogo",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-PT",
+      "width": 768,
+      "route": "/catalogo?q=not-a-product-12345",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-PT",
+      "width": 768,
+      "route": "/sobre-nos",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-PT",
+      "width": 768,
+      "route": "/contato",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-PT",
+      "width": 768,
+      "route": "/faq",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-PT",
+      "width": 768,
+      "route": "/entrega-e-pagamento",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-PT",
+      "width": 768,
+      "route": "/termos",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-PT",
+      "width": 768,
+      "route": "/privacidade",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-PT",
+      "width": 768,
+      "route": "/obrigado",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-PT",
+      "width": 768,
+      "route": "/produto/autocad-2027-windows",
+      "widthActual": 768
+    },
+    {
+      "locale": "pt-PT",
+      "width": 1440,
+      "route": "/",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-PT",
+      "width": 1440,
+      "route": "/catalogo",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-PT",
+      "width": 1440,
+      "route": "/catalogo?q=not-a-product-12345",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-PT",
+      "width": 1440,
+      "route": "/sobre-nos",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-PT",
+      "width": 1440,
+      "route": "/contato",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-PT",
+      "width": 1440,
+      "route": "/faq",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-PT",
+      "width": 1440,
+      "route": "/entrega-e-pagamento",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-PT",
+      "width": 1440,
+      "route": "/termos",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-PT",
+      "width": 1440,
+      "route": "/privacidade",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-PT",
+      "width": 1440,
+      "route": "/obrigado",
+      "widthActual": 1440
+    },
+    {
+      "locale": "pt-PT",
+      "width": 1440,
+      "route": "/produto/autocad-2027-windows",
+      "widthActual": 1440
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "route": "/",
+      "widthActual": 320
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "route": "/catalogo",
+      "widthActual": 320
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "route": "/catalogo?q=not-a-product-12345",
+      "widthActual": 320
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "route": "/sobre-nos",
+      "widthActual": 320
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "route": "/contato",
+      "widthActual": 320
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "route": "/faq",
+      "widthActual": 320
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "route": "/entrega-e-pagamento",
+      "widthActual": 320
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "route": "/termos",
+      "widthActual": 320
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "route": "/privacidade",
+      "widthActual": 320
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "route": "/obrigado",
+      "widthActual": 320
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "route": "/produto/autocad-2027-windows",
+      "widthActual": 320
+    },
+    {
+      "locale": "en-US",
+      "width": 768,
+      "route": "/",
+      "widthActual": 768
+    },
+    {
+      "locale": "en-US",
+      "width": 768,
+      "route": "/catalogo",
+      "widthActual": 768
+    },
+    {
+      "locale": "en-US",
+      "width": 768,
+      "route": "/catalogo?q=not-a-product-12345",
+      "widthActual": 768
+    },
+    {
+      "locale": "en-US",
+      "width": 768,
+      "route": "/sobre-nos",
+      "widthActual": 768
+    },
+    {
+      "locale": "en-US",
+      "width": 768,
+      "route": "/contato",
+      "widthActual": 768
+    },
+    {
+      "locale": "en-US",
+      "width": 768,
+      "route": "/faq",
+      "widthActual": 768
+    },
+    {
+      "locale": "en-US",
+      "width": 768,
+      "route": "/entrega-e-pagamento",
+      "widthActual": 768
+    },
+    {
+      "locale": "en-US",
+      "width": 768,
+      "route": "/termos",
+      "widthActual": 768
+    },
+    {
+      "locale": "en-US",
+      "width": 768,
+      "route": "/privacidade",
+      "widthActual": 768
+    },
+    {
+      "locale": "en-US",
+      "width": 768,
+      "route": "/obrigado",
+      "widthActual": 768
+    },
+    {
+      "locale": "en-US",
+      "width": 768,
+      "route": "/produto/autocad-2027-windows",
+      "widthActual": 768
+    },
+    {
+      "locale": "en-US",
+      "width": 1440,
+      "route": "/",
+      "widthActual": 1440
+    },
+    {
+      "locale": "en-US",
+      "width": 1440,
+      "route": "/catalogo",
+      "widthActual": 1440
+    },
+    {
+      "locale": "en-US",
+      "width": 1440,
+      "route": "/catalogo?q=not-a-product-12345",
+      "widthActual": 1440
+    },
+    {
+      "locale": "en-US",
+      "width": 1440,
+      "route": "/sobre-nos",
+      "widthActual": 1440
+    },
+    {
+      "locale": "en-US",
+      "width": 1440,
+      "route": "/contato",
+      "widthActual": 1440
+    },
+    {
+      "locale": "en-US",
+      "width": 1440,
+      "route": "/faq",
+      "widthActual": 1440
+    },
+    {
+      "locale": "en-US",
+      "width": 1440,
+      "route": "/entrega-e-pagamento",
+      "widthActual": 1440
+    },
+    {
+      "locale": "en-US",
+      "width": 1440,
+      "route": "/termos",
+      "widthActual": 1440
+    },
+    {
+      "locale": "en-US",
+      "width": 1440,
+      "route": "/privacidade",
+      "widthActual": 1440
+    },
+    {
+      "locale": "en-US",
+      "width": 1440,
+      "route": "/obrigado",
+      "widthActual": 1440
+    },
+    {
+      "locale": "en-US",
+      "width": 1440,
+      "route": "/produto/autocad-2027-windows",
+      "widthActual": 1440
+    },
+    {
+      "locale": "es-ES",
+      "width": 320,
+      "route": "/",
+      "widthActual": 320
+    },
+    {
+      "locale": "es-ES",
+      "width": 320,
+      "route": "/catalogo",
+      "widthActual": 320
+    },
+    {
+      "locale": "es-ES",
+      "width": 320,
+      "route": "/catalogo?q=not-a-product-12345",
+      "widthActual": 320
+    },
+    {
+      "locale": "es-ES",
+      "width": 320,
+      "route": "/sobre-nos",
+      "widthActual": 320
+    },
+    {
+      "locale": "es-ES",
+      "width": 320,
+      "route": "/contato",
+      "widthActual": 320
+    },
+    {
+      "locale": "es-ES",
+      "width": 320,
+      "route": "/faq",
+      "widthActual": 320
+    },
+    {
+      "locale": "es-ES",
+      "width": 320,
+      "route": "/entrega-e-pagamento",
+      "widthActual": 320
+    },
+    {
+      "locale": "es-ES",
+      "width": 320,
+      "route": "/termos",
+      "widthActual": 320
+    },
+    {
+      "locale": "es-ES",
+      "width": 320,
+      "route": "/privacidade",
+      "widthActual": 320
+    },
+    {
+      "locale": "es-ES",
+      "width": 320,
+      "route": "/obrigado",
+      "widthActual": 320
+    },
+    {
+      "locale": "es-ES",
+      "width": 320,
+      "route": "/produto/autocad-2027-windows",
+      "widthActual": 320
+    },
+    {
+      "locale": "es-ES",
+      "width": 768,
+      "route": "/",
+      "widthActual": 768
+    },
+    {
+      "locale": "es-ES",
+      "width": 768,
+      "route": "/catalogo",
+      "widthActual": 768
+    },
+    {
+      "locale": "es-ES",
+      "width": 768,
+      "route": "/catalogo?q=not-a-product-12345",
+      "widthActual": 768
+    },
+    {
+      "locale": "es-ES",
+      "width": 768,
+      "route": "/sobre-nos",
+      "widthActual": 768
+    },
+    {
+      "locale": "es-ES",
+      "width": 768,
+      "route": "/contato",
+      "widthActual": 768
+    },
+    {
+      "locale": "es-ES",
+      "width": 768,
+      "route": "/faq",
+      "widthActual": 768
+    },
+    {
+      "locale": "es-ES",
+      "width": 768,
+      "route": "/entrega-e-pagamento",
+      "widthActual": 768
+    },
+    {
+      "locale": "es-ES",
+      "width": 768,
+      "route": "/termos",
+      "widthActual": 768
+    },
+    {
+      "locale": "es-ES",
+      "width": 768,
+      "route": "/privacidade",
+      "widthActual": 768
+    },
+    {
+      "locale": "es-ES",
+      "width": 768,
+      "route": "/obrigado",
+      "widthActual": 768
+    },
+    {
+      "locale": "es-ES",
+      "width": 768,
+      "route": "/produto/autocad-2027-windows",
+      "widthActual": 768
+    },
+    {
+      "locale": "es-ES",
+      "width": 1440,
+      "route": "/",
+      "widthActual": 1440
+    },
+    {
+      "locale": "es-ES",
+      "width": 1440,
+      "route": "/catalogo",
+      "widthActual": 1440
+    },
+    {
+      "locale": "es-ES",
+      "width": 1440,
+      "route": "/catalogo?q=not-a-product-12345",
+      "widthActual": 1440
+    },
+    {
+      "locale": "es-ES",
+      "width": 1440,
+      "route": "/sobre-nos",
+      "widthActual": 1440
+    },
+    {
+      "locale": "es-ES",
+      "width": 1440,
+      "route": "/contato",
+      "widthActual": 1440
+    },
+    {
+      "locale": "es-ES",
+      "width": 1440,
+      "route": "/faq",
+      "widthActual": 1440
+    },
+    {
+      "locale": "es-ES",
+      "width": 1440,
+      "route": "/entrega-e-pagamento",
+      "widthActual": 1440
+    },
+    {
+      "locale": "es-ES",
+      "width": 1440,
+      "route": "/termos",
+      "widthActual": 1440
+    },
+    {
+      "locale": "es-ES",
+      "width": 1440,
+      "route": "/privacidade",
+      "widthActual": 1440
+    },
+    {
+      "locale": "es-ES",
+      "width": 1440,
+      "route": "/obrigado",
+      "widthActual": 1440
+    },
+    {
+      "locale": "es-ES",
+      "width": 1440,
+      "route": "/produto/autocad-2027-windows",
+      "widthActual": 1440
+    }
+  ],
+  "errors": []
+}

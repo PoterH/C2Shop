@@ -282,7 +282,7 @@ return (
         </div>
 
         {/* Bottom Trustpilot Reviews Bar */}
-        <div className="my-10 py-6 px-4 sm:px-6 bg-white rounded-2xl border border-slate-200/80 shadow-xs">
+        <div className="trust-review-strip my-10 py-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             <div className="lg:col-span-3 flex flex-col items-center text-center border-b lg:border-b-0 lg:border-r border-slate-200 pb-4 lg:pb-0 lg:pr-4">
               <a
@@ -306,7 +306,7 @@ return (
               </a>
             </div>
 
-            <div className="lg:col-span-9 relative flex items-center">
+            <div className="lg:col-span-9 min-w-0 relative flex items-center">
               <button
                 type="button"
                 onClick={() =>
@@ -320,7 +320,7 @@ return (
                 <ChevronLeft className="w-4 h-4" />
               </button>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5 flex-1 overflow-hidden">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5 min-w-0 flex-1">
                 {[0, 1, 2, 3].map((offset) => {
                   const item =
                     TRUSTPILOT_REVIEWS[
@@ -329,12 +329,12 @@ return (
                   return (
                     <div
                       key={item.id}
-                      className="block p-3 rounded-xl bg-slate-50/70 border border-slate-100 text-left space-y-1.5"
+                      className="block min-w-0 text-left space-y-1.5"
                     >
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
                         <TrustpilotStars count={item.rating ?? 5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
-                        <span className="text-[10px] text-slate-500 flex items-center gap-0.5 font-semibold">
-                          <CheckCircle2 className="w-3 h-3 text-[#08ad88]" /> Verificado no Trustpilot
+                        <span className="text-[10px] text-slate-500 inline-flex items-center gap-0.5 whitespace-nowrap font-semibold">
+                          <CheckCircle2 className="w-3 h-3 text-[#08ad88]" /> Verificado
                         </span>
                       </div>
 

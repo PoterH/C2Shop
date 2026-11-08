@@ -1,0 +1,10 @@
+node_modules
+dist
+.git
+.env*
+*.p12
+audits
+scratch
+*.cjs
+scratch_*.ts
+api/*.js

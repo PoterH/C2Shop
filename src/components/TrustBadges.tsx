@@ -40,7 +40,7 @@ export const TrustpilotStars: React.FC<{
   const isFourStar = count === 4;
 
   return (
-    <div className={`inline-flex items-center gap-0.5 ${className}`}>
+    <div className={`inline-flex shrink-0 items-center gap-0.5 ${className}`}>
       {[1, 2, 3, 4, 5].map((star) => {
         const isActive = star <= count;
         const imgSrc = isActive
@@ -73,15 +73,14 @@ export const TrustpilotRatingHorizontal: React.FC<{
     <button
       type="button"
       onClick={onOpenModal}
-      className={`group inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-slate-800 transition-colors cursor-pointer text-left py-1 select-none focus:outline-none ${className}`}
+      className={`trust-rating group flex w-full flex-wrap items-center justify-center gap-3 py-2 text-sm text-slate-800 cursor-pointer sm:w-auto sm:justify-start ${className}`}
       title={t('trustpilot_reviews_modal_title')}
     >
-      <span className="font-semibold text-slate-900">{t('trustpilot_excellent')}</span>
-      <TrustpilotStars count={5} size="w-3.5 h-3.5 sm:w-4 sm:h-4" starSize="w-2.5 h-2.5 sm:w-2.5 sm:h-2.5" />
-      <span className="underline underline-offset-2 decoration-slate-400 hover:decoration-slate-800 text-slate-600 font-medium whitespace-nowrap">
-        {t('trustpilot_reviews_count')} no
-      </span>
-      <TrustpilotLogo starSize="w-3.5 h-3.5 sm:w-4 sm:h-4" textSize="text-xs sm:text-sm font-extrabold" />
+      <span className="hidden lg:inline text-slate-600">{t('trustpilot_what_customers_say')}</span>
+      <span className="hidden sm:inline font-semibold">{t('trustpilot_excellent')}</span>
+      <TrustpilotStars count={5} size="w-5 h-5" />
+      <span className="hidden sm:inline text-slate-600">4.8 {t('trustpilot_score_based_on')} <span className="underline">{t('trustpilot_reviews_count')}</span></span>
+      <TrustpilotLogo starSize="w-5 h-5" textSize="text-sm" />
     </button>
   );
 };

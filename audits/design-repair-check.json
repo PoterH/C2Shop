@@ -1,0 +1,106 @@
+[
+  {
+    "width": 320,
+    "cards": [
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      },
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      },
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      },
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 768,
+    "cards": [
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      },
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      },
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      },
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "cards": [
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      },
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      },
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      },
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 2176,
+    "cards": [
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      },
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      },
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      },
+      {
+        "loaded": true,
+        "contained": true,
+        "transform": "none"
+      }
+    ],
+    "errors": []
+  }
+]

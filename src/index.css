@@ -220,6 +220,8 @@ h1, h2, h3, h4, h5, h6 {
 .footer-assurance-card > div:first-child { flex-shrink: 0; width: 28px; height: 28px; }
 .footer-assurance-card > div:last-child { min-width: 0; }
 .footer-assurance-card p { line-height: 1.5; overflow-wrap: anywhere; }
+.trust-review-strip > div > div { min-width: 0; }
+.trust-review-strip svg { flex-shrink: 0; }
 @media (min-width: 640px) and (max-width: 1279px) { .footer-assurance-card { grid-column: span 1; } }
 @media (min-width: 1280px) { .footer-partner-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 

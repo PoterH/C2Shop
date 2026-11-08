@@ -9,6 +9,7 @@ import {
   TrustGuaranteesModal
 } from '../components/TrustBadges';
 import { products } from '../data/products';
+import { CATALOG_SECTIONS, catalogLink, matchesCatalogCategory } from '../data/catalogNavigation';
 import { ProductCard } from '../components/ProductCard';
 import {
   ChevronDown,
@@ -156,7 +157,7 @@ export const Catalog: React.FC = () => {
       }
 
       // 2. Category filter
-      if (selectedCategory !== 'Todos' && product.category !== selectedCategory) {
+      if (!matchesCatalogCategory(product, selectedCategory)) {
         return false;
       }
 
@@ -331,6 +332,16 @@ export const Catalog: React.FC = () => {
           </div>
         </div>
 
+        <nav aria-label={localize('Categorias do catálogo')} className="mb-6 flex flex-wrap items-start gap-2">
+          <Link to="/catalogo" className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-blue-600">{localize('Todos')}</Link>
+          {CATALOG_SECTIONS.map(section => <details key={section.title} open={section.title === selectedCategory || section.groups.some(g => g.title === selectedCategory)} className="rounded-xl border border-slate-200 bg-white p-2 text-sm">
+            <summary className="cursor-pointer font-semibold text-slate-700">{localize(section.title)}</summary>
+            <div className="flex flex-col gap-2 pt-3">
+              <Link to={catalogLink(section.title)} className="text-blue-600">{localize('Ver todos')} — {localize(section.title)}</Link>
+              {section.groups.map(group => <Link key={group.title} to={catalogLink(group.title)} aria-current={selectedCategory === group.title ? 'page' : undefined} className="text-slate-600 aria-[current=page]:text-blue-600 aria-[current=page]:font-bold">{localize(group.title)}</Link>)}
+            </div>
+          </details>)}
+        </nav>
         {/* Products Grid */}
         {sortedProducts.length > 0 ? (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8">

@@ -5,6 +5,7 @@ import { useParams, Link, useSearchParams } from 'react-router-dom';
 const CheckoutModal = lazy(() => import('../components/CheckoutModal').then(module => ({ default: module.CheckoutModal })));
 import {
   TrustpilotStars,
+  TrustpilotRatingHorizontal,
   TrustpilotLogo,
   TrustGuaranteesModal,
 } from '../components/TrustBadges';
@@ -793,26 +794,7 @@ const ProductDetailContent: React.FC = () => {
           </nav>
 
           {/* Trustpilot Official Header Rating Bar */}
-          <button
-            type="button"
-            onClick={() => setIsGuaranteesModalOpen(true)}
-            className="inline-flex flex-nowrap items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs text-slate-800 transition-all cursor-pointer shadow-2xs whitespace-nowrap shrink-0 overflow-x-auto scrollbar-none self-start md:self-auto max-w-full"
-            title="Ver avaliações verificadas no Trustpilot"
-          >
-            <span className="text-slate-600 font-medium whitespace-nowrap">{t('trustpilot_what_customers_say')}</span>
-            <span className="font-bold text-slate-900 whitespace-nowrap">{t('trustpilot_excellent')}</span>
-            <div className="shrink-0 inline-flex items-center">
-              <TrustpilotStars count={5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
-            </div>
-            <span className="text-slate-700 font-medium whitespace-nowrap">
-              <strong className="text-slate-900 font-bold">4.8</strong> {t('trustpilot_score_based_on')}{' '}
-              <span className="underline decoration-slate-400">{t('trustpilot_reviews_count')}</span>
-            </span>
-            <span className="text-slate-300 hidden sm:inline whitespace-nowrap">•</span>
-            <div className="hidden sm:inline-flex shrink-0">
-              <TrustpilotLogo starSize="w-3.5 h-3.5" textSize="text-xs" />
-            </div>
-          </button>
+          <TrustpilotRatingHorizontal onOpenModal={() => setIsGuaranteesModalOpen(true)} />
         </div>
 
         {/* =================================================================== */}
@@ -1341,7 +1323,7 @@ const ProductDetailContent: React.FC = () => {
         {/* =================================================================== */}
         {/* TRUSTPILOT OFFICIAL REVIEWS BAR                                     */}
         {/* =================================================================== */}
-        <div className="my-10 py-6 px-4 sm:px-6 bg-white rounded-2xl border border-slate-200/80 shadow-xs">
+        <div className="trust-review-strip my-10 py-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             {/* Left Summary: Trustpilot Official Card */}
             <div className="lg:col-span-3 flex flex-col items-center text-center border-b lg:border-b-0 lg:border-r border-slate-200 pb-4 lg:pb-0 lg:pr-4">
@@ -1364,7 +1346,7 @@ const ProductDetailContent: React.FC = () => {
             </div>
 
             {/* Right Carousel of Store Reviews */}
-            <div className="lg:col-span-9 relative flex items-center">
+            <div className="lg:col-span-9 min-w-0 relative flex items-center">
               <button
                 type="button"
                 onClick={() =>
@@ -1385,9 +1367,9 @@ const ProductDetailContent: React.FC = () => {
                   return (
                     <div
                       key={item.id}
-                      className="p-4 rounded-xl bg-slate-50/80 border border-slate-100 text-left space-y-2"
+                      className="min-w-0 text-left space-y-2"
                     >
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
                         <TrustpilotStars count={item.rating ?? 5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
                         <span className="text-[10px] text-slate-500 flex items-center gap-1 font-semibold">
                           <CheckCircle2 className="w-3.5 h-3.5 text-[#08ad88]" /> {t('trustpilot_verified')} no Trustpilot
@@ -1404,18 +1386,18 @@ const ProductDetailContent: React.FC = () => {
               </div>
 
               {/* Tablet & Desktop (4 cards per slide) */}
-              <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-4 gap-3.5 flex-1 overflow-hidden">
+              <div className="hidden sm:grid sm:grid-cols-2 xl:grid-cols-4 gap-3.5 min-w-0 flex-1">
                 {[0, 1, 2, 3].map((offset) => {
                   const item =
                     activeTrustpilotReviews[(trustpilotSlideIndex + offset) % activeTrustpilotReviews.length];
                   return (
                     <div
                       key={item.id}
-                      className="p-3 rounded-xl bg-slate-50/70 border border-slate-100 text-left space-y-1.5"
+                      className="min-w-0 text-left space-y-1.5"
                     >
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
                         <TrustpilotStars count={item.rating ?? 5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
-                        <span className="text-[10px] text-slate-500 flex items-center gap-0.5 font-semibold">
+                        <span className="text-[10px] text-slate-500 inline-flex items-center gap-0.5 whitespace-nowrap font-semibold">
                           <CheckCircle2 className="w-3 h-3 text-[#08ad88]" /> {t('trustpilot_verified')}
                         </span>
                       </div>
