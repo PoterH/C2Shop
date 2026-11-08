@@ -1296,7 +1296,7 @@ export const ProductDetail: React.FC = () => {
             ) : (
               <div className="space-y-3 pt-2">
                 {/* Label above the [- 1 +] Device Selector */}
-                <div className="flex items-center justify-between gap-2 whitespace-nowrap">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                     <Monitor className="w-3.5 h-3.5 text-[#0b5ed7] shrink-0" />
                     <span>{t('device_support_label')}</span>

@@ -416,7 +416,7 @@ export const Header: React.FC = () => {
       {/* 1. TOP DARK STRIP ("TARJA")                                           */}
       {/* ===================================================================== */}
       <div className="bg-[#0f172a] text-slate-200 text-[11px] sm:text-xs">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-8.5 flex items-center justify-between gap-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-8.5 flex items-center justify-between gap-2 sm:gap-4">
           {/* Left: Sobre nós | Fale conosco */}
           <div className="flex items-center gap-2.5 font-medium whitespace-nowrap shrink-0">
             <Link to="/sobre-nos" className="hover:text-white transition-colors">
@@ -429,7 +429,7 @@ export const Header: React.FC = () => {
           </div>
 
           {/* Center: WhatsApp + Entrega Imediata + Pagamento Seguro */}
-          <div className="hidden md:flex items-center gap-6 whitespace-nowrap shrink-0">
+          <div className="hidden lg:flex items-center gap-6 whitespace-nowrap shrink-0">
             <a
               href={whatsappUrl}
               target="_blank"
@@ -537,7 +537,7 @@ export const Header: React.FC = () => {
               </button>
 
               <div
-                className={`absolute right-0 top-full pt-1 w-80 z-50 transition-all duration-200 origin-top-right ${
+                className={`absolute right-0 top-full pt-1 w-80 max-w-[calc(100vw-2rem)] z-50 transition-all duration-200 origin-top-right ${
                   isFlagOpen
                     ? 'opacity-100 translate-y-0 pointer-events-auto'
                     : 'opacity-0 -translate-y-1 pointer-events-none'
@@ -685,7 +685,7 @@ export const Header: React.FC = () => {
       {/* 2. MAIN HEADER BAR & MEGA-MENU POPUP                                  */}
       {/* ===================================================================== */}
       <div className="relative bg-white" onMouseLeave={handleMegaLeave}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4">
           {isMobileSearchActive ? (
             /* Active Mobile Search Bar State */
             <div className="flex items-center w-full animate-fade-in">
@@ -706,7 +706,7 @@ export const Header: React.FC = () => {
                 onClick={() => setIsMobileSearchActive(false)}
                 className="ml-3 text-xs font-bold text-slate-600 hover:text-slate-900"
               >
-                Cancelar
+                {t('nav_search_cancel')}
               </button>
             </div>
           ) : (
@@ -733,7 +733,7 @@ export const Header: React.FC = () => {
               </Link>
 
               {/* Center: Pill Navigation Bar with Single-Line Items */}
-              <nav className="hidden lg:flex items-center bg-[#f4f6f8] rounded-full px-3.5 py-1.5 border border-slate-200/50 gap-1 shrink-0">
+              <nav className="hidden xl:flex items-center bg-[#f4f6f8] rounded-full px-3.5 py-1.5 border border-slate-200/50 gap-1 shrink-0">
                 <Link
                   to="/"
                   onMouseEnter={() => setActiveMegaId(null)}
@@ -827,7 +827,7 @@ export const Header: React.FC = () => {
                 {/* Support / Contact Icon */}
                 <Link
                   to="/contato"
-                  className="p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"
+                  className="hidden sm:block p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"
                   title="Central de Atendimento e Suporte"
                 >
                   <User className="w-4 h-4" />
@@ -850,7 +850,7 @@ export const Header: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsOpen(!isOpen)}
-                  className="lg:hidden p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                  className="xl:hidden p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
                   aria-label="Menu principal"
                 >
                   {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -871,7 +871,7 @@ export const Header: React.FC = () => {
             }
           }}
           onMouseLeave={handleMegaLeave}
-          className={`hidden lg:block absolute left-0 right-0 top-full z-50 transition-all duration-250 ease-out origin-top ${
+          className={`hidden xl:block absolute left-0 right-0 top-full z-50 transition-all duration-250 ease-out origin-top ${
             activeCategoryData
               ? 'opacity-100 translate-y-0 pointer-events-auto'
               : 'opacity-0 -translate-y-2 pointer-events-none'
@@ -971,13 +971,13 @@ export const Header: React.FC = () => {
       {/* MOBILE DRAWER                                                         */}
       {/* ===================================================================== */}
       <div
-        className={`fixed inset-0 top-[100px] z-30 lg:hidden bg-slate-900/30 backdrop-blur-xs transition-opacity duration-300 ${
+        className={`fixed inset-0 top-[100px] z-30 xl:hidden bg-slate-900/30 backdrop-blur-xs transition-opacity duration-300 ${
           isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         onClick={() => setIsOpen(false)}
       >
         <div
-          className={`absolute top-0 right-0 w-4/5 max-w-sm h-[calc(100vh-100px)] bg-white shadow-2xl p-6 overflow-y-auto transition-transform duration-300 ease-out transform ${
+          className={`absolute top-0 right-0 w-4/5 max-w-sm h-[calc(100dvh-100px)] bg-white shadow-2xl p-6 overflow-y-auto transition-transform duration-300 ease-out transform ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
           onClick={(e) => e.stopPropagation()}

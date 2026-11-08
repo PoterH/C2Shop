@@ -535,21 +535,21 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-lg p-4 pointer-events-none">
         
         {/* Modal Container */}
-        <div className="relative w-full bg-white rounded-3xl border border-slate-100 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] pointer-events-auto">
+        <div className="relative w-full bg-white rounded-3xl border border-slate-100 shadow-2xl overflow-hidden flex flex-col max-h-[90dvh] pointer-events-auto">
         
         {/* Header */}
-        <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-          <div>
+        <div className="p-6 border-b border-slate-100 flex items-center justify-between gap-2 bg-slate-50/50">
+          <div className="min-w-0 flex-1">
             <span className="text-[10px] font-bold text-accent-blue uppercase tracking-widest bg-accent-blue/10 px-2 py-0.5 rounded">
               Checkout Seguro
             </span>
-            <h3 className="font-display font-bold text-slate-900 text-lg mt-1 truncate max-w-[280px]">
+            <h3 className="font-display font-bold text-slate-900 text-lg mt-1 truncate max-w-full">
               {cartItems.length === 1 ? activeProduct?.name : `${cartItems.length} Softwares`}
             </h3>
           </div>
           <button 
             onClick={onClose} 
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+            className="shrink-0 p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
             aria-label="Fechar"
           >
             <X className="w-5 h-5" />

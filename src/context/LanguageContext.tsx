@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useCurrency, type CurrencyCode } from './CurrencyContext';
 
-export type LanguageCode = 'pt-BR' | 'es' | 'en' | 'pt-PT';
+import { detectLanguage, type LanguageCode } from '../utils/locale';
+export type { LanguageCode } from '../utils/locale';
 
 export interface LanguageInfo {
   code: LanguageCode;
@@ -537,23 +538,11 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { setCurrency } = useCurrency();
 
-  const [language, setLanguageState] = useState<LanguageCode>(() => {
-    try {
-      const saved = localStorage.getItem('c2tech_language') as LanguageCode | null;
-      if (saved && LANGUAGES[saved]) return saved;
+  const [language, setLanguageState] = useState<LanguageCode>(detectLanguage);
 
-      // Auto-detect browser language
-      if (typeof navigator !== 'undefined' && navigator.language) {
-        const navLang = navigator.language.toLowerCase();
-        if (navLang.startsWith('en')) return 'en';
-        if (navLang.startsWith('es')) return 'es';
-        if (navLang === 'pt-pt' || navLang.startsWith('pt-pt')) return 'pt-PT';
-      }
-    } catch {
-      // fallback
-    }
-    return 'pt-BR';
-  });
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
 
   const setLanguage = (lang: LanguageCode) => {
     setLanguageState(lang);

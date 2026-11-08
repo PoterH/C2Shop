@@ -243,7 +243,9 @@ export const Catalog: React.FC = () => {
 
         {/* Trust Header: Trustpilot Rating (Left) & Guarantees Pill (Right) */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 pb-5 border-b border-slate-200/80">
-          <TrustpilotRatingHorizontal onOpenModal={() => setIsGuaranteesModalOpen(true)} />
+          <div className="max-w-full overflow-x-auto">
+            <TrustpilotRatingHorizontal onOpenModal={() => setIsGuaranteesModalOpen(true)} />
+          </div>
           <TrustGuaranteesPill onOpenModal={() => setIsGuaranteesModalOpen(true)} />
         </div>
 

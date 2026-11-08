@@ -1,3 +1,4 @@
+import { detectLanguage } from '../utils/locale';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type CurrencyCode = 'BRL' | 'USD';
@@ -53,7 +54,7 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const saved = localStorage.getItem('c2tech_currency') as CurrencyCode | null;
       if (saved && CURRENCIES[saved]) return saved;
     } catch {}
-    return 'BRL';
+    return detectLanguage() === 'pt-BR' ? 'BRL' : 'USD';
   });
 
   const [rates, setRates] = useState<Record<CurrencyCode, number>>(DEFAULT_RATES_FROM_BRL);

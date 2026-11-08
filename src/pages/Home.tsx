@@ -488,7 +488,7 @@ export const Home: React.FC = () => {
           </div>
 
           {/* Categories Slider/Tabs */}
-          <div className="flex overflow-x-auto pb-4 mb-8 scrollbar-none justify-start md:justify-center -mx-4 px-4 gap-2">
+          <div className="flex overflow-x-auto pb-4 mb-8 scrollbar-none justify-start -mx-4 px-4 gap-2">
             {CATEGORIES.map((category) => (
               <button
                 key={category}
