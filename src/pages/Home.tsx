@@ -263,7 +263,11 @@ export const Home: React.FC = () => {
             className="inline-flex items-center space-x-2 bg-slate-900/60 backdrop-blur-md rounded-full border border-sky-500/30 px-3.5 py-1 shadow-[0_0_20px_rgba(2,132,199,0.1)] hover:border-sky-500/50 transition-all duration-300 pointer-events-none select-none animate-soft-pulse"
           >
             <div className="flex -space-x-2" aria-hidden="true">
-              {[0,1,2,3,4].map(i => <span key={i} className="w-5 h-5 rounded-full border-2 border-slate-950 bg-slate-300 text-slate-600 grid place-items-center"><svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><circle cx="10" cy="6" r="4"/><path d="M2 20v-4a8 8 0 0 1 16 0v4Z"/></svg></span>)}
+              <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64&q=80" width="20" height="20" decoding="async" alt="Cliente 1" />
+              <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&h=64&q=80" width="20" height="20" decoding="async" alt="Cliente 2" />
+              <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=64&h=64&q=80" width="20" height="20" decoding="async" alt="Cliente 3" />
+              <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=64&h=64&q=80" width="20" height="20" decoding="async" alt="Cliente 4" />
+              <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=64&h=64&q=80" width="20" height="20" decoding="async" alt="Cliente 5" />
             </div>
             <span className="text-[11px] font-bold text-sky-400 tracking-wide">
               {localize(language === 'en'
