@@ -771,7 +771,6 @@ const HeaderContent: React.FC = () => {
               {/* Left: Brand Logo + Name (Proportioned & aligned like PrimeLicense) */}
               <Link to="/" className="flex items-center gap-2.5 group shrink-0 whitespace-nowrap">
                 <div className="brand-logo relative shrink-0">
-                  <img src="/images/santa-hat.png" alt="" aria-hidden="true" className="brand-christmas-hat" />
                   <img
                     src="/images/logo.webp"
                     alt="Logo C2Tech"
@@ -1071,7 +1070,6 @@ const HeaderContent: React.FC = () => {
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <div className="brand-logo relative shrink-0">
-                  <img src="/images/santa-hat.png" alt="" aria-hidden="true" className="brand-christmas-hat" />
                   <img src="/images/logo.webp" alt="C2Tech" className="relative z-10 w-7 h-7 rounded-lg object-cover" />
                 </div>
                 <span className="font-display font-black text-slate-900 text-lg">C2Tech</span>
