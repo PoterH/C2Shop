@@ -19,6 +19,11 @@ export function localizeText(value: string, language: LanguageCode, dictionary: 
   const trimmed = value.trim();
   const translated = dictionary[trimmed];
   if (translated) return value.replace(trimmed, translated);
+  const quantityAction = trimmed.match(/^(Diminuir quantidade de|Aumentar quantidade de|Remover) (.+)$/);
+  if (quantityAction) {
+    const actions = language === 'en' ? ['Decrease quantity of', 'Increase quantity of', 'Remove'] : ['Reducir cantidad de', 'Aumentar cantidad de', 'Eliminar'];
+    return actions[['Diminuir quantidade de', 'Aumentar quantidade de', 'Remover'].indexOf(quantityAction[1])] + ' ' + quantityAction[2];
+  }
   const receive = trimmed.match(/^Receba seu (.+) em 3 passos simples$/);
   if (receive) return language === 'en' ? 'Get your ' + receive[1] + ' in 3 simple steps' : 'Recibe tu ' + receive[1] + ' en 3 pasos sencillos';
   const devices = trimmed.match(/^(\d+) Dispositivos?$/i);

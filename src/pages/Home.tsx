@@ -1,18 +1,21 @@
+import { WhatsAppIcon } from '../components/WhatsAppIcon';
+import { HomeTrustpilot } from '../components/HomeTrustpilot';
 import { useText } from '../hooks/useText';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
+  Search,
   Zap,
   Settings,
   ShieldCheck,
   Infinity as InfinityIcon,
   ArrowRight,
-  MessageSquare,
   ChevronDown,
   ChevronUp,
-  Star,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Pause,
+  Play
 } from 'lucide-react';
 import { products, CATEGORIES } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
@@ -22,6 +25,8 @@ import { SnowEffect, HolidayHeroDecor } from '../components/ChristmasDecorations
 
 export const Home: React.FC = () => {
   const localize = useText();
+  const navigate = useNavigate();
+  const [heroSearch, setHeroSearch] = useState('');
   const { language } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<string>('Todos');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
@@ -32,14 +37,21 @@ export const Home: React.FC = () => {
     .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
     .slice(0, 16), [activeCategory]);
 
-  // Filter subscription products for the dedicated carousel
-  const subscriptionProducts = useMemo(() => products
-    .filter(p => p.isSubscription)
-    .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR')), []);
 
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(
+    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
+  const [isPlaying, setIsPlaying] = useState(
+    () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
   const carouselRef = useRef<HTMLDivElement>(null);
-  const subCarouselRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updateMotionPreference = () => setPrefersReducedMotion(motionPreference.matches);
+    motionPreference.addEventListener('change', updateMotionPreference);
+    return () => motionPreference.removeEventListener('change', updateMotionPreference);
+  }, []);
 
   // Reset scroll to 0 when category changes
   useEffect(() => {
@@ -50,12 +62,12 @@ export const Home: React.FC = () => {
 
   // Auto scroll effect for carousel
   useEffect(() => {
-    if (!isPlaying || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!isPlaying || prefersReducedMotion) return;
     const interval = setInterval(() => {
       if (document.hidden) return;
       const el = carouselRef.current;
       if (el) {
-        const scrollAmount = 320 + 24; // Card width + gap
+        const scrollAmount = (el.firstElementChild?.getBoundingClientRect().width ?? 0) + parseFloat(getComputedStyle(el).columnGap);
         const currentScroll = el.scrollLeft;
         const maxScroll = el.scrollWidth - el.clientWidth;
 
@@ -68,12 +80,12 @@ export const Home: React.FC = () => {
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [isPlaying, filteredProducts]);
+  }, [isPlaying, prefersReducedMotion, filteredProducts]);
 
   const scrollLeft = () => {
     const el = carouselRef.current;
     if (el) {
-      const scrollAmount = 320 + 24;
+      const scrollAmount = (el.firstElementChild?.getBoundingClientRect().width ?? 0) + parseFloat(getComputedStyle(el).columnGap);
       el.scrollTo({ left: el.scrollLeft - scrollAmount, behavior: 'smooth' });
     }
   };
@@ -81,23 +93,7 @@ export const Home: React.FC = () => {
   const scrollRight = () => {
     const el = carouselRef.current;
     if (el) {
-      const scrollAmount = 320 + 24;
-      el.scrollTo({ left: el.scrollLeft + scrollAmount, behavior: 'smooth' });
-    }
-  };
-
-  const scrollSubLeft = () => {
-    const el = subCarouselRef.current;
-    if (el) {
-      const scrollAmount = 320 + 24;
-      el.scrollTo({ left: el.scrollLeft - scrollAmount, behavior: 'smooth' });
-    }
-  };
-
-  const scrollSubRight = () => {
-    const el = subCarouselRef.current;
-    if (el) {
-      const scrollAmount = 320 + 24;
+      const scrollAmount = (el.firstElementChild?.getBoundingClientRect().width ?? 0) + parseFloat(getComputedStyle(el).columnGap);
       el.scrollTo({ left: el.scrollLeft + scrollAmount, behavior: 'smooth' });
     }
   };
@@ -114,7 +110,7 @@ export const Home: React.FC = () => {
       desc: language === 'en' ? 'Access automatically sent to your email right after purchase.' : language === 'es' ? 'Acceso enviado automáticamente a tu correo tras la compra.' : 'Acesso enviado automaticamente para o seu e-mail após a compra.'
     },
     {
-      icon: <Settings className="w-6 h-6 text-emerald-500" />,
+      icon: <Settings className="w-6 h-6 text-feedback-success" />,
       title: language === 'en' ? 'Assisted installation' : language === 'es' ? 'Instalación asistida' : 'Instalação assistida',
       desc: language === 'en' ? 'Step-by-step guide and dedicated remote support if needed.' : language === 'es' ? 'Paso a paso detallado y soporte remoto dedicado si lo necesitas.' : 'Passo a passo detalhado e suporte remoto dedicado caso precise.'
     },
@@ -124,7 +120,7 @@ export const Home: React.FC = () => {
       desc: language === 'en' ? 'Encrypted transactions and secure checkout.' : language === 'es' ? 'Transacciones cifradas y checkout seguro.' : 'Transações criptografadas e checkout seguro.'
     },
     {
-      icon: <InfinityIcon className="w-6 h-6 text-emerald-500" />,
+      icon: <InfinityIcon className="w-6 h-6 text-feedback-success" />,
       title: language === 'en' ? 'Lifetime access' : language === 'es' ? 'Acceso vitalicio' : 'Acesso vitalício',
       desc: language === 'en' ? 'Pay only once and use the software without subscriptions.' : language === 'es' ? 'Paga solo una vez y usa el software sin mensualidades.' : 'Pague apenas uma vez e utilize o software sem mensalidades.'
     }
@@ -153,32 +149,6 @@ export const Home: React.FC = () => {
     }
   ];
 
-  const reviews = [
-    {
-      author: 'Felipe P.',
-      role: 'Engenheiro Civil',
-      comment: 'Comprei o AutoCAD e chegou no e-mail rapidinho. Tive uma dúvida na instalação e me ajudaram pelo suporte remoto de forma rápida.',
-      stars: 5,
-    },
-    {
-      author: 'Mariana L.',
-      role: 'Arquiteta',
-      comment: 'Gostei bastante, o processo foi simples e consegui instalar tudo seguindo o tutorial enviado. Muito bom custo-benefício.',
-      stars: 5,
-    },
-    {
-      author: 'Rafael M.',
-      role: 'Designer Gráfico',
-      comment: 'Fiquei com receio no começo, mas deu tudo certo. Recebi o acesso imediatamente no e-mail e estou usando o software normalmente.',
-      stars: 5,
-    },
-    {
-      author: 'Camila R.',
-      role: 'Projetista de Interiores',
-      comment: 'O atendimento foi muito bom e me orientaram pelo WhatsApp quando não consegui abrir o instalador de primeira. Recomendo.',
-      stars: 5,
-    }
-  ];
 
   const faqItems = [
     {
@@ -218,39 +188,12 @@ export const Home: React.FC = () => {
   return (
     <div className="pt-0">
       {/* 1. HERO SECTION */}
-      <section className="relative bg-[#020617] pt-28 pb-6 sm:pt-32 md:pt-36 sm:pb-8 overflow-hidden text-center z-0">
+      <section className="home-hero relative bg-brand-navy pt-28 pb-6 sm:pt-32 md:pt-36 sm:pb-8 overflow-hidden text-center z-0">
 
         {/* Background Layers Wrapper (z-0 sits above section's bg color but behind relative z-10 content) */}
         <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0">
-          {/* Large Morphing Blue/Indigo/Cyan Mists (Ambient Organic Shapes) */}
-          <div
-            className="absolute -top-10 -left-10 w-[450px] h-[450px] md:w-[650px] md:h-[650px] "
-          >
-            <div className="w-full h-full bg-gradient-to-br from-[#00d2ff]/25 via-[#0066FF]/20 to-[#0a21a5]/25 rounded-full blur-[100px] md:blur-[140px] animate-morph-blob-1"></div>
-          </div>
-          <div
-            className="absolute top-40 -right-10 w-[400px] h-[400px] md:w-[600px] md:h-[600px] "
-          >
-            <div className="w-full h-full bg-gradient-to-tr from-[#0066FF]/22 via-[#00d2ff]/20 to-[#0a21a5]/22 rounded-full blur-[90px] md:blur-[130px] animate-morph-blob-2"></div>
-          </div>
-          <div
-            className="absolute bottom-10 left-[10%] w-[350px] h-[350px] md:w-[550px] md:h-[550px] "
-          >
-            <div className="w-full h-full bg-gradient-to-tl from-[#00d2ff]/18 via-[#0066FF]/20 to-[#0a21a5]/18 rounded-full blur-[80px] md:blur-[120px] animate-morph-blob-3"></div>
-          </div>
-
-          {/* Subtle top ambient light glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-[#00d2ff]/15 via-transparent to-transparent blur-3xl"></div>
-
-          {/* Tech Grid & Dot Patterns for premium background depth */}
-          <div className="absolute inset-0 bg-grid-tech opacity-70"></div>
-          <div className="absolute inset-0 bg-dot-tech opacity-50"></div>
-
-          {/* Floating Sparkles/Telemetry Dots */}
-          <div className="absolute top-[20%] left-[10%] w-1.5 h-1.5 bg-[#00d2ff] rounded-full animate-pulse opacity-40"></div>
-          <div className="absolute top-[65%] left-[22%] w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping opacity-30"></div>
-          <div className="absolute top-[35%] right-[18%] w-1 h-1 bg-[#00d2ff] rounded-full animate-pulse opacity-50"></div>
-          <div className="absolute top-[80%] right-[12%] w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse opacity-30"></div>
+          {/* A quiet technical grid gives the hero structure without decorative glow layers. */}
+          <div className="absolute inset-0 bg-grid-tech opacity-40"></div>
         </div>
 
         {/* Efeito Natalino: Flocos de Neve Caindo no Hero */}
@@ -258,26 +201,6 @@ export const Home: React.FC = () => {
         <HolidayHeroDecor />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3.5 sm:space-y-4 md:space-y-5 flex flex-col items-center">
-          {/* 1. Pill Badge with Avatars */}
-          <div
-            className="inline-flex items-center space-x-2 bg-slate-900/60 backdrop-blur-md rounded-full border border-sky-500/30 px-3.5 py-1 shadow-[0_0_20px_rgba(2,132,199,0.1)] hover:border-sky-500/50 transition-all duration-300 pointer-events-none select-none animate-soft-pulse"
-          >
-            <div className="flex -space-x-2" aria-hidden="true">
-              <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64&q=80" width="20" height="20" decoding="async" alt="Cliente 1" />
-              <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&h=64&q=80" width="20" height="20" decoding="async" alt="Cliente 2" />
-              <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=64&h=64&q=80" width="20" height="20" decoding="async" alt="Cliente 3" />
-              <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=64&h=64&q=80" width="20" height="20" decoding="async" alt="Cliente 4" />
-              <img className="w-5 h-5 rounded-full border-2 border-slate-950 object-cover" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=64&h=64&q=80" width="20" height="20" decoding="async" alt="Cliente 5" />
-            </div>
-            <span className="text-[11px] font-bold text-sky-400 tracking-wide">
-              {localize(language === 'en'
-                ? '+5,000 satisfied customers'
-                : language === 'es'
-                ? '+5.000 clientes satisfechos'
-                : '+5.000 clientes satisfeitos')}
-            </span>
-          </div>
-
           {/* 2. Headline */}
           <div className="space-y-2 md:space-y-3 max-w-5xl text-center">
             <h1 className="font-display text-white tracking-tight leading-[1.08] text-balance">
@@ -291,54 +214,51 @@ export const Home: React.FC = () => {
               <span className="font-black text-3xl sm:text-[50px] md:text-[62px] lg:text-[70px] xl:text-[74px] block mt-1 sm:mt-1.5">
                 {language === 'en' ? (
                   <>
-                    <span className="bg-gradient-to-r from-[#00d2ff] via-[#0066FF] to-[#0a21a5] bg-clip-text text-transparent">C2Tech</span> handles the rest.
+                    <span className="text-cyan-300">C2Tech</span> handles the rest.
                   </>
                 ) : language === 'es' ? (
                   <>
-                    <span className="bg-gradient-to-r from-[#00d2ff] via-[#0066FF] to-[#0a21a5] bg-clip-text text-transparent">C2Tech</span> cuida del resto.
+                    <span className="text-cyan-300">C2Tech</span> cuida del resto.
                   </>
                 ) : (
                   <>
-                    A <span className="bg-gradient-to-r from-[#00d2ff] via-[#0066FF] to-[#0a21a5] bg-clip-text text-transparent">C2Tech</span> {localize(" cuida do resto.")}</>
+                    A <span className="text-cyan-300">C2Tech</span> {localize(" cuida do resto.")}</>
                 )}
               </span>
             </h1>
 
-            {/* 3. Sub-headline */}
-            <p className="text-slate-400 text-xs sm:text-sm md:text-base lg:text-lg max-w-3xl mx-auto leading-relaxed text-balance">
-              {localize(language === 'en'
-                ? 'Full catalog, customer portal, automated email delivery and dedicated WhatsApp technical support! Ready for permanent local activation, all in one place. And you only pay once.'
-                : language === 'es'
-                ? 'Catálogo completo, área de cliente, entrega automática por correo y soporte técnico completo en WhatsApp. Todo listo para activación permanente local, en un solo lugar. Y solo pagas una vez.'
-                : 'Catálogo completo, área do cliente, entrega automática por e-mail e suporte técnico completo no WhatsApp! Tudo pronto para ativação vitalícia local, no mesmo lugar. E você só paga uma única vez por isso.')}
-            </p>
+
           </div>
 
-          {/* 4. Action Buttons */}
-          <div className="flex flex-col sm:flex-row flex-wrap gap-2.5 sm:gap-3.5 justify-center w-full max-w-md sm:max-w-5xl pt-1 sm:pt-2 relative z-20">
-            <Link
-              to="/catalogo"
-              className="flex items-center justify-center px-5 py-3 md:px-7 md:py-3.5 text-sm md:text-base font-bold text-white bg-accent-blue hover:bg-accent-blue-dark rounded-xl md:rounded-2xl shadow-[0_4px_20px_rgba(2,132,199,0.25)] hover:shadow-[0_4px_25px_rgba(2,132,199,0.35)] transition-all duration-300 group whitespace-nowrap hover:scale-105 active:scale-95"
+          {/* Hero catalog search */}
+          <div className="w-full max-w-2xl pt-2 relative z-20">
+            <form
+              role="search"
+              aria-label={localize('Pesquisar softwares')}
+              onSubmit={(event) => {
+                event.preventDefault();
+                const query = heroSearch.trim();
+                navigate(query ? `/catalogo?q=${encodeURIComponent(query)}` : '/catalogo');
+              }}
+              className="flex items-center gap-2 rounded-control bg-white p-2 pl-4 sm:pl-5 border border-sky-200/80 shadow-[0_4px_16px_rgba(15,23,42,0.12)] focus-within:ring-4 focus-within:ring-action-primary/25 focus-within:border-action-primary transition-shadow"
             >
-              <span>{localize(language === 'en' ? 'Explore software' : language === 'es' ? 'Explorar softwares' : 'Explorar softwares')}</span>
-              <ArrowRight className="w-4.5 h-4.5 ml-2 transition-transform group-hover:translate-x-1" />
-            </Link>
-            <Link
-              to="/catalogo?tab=assinaturas"
-              className="flex items-center justify-center px-5 py-3 md:px-7 md:py-3.5 text-sm md:text-base font-bold text-white bg-slate-900/60 backdrop-blur-md hover:bg-slate-900/80 rounded-xl md:rounded-2xl border border-sky-500/30 hover:border-sky-500/60 shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_25px_rgba(2,132,199,0.15)] transition-all duration-300 group whitespace-nowrap hover:scale-105 active:scale-95"
-            >
-              <span>{localize(language === 'en' ? 'Subscription Plans' : language === 'es' ? 'Planes de Suscripción' : 'Planos de Assinatura')}</span>
-              <span className="ml-2 px-1.5 py-0.5 text-[9px] font-extrabold bg-sky-500 text-white rounded-md uppercase tracking-wider animate-pulse shrink-0">
-                {localize(language === 'en' ? 'NEW' : language === 'es' ? 'NUEVO' : 'Novo')}
-              </span>
-            </Link>
-            <Link
-              to="/catalogo?q=microsoft"
-              className="flex items-center justify-center px-5 py-3 md:px-7 md:py-3.5 text-sm md:text-base font-bold text-white bg-slate-900/60 backdrop-blur-md hover:bg-slate-900/80 rounded-xl md:rounded-2xl border border-indigo-500/40 hover:border-indigo-500/70 shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_25px_rgba(99,102,241,0.25)] transition-all duration-300 group whitespace-nowrap hover:scale-105 active:scale-95"
-            >
-              <span>{localize(language === 'en' ? 'Activate your Windows/Office' : language === 'es' ? 'Activa tu Windows/Office' : 'Ative seu Windows/Office')}</span>
-              <ArrowRight className="w-4.5 h-4.5 ml-2 transition-transform group-hover:translate-x-1" />
-            </Link>
+              <Search className="w-5 h-5 text-action-primary shrink-0" aria-hidden="true" />
+              <label htmlFor="hero-software-search" className="sr-only">{localize('Qual software você procura?')}</label>
+              <input
+                id="hero-software-search"
+                type="search"
+                value={heroSearch}
+                onChange={(event) => setHeroSearch(event.target.value)}
+                placeholder={localize(language === 'en' ? 'Find your software…' : language === 'es' ? 'Encuentra tu software…' : 'Qual software você procura?')}
+                className="w-full min-w-0 bg-transparent py-3 text-base text-slate-900 placeholder:text-slate-400 outline-none"
+              />
+              <button type="submit" className="shrink-0 rounded-xl bg-action-primary hover:bg-action-primary-hover px-4 sm:px-6 py-3 text-sm sm:text-base font-semibold text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-primary">
+                {localize(language === 'en' ? 'Search' : language === 'es' ? 'Buscar' : 'Buscar')}
+              </button>
+            </form>
+            <p className="mt-3 text-xs sm:text-sm text-slate-400 text-center">
+              {localize(language === 'en' ? 'Find by name: AutoCAD, Office, SketchUp and more.' : language === 'es' ? 'Busca por nombre: AutoCAD, Office, SketchUp y más.' : 'Busque pelo nome: AutoCAD, Office, SketchUp e muito mais.')}
+            </p>
           </div>
 
           {/* Trust Carousel (Below Buttons on all devices) */}
@@ -373,10 +293,10 @@ export const Home: React.FC = () => {
 
           {/* 5. Laptop AutoCAD Mockup (Stretched Wide & Pulled Higher Up) */}
           <div
-            className="w-full max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-7xl mt-0 md:-mt-2 -mb-8 sm:-mb-24 md:-mb-48 lg:-mb-64 transition-all duration-500 relative z-10"
+            className="w-full max-w-[640px] lg:max-w-[800px] mt-0 mb-0 transition-all duration-500 relative z-10"
           >
             <img
-              src="/images/laptop_autocad.webp" width={800} height={800}
+              src="/images/laptop_autocad-focused.webp" width={728} height={550}
               alt={localize("Mockup do software AutoCAD em um notebook de alta performance")}
               className="w-full h-auto select-none pointer-events-none block border-0 drop-shadow-[0_20px_35px_rgba(7,212,243,0.12)]"
               loading="eager"
@@ -385,40 +305,20 @@ export const Home: React.FC = () => {
           </div>
         </div>
 
-        {/* Wave Divider */}
-        <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none z-20 pointer-events-none">
-          <svg className="relative block w-full h-[36px] md:h-[64px]" viewBox="0 0 1440 120" preserveAspectRatio="none">
-            <path d="M0,80 Q720,20 1440,80 L1440,120 L0,120 Z" className="fill-white"></path>
-          </svg>
-        </div>
       </section>
 
-      {/* Down Arrow (Placed outside Hero to prevent clipping by overflow-hidden) */}
-      <div className="relative z-30 h-0 w-full flex justify-center pointer-events-none">
-        <button
-          onClick={() => {
-            const nextSection = document.getElementById('confidence-section');
-            if (nextSection) {
-              nextSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
-          className="absolute -translate-y-1/2 w-8 h-8 md:w-10 h-10 rounded-full bg-white shadow-[0_4px_10px_rgba(0,0,0,0.1)] hover:shadow-[0_6px_15px_rgba(2,132,199,0.2)] flex items-center justify-center border border-slate-100/50 pointer-events-auto cursor-pointer animate-bounce transition-all duration-300 focus:outline-none"
-          aria-label={localize("Rolar para baixo")}
-        >
-          <ChevronDown className="w-4 h-4 md:w-5 h-5 text-sky-500" />
-        </button>
-      </div>
+      <HomeTrustpilot />
 
       {/* 2. CONFIDENCE SECTION */}
       <section id="confidence-section" className="py-12 bg-white scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200">
             {trustBadges.map((badge, i) => (
               <div
                 key={i}
-                className="bg-slate-50 rounded-2xl p-4 sm:p-5 border border-slate-100 hover:border-slate-200 transition-all duration-300 flex items-center sm:items-start space-x-3.5 text-left"
+                className="flex items-center gap-3 px-3 py-4 sm:px-5 sm:py-2 text-left"
               >
-                <div className="p-3 bg-white rounded-xl shadow-sm shrink-0 border border-slate-100">
+                <div className="shrink-0">
                   {badge.icon}
                 </div>
                 <div className="space-y-1">
@@ -436,8 +336,8 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
-          <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
-            <span className="text-[11px] font-extrabold text-accent-blue uppercase tracking-wider">
+          <div className="text-center max-w-3xl mx-auto space-y-3 mb-8">
+            <span className="text-[11px] font-extrabold text-action-primary uppercase tracking-wider">
               {localize(language === 'en' ? 'Complete Store' : language === 'es' ? 'Tienda Completa' : 'Loja Completa')}
             </span>
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
@@ -453,9 +353,9 @@ export const Home: React.FC = () => {
           </div>
 
           {/* Dynamic Catalog Notice Banner */}
-          <div className="max-w-4xl mx-auto mb-8 bg-sky-50/70 border border-sky-100/80 rounded-2xl p-4 text-center flex flex-col md:flex-row items-center justify-center gap-2 text-sky-950 text-sm shadow-sm select-none">
-            <span className="font-bold flex items-center justify-center text-accent-blue shrink-0">
-              {localize(language === 'en' ? '💡 Just A Few Highlights:' : language === 'es' ? '💡 Solo Algunos Destacados:' : '💡 Apenas Alguns Destaques:')}
+          <p className="max-w-4xl mx-auto mb-6 text-center text-sm text-slate-600">
+            <span className="font-semibold text-slate-800">
+              {localize(language === 'en' ? 'A few highlights:' : language === 'es' ? 'Algunos destacados:' : 'Alguns destaques:')}{' '}
             </span>
             <span>
               {localize(language === 'en'
@@ -464,7 +364,7 @@ export const Home: React.FC = () => {
                 ? 'Este es un escaparate rotativo. ¡Tenemos docenas de otros programas profesionales disponibles en nuestro catálogo completo!'
                 : 'Esta é uma vitrine rotativa. Temos dezenas de outros softwares profissionais disponíveis em nosso catálogo completo!')}
             </span>
-          </div>
+          </p>
 
           {/* Categories Slider/Tabs */}
           <div className="flex overflow-x-auto pb-4 mb-8 scrollbar-none justify-start -mx-4 px-4 gap-2">
@@ -472,7 +372,7 @@ export const Home: React.FC = () => {
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold tracking-wide whitespace-nowrap transition-all duration-200 border ${
+                className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold tracking-wide whitespace-nowrap transition-colors duration-200 border ${
                   activeCategory === category
                     ? 'bg-slate-900 border-slate-900 text-white shadow'
                     : 'bg-white border-slate-200 hover:border-slate-300 text-slate-600'
@@ -486,6 +386,27 @@ export const Home: React.FC = () => {
           {/* Products Carousel */}
           {filteredProducts.length > 0 ? (
             <div className="relative group/carousel w-full">
+              <div className="mb-3 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setIsPlaying((playing) => !playing)}
+                  disabled={prefersReducedMotion}
+                  aria-pressed={isPlaying && !prefersReducedMotion}
+                  className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-primary-hover disabled:cursor-not-allowed disabled:text-slate-500"
+                >
+                  {isPlaying && !prefersReducedMotion ? (
+                    <Pause className="h-4 w-4" aria-hidden="true" />
+                  ) : (
+                    <Play className="h-4 w-4" aria-hidden="true" />
+                  )}
+                  {localize(prefersReducedMotion
+                    ? (language === 'en' ? 'Automatic movement off' : language === 'es' ? 'Movimiento automático desactivado' : 'Movimento automático desativado')
+                    : isPlaying
+                    ? (language === 'en' ? 'Pause rotation' : language === 'es' ? 'Pausar rotación' : 'Pausar rotação')
+                    : (language === 'en' ? 'Resume rotation' : language === 'es' ? 'Reanudar rotación' : 'Retomar rotação'))}
+                </button>
+              </div>
+
               {/* Left Navigation Arrow */}
               <button
                 onClick={scrollLeft}
@@ -498,12 +419,10 @@ export const Home: React.FC = () => {
               {/* Scrollable Container */}
               <div
                 ref={carouselRef}
-                className="flex overflow-x-auto gap-6 pb-6 pt-2 px-1 scroll-smooth scrollbar-none snap-x snap-mandatory"
-                onMouseEnter={() => setIsPlaying(false)}
-                onMouseLeave={() => setIsPlaying(true)}
+                className="home-product-carousel flex overflow-x-auto pb-6 pt-2 scroll-smooth scrollbar-none snap-x snap-mandatory"
               >
                 {filteredProducts.map((product) => (
-                  <div key={product.id} className="w-[280px] sm:w-[320px] shrink-0 snap-start flex flex-col">
+                  <div key={product.id} className="home-carousel-item shrink-0 snap-start flex flex-col">
                     <ProductCard product={product} />
                   </div>
                 ))}
@@ -519,7 +438,7 @@ export const Home: React.FC = () => {
               </button>
             </div>
           ) : (
-            <div className="text-center py-12 bg-white rounded-3xl border border-slate-200">
+            <div className="py-12 text-center">
               <p className="text-slate-500 text-sm font-medium">{localize("Nenhum software cadastrado nesta categoria no momento.")}</p>
             </div>
           )}
@@ -528,89 +447,10 @@ export const Home: React.FC = () => {
           <div className="text-center mt-12">
             <Link
               to="/catalogo"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-white border border-slate-200 hover:border-slate-300 text-sm font-bold text-slate-800 hover:text-slate-900 shadow-sm transition-all duration-200"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-control bg-white border border-slate-200 hover:border-slate-300 text-sm font-bold text-slate-800 hover:text-slate-900 transition-colors duration-200"
             >
               <span>{localize("Ver catálogo de softwares completo")}</span>
               <ArrowRight className="w-4 h-4 ml-2 text-slate-500" />
-            </Link>
-          </div>
-
-        </div>
-      </section>
-
-      {/* 3.5 PREMIUM SUBSCRIPTION CAROUSEL SECTION */}
-      <section className="py-20 bg-gradient-to-b from-[#090d16] to-[#05070c] relative overflow-hidden border-b border-slate-900">
-        {/* Subtle glowing ambient lights */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gradient-to-r from-purple-500/10 to-sky-500/10 rounded-full blur-[120px] pointer-events-none"></div>
-        <div className="absolute -right-32 bottom-0 w-96 h-96 bg-purple-500/5 rounded-full blur-[100px] pointer-events-none"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
-          {/* Section Header */}
-          <div className="text-center max-w-3xl mx-auto space-y-4 mb-14">
-            <div className="inline-flex items-center space-x-2 bg-purple-500/10 text-purple-400 border border-purple-500/20 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse"></span>
-              <span>{localize("Novidade")}</span>
-            </div>
-            <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-white tracking-tight">
-              {localize("Acesso a Contas Oficiais e Assinaturas")}</h2>
-            <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-              {localize("Acesse ferramentas e suítes profissionais com credenciais oficiais exclusivas, como ")}<strong className="text-white font-semibold">{localize("Autodesk Todos os Aplicativos")}</strong>{localize(". Sem complicações, com faturamento simplificado e suporte dedicado C2Tech.")}</p>
-          </div>
-
-          {/* Subscription Carousel */}
-          {subscriptionProducts.length > 0 ? (
-            <div className="relative group/sub-carousel w-full">
-              {/* Left Navigation Arrow */}
-              {subscriptionProducts.length > 2 && (
-                <button
-                  onClick={scrollSubLeft}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 z-30 w-11 h-11 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-white shadow-md hover:shadow-lg flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none opacity-0 group-hover/sub-carousel:opacity-100 focus-visible:opacity-100"
-                  aria-label={localize("Anterior")}
-                >
-                  <ChevronLeft className="w-5 h-5 text-white" />
-                </button>
-              )}
-
-              {/* Scrollable Container */}
-              <div
-                ref={subCarouselRef}
-                className={`flex overflow-x-auto gap-6 pb-6 pt-2 px-1 scroll-smooth scrollbar-none snap-x snap-mandatory ${
-                  subscriptionProducts.length <= 2 ? 'md:justify-center' : ''
-                }`}
-              >
-                {subscriptionProducts.map((product) => (
-                  <div key={product.id} className="w-[280px] sm:w-[320px] shrink-0 snap-start flex flex-col">
-                    <ProductCard product={product} />
-                  </div>
-                ))}
-              </div>
-
-              {/* Right Navigation Arrow */}
-              {subscriptionProducts.length > 2 && (
-                <button
-                  onClick={scrollSubRight}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 z-30 w-11 h-11 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-white shadow-md hover:shadow-lg flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none opacity-0 group-hover/sub-carousel:opacity-100 focus-visible:opacity-100"
-                  aria-label={localize("Próximo")}
-                >
-                  <ChevronRight className="w-5 h-5 text-white" />
-                </button>
-              )}
-            </div>
-          ) : (
-            <div className="text-center py-12 bg-slate-900/40 rounded-3xl border border-slate-800">
-              <p className="text-slate-500 text-sm font-medium">{localize("Nenhuma assinatura cadastrada no momento.")}</p>
-            </div>
-          )}
-
-          {/* View Catalog Button */}
-          <div className="text-center mt-12">
-            <Link
-              to="/catalogo?tab=assinaturas"
-              className="inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-sm font-bold text-white shadow-[0_4px_20px_rgba(147,51,234,0.25)] hover:shadow-[0_4px_25px_rgba(147,51,234,0.35)] transition-all duration-200 group"
-            >
-              <span>{localize("Ver todos os planos de assinatura")}</span>
-              <ArrowRight className="w-4 h-4 ml-2 text-white/95 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
 
@@ -623,7 +463,7 @@ export const Home: React.FC = () => {
 
           {/* Section Header */}
           <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
-            <span className="text-[11px] font-extrabold text-accent-blue uppercase tracking-wider">
+            <span className="text-[11px] font-extrabold text-action-primary uppercase tracking-wider">
               {localize("Praticidade")}</span>
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
               {localize("Como funciona o processo de compra?")}</h2>
@@ -632,50 +472,30 @@ export const Home: React.FC = () => {
           </div>
 
           {/* Steps Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
-            {/* Visual connector line in desktop */}
-            <div className="hidden md:block absolute top-10 left-12 right-12 h-0.5 bg-slate-100 -z-10"></div>
+          <ol className="grid grid-cols-1 md:grid-cols-4 gap-8 border-t border-slate-200 pt-6">
 
             {steps.map((step, index) => (
-              <div key={index} className="text-center space-y-4">
-                <div className="w-14 h-14 rounded-full bg-slate-50 border border-slate-200/80 shadow-sm flex items-center justify-center font-display font-extrabold text-lg text-accent-blue mx-auto relative group-hover:scale-105 transition-transform">
-                  <span className="absolute inset-1.5 rounded-full bg-white border border-slate-100 flex items-center justify-center">
-                    {localize(step.number)}
-                  </span>
-                </div>
-                <div className="space-y-1.5 max-w-xs mx-auto">
-                  <h3 className="font-display font-bold text-base text-slate-900">{localize(step.title)}</h3>
-                  <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">{localize(step.desc)}</p>
-                </div>
-              </div>
+              <li key={index} className="space-y-2">
+                <span className="font-display text-sm font-bold tabular-nums text-action-primary">0{localize(step.number)}</span>
+                <h3 className="font-display font-bold text-base text-slate-900">{localize(step.title)}</h3>
+                <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">{localize(step.desc)}</p>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
 
       {/* 5. SUPPORT BANNER */}
       <section className="relative bg-slate-900 text-white py-16 overflow-hidden">
-        {/* Parallax Background Glows */}
-        <div
-          className="absolute -right-24 -top-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl  pointer-events-none"
-          style={{ transform: 'translate3d(0, calc((var(--scroll-y, 0px) - 1500px) * 0.08), 0)' }}
-        ></div>
-        <div
-          className="absolute -left-24 -bottom-24 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl  pointer-events-none"
-          style={{ transform: 'translate3d(0, calc((var(--scroll-y, 0px) - 1500px) * -0.06), 0)' }}
-        ></div>
-
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-3xl mx-auto text-center space-y-6">
-            <span className="bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider inline-block border border-emerald-500/20">
-              {localize("Instalação Garantida")}</span>
+          <div className="max-w-3xl mx-auto text-center space-y-5">
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-white tracking-tight">
               {localize("Precisa de ajuda com a instalação?")}</h2>
             <p className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
               {localize("Nossa equipe dedicada oferece orientação especializada para a correta instalação e configuração dos produtos adquiridos na C2Tech.")}</p>
 
-            <div className="p-4 bg-slate-800/50 rounded-2xl border border-slate-800 max-w-md mx-auto space-y-1 text-slate-300 text-xs sm:text-sm">
-              <p>🕒 <strong>{localize("Atendimento de suporte:")}</strong> {localize(" Segunda a Domingo, das 09:00 às 22:00.")}</p>
+            <div className="max-w-md mx-auto space-y-1 border-y border-slate-700 py-3 text-slate-300 text-xs sm:text-sm">
+              <p>🕒 <strong>{localize("Atendimento de suporte:")}</strong> {localize(" Segunda a Domingo, das 09:00 às 20:00.")}</p>
               <p className="text-slate-400 text-[11px]">{localize("Nota: Suporte exclusivo para clientes C2Tech. Poderá ser solicitado o e-mail informado na compra para localização do pedido.")}</p>
             </div>
 
@@ -684,55 +504,11 @@ export const Home: React.FC = () => {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-6 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl shadow-lg transition-all duration-200"
+                className="inline-flex items-center justify-center px-6 py-3.5 bg-feedback-success hover:bg-feedback-success-strong text-white font-bold rounded-control transition-colors"
               >
-                <MessageSquare className="w-5 h-5 mr-2 shrink-0" />
+                <WhatsAppIcon className="w-5 h-5 mr-2 shrink-0" />
                 {localize("Falar com suporte no WhatsApp")}</a>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. REVIEWS SECTION */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          {/* Section Header */}
-          <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
-            <span className="text-[11px] font-extrabold text-accent-blue uppercase tracking-wider">
-              {localize("Feedback Real")}</span>
-            <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
-              {localize("Quem compra na C2Tech aprova")}</h2>
-            <p className="text-slate-600 text-sm sm:text-base">
-              {localize("Veja as avaliações reais enviadas por nossos clientes profissionais.")}</p>
-          </div>
-
-          {/* Reviews Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {reviews.map((rev, i) => (
-              <div
-                key={i}
-                className="bg-slate-50 rounded-3xl p-6 border border-slate-100/60 shadow-sm flex flex-col justify-between text-left"
-              >
-                <div className="space-y-4">
-                  {/* Stars */}
-                  <div className="flex space-x-1">
-                    {[...Array(rev.stars)].map((_, idx) => (
-                      <Star key={idx} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                    ))}
-                  </div>
-                  {/* Comment */}
-                  <p className="text-slate-600 text-xs sm:text-sm italic leading-relaxed">
-                    &ldquo;{localize(rev.comment)}&rdquo;
-                  </p>
-                </div>
-                {/* Author Info */}
-                <div className="pt-6 border-t border-slate-200/40 mt-6">
-                  <h4 className="font-display font-bold text-sm text-slate-900">{localize(rev.author)}</h4>
-                  <p className="text-slate-500 text-[11px] font-medium">{localize(rev.role)}</p>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -742,25 +518,21 @@ export const Home: React.FC = () => {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
-          <div className="text-center space-y-3 mb-12">
-            <span className="text-[11px] font-extrabold text-accent-blue uppercase tracking-wider">
-              {localize("FAQ Resumido")}</span>
+          <div className="text-center mb-8">
             <h2 className="font-display font-extrabold text-3xl text-slate-900 tracking-tight">
               {localize("Dúvidas frequentes de nossos clientes")}</h2>
-            <p className="text-slate-600 text-sm">
-              {localize("Confira as respostas para as perguntas mais comuns recebidas por nosso time.")}</p>
           </div>
 
           {/* Accordion FAQ */}
-          <div className="space-y-4">
+          <div className="divide-y divide-slate-200 border-y border-slate-200">
             {faqItems.map((item, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm transition-all duration-200"
+                className="overflow-hidden"
               >
                 <button
                   onClick={() => toggleFaq(idx)}
-                  className="w-full flex items-center justify-between p-5 text-left font-display font-bold text-slate-900 hover:text-accent-blue transition-colors focus:outline-none"
+                  className="w-full flex items-center justify-between p-5 text-left font-display font-bold text-slate-900 hover:text-action-primary transition-colors focus:outline-none"
                   aria-expanded={openFaqIndex === idx}
                 >
                   <span className="text-sm sm:text-base pr-4">{localize(item.q)}</span>
@@ -777,30 +549,12 @@ export const Home: React.FC = () => {
                     openFaqIndex === idx ? 'max-h-64 border-t border-slate-50' : 'max-h-0'
                   }`}
                 >
-                  <div className="p-5 text-slate-600 text-xs sm:text-sm leading-relaxed bg-slate-50/50">
+                  <div className="px-5 pb-5 text-slate-600 text-xs sm:text-sm leading-relaxed">
                     {localize(item.a)}
                   </div>
                 </div>
               </div>
             ))}
-          </div>
-
-          {/* Help Notice / WhatsApp CTA */}
-          <div className="mt-12 text-center p-6 bg-white rounded-3xl border border-slate-150 shadow-sm max-w-xl mx-auto space-y-4">
-            <h3 className="font-display font-bold text-slate-900 text-sm sm:text-base">
-              {localize("Ainda tem alguma dúvida específica?")}</h3>
-            <p className="text-slate-500 text-xs">
-              {localize("Nosso time está online no WhatsApp para te ajudar a escolher a versão correta do software.")}</p>
-            <div>
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs sm:text-sm transition-colors duration-200"
-              >
-                <MessageSquare className="w-4 h-4 mr-2" />
-                {localize("Tirar dúvidas no WhatsApp")}</a>
-            </div>
           </div>
 
         </div>

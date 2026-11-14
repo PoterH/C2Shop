@@ -15,7 +15,7 @@ export default async function handler(req: any, res: any) {
 
   const { name, email, phone, productName, question } = req.body || {};
 
-  if (!name || !email || !question) {
+  if (typeof name !== 'string' || !name.trim() || name.length > 120 || typeof email !== 'string' || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || typeof question !== 'string' || !question.trim() || question.length > 6500 || (phone != null && (typeof phone !== 'string' || phone.length > 30)) || (productName != null && (typeof productName !== 'string' || productName.length > 300))) {
     return res.status(400).json({ error: 'Preencha todos os campos obrigatórios.' });
   }
 
@@ -31,18 +31,19 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
+    const escapeHtml = (value: string) => value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]!));
     const htmlContent = `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 20px auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 28px;">
         <h2 style="margin-top: 0; color: #0f172a;">Nova Pergunta no Site (C2Tech)</h2>
-        <p style="font-size: 14px; color: #475569;">Um visitante enviou uma dúvida na página do produto <strong>${productName || 'Software'}</strong>:</p>
+        <p style="font-size: 14px; color: #475569;">Um visitante enviou uma dúvida na página do produto <strong>${escapeHtml(productName || 'Software')}</strong>:</p>
         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 16px 0;">
-          <p style="margin: 4px 0; font-size: 14px;"><strong>Nome:</strong> ${name}</p>
-          <p style="margin: 4px 0; font-size: 14px;"><strong>E-mail:</strong> ${email}</p>
-          ${phone ? `<p style="margin: 4px 0; font-size: 14px;"><strong>Telefone/WhatsApp:</strong> ${phone}</p>` : ''}
-          <p style="margin: 4px 0; font-size: 14px;"><strong>Produto:</strong> ${productName || 'Geral'}</p>
+          <p style="margin: 4px 0; font-size: 14px;"><strong>Nome:</strong> ${escapeHtml(name)}</p>
+          <p style="margin: 4px 0; font-size: 14px;"><strong>E-mail:</strong> ${escapeHtml(email)}</p>
+          ${phone ? `<p style="margin: 4px 0; font-size: 14px;"><strong>Telefone/WhatsApp:</strong> ${escapeHtml(phone)}</p>` : ''}
+          <p style="margin: 4px 0; font-size: 14px;"><strong>Produto:</strong> ${escapeHtml(productName || 'Geral')}</p>
         </div>
         <h3 style="font-size: 15px; color: #0f172a; margin-bottom: 8px;">Pergunta do Cliente:</h3>
-        <div style="background: #f1f5f9; border-left: 4px solid #0284c7; padding: 14px; border-radius: 6px; font-size: 14px; color: #1e293b; white-space: pre-line;">${question}</div>
+        <div style="background: #f1f5f9; border-left: 4px solid #0284c7; padding: 14px; border-radius: 6px; font-size: 14px; color: #1e293b; white-space: pre-line;">${escapeHtml(question)}</div>
       </div>
     `;
 

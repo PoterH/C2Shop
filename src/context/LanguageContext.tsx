@@ -120,7 +120,7 @@ const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     temporarily_unavailable: 'Temporariamente Indisponível',
 
     trustpilot_based_on_bar: 'Com base em',
-    trustpilot_bar_reviews: '1.782 avaliações',
+    trustpilot_bar_reviews: '1.785 avaliações',
     trustpilot_verified: 'Verificado',
     trustpilot_showing_high_ratings: 'Exibindo nossas avaliações de 4 & 5 estrelas',
 
@@ -241,7 +241,7 @@ const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     temporarily_unavailable: 'Temporarily Unavailable',
 
     trustpilot_based_on_bar: 'Based on',
-    trustpilot_bar_reviews: '1,782 reviews',
+    trustpilot_bar_reviews: '1,785 reviews',
     trustpilot_verified: 'Verified',
     trustpilot_showing_high_ratings: 'Showing our 4 & 5 star reviews',
 
@@ -362,7 +362,7 @@ const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     temporarily_unavailable: 'Temporalmente No Disponible',
 
     trustpilot_based_on_bar: 'Con base en',
-    trustpilot_bar_reviews: '1.782 opiniones',
+    trustpilot_bar_reviews: '1.785 opiniones',
     trustpilot_verified: 'Verificado',
     trustpilot_showing_high_ratings: 'Mostrando nuestras valoraciones de 4 y 5 estrellas',
 
@@ -483,7 +483,7 @@ const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     temporarily_unavailable: 'Temporariamente Indisponível',
 
     trustpilot_based_on_bar: 'Com base em',
-    trustpilot_bar_reviews: '1.782 avaliações',
+    trustpilot_bar_reviews: '1.785 avaliações',
     trustpilot_verified: 'Verificado',
     trustpilot_showing_high_ratings: 'A apresentar as nossas avaliações de 4 e 5 estrelas',
 

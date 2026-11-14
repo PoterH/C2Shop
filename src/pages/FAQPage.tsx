@@ -1,6 +1,7 @@
+import { WhatsAppIcon } from '../components/WhatsAppIcon';
 import { useText } from '../hooks/useText';
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, MessageSquare, HelpCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 
 export const FAQPage: React.FC = () => {
   const localize = useText();
@@ -88,7 +89,7 @@ export const FAQPage: React.FC = () => {
             >
               <button
                 onClick={() => toggleFaq(idx)}
-                className="w-full flex items-center justify-between p-5 text-left font-display font-bold text-slate-900 hover:text-accent-blue transition-colors focus:outline-none"
+                className="w-full flex items-center justify-between p-5 text-left font-display font-bold text-slate-900 hover:text-action-primary transition-colors focus:outline-none"
                 aria-expanded={openIndex === idx}
               >
                 <span className="text-sm sm:text-base pr-4">{localize(item.q)}</span>
@@ -104,7 +105,7 @@ export const FAQPage: React.FC = () => {
                   openIndex === idx ? 'max-h-96 border-t border-slate-50' : 'max-h-0'
                 }`}
               >
-                <div className="p-5 text-slate-600 text-xs sm:text-sm leading-relaxed bg-slate-50/50">
+                <div className="p-5 text-slate-600 text-sm sm:text-base leading-relaxed bg-slate-50/50">
                   {localize(item.a)}
                 </div>
               </div>
@@ -117,16 +118,16 @@ export const FAQPage: React.FC = () => {
           <HelpCircle className="w-8 h-8 text-sky-500 mx-auto" />
           <h3 className="font-display font-bold text-slate-900 text-base">
             {localize("Sua dúvida não está listada aqui?")}</h3>
-          <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
+          <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
             {localize("Não se preocupe! Fale agora mesmo com nosso atendimento humano no WhatsApp e tire todas as suas dúvidas em minutos.")}</p>
           <div className="pt-2">
             <a
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-xs sm:text-sm transition-all"
+              className="inline-flex items-center justify-center px-6 py-3 bg-feedback-success hover:bg-emerald-600 text-white font-bold rounded-2xl text-sm sm:text-base transition-all"
             >
-              <MessageSquare className="w-4 h-4 mr-2" />
+              <WhatsAppIcon className="w-4 h-4 mr-2" />
               {localize("Falar no WhatsApp")}</a>
           </div>
         </div>

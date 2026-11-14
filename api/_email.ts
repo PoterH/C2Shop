@@ -176,7 +176,7 @@ export async function sendConfirmationEmail({
             </div>
             <div style="margin-bottom: 16px;">
               <span style="background-color: #0284c7; color: #ffffff; width: 24px; height: 24px; border-radius: 50%; display: inline-block; text-align: center; line-height: 24px; font-weight: bold; font-size: 13px; margin-right: 12px; vertical-align: middle;">3</span>
-              <span style="font-size: 14px; color: #475569; line-height: 1.5; vertical-align: middle;">Pronto! Use seus softwares de forma vitalícia e definitiva.</span>
+              <span style="font-size: 14px; color: #475569; line-height: 1.5; vertical-align: middle;">Pronto! Siga as instruções recebidas para acessar os produtos adquiridos.</span>
             </div>
           </div>
 
@@ -198,13 +198,14 @@ export async function sendConfirmationEmail({
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
+        ...((paymentMethod === 'boleto' || orderId.startsWith('infinitepay_')) ? { 'Idempotency-Key': `delivery-${orderId}` } : {}),
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         from: fromEmail,
         to: buyerEmail,
-        subject: `Sua Licença Vitalícia do ${subjectLabel} está liberada! 🚀`,
+        subject: `Seu acesso a ${subjectLabel} está liberado! 🚀`,
         html: htmlContent
       })
     });

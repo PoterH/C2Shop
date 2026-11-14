@@ -1,9 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { products } from '../data/products';
+import { cartItemKey, itemTotal } from '../utils/cart';
 import type { Product, LicenseOption } from '../data/products';
 import { trackEvent } from '../utils/pixel';
 
 interface CartContextType {
   cartItems: Product[];
+  cartAddVersion: number;
   isCartOpen: boolean;
   couponCode: string;
   subtotal: number;
@@ -18,6 +21,7 @@ interface CartContextType {
   ) => void;
   removeFromCart: (productId: string) => void;
   clearCart: () => void;
+  updateQuantity: (key: string, quantity: number) => void;
   setIsCartOpen: (isOpen: boolean) => void;
   applyCoupon: (code: string) => { success: boolean; message: string };
   removeCoupon: () => void;
@@ -29,10 +33,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [cartItems, setCartItems] = useState<Product[]>(() => {
     try {
       const saved: unknown = JSON.parse(localStorage.getItem('c2shop_cart') || '[]');
-      return Array.isArray(saved) ? saved.filter((item): item is Product => Boolean(item && typeof item.id === 'string' && typeof item.name === 'string' && typeof item.price === 'number')) : [];
+      return Array.isArray(saved) ? saved.filter((item): item is Product => Boolean(item && typeof item.id === 'string' && typeof item.name === 'string' && typeof item.price === 'number')).map(item => {
+        const current = products.find(product => product.slug === item.slug);
+        if(!current)return item;
+        const option = current.licenseOptions?.find(option => option.quantity === item.selectedLicenseOption?.quantity);
+        if(item.selectedLicenseOption && !option)return item;
+        return {...current, selectedLicenseOption:option, selectedSubOption:item.selectedSubOption, deviceCount:item.deviceCount};
+      }) : [];
     } catch { return []; }
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [cartAddVersion, setCartAddVersion] = useState(0);
   const [couponCode, setCouponCode] = useState(() => {
     try { return localStorage.getItem('c2shop_coupon') || ''; } catch { return ''; }
   });
@@ -67,16 +78,19 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   ) => {
     if (product.unavailable) return;
 
+    setCartAddVersion(version => version + 1);
+
     const chosenOption = licenseOption !== undefined ? licenseOption : (product.licenseOptions && product.licenseOptions.length > 0 ? product.licenseOptions[0] : undefined);
     const chosenSubOption = chosenOption ? 'avulso' : (subOption || 'recurrent');
-    const validDeviceCount = Math.max(1, deviceCount);
+    const validDeviceCount = Math.min(99, Math.max(1, Math.trunc(deviceCount)));
 
     setCartItems((prev) => {
       // Check if already in cart
-      const exists = prev.find((item) => item.id === product.id);
+      const chosenKey = cartItemKey({ ...product, selectedLicenseOption: chosenOption, selectedSubOption: chosenSubOption });
+      const exists = prev.find((item) => cartItemKey(item) === chosenKey);
       if (exists) {
         return prev.map((item) =>
-          item.id === product.id
+          cartItemKey(item) === chosenKey
             ? {
                 ...item,
                 selectedSubOption: chosenSubOption,
@@ -117,7 +131,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const removeFromCart = (productId: string) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== productId));
+    setCartItems((prev) => prev.filter((item) => cartItemKey(item) !== productId));
+  };
+
+  const updateQuantity = (key: string, quantity: number) => {
+    setCartItems(prev => prev.map(item => cartItemKey(item) === key ? { ...item, deviceCount: Math.min(99, Math.max(1, Math.trunc(quantity))) } : item));
   };
 
   const clearCart = () => {
@@ -129,7 +147,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const cleanCode = code.trim().toUpperCase();
     if (cleanCode === 'OFF10') {
       setCouponCode('OFF10');
-      if (cartItems.length > 1) {
+      if (new Set(cartItems.map(item => item.id)).size > 1) {
         return { success: true, message: 'Cupom OFF10 aplicado! Desconto de 10% ativo.' };
       } else {
         return {
@@ -146,27 +164,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Math calculations
-  const subtotal = cartItems.reduce((sum, item) => {
-    const count = item.deviceCount || 1;
-    if (item.selectedLicenseOption) {
-      return sum + item.selectedLicenseOption.price * count;
-    }
-    if (item.isSubscription) {
-      const isRecurrent = item.selectedSubOption !== 'avulso';
-      return sum + (isRecurrent ? (item.recurrencePrice || item.price) : item.price) * count;
-    }
-    return sum + item.price * count;
-  }, 0);
+  const subtotal = Math.round(cartItems.reduce((sum, item) => sum + itemTotal(item), 0) * 100) / 100;
 
   // Coupon OFF10 only applies when items count > 1
   const discountPercentage = (couponCode === 'OFF10' && cartItems.length > 1) ? 10 : 0;
-  const discountAmount = subtotal * (discountPercentage / 100);
+  const discountAmount = Math.round(subtotal * discountPercentage) / 100;
   const total = subtotal - discountAmount;
 
   return (
     <CartContext.Provider
       value={{
         cartItems,
+        cartAddVersion,
         isCartOpen,
         couponCode,
         subtotal,
@@ -176,6 +185,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addToCart,
         removeFromCart,
         clearCart,
+        updateQuantity,
         setIsCartOpen,
         applyCoupon,
         removeCoupon,

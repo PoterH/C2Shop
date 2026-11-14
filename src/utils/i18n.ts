@@ -7,6 +7,10 @@ export function translateCategory(category: string, lang: LanguageCode): string 
     switch (category) {
       case 'Todos':
         return 'All Software';
+      case 'Produtividade & Utilitários':
+        return 'Productivity & Utilities';
+      case 'Projetos Técnicos':
+        return 'Technical Projects';
       case 'Engenharia e Arquitetura':
         return 'Engineering & Architecture';
       case 'Design e Criatividade':
@@ -30,6 +34,10 @@ export function translateCategory(category: string, lang: LanguageCode): string 
     switch (category) {
       case 'Todos':
         return 'Todos los Softwares';
+      case 'Produtividade & Utilitários':
+        return 'Productividad y Utilidades';
+      case 'Projetos Técnicos':
+        return 'Proyectos Técnicos';
       case 'Engenharia e Arquitetura':
         return 'Ingeniería y Arquitectura';
       case 'Design e Criatividade':

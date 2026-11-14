@@ -1,17 +1,18 @@
+import { LifetimeSeal } from '../components/LifetimeSeal';
+import { AnimatedPrice } from '../components/AnimatedPrice';
+import { JellyRadio } from '../components/JellyRadio';
+import { galleryImageSource } from '../data/galleryImages';
+import { StoreReviews } from '../components/StoreReviews';
 import { ReviewComment } from '../components/ReviewComment';
 import { useText } from '../hooks/useText';
-import React, { lazy, Suspense, useEffect, useMemo, useState, useRef } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
-const CheckoutModal = lazy(() => import('../components/CheckoutModal').then(module => ({ default: module.CheckoutModal })));
+import React, { useEffect, useMemo, useState, useRef } from 'react';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
-  TrustpilotStars,
   TrustpilotRatingHorizontal,
-  TrustpilotLogo,
   TrustGuaranteesModal,
 } from '../components/TrustBadges';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
-import { getEffectiveCheckoutUrl } from '../data/internationalCheckouts';
 import { useCurrency } from '../context/CurrencyContext';
 import { getProductBySlug, products, type LicenseOption } from '../data/products';
 import {
@@ -32,7 +33,6 @@ import {
   Edit3,
   MessageSquare,
   X,
-  Send,
   CheckCircle2,
   Sparkles,
   ShoppingCart,
@@ -169,213 +169,21 @@ const AVATAR_COLORS = [
 
 
 
-const TRUSTPILOT_REVIEWS_EN = [
-  {
-    id: 1,
-    author: 'Carlos Eduardo M.',
-    timeAgo: '2 days ago',
-    rating: 4,
-    title: 'Super fast delivery and very clear video tutorial',
-    comment:
-      'Received the Google Drive download link in my email in less than 2 minutes. The step-by-step video made installation effortless.',
-  },
-  {
-    id: 2,
-    author: 'Fernanda S. Oliveira',
-    timeAgo: '4 days ago',
-    rating: 5,
-    title: 'Complete software and top-tier support',
-    comment:
-      'This is the second software I bought from C2Tech. Runs smoothly without any monthly fees, team is very helpful.',
-  },
-  {
-    id: 3,
-    author: 'Roberto Almeida Jr.',
-    timeAgo: '1 week ago',
-    rating: 5,
-    title: 'Outstanding value for money',
-    comment:
-      'Installed on my Mac and working like a charm. The video guide shows exactly how to activate without any headaches.',
-  },
-  {
-    id: 4,
-    author: 'Juliana Costa',
-    timeAgo: '1 week ago',
-    rating: 5,
-    title: 'Very good, highly recommend this store',
-    comment:
-      'Took about 5 minutes to arrive in my email because it landed in promotions, but the software is 100% full and lifetime.',
-  },
-  {
-    id: 5,
-    author: 'Marcos Vinícius T.',
-    timeAgo: '2 weeks ago',
-    rating: 5,
-    title: 'Best software store I have ever used',
-    comment:
-      'Guaranteed activation indeed! Had a quick question and they answered me on WhatsApp right away. 10/10.',
-  },
-];
-
-const TRUSTPILOT_REVIEWS_ES = [
-  {
-    id: 1,
-    author: 'Carlos Eduardo M.',
-    timeAgo: 'Hace 2 días',
-    rating: 4,
-    title: 'Entrega súper rápida y video muy explicativo',
-    comment:
-      'Recibí el enlace en el correo en menos de 2 minutos tras el pago. El video paso a paso facilitó muchísimo la instalación.',
-  },
-  {
-    id: 2,
-    author: 'Fernanda S. Oliveira',
-    timeAgo: 'Hace 4 días',
-    rating: 5,
-    title: 'Software completo y soporte de 10',
-    comment:
-      'Ya es el segundo programa que compro en C2Tech. Funciona a la perfección sin mensualidades, equipo muy atento.',
-  },
-  {
-    id: 3,
-    author: 'Roberto Almeida Jr.',
-    timeAgo: 'Hace 1 semana',
-    rating: 5,
-    title: 'Excelente relación calidad-precio',
-    comment:
-      'Instalado en mi Mac y funcionando de maravilla. El tutorial en video muestra exactamente cómo activar sin ningún dolor de cabeza.',
-  },
-  {
-    id: 4,
-    author: 'Juliana Costa',
-    timeAgo: 'Hace 1 semana',
-    rating: 5,
-    title: 'Muy bueno, recomiendo la tienda',
-    comment:
-      'Tardó unos 5 minutos en llegar a mi correo porque cayó en la pestaña promociones, pero el programa es completo y de por vida.',
-  },
-  {
-    id: 5,
-    author: 'Marcos Vinícius T.',
-    timeAgo: 'Hace 2 semanas',
-    rating: 5,
-    title: 'La mejor tienda de software que he probado',
-    comment:
-      '¡Activación garantizada de verdad! Tuve una duda sencilla y me respondieron por WhatsApp enseguida. Nota diez.',
-  },
-];
-
-const TRUSTPILOT_REVIEWS_PT = [
-  {
-    id: 1,
-    author: 'Carlos Eduardo M.',
-    timeAgo: 'Há 2 dias',
-    rating: 4,
-    title: 'Entrega super rápida e vídeo bem explicativo',
-    comment:
-      'Recebi o link no e-mail menos de 2 minutos após o pagamento. O vídeo passo a passo facilitou imenso a instalação.',
-  },
-  {
-    id: 2,
-    author: 'Fernanda S. Oliveira',
-    timeAgo: 'Há 4 dias',
-    rating: 5,
-    title: 'Software completo e apoio nota 10',
-    comment:
-      'Já é o segundo programa que compro na C2Tech. Funciona na perfeição sem mensalidade, equipa muito atenciosa.',
-  },
-  {
-    id: 3,
-    author: 'Roberto Almeida Jr.',
-    timeAgo: 'Há 1 semana',
-    rating: 5,
-    title: 'Excelente relação qualidade-preço',
-    comment:
-      'Instalado no meu Mac a funcionar sem falhas. O tutorial em vídeo mostra exatamente como ativar sem complicações.',
-  },
-  {
-    id: 4,
-    author: 'Juliana Costa',
-    timeAgo: 'Há 1 semana',
-    rating: 5,
-    title: 'Muito bom, recomendo a loja',
-    comment:
-      'Demorou cerca de 5 minutos a chegar ao meu e-mail, mas o programa é completo e vitalício.',
-  },
-  {
-    id: 5,
-    author: 'Marcos Vinícius T.',
-    timeAgo: 'Há 2 semanas',
-    rating: 5,
-    title: 'A melhor loja de software em que já comprei',
-    comment:
-      'Ativação garantida! Tive uma dúvida simples e responderam-me de imediato pelo WhatsApp. Excelente!',
-  },
-];
-
-const TRUSTPILOT_REVIEWS = [
-  {
-    id: 1,
-    author: 'Carlos Eduardo M.',
-    timeAgo: 'Há 2 dias',
-    rating: 4,
-    title: 'Entrega super rápida e vídeo bem explicativo',
-    comment:
-      'Recebi o link no e-mail menos de 2 minutos depois do Pix. O vídeo passo a passo facilitou demais a instalação.',
-  },
-  {
-    id: 2,
-    author: 'Fernanda S. Oliveira',
-    timeAgo: 'Há 4 dias',
-    rating: 5,
-    title: 'Software completo e suporte nota 10',
-    comment:
-      'Já é o segundo programa que compro na C2Tech. Funciona perfeitamente sem mensalidade, equipe muito atenciosa.',
-  },
-  {
-    id: 3,
-    author: 'Roberto Almeida Jr.',
-    timeAgo: 'Há 1 semana',
-    rating: 5,
-    title: 'Excelente custo-benefício',
-    comment:
-      'Instalado no meu Mac e rodando liso. O tutorial em vídeo mostra exatamente como ativar sem nenhuma dor de cabeça.',
-  },
-  {
-    id: 4,
-    author: 'Juliana Costa',
-    timeAgo: 'Há 1 semana',
-    rating: 5,
-    title: 'Muito bom, recomendo a loja',
-    comment:
-      'Demorou uns 5 minutinhos para chegar no meu e-mail porque caiu na aba promoções, mas o programa é completo e vitalício.',
-  },
-  {
-    id: 5,
-    author: 'Marcos Vinícius T.',
-    timeAgo: 'Há 2 semanas',
-    rating: 5,
-    title: 'Melhor loja de softwares que já comprei',
-    comment:
-      'Ativação garantida mesmo! Tive uma dúvida boba e me responderam no WhatsApp na mesma hora. Nota mil.',
-  },
-];
-
 const ProductDetailContent: React.FC = () => {
+  const navigate = useNavigate();
   const localize = useText();
   const { slug } = useParams<{ slug: string }>();
   const [isGuaranteesModalOpen, setIsGuaranteesModalOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<'recurrent' | 'avulso'>('recurrent');
   const [selectedLicenseOption, setSelectedLicenseOption] = useState<LicenseOption | undefined>(() => {
     const options = getProductBySlug(slug || '')?.licenseOptions;
     return options?.reduce<LicenseOption | undefined>((cheapest, option) => !cheapest || option.price < cheapest.price ? option : cheapest, undefined);
   });
   const [quantity, setQuantity] = useState<number>(1);
+  const [mobileInfoOpen, setMobileInfoOpen] = useState<'description' | 'specs' | 'activation' | null>(null);
   const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'activation'>('description');
   const [activeThumbIndex, setActiveThumbIndex] = useState<number>(0);
-  const [trustpilotSlideIndex, setTrustpilotSlideIndex] = useState<number>(0);
 
   // Modals for "Faça uma pergunta" & "Escrever uma avaliação"
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
@@ -393,9 +201,8 @@ const ProductDetailContent: React.FC = () => {
   const [fakeReviewName, setFakeReviewName] = useState('');
   const [fakeReviewComment, setFakeReviewComment] = useState('');
 
-  const { addToCart } = useCart();
+  const { addToCart, setIsCartOpen } = useCart();
   const { language, isInternational, t } = useLanguage();
-  const activeTrustpilotReviews = language === "en" ? TRUSTPILOT_REVIEWS_EN : language === "es" ? TRUSTPILOT_REVIEWS_ES : language === "pt-PT" ? TRUSTPILOT_REVIEWS_PT : TRUSTPILOT_REVIEWS;
   const { formatPrice } = useCurrency();
   const hasProcessedCheckoutRef = useRef(false);
   const relatedCarouselRef = useRef<HTMLDivElement>(null);
@@ -571,7 +378,7 @@ const ProductDetailContent: React.FC = () => {
           <div className="pt-2">
             <Link
               to="/catalogo"
-              className="inline-flex items-center px-5 py-2.5 bg-accent-blue text-white font-semibold rounded-xl text-sm shadow hover:bg-accent-blue-dark transition-all"
+              className="inline-flex items-center px-5 py-2.5 bg-action-primary text-white font-semibold rounded-xl text-sm shadow hover:bg-action-primary-hover transition-all"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               {localize("Voltar ao catálogo")}</Link>
@@ -756,8 +563,8 @@ const ProductDetailContent: React.FC = () => {
       id: 102,
       type: 'warranty' as const,
       imageUrl: undefined,
-      label: 'Software Vitalício',
-      badge: t('thumb_lifetime'),
+      label: product.id === 'autodesk_all_apps' ? 'Conta Privada Autodesk' : 'Software Vitalício',
+      badge: product.id === 'autodesk_all_apps' ? 'CONTA' : t('thumb_lifetime'),
     },
   ];
 
@@ -770,22 +577,22 @@ const ProductDetailContent: React.FC = () => {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Breadcrumb + Top Rating Strip */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-4 mb-6 border-b border-slate-100">
+        <div className="flex flex-col gap-2 pb-3 mb-4 border-b border-slate-100">
           <nav
             className="flex items-center flex-wrap gap-1.5 text-xs text-slate-500 min-w-0"
             aria-label={localize("Breadcrumb")}
           >
-            <Link to="/" className="hover:text-blue-600 transition-colors">
+            <Link to="/" className="hover:text-action-primary transition-colors">
               {localize(t('breadcrumb_home'))}
             </Link>
             <span>/</span>
-            <Link to="/catalogo" className="hover:text-blue-600 transition-colors">
+            <Link to="/catalogo" className="hover:text-action-primary transition-colors">
               {localize(t('breadcrumb_all_products'))}
             </Link>
             <span>/</span>
             <Link
               to={`/catalogo?categoria=${encodeURIComponent(product.category)}`}
-              className="hover:text-blue-600 transition-colors"
+              className="hover:text-action-primary transition-colors"
             >
               {localize(translateCategory(product.category, language))}
             </Link>
@@ -794,60 +601,30 @@ const ProductDetailContent: React.FC = () => {
           </nav>
 
           {/* Trustpilot Official Header Rating Bar */}
-          <TrustpilotRatingHorizontal onOpenModal={() => setIsGuaranteesModalOpen(true)} />
+          <TrustpilotRatingHorizontal className="self-center" onOpenModal={() => setIsGuaranteesModalOpen(true)} />
         </div>
 
         {/* =================================================================== */}
         {/* HERO SECTION (Left: Box Preview + Thumbnails | Right: Configurator) */}
         {/* =================================================================== */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-12">
+        <div className="product-hero grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start mb-10">
           {/* LEFT COLUMN: Product Box Image & Thumbnails */}
-          <div className="lg:col-span-6 flex flex-col items-center">
-            <div className="relative w-full max-w-[460px] bg-white rounded-2xl border border-slate-100 p-6 sm:p-8 flex flex-col items-center justify-center min-h-[360px] sm:min-h-[410px] shadow-sm">
-              {/* Top-left Save Badge */}
-              {savingsAmount > 0 && (
-                <div className="absolute top-4 left-4 z-10 bg-[#18b259] text-white text-xs sm:text-sm font-extrabold px-3.5 py-1.5 rounded-md shadow-sm">
-                  {localize(t('save'))} {localize(formattedSavings)}
-                </div>
-              )}
-
-              {/* Top-right Gold Lifetime Software Badge */}
-              <div
-                className="absolute top-3 right-3 z-10 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-amber-300 via-amber-400 to-amber-600 p-1 shadow-md flex items-center justify-center text-center select-none border-2 border-amber-200"
-                title={localize("Software Vitalício")}
-              >
-                <div className="w-full h-full rounded-full border border-dashed border-amber-900/40 flex flex-col items-center justify-center px-1">
-                  {/* 3 Stars in a Mini Arch */}
-                  <div className="flex items-end justify-center gap-0.5 mb-1">
-                    <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-amber-950 text-amber-950 -rotate-18 translate-y-[1.5px]" />
-                    <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-amber-950 text-amber-950 -translate-y-[1.5px]" />
-                    <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-amber-950 text-amber-950 rotate-18 translate-y-[1.5px]" />
-                  </div>
-                  <span className="text-[7.5px] sm:text-[9px] font-black text-amber-950 uppercase leading-none tracking-tight">
-                    {localize(t('badge_software'))}
-                  </span>
-                  <span className="text-[8.5px] sm:text-[10px] font-black text-amber-950 uppercase leading-tight mt-0.5 tracking-tight">
-                    {localize(t('badge_lifetime_gold'))}
-                  </span>
-                </div>
-              </div>
-
+          <div className="product-gallery lg:col-span-6 min-w-0 flex flex-col items-center">
+            <div className="product-gallery-stage relative w-full flex flex-col items-center justify-center pt-14 pb-3 min-h-[350px] sm:min-h-[440px]">
               {/* Main Visual Slides based on activeThumb */}
               {activeThumb?.type === 'image' ? (
-                <div className="relative flex flex-col items-center justify-center w-full my-auto pt-4">
+                <div className="relative flex flex-col items-center justify-center w-full my-auto">
                   {activeThumb.imageUrl ? (
-                    <div className="relative w-full max-w-[330px] rounded-2xl overflow-hidden shadow-xl border border-slate-200/70 bg-slate-900">
+                    <div className="product-cover">
                       <img
-                        src={activeThumb.imageUrl}
+                        src={galleryImageSource(activeThumb.imageUrl)}
                         alt={`${product.name} - ${selectedVersionBadge}`}
-                        className="w-full h-auto object-cover"
+                        className="product-gallery-image"
+                        fetchPriority="high"
+                        decoding="async"
                       />
-                      <div className="bg-slate-950/95 text-white px-4 py-2.5 flex items-center justify-between text-xs border-t border-white/10">
-                        <span className="font-bold text-slate-200">{localize(product.name)}</span>
-                        <span className="bg-blue-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded">
-                          {localize(selectedVersionBadge)}
-                        </span>
-                      </div>
+                      {savingsAmount > 0 && <div className="product-cover-overlay product-savings">{localize(t('save'))} {localize(formattedSavings)}</div>}
+                      <div className="product-cover-overlay product-lifetime"><LifetimeSeal label={localize(product.isSubscription ? 'Original' : 'Vitalício')} /></div>
                     </div>
                   ) : (
                     <div className="w-56 h-72 bg-gradient-to-b from-slate-100 to-slate-200 rounded-xl shadow-xl border border-slate-300 flex flex-col justify-between p-5 text-left relative">
@@ -855,7 +632,7 @@ const ProductDetailContent: React.FC = () => {
                         <span className="font-display font-black text-slate-800 text-sm">
                           C2TECH
                         </span>
-                        <span className="text-[10px] font-bold bg-blue-600 text-white px-2 py-0.5 rounded">
+                        <span className="text-xs font-bold bg-action-primary text-white px-2 py-0.5 rounded">
                           {localize(selectedPlatform)}
                         </span>
                       </div>
@@ -870,7 +647,7 @@ const ProductDetailContent: React.FC = () => {
                           {localize(selectedVersionBadge)}
                         </p>
                       </div>
-                      <div className="border-t border-slate-300 pt-2 flex items-center justify-between text-[10px] font-bold text-slate-600">
+                      <div className="border-t border-slate-300 pt-2 flex items-center justify-between text-xs font-bold text-slate-600">
                         <span>{localize("LICENÇA VITALÍCIA")}</span>
                         <span className="text-emerald-600">{localize("COMPLETO")}</span>
                       </div>
@@ -879,7 +656,7 @@ const ProductDetailContent: React.FC = () => {
                 </div>
               ) : activeThumb?.type === 'video' ? (
                 <div className="w-full max-w-[340px] bg-slate-900 text-white rounded-2xl p-6 shadow-xl space-y-4 text-center my-auto">
-                  <div className="w-14 h-14 rounded-2xl bg-blue-600/20 border border-blue-500/30 text-blue-400 flex items-center justify-center mx-auto">
+                  <div className="w-14 h-14 rounded-2xl bg-action-primary/20 border border-blue-500/30 text-blue-400 flex items-center justify-center mx-auto">
                     <PlayCircle className="w-8 h-8" />
                   </div>
                   <h4 className="font-display font-bold text-lg">
@@ -889,28 +666,28 @@ const ProductDetailContent: React.FC = () => {
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     {localize(product.id === 'autodesk_all_apps'
-                      ? 'Você recebe um guia passo a passo ensinando a realizar o login na sua conta oficial da Autodesk e baixar qualquer um dos mais de 80 softwares.'
+                      ? 'Você recebe um guia passo a passo ensinando a realizar o login na sua conta oficial da Autodesk e baixar qualquer um dos mais de 86 aplicativos.'
                       : 'Junto com os arquivos de instalação, você recebe um vídeo tutorial gravado pela nossa equipe mostrando cada clique da instalação e ativação definitiva.')}
                   </p>
-                  <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full">
+                  <div className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 bg-feedback-success/10 px-3 py-1 rounded-full">
                     <Check className="w-3.5 h-3.5" /> {localize(" Fácil, rápido e sem complicação")}</div>
                 </div>
               ) : activeThumb?.type === 'email' ? (
                 <div className="w-full max-w-[340px] bg-slate-900 text-white rounded-2xl p-6 shadow-xl space-y-4 text-center my-auto">
-                  <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto">
+                  <div className="w-14 h-14 rounded-2xl bg-feedback-success/20 border border-feedback-success/30 text-emerald-400 flex items-center justify-center mx-auto">
                     <Mail className="w-8 h-8" />
                   </div>
                   <h4 className="font-display font-bold text-lg">
                     {localize(product.id === 'autodesk_all_apps'
-                      ? 'Login e Senha Oficiais no E-mail'
+                      ? 'Login e Senha da Conta Privada'
                       : 'Link de Download Direto no E-mail')}
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     {localize(product.id === 'autodesk_all_apps'
-                      ? 'Assim que seu pagamento via Pix ou Cartão é confirmado, enviamos as credenciais de acesso oficial (login e senha) diretamente no seu e-mail e WhatsApp.'
+                      ? 'Assim que seu pagamento via Pix ou Cartão é confirmado, enviamos as credenciais da conta privada (login e senha) diretamente no seu e-mail e WhatsApp.'
                       : 'Assim que seu pagamento via Pix ou Cartão é confirmado, nosso sistema envia automaticamente o link exclusivo do Google Drive diretamente para o seu e-mail.')}
                   </p>
-                  <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full">
+                  <div className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full">
                     <CloudDownload className="w-3.5 h-3.5" /> {localize(" Entrega Rápida e Privada")}</div>
                 </div>
               ) : (
@@ -920,15 +697,15 @@ const ProductDetailContent: React.FC = () => {
                   </div>
                   <h4 className="font-display font-bold text-lg">
                     {localize(product.id === 'autodesk_all_apps'
-                      ? 'Acesso Oficial Garantido'
+                      ? 'Conta Privada Autodesk'
                       : 'Funcionamento Vitalício do Software')}
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     {localize(product.id === 'autodesk_all_apps'
-                      ? 'Conta oficial com acesso irrestrito a todos os softwares da Autodesk (AutoCAD, Revit, Maya, 3ds Max, etc.) no portal manage.autodesk.com.'
+                      ? 'Conta privada com acesso a todos os softwares da Autodesk (AutoCAD, Revit, Maya, 3ds Max, etc.) no portal manage.autodesk.com.'
                       : 'O software tem ativação definitiva para funcionar de forma vitalícia, sem mensalidades ou renovações. Além disso, você conta com 30 dias de garantia de suporte técnico para instalação e ativação.')}
                   </p>
-                  <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-300 bg-amber-500/10 px-3 py-1 rounded-full">
+                  <div className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-300 bg-amber-500/10 px-3 py-1 rounded-full">
                     <Award className="w-3.5 h-3.5" /> {localize(product.id === 'autodesk_all_apps' ? 'Conta Oficial Autodesk' : 'Uso Vitalício • 30 Dias de Suporte')}
                   </div>
                 </div>
@@ -936,27 +713,27 @@ const ProductDetailContent: React.FC = () => {
             </div>
 
             {/* Thumbnail Strip Below Main Box */}
-            <div className="flex items-center justify-center gap-2.5 mt-4 flex-wrap">
+            <div className="product-thumbnails flex w-full items-center justify-start sm:justify-center gap-2 mt-3 overflow-x-auto pb-2">
               {thumbnails.map((thumb, idx) => (
                 <button
                   key={thumb.id}
                   type="button"
                   onClick={() => setActiveThumbIndex(idx)}
-                  className={`w-14 h-16 sm:w-16 sm:h-18 rounded-lg border-2 p-1 flex flex-col items-center justify-between transition-all cursor-pointer bg-white ${
+                  className={`shrink-0 w-20 h-20 rounded-md border p-1 flex flex-col items-center justify-between transition-all cursor-pointer bg-white ${
                     activeThumbIndex === idx
-                      ? 'border-blue-600 shadow-sm scale-105'
+                      ? 'border-action-primary ring-1 ring-action-primary'
                       : 'border-slate-200 hover:border-slate-300 opacity-80 hover:opacity-100'
                   }`}
                   title={thumb.label}
                 >
                   {thumb.type === 'image' && thumb.imageUrl ? (
                     <img
-                      src={thumb.imageUrl}
+                      src={galleryImageSource(thumb.imageUrl)}
                       alt={thumb.label}
-                      className="w-full h-9 object-cover rounded-[4px]"
+                      className="w-full h-11 object-contain"
                     />
                   ) : (
-                    <div className="w-full h-9 rounded-[4px] bg-slate-900 text-white flex items-center justify-center text-[9px] font-black">
+                    <div className="w-full h-11 rounded bg-slate-50 text-slate-700 flex items-center justify-center text-xs font-black">
                       {thumb.type === 'video' ? (
                         <PlayCircle className="w-4 h-4 text-blue-400" />
                       ) : thumb.type === 'email' ? (
@@ -966,7 +743,7 @@ const ProductDetailContent: React.FC = () => {
                       )}
                     </div>
                   )}
-                  <span className="text-[8px] font-extrabold text-slate-700 uppercase tracking-tighter truncate w-full text-center">
+                  <span className="text-xs font-medium text-slate-700 uppercase tracking-tight truncate w-full text-center">
                     {localize(thumb.badge)}
                   </span>
                 </button>
@@ -975,7 +752,7 @@ const ProductDetailContent: React.FC = () => {
           </div>
 
           {/* RIGHT COLUMN: Product Title, Price, Trust Badges, Selectors & CTAs */}
-          <div className="lg:col-span-6 space-y-5">
+          <div className="product-purchase lg:col-span-6 min-w-0 space-y-4 [&_button]:min-h-10">
             <div>
               <h1 className="font-display font-extrabold text-2xl sm:text-3xl text-slate-900 tracking-tight">
                 {localize(product.name)}
@@ -989,17 +766,22 @@ const ProductDetailContent: React.FC = () => {
 
             {/* Price Row */}
             <div className="flex items-baseline gap-3">
-              <span className="font-display font-black text-3xl sm:text-4xl text-[#0b5ed7]">
-                {localize(formattedPrice)}
-              </span>
+              <AnimatedPrice
+                value={displayPrice}
+                formatted={localize(formattedPrice)}
+                className="font-display font-black text-3xl sm:text-4xl text-action-primary"
+                announce
+              />
               {displayOriginalPrice > displayPrice && (
-                <span className="text-base sm:text-lg text-slate-400 line-through font-semibold">
-                  {localize(formattedOriginalPrice)}
-                </span>
+                <AnimatedPrice
+                  value={displayOriginalPrice}
+                  formatted={localize(formattedOriginalPrice)}
+                  className="text-base sm:text-lg text-slate-400 line-through font-semibold"
+                />
               )}
               {product.isSubscription && (
                 <span className="text-xs font-bold text-slate-500">
-                  {localize(selectedLicenseOption?.label.includes('Ano') ? '/plano' : '/mês')}
+                  {localize((selectedLicenseOption?.quantity || 1) >= 12 ? '/plano' : '/mês')}
                 </span>
               )}
             </div>
@@ -1009,14 +791,14 @@ const ProductDetailContent: React.FC = () => {
               <div className="flex items-center gap-2 sm:gap-2.5 sm:pr-2 sm:border-r border-slate-200">
                 <img
                   src="/images/icons/badge-seal.webp"
-                  alt={localize("Uso Vitalício")}
+                  alt={localize(product.id === 'autodesk_all_apps' ? "Acesso por Assinatura" : "Uso Vitalício")}
                   className="w-8 h-8 object-contain shrink-0 select-none"
                   loading="eager"
                 />
                 <div>
-                  <p className="text-[11px] font-bold text-slate-800 leading-tight">{localize(t('badge_lifetime'))}</p>
-                  <p className="text-[9.5px] text-slate-500 leading-snug mt-0.5">
-                    {localize(t('badge_lifetime_sub'))}
+                  <p className="text-xs font-bold text-slate-800 leading-tight">{localize(product.id === 'autodesk_all_apps' ? 'Acesso por Assinatura' : t('badge_lifetime'))}</p>
+                  <p className="text-xs text-slate-500 leading-snug mt-0.5">
+                    {localize(product.id === 'autodesk_all_apps' ? 'Válido pelo período escolhido' : t('badge_lifetime_sub'))}
                   </p>
                 </div>
               </div>
@@ -1029,10 +811,10 @@ const ProductDetailContent: React.FC = () => {
                   loading="eager"
                 />
                 <div>
-                  <p className="text-[11px] font-bold text-slate-800 leading-tight">
+                  <p className="text-xs font-bold text-slate-800 leading-tight">
                     {localize(product.isSubscription ? (language === 'es' ? 'Acceso Oficial' : 'Acesso Oficial') : t('badge_guaranteed'))}
                   </p>
-                  <p className="text-[9.5px] text-slate-500 leading-snug mt-0.5">
+                  <p className="text-xs text-slate-500 leading-snug mt-0.5">
                     {localize(product.isSubscription ? (language === 'es' ? 'Cuenta verificada' : 'Conta verificada') : t('badge_guaranteed_sub'))}
                   </p>
                 </div>
@@ -1041,14 +823,14 @@ const ProductDetailContent: React.FC = () => {
               <div className="flex items-center gap-2 sm:gap-2.5 sm:pl-1">
                 <img
                   src="/images/icons/badge-plane.webp"
-                  alt={localize("Entrega Digital")}
+                  alt={localize(product.id === 'autodesk_all_apps' ? "Conta Privada" : "Entrega Digital")}
                   className="w-8 h-8 object-contain shrink-0 select-none"
                   loading="eager"
                 />
                 <div>
-                  <p className="text-[11px] font-bold text-slate-800 leading-tight">{localize(t('badge_digital_delivery'))}</p>
-                  <p className="text-[9.5px] text-slate-500 leading-snug mt-0.5">
-                    {localize(t('badge_digital_delivery_sub'))}
+                  <p className="text-xs font-bold text-slate-800 leading-tight">{localize(product.id === 'autodesk_all_apps' ? 'Conta Privada' : t('badge_digital_delivery'))}</p>
+                  <p className="text-xs text-slate-500 leading-snug mt-0.5">
+                    {localize(product.id === 'autodesk_all_apps' ? 'Login e senha após a compra' : t('badge_digital_delivery_sub'))}
                   </p>
                 </div>
               </div>
@@ -1062,25 +844,12 @@ const ProductDetailContent: React.FC = () => {
                 {/* Plataforma */}
                 <div className="space-y-1.5">
                   <label className="block text-xs font-semibold text-slate-700">{localize(t('platform'))}</label>
-                  <div className="flex flex-wrap gap-2">
-                    {availablePlatforms.map((plat) => {
-                      const isActive = selectedPlatform === plat;
-                      return (
-                        <button
-                          key={plat}
-                          type="button"
-                          onClick={() => handleSelectPlatform(plat)}
-                          className={`px-4 py-2 rounded-md text-xs font-bold transition-all cursor-pointer border ${
-                            isActive
-                              ? 'border-2 border-[#0b5ed7] text-[#0b5ed7] bg-blue-50/40 shadow-xs'
-                              : 'border-slate-300 text-slate-700 bg-white hover:border-slate-400'
-                          }`}
-                        >
-                          {localize(plat)}
-                        </button>
-                      );
-                    })}
-                  </div>
+                  <JellyRadio
+                    ariaLabel={localize(t('platform'))}
+                    value={selectedPlatform}
+                    items={availablePlatforms.map((plat) => ({ value: plat, label: localize(plat) }))}
+                    onChange={(platform) => handleSelectPlatform(platform as 'Windows' | 'macOS')}
+                  />
                 </div>
 
                 {/* Validade */}
@@ -1099,25 +868,18 @@ const ProductDetailContent: React.FC = () => {
                 {/* Ano / Versão */}
                 <div className="space-y-1.5">
                   <label className="block text-xs font-semibold text-slate-700">{localize(t('year'))}</label>
-                  <div className="flex flex-wrap gap-2">
-                    {availableYearsForPlatform.map((opt) => {
-                      const isSelected = selectedLicenseOption?.quantity === opt.quantity;
-                      return (
-                        <button
-                          key={opt.quantity}
-                          type="button"
-                          onClick={() => handleSelectYearOption(opt)}
-                          className={`px-4 py-2 rounded-md text-xs font-bold transition-all cursor-pointer border ${
-                            isSelected
-                              ? 'border-2 border-[#0b5ed7] text-[#0b5ed7] bg-blue-50/40 shadow-xs'
-                              : 'border-slate-300 text-slate-700 bg-white hover:border-slate-400'
-                          }`}
-                        >
-                          {opt.year}
-                        </button>
-                      );
-                    })}
-                  </div>
+                  <JellyRadio
+                    ariaLabel={localize(t('year'))}
+                    value={String(selectedLicenseOption?.quantity ?? '')}
+                    items={availableYearsForPlatform.map((opt) => ({
+                      value: String(opt.quantity),
+                      label: opt.year,
+                    }))}
+                    onChange={(_, index) => {
+                      const option = availableYearsForPlatform[index];
+                      if (option) handleSelectYearOption(option);
+                    }}
+                  />
                 </div>
               </div>
             ) : (
@@ -1167,7 +929,7 @@ const ProductDetailContent: React.FC = () => {
                                 : 'border-slate-300 text-slate-700 bg-white hover:border-slate-400'
                             }`}
                           >
-                            {localize(product.id === 'eberick_builder_2025' || opt.label.startsWith('Versão')
+                            {localize(product.id === 'autodesk_all_apps' || product.id === 'eberick_builder_2025' || opt.label.startsWith('Versão')
                               ? opt.label
                               : `${opt.label} — ${formatPrice(opt.price)}`)}
                           </button>
@@ -1192,7 +954,7 @@ const ProductDetailContent: React.FC = () => {
                             : 'border-slate-300 bg-white'
                         }`}
                       >
-                        <span className="block text-[11px] font-bold text-slate-800">
+                        <span className="block text-xs font-bold text-slate-800">
                           {localize("Recorrente Mensal")}</span>
                         <span className="text-sm font-black text-[#0b5ed7]">
                           {formattedRecurrencePrice}{localize("/mês")}</span>
@@ -1206,7 +968,7 @@ const ProductDetailContent: React.FC = () => {
                             : 'border-slate-300 bg-white'
                         }`}
                       >
-                        <span className="block text-[11px] font-bold text-slate-800">
+                        <span className="block text-xs font-bold text-slate-800">
                           {localize("Pagamento Único")}</span>
                         <span className="text-sm font-black text-slate-900">
                           {localize(formatPrice(product.price))}
@@ -1230,18 +992,21 @@ const ProductDetailContent: React.FC = () => {
             ) : (
               <div className="space-y-3 pt-2">
                 {/* Label above the [- 1 +] Device Selector */}
+                {product.id !== 'autodesk_all_apps' && (
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                     <Monitor className="w-3.5 h-3.5 text-[#0b5ed7] shrink-0" />
                     <span>{localize(t('device_support_label'))}</span>
                   </label>
-                  <span className="text-[11px] font-bold text-[#0b5ed7] bg-blue-50 border border-blue-200/80 px-2.5 py-0.5 rounded-full shrink-0">
+                  <span className="text-xs font-bold text-[#0b5ed7] bg-blue-50 border border-blue-200/80 px-2.5 py-0.5 rounded-full shrink-0">
                     {localize(quantity === 1 ? t('single_device') : `${quantity} ${t('multiple_devices')}`)}
                   </span>
                 </div>
+                )}
 
                 <div className="flex items-stretch gap-3">
                   {/* Quantity / Devices Counter (- 1 +) */}
+                  {product.id !== 'autodesk_all_apps' && (
                   <div
                     className="flex items-center border border-slate-300 rounded-md bg-white overflow-hidden shrink-0"
                     title={localize("Quantidade de dispositivos com suporte")}
@@ -1266,6 +1031,7 @@ const ProductDetailContent: React.FC = () => {
                       <Plus className="w-3.5 h-3.5" />
                     </button>
                   </div>
+                  )}
 
                   {/* Blue "Adicionar ao carrinho" Button */}
                   <button
@@ -1279,7 +1045,7 @@ const ProductDetailContent: React.FC = () => {
                       );
                     }}
                     id={`detail-add-to-cart-${product.id}`}
-                    className="flex-1 bg-[#0b5ed7] hover:bg-[#0a53be] text-white font-bold text-sm py-3 px-6 rounded-md shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
+                    className="specular-press flex-1 bg-[#0b5ed7] hover:bg-[#0a53be] text-white font-bold text-sm py-3 px-6 rounded-md shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
                   >
                     <ShoppingCart className="w-4 h-4" />
                     <span>{localize(t('add_to_cart'))}</span>
@@ -1290,28 +1056,20 @@ const ProductDetailContent: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    if (isInternational) {
-                      const effectiveUrl = getEffectiveCheckoutUrl(product, selectedLicenseOption, true);
-                      window.open(effectiveUrl, '_blank', 'noopener,noreferrer');
-                    } else {
-                      addToCart(
-                        product,
-                        selectedLicenseOption ? 'avulso' : selectedPlan,
-                        selectedLicenseOption,
-                        quantity
-                      );
-                    }
+                    addToCart(product, selectedLicenseOption ? 'avulso' : selectedPlan, selectedLicenseOption, quantity);
+                    setIsCartOpen(false);
+                    navigate('/checkout');
                   }}
                   id={`detail-buy-now-${product.id}`}
-                  className="w-full bg-slate-950 hover:bg-slate-800 text-white font-bold text-sm py-3.5 px-6 rounded-md shadow-md transition-all cursor-pointer flex items-center justify-center gap-2.5"
+                  className="specular-press w-full bg-slate-950 hover:bg-slate-800 text-white font-bold text-sm py-3.5 px-6 rounded-md shadow-md transition-all cursor-pointer flex items-center justify-center gap-2.5"
                 >
                   <span>{localize(isInternational ? t('buy_now') : 'Comprar agora')}</span>
-                  <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold bg-white/15 px-2 py-0.5 rounded text-emerald-300">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-extrabold bg-white/15 px-2 py-0.5 rounded text-emerald-300">
                     {localize(isInternational ? t('buy_now_badge') : 'PIX • CARTÃO')}
                   </span>
                 </button>
                 {isInternational && (
-                  <p className="text-[11px] text-slate-500 text-center leading-relaxed pt-1">
+                  <p className="text-xs text-slate-500 text-center leading-relaxed pt-1">
                     {localize(t('intl_checkout_hint'))}
                   </p>
                 )}
@@ -1323,121 +1081,7 @@ const ProductDetailContent: React.FC = () => {
         {/* =================================================================== */}
         {/* TRUSTPILOT OFFICIAL REVIEWS BAR                                     */}
         {/* =================================================================== */}
-        <div className="trust-review-strip my-10 py-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-            {/* Left Summary: Trustpilot Official Card */}
-            <div className="lg:col-span-3 flex flex-col items-center text-center border-b lg:border-b-0 lg:border-r border-slate-200 pb-4 lg:pb-0 lg:pr-4">
-              <button
-                type="button"
-                onClick={() => setIsGuaranteesModalOpen(true)}
-                className="space-y-2 cursor-pointer group text-center"
-              >
-                <p className="font-display font-extrabold text-xl text-slate-900 tracking-tight">{t('trustpilot_excellent')}</p>
-                <div className="flex items-center justify-center gap-1">
-                  <TrustpilotStars count={5} size="w-6 h-6" starSize="w-3.5 h-3.5" />
-                </div>
-                <p className="text-xs text-slate-600">
-                  {t('trustpilot_based_on_bar')} <span className="underline font-semibold text-slate-900">{t('trustpilot_bar_reviews')}</span>
-                </p>
-                <div className="pt-1 flex items-center justify-center">
-                  <TrustpilotLogo starSize="w-5 h-5" textSize="text-base" />
-                </div>
-              </button>
-            </div>
-
-            {/* Right Carousel of Store Reviews */}
-            <div className="lg:col-span-9 min-w-0 relative flex items-center">
-              <button
-                type="button"
-                onClick={() =>
-                  setTrustpilotSlideIndex((prev) =>
-                    prev === 0 ? activeTrustpilotReviews.length - 1 : prev - 1
-                  )
-                }
-                className="w-8 h-8 rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0 mr-2 cursor-pointer shadow-2xs"
-                aria-label="Avaliação anterior"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-
-              {/* Mobile (1 card per slide) */}
-              <div className="block sm:hidden flex-1 overflow-hidden">
-                {(() => {
-                  const item = activeTrustpilotReviews[trustpilotSlideIndex % activeTrustpilotReviews.length];
-                  return (
-                    <div
-                      key={item.id}
-                      className="min-w-0 text-left space-y-2"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <TrustpilotStars count={item.rating ?? 5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
-                        <span className="text-[10px] text-slate-500 flex items-center gap-1 font-semibold">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#08ad88]" /> {t('trustpilot_verified')} no Trustpilot
-                        </span>
-                      </div>
-                      <p className="text-xs font-bold text-slate-900">{item.title}</p>
-                      <p className="text-xs text-slate-600 leading-relaxed">{item.comment}</p>
-                      <p className="text-[10px] text-slate-400 font-medium pt-1">
-                        <span className="font-semibold text-slate-700">{item.author}</span>, {item.timeAgo}
-                      </p>
-                    </div>
-                  );
-                })()}
-              </div>
-
-              {/* Tablet & Desktop (4 cards per slide) */}
-              <div className="hidden sm:grid sm:grid-cols-2 xl:grid-cols-4 gap-3.5 min-w-0 flex-1">
-                {[0, 1, 2, 3].map((offset) => {
-                  const item =
-                    activeTrustpilotReviews[(trustpilotSlideIndex + offset) % activeTrustpilotReviews.length];
-                  return (
-                    <div
-                      key={item.id}
-                      className="min-w-0 text-left space-y-1.5"
-                    >
-                      <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
-                        <TrustpilotStars count={item.rating ?? 5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
-                        <span className="text-[10px] text-slate-500 inline-flex items-center gap-0.5 whitespace-nowrap font-semibold">
-                          <CheckCircle2 className="w-3 h-3 text-[#08ad88]" /> {t('trustpilot_verified')}
-                        </span>
-                      </div>
-
-                      <p className="text-xs font-bold text-slate-900 line-clamp-1">{item.title}</p>
-                      <p className="text-[11px] text-slate-600 line-clamp-2 leading-relaxed">
-                        {item.comment}
-                      </p>
-                      <p className="text-[10px] text-slate-400 font-medium pt-0.5">
-                        <span className="font-semibold text-slate-600">{item.author}</span>,{' '}
-                        {item.timeAgo}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setTrustpilotSlideIndex((prev) => (prev + 1) % activeTrustpilotReviews.length)
-                }
-                className="w-8 h-8 rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0 ml-2 cursor-pointer shadow-2xs"
-                aria-label="Próxima avaliação"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          <div className="mt-3 pt-2 border-t border-slate-100 text-center lg:text-left lg:pl-[26%]">
-            <button
-              type="button"
-              onClick={() => setIsGuaranteesModalOpen(true)}
-              className="text-[11px] text-slate-500 hover:text-slate-800 cursor-pointer font-medium"
-            >
-              {t('trustpilot_showing_high_ratings')}
-            </button>
-          </div>
-        </div>
+        <StoreReviews />
 
         {/* =================================================================== */}
         {/* ESSENTIAL PLUGINS RECOMMENDATION BANNER (Windows only)              */}
@@ -1458,7 +1102,7 @@ const ProductDetailContent: React.FC = () => {
                   <h3 className="font-display font-black text-xl sm:text-2xl text-white tracking-tight">
                     {localize("Potencialize seu ")}{hostName} {localize(" com ")}{supportsVray ? 'Renderizadores Profissionais' : 'Renderização em Tempo Real'}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                  <p className="text-sm sm:text-base text-slate-300 mt-1 max-w-2xl leading-relaxed">
                     O {hostName} {localize(" é indispensável para arquitetura e projetos 3D. Para transformar seus modelos em imagens e vídeos fotorrealistas de alto impacto para clientes, ")}{supportsVray ? 'estes dois motores de render são indispensáveis:' : 'o plugin Chaos Enscape é indispensável:'}
                   </p>
                 </div>
@@ -1478,7 +1122,7 @@ const ProductDetailContent: React.FC = () => {
                         className="w-16 h-16 rounded-xl object-cover bg-slate-800 border border-white/10 shrink-0 shadow-sm"
                       />
                       <div className="min-w-0 flex-1">
-                        <div className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded mb-1">
+                        <div className="inline-flex items-center gap-1 text-xs font-extrabold uppercase tracking-wider text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded mb-1">
                           {localize("Tempo Real & VR")}</div>
                         <h4 className="font-display font-bold text-base text-white group-hover:text-sky-300 transition-colors">
                           Chaos Enscape
@@ -1491,7 +1135,7 @@ const ProductDetailContent: React.FC = () => {
 
                   <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between gap-3">
                     <div>
-                      <span className="text-[10px] text-slate-400 block font-medium">{localize("Licença Vitalícia")}</span>
+                      <span className="text-xs text-slate-400 block font-medium">{localize("Licença Vitalícia")}</span>
                       <span className="font-display font-black text-lg text-emerald-400">{formatPrice(enscapeProduct?.price ?? 97.90)}</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -1504,7 +1148,7 @@ const ProductDetailContent: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => addToCart(enscapeProduct)}
-                          className="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+                          className="px-3.5 py-2 rounded-lg bg-action-primary hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
                         >
                           <ShoppingCart className="w-3.5 h-3.5" />
                           <span>{localize("Adicionar")}</span>
@@ -1525,7 +1169,7 @@ const ProductDetailContent: React.FC = () => {
                           className="w-16 h-16 rounded-xl object-cover bg-slate-800 border border-white/10 shrink-0 shadow-sm"
                         />
                         <div className="min-w-0 flex-1">
-                          <div className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded mb-1">
+                          <div className="inline-flex items-center gap-1 text-xs font-extrabold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded mb-1">
                             {localize("Fotorrealismo Máximo")}</div>
                           <h4 className="font-display font-bold text-base text-white group-hover:text-amber-300 transition-colors">
                             Chaos V-Ray 7
@@ -1537,7 +1181,7 @@ const ProductDetailContent: React.FC = () => {
 
                       {/* Host Software Selector (SketchUp, Revit, Rhinoceros) */}
                       <div className="pt-2 border-t border-white/10">
-                        <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                        <div className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
                           <span>{localize("Selecione a versão:")}</span>
                           <span className="text-amber-300 font-extrabold">{selectedVrayHost}</span>
                         </div>
@@ -1549,7 +1193,7 @@ const ProductDetailContent: React.FC = () => {
                                 key={host}
                                 type="button"
                                 onClick={() => setSelectedVrayHost(host)}
-                                className={`py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all text-center border cursor-pointer ${
+                                className={`py-1.5 px-2 rounded-lg text-xs font-bold transition-all text-center border cursor-pointer ${
                                   isSelected
                                     ? 'bg-amber-500/25 border-amber-400 text-amber-300 shadow-xs ring-1 ring-amber-400/30'
                                     : 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10 hover:text-white'
@@ -1565,7 +1209,7 @@ const ProductDetailContent: React.FC = () => {
 
                     <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between gap-3">
                       <div>
-                        <span className="text-[10px] text-slate-400 block font-medium">{localize("Licença Vitalícia")}</span>
+                        <span className="text-xs text-slate-400 block font-medium">{localize("Licença Vitalícia")}</span>
                         <span className="font-display font-black text-lg text-emerald-400">{formatPrice(vrayProduct?.price ?? 87.90)}</span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -1598,11 +1242,11 @@ const ProductDetailContent: React.FC = () => {
         {/* =================================================================== */}
         <div className="bg-[#f4f6f8] rounded-2xl border border-slate-200/80 p-5 sm:p-8 mb-14">
           {/* Tabs Navigation Bar */}
-          <div className="flex flex-wrap items-center gap-4 sm:gap-8 border-b border-slate-300 pb-0 mb-6">
+          <div className="hidden sm:flex flex-wrap items-center gap-8 border-b border-slate-300 pb-0 mb-6">
             <button
               type="button"
               onClick={() => setActiveTab('description')}
-              className={`flex items-center gap-2 pb-3.5 text-xs sm:text-sm font-extrabold uppercase tracking-wider border-b-2 transition-all cursor-pointer -mb-[1px] ${
+              className={`flex items-center gap-2 pb-3.5 text-sm sm:text-base font-extrabold uppercase tracking-wider border-b-2 transition-all cursor-pointer -mb-[1px] ${
                 activeTab === 'description'
                   ? 'border-slate-900 text-slate-900'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -1615,7 +1259,7 @@ const ProductDetailContent: React.FC = () => {
             <button
               type="button"
               onClick={() => setActiveTab('specs')}
-              className={`flex items-center gap-2 pb-3.5 text-xs sm:text-sm font-extrabold uppercase tracking-wider border-b-2 transition-all cursor-pointer -mb-[1px] ${
+              className={`flex items-center gap-2 pb-3.5 text-sm sm:text-base font-extrabold uppercase tracking-wider border-b-2 transition-all cursor-pointer -mb-[1px] ${
                 activeTab === 'specs'
                   ? 'border-slate-900 text-slate-900'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -1628,7 +1272,7 @@ const ProductDetailContent: React.FC = () => {
             <button
               type="button"
               onClick={() => setActiveTab('activation')}
-              className={`flex items-center gap-2 pb-3.5 text-xs sm:text-sm font-extrabold uppercase tracking-wider border-b-2 transition-all cursor-pointer -mb-[1px] ${
+              className={`flex items-center gap-2 pb-3.5 text-sm sm:text-base font-extrabold uppercase tracking-wider border-b-2 transition-all cursor-pointer -mb-[1px] ${
                 activeTab === 'activation'
                   ? 'border-slate-900 text-slate-900'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -1642,15 +1286,16 @@ const ProductDetailContent: React.FC = () => {
           {/* ----------------------------------------------------------------- */}
           {/* TAB 1: DESCRIÇÃO                                                  */}
           {/* ----------------------------------------------------------------- */}
-          {activeTab === 'description' && (
-            <div className="space-y-8 text-slate-700 text-sm leading-relaxed">
+          <button type="button" aria-expanded={mobileInfoOpen === 'description'} aria-controls="product-info-description" onClick={() => setMobileInfoOpen(current => current === 'description' ? null : 'description')} className="sm:hidden flex w-full items-center gap-3 py-4 text-left text-sm font-bold border-b border-slate-200 text-slate-900"><Info className="w-5 h-5 shrink-0"/><span className="flex-1">{localize(t('tab_description'))}</span><ChevronRight className={`w-5 h-5 transition-transform ${mobileInfoOpen === 'description' ? 'rotate-90' : ''}`}/></button>
+          {(
+            <div id="product-info-description" className={`${mobileInfoOpen === 'description' ? 'block py-5' : 'hidden'} ${activeTab === 'description' ? 'sm:block' : 'sm:hidden'} sm:py-0 space-y-8 text-slate-700 text-sm leading-relaxed`}>
               {/* Top Note */}
-              <p className="text-xs sm:text-sm text-slate-800 bg-white/80 p-4 rounded-xl border border-slate-200/80">
+              <p className="text-sm sm:text-base text-slate-800 bg-white/80 p-4 rounded-xl border border-slate-200/80">
                 {product.id === 'autodesk_all_apps' ? (
                   <>
                     <strong>{localize("NOTA IMPORTANTE:")}</strong> {localize(" O plano")}{localize(' ')}
-                    <strong>{localize("Autodesk Todos os Aplicativos")}</strong> {localize(" oferece acesso oficial completo a mais de 80 softwares oficiais da Autodesk. Você receberá")}{localize(' ')}
-                    <strong>{localize("login e senha para entrar em uma conta oficial da Autodesk")}</strong>{localize(' ')}
+                    <strong>{localize("Pacote Autodesk 86+ Apps Originais")}</strong> {localize(" oferece acesso oficial completo a mais de 86 aplicativos oficiais da Autodesk. Você receberá")}{localize(' ')}
+                    <strong>{localize("login e senha de uma conta privada Autodesk para seu uso")}</strong>{localize(' ')}
                     {localize("diretamente no portal oficial ")}<strong>manage.autodesk.com</strong>{localize(", com download direto dos instaladores oficiais, atualizações contínuas e suporte prioritário via WhatsApp.")}</>
                 ) : (
                   <>
@@ -1665,7 +1310,7 @@ const ProductDetailContent: React.FC = () => {
                 <h3 className="font-display font-extrabold text-base text-slate-900">
                   {localize(t('product_details_heading'))}
                 </h3>
-                <ul className="space-y-2 text-xs sm:text-sm">
+                <ul className="space-y-2 text-sm sm:text-base">
                   {product.features.map((feat, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
@@ -1742,7 +1387,7 @@ const ProductDetailContent: React.FC = () => {
                     <p className="text-xs text-slate-700 font-medium leading-snug">
                       {product.id === 'autodesk_all_apps' ? (
                         <>
-                          {localize("Baixe e utilize qualquer um dos ")}<strong>{localize("mais de 80 softwares Autodesk")}</strong> {localize(" oficiais")}</>
+                          {localize("Baixe e utilize qualquer um dos ")}<strong>{localize("mais de 86 aplicativos Autodesk")}</strong> {localize(" oficiais")}</>
                       ) : (
                         <>
                           {localize("Siga o vídeo tutorial e ")}<strong>{localize("ative de forma vitalícia")}</strong> {localize(" no seu computador")}</>
@@ -1758,10 +1403,10 @@ const ProductDetailContent: React.FC = () => {
                   <>
                     <h3 className="font-display font-extrabold text-base text-slate-900">
                       {localize("A diferença entre o nosso AutoCAD Completo e o AutoCAD LT")}</h3>
-                    <p className="text-xs sm:text-sm text-slate-600">
+                    <p className="text-sm sm:text-base text-slate-600">
                       {localize("Ao adquirir na C2Tech, você recebe a edição ")}<strong>{localize("AutoCAD Completa")}</strong>{localize(' ')}
                       {localize("(e não a versão limitada LT), garantindo máxima produtividade para projetos de engenharia, arquitetura e design:")}</p>
-                    <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
+                    <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
                       <li>
                         <strong>{localize("AutoCAD Completo (Nossa Versão):")}</strong> {localize(" Ideal para profissionais e estudantes que precisam tanto de desenho técnico 2D quanto de")}{localize(' ')}
                         <strong>{localize("modelagem 3D completa")}</strong>{localize(", renderização realista, nuvem de pontos, automação com rotinas ")}<strong>AutoLISP / LISP</strong>{localize(", APIs e bibliotecas completas de arquitetura, mecânica e elétrica.")}</li>
@@ -1773,10 +1418,10 @@ const ProductDetailContent: React.FC = () => {
                   <>
                     <h3 className="font-display font-extrabold text-base text-slate-900">
                       {localize("Por que o nosso SketchUp Pro Desktop Completo supera a versão Web / Go?")}</h3>
-                    <p className="text-xs sm:text-sm text-slate-600">
+                    <p className="text-sm sm:text-base text-slate-600">
                       {localize("Ao adquirir na C2Tech, você recebe a suíte ")}<strong>{localize("SketchUp Pro Desktop Completa")}</strong>{localize(' ')}
                       {localize("(com ")}<strong>LayOut</strong> e <strong>Style Builder</strong> {localize(" inclusos), essencial para arquitetos, designers de interiores, marceneiros e engenheiros:")}</p>
-                    <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
+                    <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
                       <li>
                         <strong>{localize("Suporte Total a Plugins e Renderizadores:")}</strong> {localize(" Ao contrário das edições básicas ou web, o SketchUp Pro Desktop aceita todos os plugins Ruby (`.rbz`) e funciona perfeitamente com ")}<strong>V-Ray, Enscape, Lumion, D5 Render</strong>{localize(' ')}
                         {localize("e blocos dinâmicos.")}</li>
@@ -1788,9 +1433,9 @@ const ProductDetailContent: React.FC = () => {
                   <>
                     <h3 className="font-display font-extrabold text-base text-slate-900">
                       {localize("O que está incluso no pacote CYPE Completo (2025.d e 2026.a)?")}</h3>
-                    <p className="text-xs sm:text-sm text-slate-600">
+                    <p className="text-sm sm:text-base text-slate-600">
                       {localize("Tanto na versão ")}<strong>2025.d</strong> {localize(" quanto na versão ")}<strong>2026.a</strong>{localize(", você recebe a suíte ")}<strong>{localize("CYPE Completa")}</strong> {localize(" com todos os módulos desbloqueados, incluindo:")}</p>
-                    <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
+                    <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
                       <li>
                         <strong>{localize("Programas Inclusos:")}</strong> <strong>CYPECAD</strong> {localize(" (concreto armado, protendido, lajes, vigas, pilares e fundações), ")}<strong>CYPE 3D</strong>{localize(' ')}
                         {localize("(estruturas metálicas, galpões, madeira e alumínio),")}{localize(' ')}
@@ -1808,10 +1453,10 @@ const ProductDetailContent: React.FC = () => {
                   <>
                     <h3 className="font-display font-extrabold text-base text-slate-900">
                       {localize("O que está incluso no nosso CorelDRAW Graphics Suite Completo?")}</h3>
-                    <p className="text-xs sm:text-sm text-slate-600">
+                    <p className="text-sm sm:text-base text-slate-600">
                       {localize("Ao adquirir na C2Tech, você recebe a suíte ")}<strong>{localize("CorelDRAW Graphics Suite Completa")}</strong>{localize(' ')}
                       {localize("para uso local ilimitado (sem bloqueios de tela ou assinaturas mensais), ideal para gráficas, agências, sublimação, corte a laser e comunicação visual:")}</p>
-                    <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
+                    <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
                       <li>
                         <strong>{localize("Aplicativos Principais Inclusos:")}</strong> <strong>CorelDRAW</strong>{localize(' ')}
                         {localize("(ilustração vetorial e layout de página), ")}<strong>Corel PHOTO-PAINT</strong>{localize(' ')}
@@ -1827,7 +1472,7 @@ const ProductDetailContent: React.FC = () => {
                     <h3 className="font-display font-extrabold text-base text-slate-900">
                       {localize("Sobre o ")}{localize(product.name)}
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-700 whitespace-pre-line">
+                    <p className="text-sm sm:text-base text-slate-700 whitespace-pre-line">
                       {localize(product.longDescription)}
                     </p>
                   </>
@@ -1838,9 +1483,19 @@ const ProductDetailContent: React.FC = () => {
               <div className="space-y-3 pt-4 border-t border-slate-200">
                 <h3 className="font-display font-extrabold text-base text-slate-900">
                   {localize("Compre o ")}{localize(product.name)} {localize(" pelo melhor preço na C2Tech")}</h3>
-                <p className="text-xs sm:text-sm text-slate-600">
+                <p className="text-sm sm:text-base text-slate-600">
                   {localize("Na C2Tech você garante softwares profissionais completos por uma fração do custo tradicional, com entrega imediata e suporte real. Veja por que milhares de clientes confiam em nós:")}</p>
-                <ul className="space-y-2.5 text-xs sm:text-sm">
+                {product.id === 'autodesk_all_apps' ? (
+                <ul className="space-y-2.5 text-sm sm:text-base">
+                  {[["Acesso pelo Período Escolhido:"," Utilize os aplicativos durante os 30 dias, 1 ano, 2 anos ou 3 anos do plano adquirido. O acesso acompanha a duração do plano contratado."],["Conta Privada para Seu Uso:"," Você recebe login e senha de uma conta privada Autodesk, com orientações para entrar no portal oficial."],["Aplicativos Originais em um Só Pacote:"," Acesse mais de 86 aplicativos disponíveis na conta, incluindo AutoCAD, Revit, Inventor, Fusion, Maya, 3ds Max e Navisworks."],["Recebimento das Credenciais:"," Após a confirmação do pagamento, enviamos os dados de acesso e as instruções para utilizar sua conta. Os programas são baixados pelo portal oficial da Autodesk."],["Suporte para Começar:"," Conte com a C2Tech para orientações de acesso à conta e instalação dos aplicativos disponíveis, conforme as condições de suporte do produto."]].map(([title, text]) => (
+                    <li key={title} className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
+                      <span><strong>{localize(title)}</strong> {localize(text)}</span>
+                    </li>
+                  ))}
+                </ul>
+                ) : (
+                <ul className="space-y-2.5 text-sm sm:text-base">
                   <li className="flex items-start gap-2">
                     <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
                     <span>
@@ -1867,6 +1522,7 @@ const ProductDetailContent: React.FC = () => {
                       <strong>{localize("Reinstalação Garantida:")}</strong> {localize(" O link enviado para o seu e-mail permanece disponível caso você formate ou troque de computador no futuro.")}</span>
                   </li>
                 </ul>
+                )}
               </div>
 
               {/* Como escolher entre as edições (específico para AutoCAD ou SketchUp Pro) */}
@@ -1876,7 +1532,7 @@ const ProductDetailContent: React.FC = () => {
                     {localize("Como escolher entre as edições do AutoCAD (2019, 2024, 2025, 2026 e 2027)")}</h3>
                   <p className="text-xs font-bold text-slate-800">
                     {localize("Considere a compatibilidade do seu computador:")}</p>
-                  <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
+                  <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
                     <li>
                       <strong>{localize("AutoCAD 2019 (Windows):")}</strong> {localize(" Excelente escolha para computadores ou notebooks mais antigos (com 8 GB de RAM ou placas de vídeo integradas). É extremamente leve, rápido e abre arquivos DWG perfeitamente.")}</li>
                     <li>
@@ -1893,7 +1549,7 @@ const ProductDetailContent: React.FC = () => {
                     {localize("Como escolher entre as edições do SketchUp Pro (2021, 2024, 2025 e 2026)")}</h3>
                   <p className="text-xs font-bold text-slate-800">
                     {localize("Considere a configuração do seu computador e seus plugins favoritos:")}</p>
-                  <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
+                  <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
                     <li>
                       <strong>{localize("SketchUp Pro 2021 (Windows):")}</strong> {localize(" Ideal para PCs ou notebooks mais modestos (8 GB de RAM ou vídeo integrado) e para quem utiliza bibliotecas de plugins clássicos. É super leve, estável e consome poucos recursos.")}</li>
                     <li>
@@ -1910,7 +1566,7 @@ const ProductDetailContent: React.FC = () => {
                     {localize("Como escolher entre o CYPE 2025.d e o CYPE 2026.a")}</h3>
                   <p className="text-xs font-bold text-slate-800">
                     {localize("Ambas as versões incluem CYPECAD, CYPE 3D, CYPETHERM, Arquimedes e todos os módulos:")}</p>
-                  <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
+                  <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
                     <li>
                       <strong>{localize("CYPE 2025.d (Todos os Idiomas):")}</strong> {localize(" Excelente custo-benefício e disponível em ")}<strong>{localize("todas as linguagens")}</strong> {localize(" (Português, Espanhol, Inglês, Francês, etc.), ideal tanto para projetos nacionais com normas ABNT NBR quanto para engenheiros que trabalham com eurocódigos ou idiomas internacionais.")}</li>
                     <li>
@@ -1925,7 +1581,7 @@ const ProductDetailContent: React.FC = () => {
                     {localize("Como escolher entre as edições do CorelDRAW (X7, 2022, 2023, 2024, 2025 e 2026)")}</h3>
                   <p className="text-xs font-bold text-slate-800">
                     {localize("Escolha a edição ideal para o seu fluxo de trabalho e computador:")}</p>
-                  <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-700">
+                  <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
                     <li>
                       <strong>{localize("CorelDRAW X7 (Windows):")}</strong> {localize(" O clássico favorito de gráficas rápidas, estamparia, sublimação e máquinas de corte (Plotter / Laser). É extremamente leve, abre instantaneamente até em notebooks básicos com 4 GB de RAM.")}</li>
                     <li>
@@ -1941,17 +1597,17 @@ const ProductDetailContent: React.FC = () => {
                 <h3 className="font-display font-extrabold text-base text-slate-900">
                   {localize("Perguntas Frequentes (FAQ)")}</h3>
 
-                <div className="space-y-3 text-xs sm:text-sm">
+                <div className="space-y-3 text-sm sm:text-base">
                   <div>
                     <p className="font-bold text-slate-900">
-                      {localize("Como recebo meu software após a compra?")}</p>
+                      {localize(product.id === 'autodesk_all_apps' ? 'Como recebo minha conta privada?' : 'Como recebo meu software após a compra?')}</p>
                     <p className="text-slate-600 mt-0.5">
-                      {localize("Assim que o pagamento é aprovado (instantâneo via Pix ou Cartão de Crédito), você recebe automaticamente um e-mail com o botão de download direto no Google Drive contendo o instalador completo e o vídeo de instruções.")}</p>
+                      {localize(product.id === 'autodesk_all_apps' ? 'Após a confirmação do pagamento, enviamos login e senha de uma conta privada para você acessar o portal oficial da Autodesk e baixar os aplicativos disponíveis no plano.' : 'Assim que o pagamento é aprovado (instantâneo via Pix ou Cartão de Crédito), você recebe automaticamente um e-mail com o botão de download direto no Google Drive contendo o instalador completo e o vídeo de instruções.')}</p>
                   </div>
 
                   <div>
                     <p className="font-bold text-slate-900">
-                      {localize("O software é realmente vitalício? Preciso pagar mensalidade depois?")}</p>
+                      {localize(product.id === 'autodesk_all_apps' ? 'Por quanto tempo posso usar os aplicativos?' : 'O software é realmente vitalício? Preciso pagar mensalidade depois?')}</p>
                     <p className="text-slate-600 mt-0.5">
                       {localize(product.isSubscription
                         ? 'Este produto é um plano de assinatura com renovação conforme o período escolhido.'
@@ -1984,10 +1640,11 @@ const ProductDetailContent: React.FC = () => {
           {/* ----------------------------------------------------------------- */}
           {/* TAB 2: ESPECIFICAÇÕES DO SISTEMA                                  */}
           {/* ----------------------------------------------------------------- */}
-          {activeTab === 'specs' && (
-            <div className="space-y-6">
+          <button type="button" aria-expanded={mobileInfoOpen === 'specs'} aria-controls="product-info-specs" onClick={() => setMobileInfoOpen(current => current === 'specs' ? null : 'specs')} className="sm:hidden flex w-full items-center gap-3 py-4 text-left text-sm font-bold border-b border-slate-200 text-slate-900"><List className="w-5 h-5 shrink-0"/><span className="flex-1">{localize(t('tab_specs'))}</span><ChevronRight className={`w-5 h-5 transition-transform ${mobileInfoOpen === 'specs' ? 'rotate-90' : ''}`}/></button>
+          {(
+            <div id="product-info-specs" className={`${mobileInfoOpen === 'specs' ? 'block py-5' : 'hidden'} ${activeTab === 'specs' ? 'sm:block' : 'sm:hidden'} sm:py-0 space-y-6`}>
               <div className="overflow-hidden rounded-lg border border-slate-200/80">
-                <table className="w-full text-left border-collapse text-xs sm:text-sm">
+                <table className="w-full text-left border-collapse text-sm sm:text-base">
                   <tbody>
                     <tr className="bg-white border-b border-slate-200/70">
                       <th className="py-3.5 px-4 font-bold text-slate-900 w-1/3 sm:w-1/4 align-top">
@@ -2102,21 +1759,22 @@ const ProductDetailContent: React.FC = () => {
           {/* ----------------------------------------------------------------- */}
           {/* TAB 3: ATIVAÇÃO                                                   */}
           {/* ----------------------------------------------------------------- */}
-          {activeTab === 'activation' && (
-            <div className="space-y-5 text-slate-800 text-sm leading-relaxed py-2">
+          <button type="button" aria-expanded={mobileInfoOpen === 'activation'} aria-controls="product-info-activation" onClick={() => setMobileInfoOpen(current => current === 'activation' ? null : 'activation')} className="sm:hidden flex w-full items-center gap-3 py-4 text-left text-sm font-bold border-b border-slate-200 text-slate-900"><FileCheck className="w-5 h-5 shrink-0"/><span className="flex-1">{localize(t('tab_activation'))}</span><ChevronRight className={`w-5 h-5 transition-transform ${mobileInfoOpen === 'activation' ? 'rotate-90' : ''}`}/></button>
+          {(
+            <div id="product-info-activation" className={`${mobileInfoOpen === 'activation' ? 'block py-5' : 'hidden'} ${activeTab === 'activation' ? 'sm:block' : 'sm:hidden'} sm:py-0 space-y-5 text-slate-800 text-sm leading-relaxed py-2`}>
               <h3 className="font-display font-extrabold text-base sm:text-lg text-slate-950">
                 {localize(product.id === 'autodesk_all_apps'
                   ? 'Como acessar sua conta oficial da Autodesk em três passos simples'
                   : 'Como instalar e ativar seu software em três passos simples')}
               </h3>
-              <p className="text-xs sm:text-sm text-slate-700">
+              <p className="text-sm sm:text-base text-slate-700">
                 {localize(product.id === 'autodesk_all_apps'
-                  ? 'Adquirir o plano Autodesk Todos os Aplicativos na C2Shop garante acesso oficial a mais de 80 softwares. Você recebe suas credenciais exclusivas (login e senha) e acessa diretamente pelo portal oficial seguindo os passos abaixo:'
+                  ? 'Adquirir o plano Pacote Autodesk 86+ Apps Originais na C2Shop garante acesso oficial a mais de 86 aplicativos. Você recebe suas credenciais exclusivas (login e senha) e acessa diretamente pelo portal oficial seguindo os passos abaixo:'
                   : 'Adquirir seu software na C2Tech oferece muito mais do que economia financeira; além de garantir a versão completa e vitalícia sem mensalidades, você realiza a instalação e ativação de forma rápida e guiada seguindo os passos abaixo:')}
               </p>
 
               {product.id === 'autodesk_all_apps' ? (
-                <ol className="space-y-3 text-xs sm:text-sm text-slate-800 pl-1">
+                <ol className="space-y-3 text-sm sm:text-base text-slate-800 pl-1">
                   <li className="flex items-baseline gap-2.5">
                     <span className="font-display font-extrabold text-base text-slate-950">1.</span>
                     <span>
@@ -2130,11 +1788,11 @@ const ProductDetailContent: React.FC = () => {
                   <li className="flex items-baseline gap-2.5">
                     <span className="font-display font-extrabold text-base text-slate-950">3.</span>
                     <span>
-                      <strong>{localize("Instale e utilize todos os aplicativos:")}</strong> {localize(" Escolha qualquer um dos mais de 80 softwares Autodesk (AutoCAD, Revit, Maya, Inventor, 3ds Max, etc.) e instale diretamente no seu computador com todas as ferramentas e atualizações oficiais liberadas!")}</span>
+                      <strong>{localize("Instale e utilize todos os aplicativos:")}</strong> {localize(" Escolha qualquer um dos mais de 86 aplicativos Autodesk (AutoCAD, Revit, Maya, Inventor, 3ds Max, etc.) e instale diretamente no seu computador com todas as ferramentas e atualizações oficiais liberadas!")}</span>
                   </li>
                 </ol>
               ) : (
-                <ol className="space-y-3 text-xs sm:text-sm text-slate-800 pl-1">
+                <ol className="space-y-3 text-sm sm:text-base text-slate-800 pl-1">
                   <li className="flex items-baseline gap-2.5">
                     <span className="font-display font-extrabold text-base text-slate-950">1.</span>
                     <span>
@@ -2193,6 +1851,8 @@ const ProductDetailContent: React.FC = () => {
             >
               {relatedProducts.map((rel) => {
                 const relSavings = Math.max(0, rel.originalPrice - rel.price);
+                const relReviews = reviewsData[rel.id] || [];
+                const relRating = relReviews.length ? relReviews.reduce((sum, review) => sum + review.rating, 0) / relReviews.length : 0;
                 return (
                   <div
                     key={rel.id}
@@ -2211,43 +1871,43 @@ const ProductDetailContent: React.FC = () => {
                           />
                         ) : (
                           <div className="w-24 h-32 bg-slate-900 text-white rounded-lg p-2.5 flex flex-col justify-between text-left">
-                            <span className="text-[9px] font-bold text-blue-400">
+                            <span className="text-xs font-bold text-blue-400">
                               {localize(rel.compatibility)}
                             </span>
                             <span className="text-xs font-extrabold leading-tight line-clamp-2">
                               {localize(rel.name)}
                             </span>
-                            <span className="text-[8px] text-emerald-400 font-bold uppercase">
+                            <span className="text-xs text-emerald-400 font-bold uppercase">
                               {localize("Vitalício")}</span>
                           </div>
                         )}
                       </Link>
 
                       {relSavings > 0 && (
-                        <span className="inline-block bg-[#18b259] text-white text-[10px] font-extrabold px-2 py-0.5 rounded mb-2">
+                        <span className="inline-block bg-[#18b259] text-white text-xs font-extrabold px-2 py-0.5 rounded mb-2">
                           {localize(t('save'))} {localize(formatPrice(relSavings))}
                         </span>
                       )}
 
                       <Link to={`/produto/${rel.slug}`}>
-                        <h3 className="font-display font-bold text-xs sm:text-sm text-slate-900 hover:text-blue-600 transition-colors line-clamp-2 min-h-[36px]">
+                        <h3 className="font-display font-bold text-sm sm:text-base text-slate-900 hover:text-action-primary transition-colors line-clamp-2 min-h-[36px]">
                           {localize(rel.name)}
                         </h3>
                       </Link>
 
-                      <div className="flex items-center gap-1 mt-1">
+                      {relReviews.length > 0 && <div className="flex items-center gap-1 mt-1">
                         <div className="flex">
                           {[1, 2, 3, 4, 5].map((s) => (
                             <Star
                               key={s}
-                              className="w-3 h-3 fill-amber-400 text-amber-400"
+                              className={`w-3 h-3 ${s <= Math.round(relRating) ? 'fill-amber-400 text-amber-400' : 'fill-slate-200 text-slate-200'}`}
                             />
                           ))}
                         </div>
-                        <span className="text-[10px] text-slate-400 font-semibold">
-                          ({(reviewsData[rel.id] || []).length || 9})
+                        <span className="text-xs text-slate-400 font-semibold">
+                          ({relReviews.length})
                         </span>
-                      </div>
+                      </div>}
                     </div>
 
                     <div className="pt-3 mt-2 border-t border-slate-100 space-y-2.5">
@@ -2255,7 +1915,7 @@ const ProductDetailContent: React.FC = () => {
                         <span className="font-display font-black text-sm text-[#0b5ed7]">
                           {localize(formatPrice(rel.price))}
                         </span>
-                        <span className="text-[11px] text-slate-400 line-through">
+                        <span className="text-xs text-slate-400 line-through">
                           {localize(formatPrice(rel.originalPrice))}
                         </span>
                       </div>
@@ -2297,7 +1957,7 @@ const ProductDetailContent: React.FC = () => {
                   />
                 ))}
               </div>
-              <span className="text-[11px] text-slate-500 font-medium">
+              <span className="text-xs text-slate-500 font-medium">
                 ({productReviews.length} {localize(" avaliações)")}</span>
             </div>
 
@@ -2317,7 +1977,7 @@ const ProductDetailContent: React.FC = () => {
                       />
                     ))}
                   </div>
-                  <span className="w-16 text-right text-[11px] text-slate-600 font-medium shrink-0">
+                  <span className="w-16 text-right text-xs text-slate-600 font-medium shrink-0">
                     {localize(row.label)}
                   </span>
                   <div className="flex-1 h-2.5 bg-slate-200 rounded-full overflow-hidden">
@@ -2326,7 +1986,7 @@ const ProductDetailContent: React.FC = () => {
                       style={{ width: `${row.pct}%` }}
                     />
                   </div>
-                  <span className="w-6 text-left text-[11px] font-bold text-slate-700 shrink-0">
+                  <span className="w-6 text-left text-xs font-bold text-slate-700 shrink-0">
                     {row.count}
                   </span>
                 </div>
@@ -2408,12 +2068,12 @@ const ProductDetailContent: React.FC = () => {
                           </span>
                           <ReviewFlagIcon country={review.country} />
                         </div>
-                        <p className="text-[11px] font-bold text-emerald-600">
+                        <p className="text-xs font-bold text-emerald-600">
                           {localize(language === 'en' ? 'Verified purchase' : language === 'es' ? 'Compra verificada' : 'Compra verificada')}
                         </p>
                       </div>
 
-                      <div className="text-xs sm:text-sm text-slate-700 leading-relaxed pt-1"><ReviewComment value={review.comment} country={review.country} /></div>
+                      <div className="text-sm sm:text-base text-slate-700 leading-relaxed pt-1"><ReviewComment value={review.comment} country={review.country} /></div>
                     </div>
                   </div>
 
@@ -2436,7 +2096,7 @@ const ProductDetailContent: React.FC = () => {
                         ({review.rating}/5)
                       </span>
                     </div>
-                    <span className="text-[11px] text-slate-400 font-medium">
+                    <span className="text-xs text-slate-400 font-medium">
                       {localize(review.date)}
                     </span>
                   </div>
@@ -2469,13 +2129,13 @@ const ProductDetailContent: React.FC = () => {
                 </div>
                 <h3 className="font-display font-extrabold text-xl text-slate-900">
                   {localize("Pergunta enviada com sucesso!")}</h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
                   {localize("Sua dúvida foi encaminhada diretamente para nossa equipe em")}{localize(' ')}
                   <strong>c2tech2025@gmail.com</strong>{localize(". Responderemos no seu e-mail o mais rápido possível!")}</p>
                 <button
                   type="button"
                   onClick={() => setIsQuestionModalOpen(false)}
-                  className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg cursor-pointer"
+                  className="px-6 py-2.5 bg-action-primary hover:bg-action-primary-hover text-white font-bold text-xs rounded-lg cursor-pointer"
                 >
                   {localize("Fechar janela")}</button>
               </div>
@@ -2503,7 +2163,7 @@ const ProductDetailContent: React.FC = () => {
                     value={questionName}
                     onChange={(e) => setQuestionName(e.target.value)}
                     placeholder={localize("Ex: João Silva")}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm focus:outline-none focus:border-blue-600"
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm sm:text-base focus:outline-none focus:border-action-primary"
                   />
                 </div>
 
@@ -2516,7 +2176,7 @@ const ProductDetailContent: React.FC = () => {
                     value={questionEmail}
                     onChange={(e) => setQuestionEmail(e.target.value)}
                     placeholder={localize("seuemail@exemplo.com")}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm focus:outline-none focus:border-blue-600"
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm sm:text-base focus:outline-none focus:border-action-primary"
                   />
                 </div>
 
@@ -2528,7 +2188,7 @@ const ProductDetailContent: React.FC = () => {
                     value={questionPhone}
                     onChange={(e) => setQuestionPhone(e.target.value)}
                     placeholder="(11) 99999-9999"
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm focus:outline-none focus:border-blue-600"
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm sm:text-base focus:outline-none focus:border-action-primary"
                   />
                 </div>
 
@@ -2541,7 +2201,7 @@ const ProductDetailContent: React.FC = () => {
                     value={questionText}
                     onChange={(e) => setQuestionText(e.target.value)}
                     placeholder={localize("Digite sua dúvida sobre instalação, compatibilidade ou funcionamento...")}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm focus:outline-none focus:border-blue-600 resize-none"
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm sm:text-base focus:outline-none focus:border-action-primary resize-none"
                   />
                 </div>
 
@@ -2557,7 +2217,7 @@ const ProductDetailContent: React.FC = () => {
                     disabled={isSendingQuestion}
                     className="px-5 py-2.5 rounded-lg bg-[#0b5ed7] hover:bg-[#0a53be] text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer disabled:opacity-60"
                   >
-                    <Send className="w-3.5 h-3.5" />
+                    <CloudDownload className="w-3.5 h-3.5" />
                     <span>{localize(isSendingQuestion ? 'Enviando...' : 'Enviar pergunta')}</span>
                   </button>
                 </div>
@@ -2589,7 +2249,7 @@ const ProductDetailContent: React.FC = () => {
                 </div>
                 <h3 className="font-display font-extrabold text-xl text-slate-900">
                   {localize("Avaliação recebida para moderação!")}</h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
                   {localize("Obrigado pelo seu feedback! Após a validação do número do pedido em nosso sistema, sua avaliação será publicada nesta página.")}</p>
                 <button
                   type="button"
@@ -2640,7 +2300,7 @@ const ProductDetailContent: React.FC = () => {
                     value={fakeReviewName}
                     onChange={(e) => setFakeReviewName(e.target.value)}
                     placeholder={localize("Seu nome completo")}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm focus:outline-none focus:border-blue-600"
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm sm:text-base focus:outline-none focus:border-action-primary"
                   />
                 </div>
 
@@ -2653,7 +2313,7 @@ const ProductDetailContent: React.FC = () => {
                     value={fakeReviewComment}
                     onChange={(e) => setFakeReviewComment(e.target.value)}
                     placeholder={localize("Conte como foi a entrega e instalação do software...")}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs sm:text-sm focus:outline-none focus:border-blue-600 resize-none"
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm sm:text-base focus:outline-none focus:border-action-primary resize-none"
                   />
                 </div>
 
@@ -2678,46 +2338,38 @@ const ProductDetailContent: React.FC = () => {
 
       <TrustGuaranteesModal isOpen={isGuaranteesModalOpen} onClose={() => setIsGuaranteesModalOpen(false)} />
 
-      <Suspense fallback={null}>{isCheckoutOpen && <CheckoutModal
-        product={product}
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
-        initialSubOption={selectedPlan}
-      />}</Suspense>
+
 
       {/* Sticky Mobile Purchase Bar (Optimized for iPhone / Mobile) */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 sm:hidden bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2.5 flex items-center justify-between gap-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+      <div className="product-mobile-buybar fixed bottom-0 left-0 right-0 z-30 sm:hidden bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2.5 flex items-center justify-between gap-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
         <div className="min-w-0">
           <p className="text-xs font-bold text-slate-900 truncate leading-tight">
             {localize(product.name)}
           </p>
           <div className="flex items-baseline gap-1.5 mt-0.5">
-            <span className="font-black text-base text-[#0b5ed7] leading-none">
-              {localize(formattedPrice)}
-            </span>
+            <AnimatedPrice
+              value={displayPrice}
+              formatted={localize(formattedPrice)}
+              className="font-black text-base text-action-primary leading-none"
+              announce
+            />
             {displayOriginalPrice > displayPrice && (
-              <span className="text-[10px] text-slate-400 line-through">
-                {localize(formattedOriginalPrice)}
-              </span>
+              <AnimatedPrice
+                value={displayOriginalPrice}
+                formatted={localize(formattedOriginalPrice)}
+                className="text-xs text-slate-400 line-through"
+              />
             )}
           </div>
         </div>
         <button
           type="button"
           onClick={() => {
-            if (isInternational) {
-              const effectiveUrl = getEffectiveCheckoutUrl(product, selectedLicenseOption, true);
-              window.open(effectiveUrl, '_blank', 'noopener,noreferrer');
-            } else {
-              addToCart(
-                product,
-                selectedLicenseOption ? 'avulso' : selectedPlan,
-                selectedLicenseOption,
-                quantity
-              );
-            }
+            addToCart(product, selectedLicenseOption ? 'avulso' : selectedPlan, selectedLicenseOption, quantity);
+            setIsCartOpen(false);
+            navigate('/checkout');
           }}
-          className="shrink-0 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs py-2.5 px-5 rounded-xl shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+          className="shrink-0 bg-feedback-success hover:bg-emerald-600 text-white font-bold text-xs py-2.5 px-5 rounded-xl shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
         >
           <ShoppingCart className="w-4 h-4" />
           <span>{localize(isInternational ? t('buy_now') : 'Comprar')}</span>

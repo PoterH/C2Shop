@@ -70,6 +70,43 @@ export const CATEGORIES = [
 
 export const products: Product[] = [
   {
+  "id": "tqs_24_7",
+  "slug": "tqs-24-7",
+  "name": "TQS 24.7",
+  "category": "Engenharia e Arquitetura",
+  "compatibility": "Windows",
+  "version": "24.7",
+  "description": "TQS 24.7 para engenharia estrutural no Windows. O pacote inclui também PREO e ALVEST, com entrega digital e orientações de instalação.",
+  "longDescription": "O pacote TQS 24.7 para Windows reúne o TQS na versão 24.7 e os adicionais PREO e ALVEST em uma única compra. Uma opção para profissionais de engenharia estrutural que desejam trabalhar com essas ferramentas no computador. Após a confirmação do pagamento, você recebe por e-mail o link de acesso aos arquivos do pacote, junto com as orientações de instalação. PREO e ALVEST estão incluídos no valor anunciado, sem compra separada desses adicionais.",
+  "price": 437.9,
+  "originalPrice": 657.90,
+  "checkoutUrl": "https://pay.cakto.com.br/rwnz4ws",
+  "imageUrl": "/images/products/tqs-card-1-20261111.webp",
+  "features": [
+    "TQS versão 24.7 para Windows",
+    "PREO e ALVEST incluídos no pacote",
+    "Pacote para engenharia estrutural",
+    "Entrega digital após a confirmação do pagamento",
+    "Orientações para instalação e suporte C2Tech"
+  ],
+  "requirements": {
+    "os": "Windows",
+    "cpu": "Consulte os requisitos do TQS 24.7 para o seu equipamento",
+    "ram": "Conforme os requisitos da versão e o porte dos projetos",
+    "storage": "Espaço para o programa e os arquivos dos projetos"
+  },
+  "internationalCheckoutUrl": "https://pay.cakto.com.br/rwnz4ws",
+  "driveUrl": "https://drive.google.com/drive/folders/1XjuMbUacZXd1F5A3z8bJw6Do7e__AOLY?usp=sharing",
+  "keywords": [
+    "tqs",
+    "tqs 24.7",
+    "preo",
+    "alvest",
+    "engenharia",
+    "estruturas"
+  ]
+},
+  {
     id: 'geo5_2024_win',
     keywords: ['autodesk', 'engenharia', 'arquitetura', 'cad', 'bim'],
     slug: 'geo5-2024-windows',
@@ -82,7 +119,7 @@ export const products: Product[] = [
     price: 227.90,
     originalPrice: 369.00,
     checkoutUrl: 'https://pay.cakto.com.br/kcsubty_850603',
-    imageUrl: '/images/products/geo5-2024.webp',
+    imageUrl: "/images/products/geo5_2024_win-card-68-20261112.webp",
     notes: 'Nota: O acesso para download será enviado instantaneamente no seu e-mail após a compra.',
     features: [
       'Versão 2024 completa com todos os módulos inclusos',
@@ -134,7 +171,7 @@ export const products: Product[] = [
     price: 67.90,
     originalPrice: 129.90,
     checkoutUrl: 'https://pay.cakto.com.br/e76zoav',
-    imageUrl: '/images/products/autocad-cover.webp',
+    imageUrl: "/images/products/autocad-card-19-20261111.webp",
     ean13: '8388917939753',
     mpn: '001N1-WW8644-T480',
     licenseOptions: [
@@ -148,8 +185,8 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/e76zoav',
         driveUrl: 'https://drive.google.com/drive/folders/1dxBJGU_lQAdXzSNg2SKlZWDxaLPbtq8e?usp=drive_link',
         downloadSlug: 'autocad-2019-windows',
-        imageUrl: '/images/products/autocad-2019-windows.webp',
-        gallery: ['/images/products/autocad-2019-windows.webp']
+        imageUrl: "/images/products/autocad-card-26-20261111.webp",
+        gallery: ["/images/products/autocad-card-26-20261111.webp"]
       },
       {
         quantity: 20241,
@@ -161,8 +198,8 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/89pnrua',
         driveUrl: 'https://drive.google.com/drive/folders/1Tyq7yNlz5jIzZGP-l6p8CYO9nxIsH1bS?usp=drive_link',
         downloadSlug: 'autocad-2024-windows',
-        imageUrl: '/images/products/autocad-2024-windows.webp',
-        gallery: ['/images/products/autocad-2024-windows.webp']
+        imageUrl: "/images/products/autocad-card-24-20261111.webp",
+        gallery: ["/images/products/autocad-card-24-20261111.webp"]
       },
       {
         quantity: 20251,
@@ -174,8 +211,8 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/5d9i7rx',
         driveUrl: 'https://drive.google.com/drive/folders/1wSjViIX_14R6SbCGP7f_2vPxXbttFi_S?usp=drive_link',
         downloadSlug: 'autocad-2025-windows',
-        imageUrl: '/images/products/autocad-2025-windows.webp',
-        gallery: ['/images/products/autocad-2025-windows.webp']
+        imageUrl: "/images/products/autocad-card-23-20261111.webp",
+        gallery: ["/images/products/autocad-card-23-20261111.webp"]
       },
       {
         quantity: 20261,
@@ -187,8 +224,8 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/t38dbcv',
         driveUrl: 'https://drive.google.com/drive/folders/1dPfNigOwUAm9HzpQJopKDrB-dLKhirt6?usp=drive_link',
         downloadSlug: 'autocad-2026-windows',
-        imageUrl: '/images/products/autocad-2026-windows.webp',
-        gallery: ['/images/products/autocad-2026-windows.webp']
+        imageUrl: "/images/products/autocad-card-22-20261111.webp",
+        gallery: ["/images/products/autocad-card-22-20261111.webp"]
       },
       {
         quantity: 20271,
@@ -199,8 +236,8 @@ export const products: Product[] = [
         originalPrice: 245.00,
         checkoutUrl: 'https://pay.cakto.com.br/3agirjy_453939',
         downloadSlug: 'autocad-2027-windows',
-        imageUrl: '/images/products/autocad-2027-windows.webp',
-        gallery: ['/images/products/autocad-2027-windows.webp']
+        imageUrl: "/images/products/autocad-card-20-20261111.webp",
+        gallery: ["/images/products/autocad-card-20-20261111.webp"]
       },
       {
         quantity: 20242,
@@ -211,8 +248,8 @@ export const products: Product[] = [
         originalPrice: 239.90,
         checkoutUrl: 'https://pay.cakto.com.br/35oxts5',
         downloadSlug: 'autocad-2024-macos',
-        imageUrl: '/images/products/autocad-2024-macos.webp',
-        gallery: ['/images/products/autocad-2024-macos.webp']
+        imageUrl: "/images/products/autocad-card-25-20261111.webp",
+        gallery: ["/images/products/autocad-card-25-20261111.webp"]
       },
       {
         quantity: 20272,
@@ -223,8 +260,8 @@ export const products: Product[] = [
         originalPrice: 269.90,
         checkoutUrl: 'https://pay.cakto.com.br/fw49xt3',
         downloadSlug: 'autocad-2027-macos',
-        imageUrl: '/images/products/autocad-2027-macos.webp',
-        gallery: ['/images/products/autocad-2027-macos.webp']
+        imageUrl: "/images/products/autocad-card-21-20261111.webp",
+        gallery: ["/images/products/autocad-card-21-20261111.webp"]
       }
     ],
     features: [
@@ -256,14 +293,8 @@ export const products: Product[] = [
     price: 137.90,
     originalPrice: 229.90,
     checkoutUrl: 'https://pay.cakto.com.br/5tysfn4',
-    imageUrl: '/images/products/revit-cover.webp',
-    gallery: [
-      '/images/products/revit-cover.webp',
-      '/images/products/revit-2027.webp',
-      '/images/products/revit-2026.webp',
-      '/images/products/revit-2025.webp',
-      '/images/products/revit-2024.webp'
-    ],
+    imageUrl: "/images/products/revit_2027-card-47-20261111.webp",
+    gallery: ["/images/products/revit_2027-card-47-20261111.webp"],
     licenseOptions: [
       {
         quantity: 2024,
@@ -274,8 +305,8 @@ export const products: Product[] = [
         originalPrice: 229.90,
         checkoutUrl: 'https://pay.cakto.com.br/5tysfn4',
         downloadSlug: 'revit-2024',
-        imageUrl: '/images/products/revit-2024.webp',
-        gallery: ['/images/products/revit-2024.webp']
+        imageUrl: "/images/products/revit_2027-card-50-20261111.webp",
+        gallery: ["/images/products/revit_2027-card-50-20261111.webp"]
       },
       {
         quantity: 2025,
@@ -286,8 +317,8 @@ export const products: Product[] = [
         originalPrice: 239.90,
         checkoutUrl: 'https://pay.cakto.com.br/3bmarsh',
         downloadSlug: 'revit-2025',
-        imageUrl: '/images/products/revit-2025.webp',
-        gallery: ['/images/products/revit-2025.webp']
+        imageUrl: "/images/products/revit_2027-card-49-20261111.webp",
+        gallery: ["/images/products/revit_2027-card-49-20261111.webp"]
       },
       {
         quantity: 2026,
@@ -299,8 +330,8 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/ggozfmn',
         driveUrl: 'https://drive.google.com/drive/folders/1hzQCGH3TmzdqJm7ySN_aptZNAd86ehzQ?usp=drive_link',
         downloadSlug: 'revit-2026',
-        imageUrl: '/images/products/revit-2026.webp',
-        gallery: ['/images/products/revit-2026.webp']
+        imageUrl: "/images/products/revit_2027-card-48-20261111.webp",
+        gallery: ["/images/products/revit_2027-card-48-20261111.webp"]
       },
       {
         quantity: 2027,
@@ -311,8 +342,8 @@ export const products: Product[] = [
         originalPrice: 269.90,
         checkoutUrl: 'https://pay.cakto.com.br/33xszru_453977',
         downloadSlug: 'revit-2027',
-        imageUrl: '/images/products/revit-2027.webp',
-        gallery: ['/images/products/revit-2027.webp']
+        imageUrl: "/images/products/revit_2027-card-47-20261111.webp",
+        gallery: ["/images/products/revit_2027-card-47-20261111.webp"]
       }
     ],
     features: [
@@ -364,10 +395,8 @@ export const products: Product[] = [
     originalPrice: 289.90,
     checkoutUrl: 'https://pay.cakto.com.br/mz6wwv6',
     driveUrl: 'https://drive.google.com/drive/folders/1HcPHfbBfsBrf3pjgPAgMuTPSd1ML2QY5?usp=drive_link',
-    imageUrl: '/images/products/3ds-max-2027.webp',
-    gallery: [
-      '/images/products/3ds-max-2027.webp'
-    ],
+    imageUrl: "/images/products/3ds_max_2027-card-54-20261111.webp",
+    gallery: ["/images/products/3ds_max_2027-card-54-20261111.webp"],
     features: [
       'Versão completa e funcional sem restrições',
       'Ativação permanente (vitalícia sem mensalidades)',
@@ -397,7 +426,7 @@ export const products: Product[] = [
     price: 167.90,
     originalPrice: 279.00,
     checkoutUrl: 'https://pay.cakto.com.br/pth7gb9_453983',
-    imageUrl: '/images/products/inventor-professional-2027.webp',
+    imageUrl: "/images/products/inventor_pro_2027-card-53-20261111.webp",
     features: [
       'Versão completa e funcional',
       'Acesso vitalício para uso ilimitado',
@@ -427,7 +456,7 @@ export const products: Product[] = [
     price: 147.90,
     originalPrice: 258.00,
     checkoutUrl: 'https://pay.cakto.com.br/p8io5d6',
-    imageUrl: '/images/products/civil-3d-2027.webp',
+    imageUrl: "/images/products/civil3d_2027-card-52-20261111.webp",
     features: [
       'Versão completa e funcional',
       'Acesso vitalício para uso ilimitado',
@@ -457,7 +486,7 @@ export const products: Product[] = [
     price: 187.90,
     originalPrice: 314.90,
     checkoutUrl: 'https://pay.cakto.com.br/i7yjqej',
-    imageUrl: '/images/products/navisworks-manage-2027.webp',
+    imageUrl: "/images/products/navisworks_2027-card-51-20261111.webp",
     features: [
       'Versão completa e funcional',
       'Acesso vitalício para uso ilimitado',
@@ -480,13 +509,13 @@ export const products: Product[] = [
     name: 'SketchUp Pro',
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows e macOS',
-    version: '2021 a 2026 (64-bits)',
+    version: '2021 a 2027 (64-bits)',
     description: 'Modelagem 3D intuitiva para arquitetura, interiores, marcenaria e documentação 2D com LayOut no Windows e macOS.',
     longDescription: 'O SketchUp Pro é a ferramenta definitiva e mais intuitiva do mundo para modelagem 3D arquitetônica, design de interiores, marcenaria, paisagismo e maquetes eletrônicas. Esta versão completa e vitalícia inclui o modelador 3D SketchUp Pro Desktop, o LayOut (para pranchas técnicas, cotas e detalhamento executivo 2D) e o Style Builder, com total compatibilidade com os principais renderizadores do mercado (V-Ray, Enscape, Lumion e D5 Render) tanto em computadores Windows quanto em Mac (Intel e Apple Silicon M1/M2/M3/M4).',
     price: 87.90,
     originalPrice: 152.90,
     checkoutUrl: 'https://pay.cakto.com.br/887oxn6',
-    imageUrl: '/images/products/sketchup-pro-cover.webp',
+    imageUrl: "/images/products/sketchup-card-7-20261112.webp",
     ean13: '8388917941206',
     mpn: 'SKP-PRO-WW2026-C2',
     licenseOptions: [
@@ -499,7 +528,7 @@ export const products: Product[] = [
         originalPrice: 152.90,
         checkoutUrl: 'https://pay.cakto.com.br/887oxn6',
         downloadSlug: 'sketchup-pro-2021-windows',
-        imageUrl: '/images/products/sketchup-pro-2021-windows.webp'
+        imageUrl: "/images/products/sketchup-card-15-20261112.webp"
       },
       {
         quantity: 20241,
@@ -510,7 +539,7 @@ export const products: Product[] = [
         originalPrice: 224.00,
         checkoutUrl: 'https://pay.cakto.com.br/343guqe',
         downloadSlug: 'sketchup-pro-2024-windows',
-        imageUrl: '/images/products/sketchup-pro-2024-windows.webp'
+        imageUrl: "/images/products/sketchup-card-13-20261112.webp"
       },
       {
         quantity: 20251,
@@ -521,7 +550,7 @@ export const products: Product[] = [
         originalPrice: 239.90,
         checkoutUrl: 'https://pay.cakto.com.br/y9tcw6z',
         downloadSlug: 'sketchup-pro-2025-windows',
-        imageUrl: '/images/products/sketchup-pro-2025-windows.webp'
+        imageUrl: "/images/products/sketchup-card-12-20261112.webp"
       },
       {
         quantity: 20261,
@@ -532,7 +561,7 @@ export const products: Product[] = [
         originalPrice: 258.90,
         checkoutUrl: 'https://pay.cakto.com.br/37xdw4p_847334',
         downloadSlug: 'sketchup-pro-2026-windows',
-        imageUrl: '/images/products/sketchup-pro-2026-windows.webp'
+        imageUrl: "/images/products/sketchup-card-10-20261112.webp"
       },
       {
         quantity: 20242,
@@ -543,7 +572,7 @@ export const products: Product[] = [
         originalPrice: 254.00,
         checkoutUrl: 'https://pay.cakto.com.br/m3bn96a',
         downloadSlug: 'sketchup-pro-2024-macos',
-        imageUrl: '/images/products/sketchup-pro-2024-macos.webp'
+        imageUrl: "/images/products/sketchup-card-14-20261112.webp"
       },
       {
         quantity: 20262,
@@ -554,13 +583,15 @@ export const products: Product[] = [
         originalPrice: 284.90,
         checkoutUrl: 'https://pay.cakto.com.br/xogsm9p',
         downloadSlug: 'sketchup-pro-2026-macos',
-        imageUrl: '/images/products/sketchup-pro-2026-macos.webp'
-      }
+        imageUrl: "/images/products/sketchup-card-11-20261112.webp"
+      },
+      {"quantity":20271,"label":"Windows - 2027","platform":"Windows","year":"2027","price":167.9,"originalPrice":288.90,"checkoutUrl":"https://pay.cakto.com.br/3c8sik6","internationalCheckoutUrl":"https://pay.cakto.com.br/3c8sik6","driveUrl":"https://drive.google.com/drive/folders/1rcSMvCV5MFqJunxKwrAR3_olmBFtuNZT?usp=sharing","downloadSlug":"sketchup-pro-2027-windows","imageUrl":"/images/products/sketchup-card-8-20261112.webp"},
+      {"quantity":20272,"label":"macOS - 2027","platform":"macOS","year":"2027","price":187.9,"originalPrice":288.90,"checkoutUrl":"https://pay.cakto.com.br/3bnzc7t","internationalCheckoutUrl":"https://pay.cakto.com.br/3bnzc7t","driveUrl":"https://drive.google.com/drive/folders/1AzyE3jJ1ER1RKyA6sI-dfCn1uvbJqAcM?usp=drive_link","downloadSlug":"sketchup-pro-2027-macos","imageUrl":"/images/products/sketchup-card-9-20261112.webp"}
     ],
     features: [
       'Versão completa e vitalícia (Sem mensalidades ou anuidades)',
       'Inclui SketchUp Pro 3D, LayOut 2D e Style Builder completos',
-      'Edições 2021, 2024, 2025 e 2026 para Windows e macOS (Intel e Apple M1/M2/M3/M4)',
+      'Edições 2021, 2024, 2025, 2026 e 2027 para Windows e macOS (Intel e Apple M1/M2/M3/M4)',
       'Totalmente compatível com V-Ray, Enscape, Lumion e plugins Ruby',
       'Acompanha instruções passo a passo em vídeo para instalação rápida',
       'Link de download enviado imediatamente no seu e-mail após a compra',
@@ -586,12 +617,9 @@ export const products: Product[] = [
     price: 227.90,
     originalPrice: 449.00,
     checkoutUrl: 'https://pay.cakto.com.br/33tbjgj',
-    imageUrl: '/images/products/eberick-builder-2026-infinity.webp',
-    gallery: [
-      '/images/products/eberick-builder-2026-infinity.webp',
-      '/images/products/eberick-builder-2025-infinity.webp',
-      '/images/products/eberick-builder-2024-plena.webp'
-    ],
+    internationalCheckoutUrl: 'https://pay.cakto.com.br/33tbjgj',
+    imageUrl: "/images/products/eberick_builder_2025-card-40-20261111.webp",
+    gallery: ["/images/products/eberick_builder_2025-card-40-20261111.webp"],
     licenseOptions: [
       {
         quantity: 2024,
@@ -599,9 +627,10 @@ export const products: Product[] = [
         price: 227.90,
         originalPrice: 449.00,
         checkoutUrl: 'https://pay.cakto.com.br/33tbjgj',
+        internationalCheckoutUrl: 'https://pay.cakto.com.br/33tbjgj',
         driveUrl: 'https://drive.google.com/drive/folders/1AOD3jP7Qkyk5eqx65uBEQMyCYdI1dfNn?usp=drive_link',
         downloadSlug: 'eberick-builder-2024-plena',
-        imageUrl: '/images/products/eberick-builder-2024-plena.webp'
+        imageUrl: "/images/products/eberick_builder_2025-card-42-20261111.webp"
       },
       {
         quantity: 2025,
@@ -609,18 +638,20 @@ export const products: Product[] = [
         price: 367.90,
         originalPrice: 549.00,
         checkoutUrl: 'https://pay.cakto.com.br/7jw8eyi_847943',
+        internationalCheckoutUrl: 'https://pay.cakto.com.br/7jw8eyi_847943',
         downloadSlug: 'eberick-builder-2025',
-        imageUrl: '/images/products/eberick-builder-2025-infinity.webp'
+        imageUrl: "/images/products/eberick_builder_2025-card-41-20261111.webp"
       },
       {
         quantity: 2026,
         label: 'Versão Infinity 2026.09',
-        price: 507.90,
+        price: 447.90,
         originalPrice: 849.00,
         checkoutUrl: 'https://pay.cakto.com.br/8x4fckr',
+        internationalCheckoutUrl: 'https://pay.cakto.com.br/8x4fckr',
         driveUrl: 'https://drive.google.com/drive/folders/1Agg7qd7JFCAKsfFdgsoEUnGDMgDnZ_B0?usp=drive_link',
         downloadSlug: 'eberick-builder-2026-infinity',
-        imageUrl: '/images/products/eberick-builder-2026-infinity.webp'
+        imageUrl: "/images/products/eberick_builder_2025-card-40-20261111.webp"
       }
     ],
     features: [
@@ -654,11 +685,10 @@ export const products: Product[] = [
     price: 267.90,
     originalPrice: 429.90,
     checkoutUrl: 'https://pay.cakto.com.br/3f5thmj',
+    internationalCheckoutUrl: 'https://pay.cakto.com.br/3f5thmj',
     driveUrl: 'https://drive.google.com/drive/folders/1iB-8pJlcggopLS6QUQvee9Ef_SKgrvM2?usp=drive_link',
-    imageUrl: '/images/products/altoqi-visus-2026.webp',
-    gallery: [
-      '/images/products/altoqi-visus-2026.webp'
-    ],
+    imageUrl: "/images/products/altoqi_visus_2026-card-43-20261111.webp",
+    gallery: ["/images/products/altoqi_visus_2026-card-43-20261111.webp"],
     features: [
       'Versão completa e funcional da edição 2026-06',
       'Integração direta com AltoQi Eberick, Builder e modelos IFC',
@@ -690,7 +720,7 @@ export const products: Product[] = [
     price: 127.90,
     originalPrice: 209.00,
     checkoutUrl: 'https://pay.cakto.com.br/e6wi689',
-    imageUrl: '/images/products/archicad-30-bra.webp',
+    imageUrl: "/images/products/archicad_30-card-39-20261111.webp",
     ean13: '8388917951203',
     mpn: 'ACAD-BRA-WW2026-C2',
     licenseOptions: [
@@ -703,7 +733,7 @@ export const products: Product[] = [
         originalPrice: 209.00,
         checkoutUrl: 'https://pay.cakto.com.br/e6wi689',
         downloadSlug: 'archicad-28-bra',
-        imageUrl: '/images/products/archicad-28-bra.webp'
+        imageUrl: "/images/products/archicad_30-card-37-20261111.webp"
       },
       {
         quantity: 291,
@@ -714,7 +744,7 @@ export const products: Product[] = [
         originalPrice: 219.00,
         checkoutUrl: 'https://pay.cakto.com.br/3fgpwfj_848451',
         downloadSlug: 'archicad-29-bra',
-        imageUrl: '/images/products/archicad-29-bra.webp'
+        imageUrl: "/images/products/archicad_30-card-38-20261111.webp"
       },
       {
         quantity: 301,
@@ -725,7 +755,7 @@ export const products: Product[] = [
         originalPrice: 254.90,
         checkoutUrl: 'https://pay.cakto.com.br/khwk5iz',
         downloadSlug: 'archicad-30-bra',
-        imageUrl: '/images/products/archicad-30-bra.webp'
+        imageUrl: "/images/products/archicad_30-card-39-20261111.webp"
       }
     ],
     features: [
@@ -752,19 +782,15 @@ export const products: Product[] = [
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows',
     version: '2025.d, 2026.a e 2027.a (64-bits)',
-    description: 'Suíte completa com CYPECAD, CYPE 3D, CYPETHERM, Arquimedes e mais para cálculo estrutural e instalações.',
-    longDescription: 'O pacote CYPE Completo reúne em uma única instalação todos os módulos consagrados da CYPE Ingenieros, incluindo CYPECAD, CYPE 3D, CYPETHERM, Arquimedes, Gerador de Preços e projetos de instalações prediais compatíveis com as normas brasileiras (ABNT NBR). Disponível nas versões 2025.d (todos os idiomas), 2026.a (Português Brasil) e a nova versão 2027.a.',
+    description: "CYPE Completo 2027.a com todos os módulos e todos os idiomas: a edição mais avançada da nossa oferta. Consulte as diferenças de instalação entre 2027.a, 2026.a e 2025.d.",
+    longDescription: "O CYPE Completo reúne CYPECAD, CYPE 3D, CYPETHERM, Arquimedes, Gerador de Preços e os demais módulos para cálculo estrutural e instalações. A versão 2027.a é a edição mais avançada da nossa oferta, superior às versões anteriores, com todos os módulos e disponibilidade em todos os idiomas. A versão 2025.d também está disponível em todos os idiomas; a versão 2026.a está disponível em Português Brasil (PT-BR). Instalação por versão: a edição 2027.a permite instalação em apenas uma máquina. As edições 2025.d e 2026.a permitem instalação em várias máquinas. Em todas as versões, nosso suporte técnico atende somente uma máquina por vez, dentro do período de suporte contratado.",
     price: 247.90,
     originalPrice: 378.90,
     checkoutUrl: 'https://pay.cakto.com.br/xzemgyx',
-    imageUrl: '/images/products/cype-2027.webp',
+    imageUrl: "/images/products/cype_2026-card-72-20261112.webp",
     ean13: '8388917943811',
     mpn: 'CYP-FULL-BR2026-C2',
-    gallery: [
-      '/images/products/cype-2027.webp',
-      '/images/products/cypecad-2026.webp',
-      '/images/products/cypecad-2025.webp'
-    ],
+    gallery: ["/images/products/cype_2026-card-72-20261112.webp"],
     licenseOptions: [
       {
         quantity: 20251,
@@ -775,8 +801,8 @@ export const products: Product[] = [
         originalPrice: 378.90,
         checkoutUrl: 'https://pay.cakto.com.br/xzemgyx',
         downloadSlug: 'cypecad-2025',
-        imageUrl: '/images/products/cypecad-2025.webp',
-        gallery: ['/images/products/cypecad-2025.webp']
+        imageUrl: "/images/products/cype_2026-card-70-20261112.webp",
+        gallery: ["/images/products/cype_2026-card-70-20261112.webp"]
       },
       {
         quantity: 20261,
@@ -787,28 +813,32 @@ export const products: Product[] = [
         originalPrice: 469.00,
         checkoutUrl: 'https://pay.cakto.com.br/nyooujd_454658',
         downloadSlug: 'cypecad-2026',
-        imageUrl: '/images/products/cypecad-2026.webp',
-        gallery: ['/images/products/cypecad-2026.webp']
+        imageUrl: "/images/products/cype_2026-card-71-20261112.webp",
+        gallery: ["/images/products/cype_2026-card-71-20261112.webp"]
       },
       {
         quantity: 20271,
-        label: 'Windows - 2027.a',
+        label: 'Windows - 2027.a (Todos os Idiomas)',
         platform: 'Windows',
         year: '2027.a',
-        price: 527.90,
+        price: 299.90,
         originalPrice: 799.00,
         checkoutUrl: 'https://pay.cakto.com.br/qksobr6',
         driveUrl: 'https://drive.google.com/drive/folders/1wp0tXGCwPnHHyX2n9oGhvsenjqJwwfgN?usp=drive_link',
         downloadSlug: 'cypecad-2027',
-        imageUrl: '/images/products/cype-2027.webp',
-        gallery: ['/images/products/cype-2027.webp']
+        imageUrl: "/images/products/cype_2026-card-72-20261112.webp",
+        gallery: ["/images/products/cype_2026-card-72-20261112.webp"]
       }
     ],
     features: [
       'Inclui CYPECAD, CYPE 3D, CYPETHERM, Arquimedes, Gerador de Preços entre outros',
       'Todos os módulos ativos (concreto armado, protendido, estruturas metálicas, fundações e instalações)',
-      'Versão 2026.a exclusivamente em Português Brasil (PT-BR) | Versão 2025.d em todos os idiomas',
-      'Ativação vitalícia para uso ilimitado sem mensalidades',
+      '2027.a: edição mais avançada da nossa oferta, com todos os módulos e todos os idiomas',
+      '2025.d: todos os idiomas | 2026.a: Português Brasil (PT-BR)',
+      '2027.a: instalação em apenas uma máquina',
+      '2025.d e 2026.a: instalação permitida em várias máquinas',
+      'Em todas as versões, o suporte atende somente uma máquina por vez',
+      'Ativação vitalícia sem mensalidades, respeitando o limite de máquinas de cada versão',
       'Acompanha instruções em vídeo passo a passo para instalação',
       'Entrega automática no e-mail logo após a confirmação do pagamento',
       'Suporte técnico remoto incluso (30 dias de garantia de suporte)'
@@ -834,7 +864,7 @@ export const products: Product[] = [
     price: 167.90,
     originalPrice: 298.00,
     checkoutUrl: 'https://pay.cakto.com.br/7hh4cvt_847441',
-    imageUrl: '/images/products/solidworks-2026.webp',
+    imageUrl: "/images/products/solidworks_2026-card-45-20261111.webp",
     licenseOptions: [
       {
         quantity: 2025,
@@ -845,7 +875,7 @@ export const products: Product[] = [
         originalPrice: 268.00,
         checkoutUrl: 'https://pay.cakto.com.br/37dp6zs',
         downloadSlug: 'solidworks-2025',
-        imageUrl: '/images/products/solidworks-2025.webp'
+        imageUrl: "/images/products/solidworks_2026-card-46-20261111.webp"
       },
       {
         quantity: 2026,
@@ -856,7 +886,7 @@ export const products: Product[] = [
         originalPrice: 298.00,
         checkoutUrl: 'https://pay.cakto.com.br/7hh4cvt_847441',
         downloadSlug: 'solidworks-2026',
-        imageUrl: '/images/products/solidworks-2026.webp'
+        imageUrl: "/images/products/solidworks_2026-card-45-20261111.webp"
       }
     ],
     features: [
@@ -888,7 +918,7 @@ export const products: Product[] = [
     price: 197.90,
     originalPrice: 329.90,
     checkoutUrl: 'https://pay.cakto.com.br/3cg7y55',
-    imageUrl: '/images/products/sisdea-2025.webp',
+    imageUrl: "/images/products/sisdea_2025-card-44-20261111.webp",
     features: [
       'Versão completa e funcional',
       'Acesso vitalício para uso ilimitado',
@@ -908,7 +938,7 @@ export const products: Product[] = [
   {
     id: 'rhinoceros_8',
     slug: 'rhinoceros-9',
-    name: 'Rhinoceros 9 (Rhino 3D)',
+    name: 'Rhinoceros',
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows e macOS',
     version: '9 Commercial & 8 Commercial (Windows e macOS)',
@@ -918,7 +948,7 @@ export const products: Product[] = [
     originalPrice: 289.00,
     checkoutUrl: 'https://pay.cakto.com.br/339cg7t',
     internationalCheckoutUrl: 'https://pay.cakto.com.br/3ctrs2o',
-    imageUrl: '/images/products/rhinoceros-9.webp',
+    imageUrl: "/images/products/rhinoceros_8-card-60-20261111.webp",
     driveUrl: 'https://drive.google.com/drive/folders/1RXd6tR_Ly2OezQVJ94yHBWHR1mkE1UCO?usp=sharing',
     licenseOptions: [
       {
@@ -931,7 +961,7 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/339cg7t',
         internationalCheckoutUrl: 'https://pay.cakto.com.br/3ctrs2o',
         downloadSlug: 'rhinoceros-9-windows',
-        imageUrl: '/images/products/rhinoceros-9.webp',
+        imageUrl: "/images/products/rhinoceros_8-card-61-20261111.webp",
         driveUrl: 'https://drive.google.com/drive/folders/1RXd6tR_Ly2OezQVJ94yHBWHR1mkE1UCO?usp=sharing'
       },
       {
@@ -944,7 +974,7 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/owkfuvv_850623',
         internationalCheckoutUrl: 'https://pay.cakto.com.br/dgr2xz8',
         downloadSlug: 'rhinoceros-8',
-        imageUrl: '/images/products/rhinoceros-8.webp'
+        imageUrl: "/images/products/rhinoceros_8-card-62-20261111.webp"
       },
       {
         quantity: 2,
@@ -956,7 +986,7 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/ew26je8',
         internationalCheckoutUrl: 'https://pay.cakto.com.br/am2bfot',
         downloadSlug: 'rhinoceros-8-mac',
-        imageUrl: '/images/products/rhinoceros-8-mac.webp'
+        imageUrl: "/images/products/rhinoceros_8-card-63-20261111.webp"
       }
     ],
     features: [
@@ -988,7 +1018,7 @@ export const products: Product[] = [
     price: 137.90,
     originalPrice: 214.90,
     checkoutUrl: 'https://pay.cakto.com.br/ecx56mf',
-    imageUrl: '/images/products/zwcad-2026.webp',
+    imageUrl: "/images/products/zwcad_2026-card-69-20261112.webp",
     features: [
       'Versão completa e funcional',
       'Acesso vitalício para uso ilimitado',
@@ -1018,7 +1048,7 @@ export const products: Product[] = [
     price: 237.90,
     originalPrice: 379.00,
     checkoutUrl: 'https://pay.cakto.com.br/p5j6qsj',
-    imageUrl: '/images/products/tekla-structures-2025.webp',
+    imageUrl: "/images/products/tekla_2026-card-66-20261112.webp",
     features: [
       'Versão completa e funcional',
       'Acesso vitalício para uso ilimitado',
@@ -1048,7 +1078,7 @@ export const products: Product[] = [
     price: 127.90,
     originalPrice: 199.90,
     checkoutUrl: 'https://pay.cakto.com.br/g2h5czk_443849',
-    imageUrl: '/images/products/office-2024-professional-plus.webp',
+    imageUrl: "/images/products/office-card-2-20261111.webp",
     notes: 'Nota: A licença é local e não inclui espaço de armazenamento em nuvem no OneDrive.',
     licenseOptions: [
       {
@@ -1060,7 +1090,7 @@ export const products: Product[] = [
         originalPrice: 199.90,
         checkoutUrl: 'https://pay.cakto.com.br/g2h5czk_443849',
         downloadSlug: 'office-2024-professional-plus',
-        imageUrl: '/images/products/office-2024-professional-plus.webp'
+        imageUrl: "/images/products/office-card-3-20261111.webp"
       },
       {
         quantity: 2,
@@ -1071,7 +1101,7 @@ export const products: Product[] = [
         originalPrice: 289.90,
         checkoutUrl: 'https://pay.cakto.com.br/363brvw',
         downloadSlug: 'office-2024-professional-mac',
-        imageUrl: '/images/products/office-2024-professional-mac.webp'
+        imageUrl: "/images/products/office-card-4-20261111.webp"
       }
     ],
     features: [
@@ -1104,7 +1134,7 @@ export const products: Product[] = [
     price: 87.90,
     originalPrice: 149.90,
     checkoutUrl: 'https://pay.cakto.com.br/t5qr5by_847341',
-    imageUrl: '/images/products/vray-7-windows.webp',
+    imageUrl: "/images/products/vray_7-card-55-20261111.webp",
     licenseOptions: [
       {
         quantity: 1,
@@ -1114,7 +1144,7 @@ export const products: Product[] = [
         price: 87.90,
         originalPrice: 149.90,
         checkoutUrl: 'https://pay.cakto.com.br/t5qr5by_847341',
-        imageUrl: '/images/products/vray-7-windows.webp'
+        imageUrl: "/images/products/vray_7-card-55-20261111.webp"
       },
       {
         quantity: 2,
@@ -1124,7 +1154,7 @@ export const products: Product[] = [
         price: 87.90,
         originalPrice: 149.90,
         checkoutUrl: 'https://pay.cakto.com.br/t5qr5by_847341',
-        imageUrl: '/images/products/vray-7-windows.webp'
+        imageUrl: "/images/products/vray_7-card-56-20261111.webp"
       },
       {
         quantity: 3,
@@ -1134,7 +1164,7 @@ export const products: Product[] = [
         price: 87.90,
         originalPrice: 149.90,
         checkoutUrl: 'https://pay.cakto.com.br/t5qr5by_847341',
-        imageUrl: '/images/products/vray-7-windows.webp'
+        imageUrl: "/images/products/vray_7-card-57-20261111.webp"
       }
     ],
     features: [
@@ -1167,7 +1197,7 @@ export const products: Product[] = [
     price: 97.90,
     originalPrice: 164.90,
     checkoutUrl: 'https://pay.cakto.com.br/u9uowmi_847345',
-    imageUrl: '/images/products/chaos-enscape-windows.webp',
+    imageUrl: "/images/products/enscape-card-58-20261111.webp",
     features: [
       'Versão completa e funcional',
       'Acesso vitalício para uso ilimitado',
@@ -1197,7 +1227,7 @@ export const products: Product[] = [
     price: 137.90,
     originalPrice: 234.90,
     checkoutUrl: 'https://pay.cakto.com.br/fvvtpwg',
-    imageUrl: '/images/products/promob-plus-professional-2026.webp',
+    imageUrl: "/images/products/promob-card-5-20261111.webp",
     ean13: '8388917966100',
     mpn: 'PRMB-PLUS-WW2026-C2',
     licenseOptions: [
@@ -1211,7 +1241,7 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/fvvtpwg',
         internationalCheckoutUrl: 'https://pay.cakto.com.br/m2hsa5x',
         downloadSlug: 'promob-plus-enterprise-2024',
-        imageUrl: '/images/products/promob-enterprise-2024.webp'
+        imageUrl: "/images/products/promob-card-6-20261111.webp"
       },
       {
         quantity: 20261,
@@ -1223,7 +1253,7 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/aaddsnu',
         internationalCheckoutUrl: 'https://pay.cakto.com.br/3bc5zyh',
         downloadSlug: 'promob-plus-professional-2026',
-        imageUrl: '/images/products/promob-plus-professional-2026.webp',
+        imageUrl: "/images/products/promob-card-5-20261111.webp",
         driveUrl: 'https://drive.google.com/drive/folders/11wI5uSksi7h_CP4fwQVDulz6hqZvEfoE?usp=sharing'
       }
     ],
@@ -1278,10 +1308,8 @@ export const products: Product[] = [
     originalPrice: 319.90,
     checkoutUrl: 'https://pay.cakto.com.br/qtaehri',
     driveUrl: 'https://drive.google.com/drive/folders/15Bs5e9ozDlJxJ3ynBCKtgeUxVspn2aLK?usp=drive_link',
-    imageUrl: '/images/products/vectric-aspire-12-5-pro.webp',
-    gallery: [
-      '/images/products/vectric-aspire-12-5-pro.webp'
-    ],
+    imageUrl: "/images/products/vectric_aspire_12_5-card-67-20261112.webp",
+    gallery: ["/images/products/vectric_aspire_12_5-card-67-20261112.webp"],
     ean13: '8388917978202',
     mpn: 'VASP-PRO-WW125-C2',
     features: [
@@ -1316,7 +1344,7 @@ export const products: Product[] = [
     price: 47.90,
     originalPrice: 89.90,
     checkoutUrl: 'https://pay.cakto.com.br/os323a8',
-    imageUrl: '/images/products/coreldraw-cover.webp',
+    imageUrl: "/images/products/corel-card-27-20261111.webp",
     ean13: '8388917945198',
     mpn: 'CDGS-PRO-WW2026-C2',
     licenseOptions: [
@@ -1329,7 +1357,7 @@ export const products: Product[] = [
         originalPrice: 89.90,
         checkoutUrl: 'https://pay.cakto.com.br/os323a8',
         downloadSlug: 'coreldraw-x7-windows',
-        imageUrl: '/images/products/coreldraw-x7-windows.webp'
+        imageUrl: "/images/products/corel-card-36-20261111.webp"
       },
       {
         quantity: 20221,
@@ -1341,7 +1369,7 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/3cwhgqy',
         driveUrl: 'https://drive.google.com/drive/folders/1EZTYmNQQMRlPtidtKx3IQxpK5DU3KfRw?usp=drive_link',
         downloadSlug: 'coreldraw-2022-windows',
-        imageUrl: '/images/products/coreldraw-2022-windows.webp'
+        imageUrl: "/images/products/corel-card-35-20261111.webp"
       },
       {
         quantity: 20231,
@@ -1353,7 +1381,7 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/oai5wem',
         driveUrl: 'https://drive.google.com/drive/folders/1YcJLz4ICNlyukNyPTZy_-oSSlgNkB8YW?usp=drive_link',
         downloadSlug: 'coreldraw-2023-windows',
-        imageUrl: '/images/products/coreldraw-2023-windows.webp'
+        imageUrl: "/images/products/corel-card-34-20261111.webp"
       },
       {
         quantity: 20241,
@@ -1365,7 +1393,7 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/3422jba',
         driveUrl: 'https://drive.google.com/drive/folders/1h0NRYIH_-d66gOEFEORTsuji6Gcy-rer?usp=drive_link',
         downloadSlug: 'coreldraw-2024-windows',
-        imageUrl: '/images/products/coreldraw-2024-windows.webp'
+        imageUrl: "/images/products/corel-card-32-20261111.webp"
       },
       {
         quantity: 20251,
@@ -1376,7 +1404,7 @@ export const products: Product[] = [
         originalPrice: 154.00,
         checkoutUrl: 'https://pay.cakto.com.br/p5h4svu',
         downloadSlug: 'coreldraw-2025-windows',
-        imageUrl: '/images/products/coreldraw-2025-windows.webp'
+        imageUrl: "/images/products/corel-card-30-20261111.webp"
       },
       {
         quantity: 20261,
@@ -1387,18 +1415,7 @@ export const products: Product[] = [
         originalPrice: 169.90,
         checkoutUrl: 'https://pay.cakto.com.br/35jm335_853466',
         downloadSlug: 'coreldraw-graphics-suite-2026',
-        imageUrl: '/images/products/coreldraw-graphics-suite-2026.webp'
-      },
-      {
-        quantity: 20222,
-        label: 'macOS - 2022',
-        platform: 'macOS',
-        year: '2022',
-        price: 97.90,
-        originalPrice: 168.00,
-        checkoutUrl: 'https://pay.cakto.com.br/349jgmy',
-        downloadSlug: 'coreldraw-2022-macos',
-        imageUrl: '/images/products/coreldraw-2022-macos.webp'
+        imageUrl: "/images/products/corel-card-28-20261111.webp"
       },
       {
         quantity: 20242,
@@ -1409,7 +1426,7 @@ export const products: Product[] = [
         originalPrice: 214.90,
         checkoutUrl: 'https://pay.cakto.com.br/ni9z85j',
         downloadSlug: 'coreldraw-2024-macos',
-        imageUrl: '/images/products/coreldraw-2024-macos.webp'
+        imageUrl: "/images/products/corel-card-33-20261111.webp"
       },
       {
         quantity: 20252,
@@ -1420,7 +1437,7 @@ export const products: Product[] = [
         originalPrice: 229.00,
         checkoutUrl: 'https://pay.cakto.com.br/3ccw87u',
         downloadSlug: 'coreldraw-2025-macos',
-        imageUrl: '/images/products/coreldraw-2025-macos.webp'
+        imageUrl: "/images/products/corel-card-31-20261111.webp"
       },
       {
         quantity: 20262,
@@ -1431,7 +1448,7 @@ export const products: Product[] = [
         originalPrice: 244.90,
         checkoutUrl: 'https://pay.cakto.com.br/jnap84i',
         downloadSlug: 'coreldraw-graphics-suite-2026-macos',
-        imageUrl: '/images/products/coreldraw-graphics-suite-2026-macos.webp'
+        imageUrl: "/images/products/corel-card-29-20261111.webp"
       }
     ],
     features: [
@@ -1464,10 +1481,10 @@ export const products: Product[] = [
     originalPrice: 179.90,
     checkoutUrl: 'https://pay.cakto.com.br/33bi9nb',
     internationalCheckoutUrl: 'https://pay.cakto.com.br/vpgiw9h',
-    imageUrl: '/images/products/adobe-photoshop-2026.webp',
+    imageUrl: "/images/products/photoshop_2026-card-77-20261112.webp",
     licenseOptions: [
-      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/33bi9nb', internationalCheckoutUrl: 'https://pay.cakto.com.br/vpgiw9h', downloadSlug: 'adobe-photoshop-2026-windows', imageUrl: '/images/products/adobe-photoshop-2026-windows.webp', driveUrl: 'https://drive.google.com/drive/folders/1_idfhrAAsyUoRd8US1rISgzE-P9C9wxI?usp=drive_link' },
-      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/vzmbho4', internationalCheckoutUrl: 'https://pay.cakto.com.br/55spj79', downloadSlug: 'adobe-photoshop-2026-macos', imageUrl: '/images/products/adobe-photoshop-2026-macos.webp', driveUrl: 'https://drive.google.com/drive/folders/144KpBlWwN_ayPPwv3qR0_2HiERenY9xa?usp=drive_link' }
+      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/33bi9nb', internationalCheckoutUrl: 'https://pay.cakto.com.br/vpgiw9h', downloadSlug: 'adobe-photoshop-2026-windows', imageUrl: "/images/products/photoshop_2026-card-78-20261112.webp", driveUrl: 'https://drive.google.com/drive/folders/1_idfhrAAsyUoRd8US1rISgzE-P9C9wxI?usp=drive_link' },
+      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/vzmbho4', internationalCheckoutUrl: 'https://pay.cakto.com.br/55spj79', downloadSlug: 'adobe-photoshop-2026-macos', imageUrl: "/images/products/photoshop_2026-card-79-20261112.webp", driveUrl: 'https://drive.google.com/drive/folders/144KpBlWwN_ayPPwv3qR0_2HiERenY9xa?usp=drive_link' }
     ],
     features: [
       'Versão completa e funcional',
@@ -1500,10 +1517,10 @@ export const products: Product[] = [
     originalPrice: 179.90,
     checkoutUrl: 'https://pay.cakto.com.br/3e8vhbk',
     internationalCheckoutUrl: 'https://pay.cakto.com.br/oabdp5a',
-    imageUrl: '/images/products/adobe-illustrator-2026.webp',
+    imageUrl: "/images/products/illustrator_2026-card-86-20261112.webp",
     licenseOptions: [
-      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/3e8vhbk', internationalCheckoutUrl: 'https://pay.cakto.com.br/oabdp5a', downloadSlug: 'adobe-illustrator-2026-windows', imageUrl: '/images/products/adobe-illustrator-2026-windows.webp', driveUrl: 'https://drive.google.com/drive/folders/1wfikDovRV2Z6hx8Gibv47zsta5eaxlfE?usp=drive_link' },
-      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/r9dq6mw', internationalCheckoutUrl: 'https://pay.cakto.com.br/ye23okq', downloadSlug: 'adobe-illustrator-2026-macos', imageUrl: '/images/products/adobe-illustrator-2026-macos.webp', driveUrl: 'https://drive.google.com/drive/folders/19MVxRgRzyMN5vWE0wpBNdLuZ680jGysm?usp=drive_link' }
+      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/3e8vhbk', internationalCheckoutUrl: 'https://pay.cakto.com.br/oabdp5a', downloadSlug: 'adobe-illustrator-2026-windows', imageUrl: "/images/products/illustrator_2026-card-87-20261112.webp", driveUrl: 'https://drive.google.com/drive/folders/1wfikDovRV2Z6hx8Gibv47zsta5eaxlfE?usp=drive_link' },
+      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/r9dq6mw', internationalCheckoutUrl: 'https://pay.cakto.com.br/ye23okq', downloadSlug: 'adobe-illustrator-2026-macos', imageUrl: "/images/products/illustrator_2026-card-88-20261112.webp", driveUrl: 'https://drive.google.com/drive/folders/19MVxRgRzyMN5vWE0wpBNdLuZ680jGysm?usp=drive_link' }
     ],
     features: [
       'Versão completa e funcional',
@@ -1535,10 +1552,10 @@ export const products: Product[] = [
     originalPrice: 179.90,
     checkoutUrl: 'https://pay.cakto.com.br/35wxuu6',
     internationalCheckoutUrl: 'https://pay.cakto.com.br/ppgrgwu',
-    imageUrl: '/images/products/adobe-premiere-pro-2026.webp',
+    imageUrl: "/images/products/premiere_2026-card-80-20261112.webp",
     licenseOptions: [
-      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/35wxuu6', internationalCheckoutUrl: 'https://pay.cakto.com.br/ppgrgwu', downloadSlug: 'adobe-premiere-pro-2026-windows', imageUrl: '/images/products/adobe-premiere-pro-2026-windows.webp', driveUrl: 'https://drive.google.com/drive/folders/1ouOI2kE9ykUWhbIRKVErLdt8wT-7lUzP?usp=drive_link' },
-      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/8jjtest', internationalCheckoutUrl: 'https://pay.cakto.com.br/mdfqde5', downloadSlug: 'adobe-premiere-pro-2026-macos', imageUrl: '/images/products/adobe-premiere-pro-2026-macos.webp', driveUrl: 'https://drive.google.com/drive/folders/1MpniYyk6PpiiGF_pcTtrG3kpX4DS9bG4?usp=drive_link' }
+      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/35wxuu6', internationalCheckoutUrl: 'https://pay.cakto.com.br/ppgrgwu', downloadSlug: 'adobe-premiere-pro-2026-windows', imageUrl: "/images/products/premiere_2026-card-81-20261112.webp", driveUrl: 'https://drive.google.com/drive/folders/1ouOI2kE9ykUWhbIRKVErLdt8wT-7lUzP?usp=drive_link' },
+      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/8jjtest', internationalCheckoutUrl: 'https://pay.cakto.com.br/mdfqde5', downloadSlug: 'adobe-premiere-pro-2026-macos', imageUrl: "/images/products/premiere_2026-card-82-20261112.webp", driveUrl: 'https://drive.google.com/drive/folders/1MpniYyk6PpiiGF_pcTtrG3kpX4DS9bG4?usp=drive_link' }
     ],
     features: [
       'Versão completa e funcional',
@@ -1570,10 +1587,10 @@ export const products: Product[] = [
     originalPrice: 179.90,
     checkoutUrl: 'https://pay.cakto.com.br/pd66c62',
     internationalCheckoutUrl: 'https://pay.cakto.com.br/y3o3wwj',
-    imageUrl: '/images/products/adobe-after-effects-2026.webp',
+    imageUrl: "/images/products/after_effects_2026-card-83-20261112.webp",
     licenseOptions: [
-      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/pd66c62', internationalCheckoutUrl: 'https://pay.cakto.com.br/y3o3wwj', downloadSlug: 'adobe-after-effects-2026-windows', imageUrl: '/images/products/adobe-after-effects-2026-windows.webp', driveUrl: 'https://drive.google.com/drive/folders/1n7IMbAMrKMrph3SAClqZjA-lWKu7aEef?usp=drive_link' },
-      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/yanciia', internationalCheckoutUrl: 'https://pay.cakto.com.br/b23ppi5', downloadSlug: 'adobe-after-effects-2026-macos', imageUrl: '/images/products/adobe-after-effects-2026-macos.webp', driveUrl: 'https://drive.google.com/drive/folders/1eubskNF0SF_pFKT9Dp2oA1pg1qFxI73g?usp=drive_link' }
+      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/pd66c62', internationalCheckoutUrl: 'https://pay.cakto.com.br/y3o3wwj', downloadSlug: 'adobe-after-effects-2026-windows', imageUrl: "/images/products/after_effects_2026-card-84-20261112.webp", driveUrl: 'https://drive.google.com/drive/folders/1n7IMbAMrKMrph3SAClqZjA-lWKu7aEef?usp=drive_link' },
+      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/yanciia', internationalCheckoutUrl: 'https://pay.cakto.com.br/b23ppi5', downloadSlug: 'adobe-after-effects-2026-macos', imageUrl: "/images/products/after_effects_2026-card-85-20261112.webp", driveUrl: 'https://drive.google.com/drive/folders/1eubskNF0SF_pFKT9Dp2oA1pg1qFxI73g?usp=drive_link' }
     ],
     features: [
       'Versão completa e funcional',
@@ -1605,10 +1622,10 @@ export const products: Product[] = [
     originalPrice: 179.90,
     checkoutUrl: 'https://pay.cakto.com.br/fwwqmba',
     internationalCheckoutUrl: 'https://pay.cakto.com.br/hkrjs3s',
-    imageUrl: '/images/products/adobe-lightroom-classic-2026.webp',
+    imageUrl: "/images/products/lightroom_classic_2026-card-89-20261112.webp",
     licenseOptions: [
-      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/fwwqmba', internationalCheckoutUrl: 'https://pay.cakto.com.br/hkrjs3s', downloadSlug: 'adobe-lightroom-classic-2026-windows', imageUrl: '/images/products/adobe-lightroom-classic-2026-windows.webp', driveUrl: 'https://drive.google.com/drive/folders/1e496p9h2z0Ri0npC8wKdHDgl19jJtCtz?usp=drive_link' },
-      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/gz92etx', internationalCheckoutUrl: 'https://pay.cakto.com.br/k9x8mcc', downloadSlug: 'adobe-lightroom-classic-2026-macos', imageUrl: '/images/products/adobe-lightroom-classic-2026-macos.webp', driveUrl: 'https://drive.google.com/drive/folders/1FTcxAAgCbBukIan7lR-6GTQngQZ1mZEQ?usp=drive_link' }
+      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 97.90, originalPrice: 179.90, checkoutUrl: 'https://pay.cakto.com.br/fwwqmba', internationalCheckoutUrl: 'https://pay.cakto.com.br/hkrjs3s', downloadSlug: 'adobe-lightroom-classic-2026-windows', imageUrl: "/images/products/lightroom_classic_2026-card-90-20261112.webp", driveUrl: 'https://drive.google.com/drive/folders/1e496p9h2z0Ri0npC8wKdHDgl19jJtCtz?usp=drive_link' },
+      { quantity: 20262, label: 'macOS - 2026', platform: 'macOS', year: '2026', price: 137.90, originalPrice: 229.00, checkoutUrl: 'https://pay.cakto.com.br/gz92etx', internationalCheckoutUrl: 'https://pay.cakto.com.br/k9x8mcc', downloadSlug: 'adobe-lightroom-classic-2026-macos', imageUrl: "/images/products/lightroom_classic_2026-card-91-20261112.webp", driveUrl: 'https://drive.google.com/drive/folders/1FTcxAAgCbBukIan7lR-6GTQngQZ1mZEQ?usp=drive_link' }
     ],
     features: [
       'Versão completa e funcional',
@@ -1639,7 +1656,7 @@ export const products: Product[] = [
     price: 97.00,
     originalPrice: 167.00,
     checkoutUrl: 'https://pay.cakto.com.br/xsxm4u5_853714',
-    imageUrl: '/images/products/proteus-9.webp',
+    imageUrl: "/images/products/proteus_9-card-73-20261112.webp",
     features: [
       'Versão completa e funcional',
       'Acesso vitalício para uso ilimitado',
@@ -1668,7 +1685,7 @@ export const products: Product[] = [
     price: 350.00,
     originalPrice: 529.00,
     checkoutUrl: '[LINK_CHECKOUT_EXOCAD]',
-    imageUrl: '/images/products/exocad-dentalcad-31.webp',
+    imageUrl: '/images/products/exocad-31-card-20261112.webp',
     features: [
       'Versão completa e funcional com módulos clínicos integrados',
       'Acesso vitalício para uso ilimitado',
@@ -1698,7 +1715,7 @@ export const products: Product[] = [
     originalPrice: 389.90,
     checkoutUrl: 'https://pay.cakto.com.br/8oornwz',
     internationalCheckoutUrl: 'https://pay.cakto.com.br/97u3fwj',
-    imageUrl: '/images/products/parallels-desktop-27.webp',
+    imageUrl: "/images/products/parallels-card-16-20261111.webp",
     driveUrl: 'https://drive.google.com/drive/folders/1z6eL7yiGFPsDWAjZdA7Yl5dhK5Q_uz2V?usp=sharing',
     licenseOptions: [
       {
@@ -1711,7 +1728,7 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/iqu3oi2',
         internationalCheckoutUrl: 'https://pay.cakto.com.br/33d45v8',
         downloadSlug: 'parallels-desktop-26',
-        imageUrl: '/images/products/parallels-desktop-26.webp'
+        imageUrl: "/images/products/parallels-card-17-20261111.webp"
       },
       {
         quantity: 27,
@@ -1723,7 +1740,7 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/8oornwz',
         internationalCheckoutUrl: 'https://pay.cakto.com.br/97u3fwj',
         downloadSlug: 'parallels-desktop-27',
-        imageUrl: '/images/products/parallels-desktop-27.webp',
+        imageUrl: "/images/products/parallels-card-16-20261111.webp",
         driveUrl: 'https://drive.google.com/drive/folders/1z6eL7yiGFPsDWAjZdA7Yl5dhK5Q_uz2V?usp=sharing'
       }
     ],
@@ -1753,10 +1770,10 @@ export const products: Product[] = [
     version: '2026.1.2',
     description: 'Editor de vídeo e gravador de tela profissional tudo-em-um para criação de conteúdo de alta qualidade.',
     longDescription: 'O TechSmith Camtasia 2026 é o software líder de mercado para gravação de tela e edição de vídeo voltado para a criação de tutoriais, demonstrações de produtos, aulas online e vídeos de treinamento. Esta versão completa e funcional oferece gravação em alta definição, edição multitrilha intuitiva, efeitos visuais modernos, legendagem automática por IA e biblioteca rica em recursos prontos, tudo com acesso vitalício e sem taxas de assinatura mensal.',
-    price: 127.90,
+    price: 69.90,
     originalPrice: 208.90,
     checkoutUrl: 'https://pay.cakto.com.br/kxd76qu',
-    imageUrl: '/images/products/camtasia-2026.webp',
+    imageUrl: "/images/products/camtasia_2026-card-95-20261112.webp",
     features: [
       'Versão completa e funcional',
       'Acesso vitalício para uso ilimitado',
@@ -1782,10 +1799,10 @@ export const products: Product[] = [
     version: '12.0.2',
     description: 'Editor de PDF completo e profissional para editar, converter, assinar e ler arquivos PDF.',
     longDescription: 'O Wondershare PDFelement Professional 12 para Windows é a solução definitiva de PDF tudo-em-um. Com uma interface moderna e intuitiva, ele permite editar textos e imagens em PDFs com a mesma facilidade de um processador de texto, converter arquivos de e para múltiplos formatos (Word, Excel, PowerPoint, imagens), criar formulários preenchíveis, assinar digitalmente e aplicar tecnologia OCR avançada para digitalizar e pesquisar textos em documentos escaneados.',
-    price: 137.90,
+    price: 69.90,
     originalPrice: 218.00,
     checkoutUrl: 'https://pay.cakto.com.br/gcgjq3d',
-    imageUrl: '/images/products/pdfelement-12.webp',
+    imageUrl: "/images/products/pdfelement_12-card-75-20261112.webp",
     features: [
       'Versão completa e funcional',
       'Acesso vitalício para uso ilimitado',
@@ -1811,10 +1828,10 @@ export const products: Product[] = [
     version: '13.0.0',
     description: 'Software profissional de recuperação de dados e restauração de arquivos excluídos.',
     longDescription: 'O Wondershare Recoverit 13 para Windows é um software profissional de recuperação de dados líder de mercado. Ele possui uma taxa de recuperação de 95% e suporta a restauração de mais de 1000 formatos de arquivos (incluindo fotos, vídeos, documentos e e-mails) de quase todos os tipos de dispositivos de armazenamento: discos rígidos (HDD/SSD), pen drives, cartões de memória, além de sistemas de arquivos danificados ou formatados de forma acidental.',
-    price: 127.90,
+    price: 69.90,
     originalPrice: 194.90,
     checkoutUrl: 'https://pay.cakto.com.br/3dqe23f',
-    imageUrl: '/images/products/wondershare-recoverit-13.webp',
+    imageUrl: "/images/products/wondershare_recoverit_13-card-74-20261112.webp",
     features: [
       'Versão completa e funcional',
       'Acesso vitalício para uso ilimitado',
@@ -1835,30 +1852,32 @@ export const products: Product[] = [
     id: 'autodesk_all_apps',
     keywords: ['autocad', 'revit', 'maya', 'fusion 360', '3ds max', 'advanced steel', 'inventor', 'autodesk', 'bim', 'cad'],
     slug: 'autodesk-all-apps',
-    name: 'Autodesk Todos os Aplicativos',
+    name: 'Pacote Autodesk 86+ Apps Originais',
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows e macOS',
     version: '2024/2025/2026/2027',
-    description: 'Acesso oficial Autodesk Todos os Aplicativos. Você recebe login e senha para entrar em uma conta oficial da Autodesk e utilizar mais de 80 softwares.',
-    longDescription: 'O plano Autodesk Todos os Aplicativos oferece acesso oficial completo a mais de 80 softwares da Autodesk (incluindo AutoCAD, Revit, Inventor, Maya, 3ds Max e muito mais). O cliente recebe login e senha exclusivos para entrar em uma conta oficial diretamente no portal da Autodesk (manage.autodesk.com). Você poderá baixar e instalar os softwares oficiais diretamente pela sua conta, recebendo todas as atualizações e suporte C2Tech via WhatsApp.',
-    price: 89.90,
+    description: "Mais de 86 aplicativos originais Autodesk em um só pacote. Receba uma conta privada com login e senha para acessar o portal oficial e baixar AutoCAD, Revit, Inventor, Fusion, Maya, 3ds Max, Navisworks e muito mais pelo período escolhido.",
+    longDescription: "O Pacote Autodesk 86+ Apps Originais reúne em um único acesso mais de 86 aplicativos para arquitetura, engenharia, construção, design de produtos, modelagem 3D, animação e efeitos visuais. Após a confirmação do pagamento, enviamos login e senha de uma conta privada para seu uso, permitindo entrar na conta Autodesk pelo portal oficial manage.autodesk.com e baixar os programas originais disponíveis no pacote. Entre os destaques estão AutoCAD e seus módulos especializados, Revit, Inventor, Fusion, Maya, 3ds Max, Navisworks, Civil 3D, Advance Steel e Robot Structural Analysis, entre outros. A principal vantagem é reunir ferramentas para diferentes etapas do trabalho: desenho CAD, projetos BIM, detalhamento, desenvolvimento mecânico, compatibilização, modelagem e animação, sem precisar escolher apenas um software. Tenha acesso aos instaladores oficiais e às versões disponíveis na conta, incluindo edições 2024 a 2027 conforme o aplicativo. Escolha 30 dias, 1 ano, 2 anos ou 3 anos de acesso. O uso dos programas fica disponível durante a vigência do plano escolhido. A disponibilidade de versões, módulos e compatibilidade com Windows ou macOS varia conforme cada aplicativo. A C2Tech fornece orientações de acesso e suporte para ajudar você a começar.",
+    price: 39.90,
     originalPrice: 148.90,
     checkoutUrl: 'https://pay.cakto.com.br/6ek2ybh',
-    imageUrl: '/images/products/autodesk-all-apps.webp',
+    imageUrl: '/images/products/autodesk-86-apps-subscription-20261111.webp',
     isSubscription: true,
     billingPeriod: 'mensal',
     licenseOptions: [
-      { quantity: 1, label: 'Mensal', price: 89.90, checkoutUrl: 'https://pay.cakto.com.br/6ek2ybh' },
-      { quantity: 12, label: '1 Ano', price: 397.90, checkoutUrl: 'https://pay.cakto.com.br/sweaaho_448678' },
-      { quantity: 24, label: '2 Anos', price: 597.90, checkoutUrl: 'https://pay.cakto.com.br/3ci8dh3' },
-      { quantity: 36, label: '3 Anos', price: 737.90, checkoutUrl: 'https://pay.cakto.com.br/sjhwfte' }
+      { quantity: 1, label: '30 dias', price: 39.90, checkoutUrl: 'https://pay.cakto.com.br/6ek2ybh' },
+      { quantity: 12, label: '1 ano', price: 397.90, checkoutUrl: 'https://pay.cakto.com.br/sweaaho_448678' },
+      { quantity: 24, label: '2 anos', price: 597.90, checkoutUrl: 'https://pay.cakto.com.br/3ci8dh3' },
+      { quantity: 36, label: '3 anos', price: 737.90, checkoutUrl: 'https://pay.cakto.com.br/sjhwfte' }
     ],
     features: [
-      'Você recebe login e senha de conta oficial da Autodesk',
+      'Você recebe uma conta privada Autodesk com login e senha para seu uso',
       'Acesso direto no portal oficial manage.autodesk.com',
-      'Mais de 80 softwares Autodesk inclusos (AutoCAD, Revit, 3ds Max, Maya, etc.)',
+      '86+ aplicativos originais: AutoCAD e módulos, Revit, Inventor, Fusion, Maya, 3ds Max e Navisworks',
       'Download e instalação oficial pelo aplicativo Autodesk Desktop',
-      'Compatível com Windows e macOS',
+      'Ferramentas para CAD, BIM, engenharia, design de produtos, animação e compatibilização',
+      'Planos de 30 dias, 1 ano, 2 anos ou 3 anos de acesso',
+      'Windows e macOS conforme a compatibilidade de cada aplicativo',
       'Atualizações oficiais e suporte prioritário via WhatsApp'
     ],
     requirements: {
@@ -1882,7 +1901,7 @@ export const products: Product[] = [
     price: 89.90,
     originalPrice: 159.90,
     checkoutUrl: 'https://pay.cakto.com.br/mzrcqje_917458',
-    imageUrl: '/images/products/windows-11-pro.webp',
+    imageUrl: "/images/products/windows_11_pro-card-64-20261112.webp",
     isSubscription: false,
     features: [
       'Chave original de 25 dígitos',
@@ -1941,7 +1960,7 @@ export const products: Product[] = [
     price: 79.90,
     originalPrice: 139.90,
     checkoutUrl: 'https://pay.cakto.com.br/ihir3na',
-    imageUrl: '/images/products/windows-10-pro.webp',
+    imageUrl: "/images/products/windows_10_pro-card-65-20261112.webp",
     isSubscription: false,
     features: [
       'Chave original de 25 dígitos',
@@ -1992,11 +2011,11 @@ export const products: Product[] = [
     originalPrice: 269.00,
     checkoutUrl: 'https://pay.cakto.com.br/bcmzpny',
     internationalCheckoutUrl: 'https://pay.cakto.com.br/agmzvu9',
-    imageUrl: '/images/products/adobe-acrobat-pro.webp',
+    imageUrl: "/images/products/adobe_acrobat_pro_2026-card-92-20261112.webp",
     isSubscription: false,
     licenseOptions: [
-      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 167.90, originalPrice: 269.00, checkoutUrl: 'https://pay.cakto.com.br/bcmzpny', internationalCheckoutUrl: 'https://pay.cakto.com.br/agmzvu9', downloadSlug: 'adobe-acrobat-pro-dc-2026-windows', imageUrl: '/images/products/adobe-acrobat-pro-dc-2026-windows.webp', driveUrl: 'https://drive.google.com/drive/folders/1OXYAN30RI857GoCV9MVKZSKZl2tX28De?usp=drive_link' },
-      { quantity: 20252, label: 'macOS - 2025', platform: 'macOS', year: '2025', price: 189.90, originalPrice: 299.00, checkoutUrl: 'https://pay.cakto.com.br/gm7y7qs', downloadSlug: 'adobe-acrobat-pro-dc-2025-macos', imageUrl: '/images/products/adobe-acrobat-pro-dc-2025-macos.webp', driveUrl: 'https://drive.google.com/drive/folders/1J-z0eMqZrANbm8_GtcYjDku29ctBCFsd?usp=drive_link' }
+      { quantity: 2026, label: 'Windows - 2026', platform: 'Windows', year: '2026', price: 167.90, originalPrice: 269.00, checkoutUrl: 'https://pay.cakto.com.br/bcmzpny', internationalCheckoutUrl: 'https://pay.cakto.com.br/agmzvu9', downloadSlug: 'adobe-acrobat-pro-dc-2026-windows', imageUrl: "/images/products/adobe_acrobat_pro_2026-card-93-20261112.webp", driveUrl: 'https://drive.google.com/drive/folders/1OXYAN30RI857GoCV9MVKZSKZl2tX28De?usp=drive_link' },
+      { quantity: 20252, label: 'macOS - 2025', platform: 'macOS', year: '2025', price: 189.90, originalPrice: 299.00, checkoutUrl: 'https://pay.cakto.com.br/gm7y7qs', downloadSlug: 'adobe-acrobat-pro-dc-2025-macos', imageUrl: "/images/products/adobe_acrobat_pro_2026-card-94-20261112.webp", driveUrl: 'https://drive.google.com/drive/folders/1J-z0eMqZrANbm8_GtcYjDku29ctBCFsd?usp=drive_link' }
     ],
     features: [
       'Acesso vitalício',
@@ -2024,10 +2043,10 @@ export const products: Product[] = [
     version: '2025 (All Plugins + Addons)',
     description: 'A estação de trabalho de áudio digital definitiva. Crie, grave, edite e mixe suas músicas com plugins premium.',
     longDescription: 'O FL Studio 2025 Producer Edition traz tudo o que você precisa para a produção musical profissional. Esta versão inclui todos os plugins e addons (All Plugins Edition), oferecendo sintetizadores avançados, efeitos de mixagem e ferramentas de masterização em uma interface intuitiva. Licença vitalícia completa e permanente para Windows.',
-    price: 127.90,
+    price: 69.90,
     originalPrice: 219.90,
     checkoutUrl: 'https://pay.cakto.com.br/x6cwjnu',
-    imageUrl: '/images/products/fl-studio-2025.webp',
+    imageUrl: "/images/products/fl_studio_2025-card-96-20261112.webp",
     isSubscription: false,
     features: [
       'Acesso vitalício',
@@ -2092,10 +2111,10 @@ export const products: Product[] = [
     version: '15',
     description: 'Um dos editores de vídeo mais populares e fáceis de usar do mercado, com recursos avançados de IA.',
     longDescription: 'O Wondershare Filmora 15 traz uma revolução na edição de vídeo com novas ferramentas alimentadas por inteligência artificial. Crie vídeos incríveis de forma rápida, com efeitos, transições e edição de áudio profissional, tudo em uma interface intuitiva. Licença vitalícia completa para Windows.',
-    price: 127.90,
+    price: 69.90,
     originalPrice: 198.00,
     checkoutUrl: 'https://pay.cakto.com.br/32u8f6d',
-    imageUrl: '/images/products/filmora-15.webp',
+    imageUrl: "/images/products/filmora_15-card-76-20261112.webp",
     isSubscription: false,
     features: [
       'Acesso vitalício',
@@ -2165,7 +2184,7 @@ export function getProductBySlug(slug: string): Product | undefined {
   if (slug === 'autocad-2027-macos' || slug === 'autodesk-autocad' || slug === 'autocad') {
     return products.find(p => p.slug === 'autocad-2027-windows');
   }
-  if (slug === 'sketchup-pro-2026-macos' || slug === 'sketchup-pro' || slug === 'sketchup') {
+  if (slug === 'sketchup-pro-2027-windows' || slug === 'sketchup-pro-2027-macos' || slug === 'sketchup-pro-2026-macos' || slug === 'sketchup-pro' || slug === 'sketchup') {
     return products.find(p => p.slug === 'sketchup-pro-2026-windows');
   }
   if (slug === 'coreldraw-graphics-suite-2026-macos' || slug === 'coreldraw-graphics-suite' || slug === 'coreldraw') {

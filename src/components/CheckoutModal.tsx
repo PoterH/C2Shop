@@ -64,6 +64,22 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   const [phone, setPhone] = useState('');
   const [subOption, setSubOption] = useState<'recurrent' | 'avulso'>(initialPlan);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const shakeInvalidField = (fieldId: string) => {
+    requestAnimationFrame(() => {
+      const field = document.getElementById(fieldId);
+      if (!field) return;
+      field.classList.remove('is-shaking');
+      void field.offsetWidth;
+      field.classList.add('is-shaking');
+      field.addEventListener('animationend', () => field.classList.remove('is-shaking'), { once: true });
+      const focusTarget = field.matches('input,button,select,textarea') ? field : field.querySelector<HTMLElement>('input,button,select,textarea');
+      focusTarget?.focus({ preventScroll: true });
+    });
+  };
+  const showInfoError = (message: string, fieldId: string) => {
+    setErrorMessage(message);
+    shakeInvalidField(fieldId);
+  };
 
   // Pix Payment Data from API
   const [pixCopyPaste, setPixCopyPaste] = useState('');
@@ -212,38 +228,38 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   // Step Validations
   const validateInfoStep = () => {
     if (!termsAccepted) {
-      setErrorMessage('Por favor, leia e aceite os Termos e Condições para prosseguir.');
+      showInfoError('Por favor, leia e aceite os Termos e Condições para prosseguir.', 'checkout-terms');
       return false;
     }
     if (fullName.trim().split(' ').length < 2) {
-      setErrorMessage('Por favor, informe seu nome completo.');
+      showInfoError('Por favor, informe seu nome completo.', 'checkout-name');
       return false;
     }
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      setErrorMessage('Por favor, insira um e-mail válido.');
+      showInfoError('Por favor, insira um e-mail válido.', 'checkout-email');
       return false;
     }
     const cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
     if (cleanCpfCnpj.length > 0) {
       if (cleanCpfCnpj.length !== 11 && cleanCpfCnpj.length !== 14) {
-        setErrorMessage('Por favor, insira um CPF ou CNPJ válido ou deixe o campo em branco.');
+        showInfoError('Por favor, insira um CPF ou CNPJ válido ou deixe o campo em branco.', 'checkout-document');
         return false;
       }
 
       // Validação matemática do documento apenas se preenchido
       if (cleanCpfCnpj.length === 11 && !isValidCPF(cleanCpfCnpj)) {
-        setErrorMessage('CPF inválido. Por favor, verifique os números digitados ou deixe em branco.');
+        showInfoError('CPF inválido. Por favor, verifique os números digitados ou deixe em branco.', 'checkout-document');
         return false;
       }
       if (cleanCpfCnpj.length === 14 && !isValidCNPJ(cleanCpfCnpj)) {
-        setErrorMessage('CNPJ inválido. Por favor, verifique os números digitados ou deixe em branco.');
+        showInfoError('CNPJ inválido. Por favor, verifique os números digitados ou deixe em branco.', 'checkout-document');
         return false;
       }
     }
 
     const cleanPhone = phone.replace(/\D/g, '');
     if (cleanPhone.length > 0 && (cleanPhone.length < 10 || cleanPhone.length > 11)) {
-      setErrorMessage('Por favor, insira um telefone válido com DDD ou deixe o campo em branco.');
+      showInfoError('Por favor, insira um telefone válido com DDD ou deixe o campo em branco.', 'checkout-phone');
       return false;
     }
     setErrorMessage(null);
@@ -416,15 +432,15 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
   const handleBoletoCheckout = async () => {
     const cleanCpfCnpj = cpfCnpj.replace(/\D/g, '');
     if (cleanCpfCnpj.length !== 11 && cleanCpfCnpj.length !== 14) {
-      setErrorMessage('Para emissão de Boleto Bancário, o Banco Central exige informar um CPF ou CNPJ válido.');
+      showInfoError('Para emissão de Boleto Bancário, o Banco Central exige informar um CPF ou CNPJ válido.', 'checkout-boleto-document');
       return;
     }
     if (cleanCpfCnpj.length === 11 && !isValidCPF(cleanCpfCnpj)) {
-      setErrorMessage('CPF inválido para emissão do boleto. Verifique os números digitados.');
+      showInfoError('CPF inválido para emissão do boleto. Verifique os números digitados.', 'checkout-boleto-document');
       return;
     }
     if (cleanCpfCnpj.length === 14 && !isValidCNPJ(cleanCpfCnpj)) {
-      setErrorMessage('CNPJ inválido para emissão do boleto. Verifique os números digitados.');
+      showInfoError('CNPJ inválido para emissão do boleto. Verifique os números digitados.', 'checkout-boleto-document');
       return;
     }
 
@@ -519,7 +535,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
         {/* Header */}
         <div className="p-6 border-b border-slate-100 flex items-center justify-between gap-2 bg-slate-50/50">
           <div className="min-w-0 flex-1">
-            <span className="text-[10px] font-bold text-accent-blue uppercase tracking-widest bg-accent-blue/10 px-2 py-0.5 rounded">
+            <span className="text-[10px] font-bold text-action-primary uppercase tracking-widest bg-action-primary/10 px-2 py-0.5 rounded">
               {localize("Checkout Seguro")}</span>
             <h3 className="font-display font-bold text-slate-900 text-lg mt-1 truncate max-w-full">
               {localize(cartItems.length === 1 ? activeProduct?.name : `${cartItems.length} Softwares`)}
@@ -539,7 +555,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
           {/* Error Banner */}
           {errorMessage && (
-            <div className="p-4 bg-red-50 text-red-800 text-xs font-semibold rounded-2xl border border-red-100 flex flex-col gap-3">
+            <div role="alert" className="p-4 bg-red-50 text-red-800 text-xs font-semibold rounded-2xl border border-red-100 flex flex-col gap-3">
               <div className="flex items-start space-x-2">
                 <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
                 <p className="text-left leading-normal">{localize(errorMessage)}</p>
@@ -580,7 +596,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                         }}
                         className={`py-2 px-3 text-center rounded-xl border text-[10px] font-bold transition-all ${
                           subOption === 'recurrent'
-                            ? 'border-emerald-500 bg-emerald-500/10 text-emerald-800'
+                            ? 'border-feedback-success bg-feedback-success/10 text-emerald-800'
                             : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
                         }`}
                       >
@@ -594,7 +610,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                         }}
                         className={`py-2 px-3 text-center rounded-xl border text-[10px] font-bold transition-all ${
                           subOption === 'avulso'
-                            ? 'border-accent-blue bg-accent-blue/10 text-accent-blue-dark'
+                            ? 'border-action-primary bg-action-primary/10 text-action-primary-hover'
                             : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
                         }`}
                       >
@@ -638,11 +654,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                   <div className="relative">
                     <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <input
+                      id="checkout-name"
                       type="text"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       placeholder={localize("Ex: João Silva Santos")}
-                      className="w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all"
+                      className="t-input w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-action-primary focus:ring-1 focus:ring-action-primary rounded-xl text-sm transition-all"
                     />
                   </div>
                 </div>
@@ -653,11 +670,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                   <div className="relative">
                     <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <input
+                      id="checkout-email"
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder={localize("Ex: joao@exemplo.com")}
-                      className="w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all"
+                      className="t-input w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-action-primary focus:ring-1 focus:ring-action-primary rounded-xl text-sm transition-all"
                     />
                   </div>
                   <p className="text-[10px] text-slate-400">{localize("Certifique-se de digitar o e-mail correto para receber os links de acesso instantaneamente.")}</p>
@@ -672,12 +690,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                     <div className="relative">
                       <FileText className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                       <input
+                        id="checkout-document"
                         type="text"
                         value={cpfCnpj}
                         onChange={(e) => setCpfCnpj(formatCPFOrCNPJ(e.target.value))}
                         placeholder={localize("Opcional")}
                         maxLength={18}
-                        className="w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all"
+                        className="t-input w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-action-primary focus:ring-1 focus:ring-action-primary rounded-xl text-sm transition-all"
                       />
                     </div>
                   </div>
@@ -689,12 +708,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                     <div className="relative">
                       <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                       <input
+                        id="checkout-phone"
                         type="text"
                         value={phone}
                         onChange={(e) => setPhone(formatPhone(e.target.value))}
                         placeholder={localize("Opcional")}
                         maxLength={15}
-                        className="w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-accent-blue focus:ring-1 focus:ring-accent-blue rounded-xl text-sm transition-all"
+                        className="t-input w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-action-primary focus:ring-1 focus:ring-action-primary rounded-xl text-sm transition-all"
                       />
                     </div>
                   </div>
@@ -706,15 +726,16 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                 <label className="flex items-start gap-2.5 cursor-pointer group">
                   <div className="relative flex items-center justify-center shrink-0 mt-0.5">
                     <input
+                      id="checkout-terms"
                       type="checkbox"
-                      className="peer appearance-none w-4 h-4 border-2 border-slate-300 rounded bg-white checked:bg-accent-blue checked:border-accent-blue transition-all cursor-pointer"
+                      className="t-input peer appearance-none w-4 h-4 border-2 border-slate-300 rounded bg-white checked:bg-action-primary checked:border-action-primary transition-all cursor-pointer"
                       checked={termsAccepted}
                       onChange={(e) => setTermsAccepted(e.target.checked)}
                     />
                     <CheckCircle2 className="absolute w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
                   </div>
                   <span className="text-[11px] text-slate-500 leading-snug">
-                    {localize("Li e concordo com os ")}<a href="/termos" target="_blank" rel="noopener noreferrer" className="text-accent-blue hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>{localize("Termos e Condições")}</a> {localize(" de compra, uso e suporte.")}</span>
+                    {localize("Li e concordo com os ")}<a href="/termos" target="_blank" rel="noopener noreferrer" className="text-action-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>{localize("Termos e Condições")}</a> {localize(" de compra, uso e suporte.")}</span>
                 </label>
               </div>
 
@@ -726,7 +747,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                 </div>
                 <button
                   onClick={handleProceedToPayment}
-                  className="px-6 py-3 bg-accent-blue hover:bg-accent-blue-dark text-white font-bold rounded-2xl text-sm transition-all shadow-md cursor-pointer"
+                  className="px-6 py-3 bg-action-primary hover:bg-action-primary-hover text-white font-bold rounded-2xl text-sm transition-all shadow-md cursor-pointer"
                 >
                   {localize("Ir para Pagamento")}</button>
               </div>
@@ -795,20 +816,17 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                        onClick={() => setPaymentMethod('pix')}
                        className={`relative flex flex-col justify-between items-start p-4 h-24 text-left w-full cursor-pointer transition-all rounded-2xl border-2 ${
                          paymentMethod === 'pix'
-                           ? 'border-emerald-500 bg-slate-50/50 shadow-sm'
+                           ? 'border-feedback-success bg-slate-50/50 shadow-sm'
                            : 'border-slate-200/80 bg-slate-50/20 hover:bg-slate-50'
                        }`}
                      >
                        {/* Pix Icon */}
-                       <svg className={`w-5 h-5 ${paymentMethod === 'pix' ? 'text-emerald-500' : 'text-slate-400'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                         <path d="M12 2L2 12l10 10 10-10L12 2z" />
-                         <path d="M12 7l-5 5 5 5 5-5-5-5z" fill="currentColor" />
-                       </svg>
+                       <img src="/images/payments/pix.svg" alt="" className="h-5 w-5 object-contain" width="20" height="20" />
 
                        <span className="text-xs font-bold text-slate-800">Pix</span>
 
                        {/* 2% OFF Badge */}
-                       <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm z-10 whitespace-nowrap">
+                       <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 bg-feedback-success text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm z-10 whitespace-nowrap">
                          2% OFF
                        </div>
                      </button>
@@ -868,7 +886,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                     <button
                       onClick={handlePixCheckout}
                       disabled={loading}
-                      className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-sm transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+                      className="w-full py-4 bg-feedback-success hover:bg-emerald-600 text-white font-bold rounded-2xl text-sm transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                     >
                       {loading ? (
                         <>
@@ -899,12 +917,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                         <div className="relative">
                           <FileText className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                           <input
+                            id="checkout-boleto-document"
                             type="text"
                             value={cpfCnpj}
                             onChange={(e) => setCpfCnpj(formatCPFOrCNPJ(e.target.value))}
                             placeholder="000.000.000-00"
                             maxLength={18}
-                            className="w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 rounded-xl text-sm transition-all"
+                            className="t-input w-full pl-10 pr-4 py-3 border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 rounded-xl text-sm transition-all"
                           />
                         </div>
                       </div>
@@ -957,7 +976,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                       </div>
                     ) : (
                       <div className="p-5 bg-emerald-50 rounded-2xl border border-emerald-100 flex flex-col items-center text-center">
-                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-3 shadow-sm text-emerald-500">
+                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-3 shadow-sm text-feedback-success">
                           <CreditCard className="w-6 h-6" />
                         </div>
                         <h4 className="text-sm font-bold text-slate-800 mb-1">
@@ -1002,8 +1021,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
               ) : (
                 <>
                   <div className="space-y-2">
-                    <span className="bg-emerald-500/10 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-500/10 inline-flex items-center">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
+                    <span className="bg-feedback-success/10 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-feedback-success/10 inline-flex items-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-feedback-success mr-2 animate-pulse"></span>
                       {localize("Aguardando Pagamento Pix")}</span>
                     <h4 className="font-display font-extrabold text-slate-900 text-lg">
                       {localize("Escaneie o QR Code ou Copie o código")}</h4>
@@ -1026,7 +1045,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                         className="w-full h-full object-contain"
                       />
                     ) : (
-                      <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+                      <Loader2 className="w-8 h-8 text-feedback-success animate-spin" />
                     )}
                   </div>
 
@@ -1043,7 +1062,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                       />
                       <button
                         onClick={handleCopyPix}
-                        className="p-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 hover:text-accent-blue rounded-xl transition-all flex items-center justify-center shrink-0 cursor-pointer shadow-sm"
+                        className="p-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 hover:text-action-primary rounded-xl transition-all flex items-center justify-center shrink-0 cursor-pointer shadow-sm"
                         title={localize("Copiar Pix")}
                       >
                         {copied ? (
@@ -1057,7 +1076,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
                   {/* Safety badge */}
                   <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 max-w-sm mx-auto flex items-center justify-center space-x-2 text-[11px] text-slate-500">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-feedback-success shrink-0" />
                     <span>{localize("Transação Monitorada pelo Banco Central")}</span>
                   </div>
 
@@ -1122,7 +1141,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                         setCopiedBarcode(true);
                         setTimeout(() => setCopiedBarcode(false), 2000);
                       }}
-                      className="p-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 hover:text-accent-blue rounded-xl transition-all flex items-center justify-center shrink-0 cursor-pointer shadow-sm"
+                      className="p-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 hover:text-action-primary rounded-xl transition-all flex items-center justify-center shrink-0 cursor-pointer shadow-sm"
                       title={localize("Copiar Código de Barras")}
                     >
                       {copiedBarcode ? (
@@ -1160,7 +1179,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
           {/* STEP 4: Success State */}
           {currentStep === 'success' && (
             <div className="text-center py-10 space-y-6 animate-scale-in">
-              <div className="mx-auto w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center border border-emerald-500/20 shadow-lg">
+              <div className="mx-auto w-20 h-20 bg-feedback-success/10 text-feedback-success rounded-full flex items-center justify-center border border-feedback-success/20 shadow-lg">
                 <CheckCircle2 className="w-12 h-12 animate-soft-pulse" />
               </div>
 

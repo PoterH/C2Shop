@@ -1,5 +1,6 @@
+import { createCardOrder } from './_infinitepay.js';
 import { products } from './_products.js';
-import { getEfiInstance, isMockMode } from './_efi.js';
+import { getEfiInstance, getEfiChargesInstance, isMockMode } from './_efi.js';
 import { sendConfirmationEmail } from './_email.js';
 import { MercadoPagoConfig, Payment, PreApproval, Order } from 'mercadopago';
 
@@ -45,6 +46,16 @@ export default async function handler(req: any, res: any) {
     checkoutItems = [{ slug: productSlug }];
   }
 
+  if (!checkoutItems.length || checkoutItems.length > 150) return res.status(400).json({error:'Carrinho vazio ou inválido.'});
+  for (const item of checkoutItems) {
+    if (item.deviceCount != null && (!Number.isInteger(item.deviceCount) || item.deviceCount < 1 || item.deviceCount > 99)) return res.status(400).json({error:'Quantidade inválida.'});
+  }
+  if (typeof buyer.name !== 'string' || !buyer.name.trim() || typeof buyer.email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buyer.email)) return res.status(400).json({error:'Dados do comprador inválidos.'});
+  // Preserve requests from carts created before the Parallels catalog update.
+  checkoutItems = checkoutItems.map(item => item.slug === 'parallels-desktop-26'
+    ? { ...item, slug: 'parallels-desktop-27', licenseQuantity: item.licenseQuantity ?? 26 }
+    : item);
+
   // Find all products in local DB
   const matchedProducts: any[] = [];
   for (const item of checkoutItems) {
@@ -52,7 +63,20 @@ export default async function handler(req: any, res: any) {
     if (!matched) {
       return res.status(404).json({ error: `Produto não encontrado: ${item.slug}` });
     }
-    matchedProducts.push(matched);
+    if (matched.unavailable) return res.status(400).json({error:'Produto indisponível.'});
+    const option = item.licenseQuantity
+      ? matched.licenseOptions?.find(opt => opt.quantity === item.licenseQuantity)
+      : undefined;
+    if (item.licenseQuantity != null && !option) {
+      return res.status(400).json({ error: 'A versão selecionada não está mais disponível. Atualize o carrinho e selecione a versão novamente.' });
+    }
+    // Persist the selected edition so the payment confirmation email delivers it.
+    matchedProducts.push(option ? {
+      ...matched,
+      slug: option.downloadSlug || matched.slug,
+      name: `${matched.name} — ${option.label}`,
+      price: option.price,
+    } : matched);
   }
 
   // Math calculations
@@ -80,19 +104,32 @@ export default async function handler(req: any, res: any) {
     return { item, prod, price: itemPrice };
   });
 
-  subtotal = itemsWithPrices.reduce((sum, entry) => sum + entry.price, 0);
+  subtotal = itemsWithPrices.reduce((sum, entry) => sum + Math.round(entry.price * 100) * (entry.item.deviceCount || 1) / 100, 0);
 
   let discountAmount = 0;
   let finalTotal = subtotal;
 
   // Coupon OFF10 rule: 10% discount for more than 1 item in the cart (only if not subscription)
-  if (!isSubPayment && coupon === 'OFF10' && matchedProducts.length > 1) {
-    discountAmount = subtotal * 0.10;
+  if (!isSubPayment && coupon === 'OFF10' && new Set(checkoutItems.map(item => item.slug)).size > 1) {
+    discountAmount = Math.round(subtotal * 10) / 100;
     finalTotal = subtotal - discountAmount;
   }
 
   const pixPrice = isSubPayment ? finalTotal : (finalTotal * 0.98);
   const pixPriceStr = pixPrice.toFixed(2);
+
+  if (paymentMethod === 'infinitepay') {
+    if (recurrence) return res.status(400).json({error:'Assinaturas recorrentes devem ser finalizadas pela Cakto.'});
+    const amount = Math.round(finalTotal * 100);
+    let assigned = 0;
+    const deliveryProducts = itemsWithPrices.map((entry, index) => {
+      const cents = index === itemsWithPrices.length - 1 ? amount-assigned : Math.round(Math.round(entry.price*100)*(entry.item.deviceCount||1)*(1-discountAmount/subtotal));
+      assigned += cents;
+      return {slug:matchedProducts[index].slug,name:matchedProducts[index].name + ((entry.item.deviceCount||1)>1 ? ' × '+entry.item.deviceCount : ''),price:cents/100};
+    });
+    try { return res.status(200).json(await createCardOrder({amount,buyer:{name:buyer.name.trim(),email:buyer.email.trim().toLowerCase()},products:deliveryProducts})); }
+    catch { return res.status(503).json({error:'Cartão temporariamente indisponível. Tente novamente ou fale com nosso atendimento.'}); }
+  }
 
   // 1. PROCESSO DE PAGAMENTO PIX (EFI BANK)
   if (paymentMethod === 'pix') {
@@ -118,7 +155,7 @@ export default async function handler(req: any, res: any) {
       if (isSubPayment && recurrence) {
         // ASSINATURA PIX AUTOMÁTICO (BCB RECORRENTE)
         console.log(`Efí SDK: Criando Pix Automático para ${firstProduct.name}...`);
-        
+
         // 1. Criar localização de recorrência
         const locRes = await efi.pixCreateLocationRecurrenceAutomatic();
         const locId = locRes.id;
@@ -131,7 +168,7 @@ export default async function handler(req: any, res: any) {
         const tomorrow = new Date();
         tomorrow.setDate(today.getDate() + 1);
         const dataInicial = tomorrow.toISOString().split('T')[0];
-        
+
         const nextYear = new Date();
         nextYear.setFullYear(today.getFullYear() + 2); // 2 anos de duração do contrato de recorrência
         const dataFinal = nextYear.toISOString().split('T')[0];
@@ -197,7 +234,7 @@ export default async function handler(req: any, res: any) {
 
         const chargeBody: Record<string, any> = {
           calendario: {
-            expiracao: 3600
+            expiracao: 600
           },
           ...(devedorPayload ? { devedor: devedorPayload } : {}),
           valor: {
@@ -223,6 +260,7 @@ export default async function handler(req: any, res: any) {
           txid: txid,
           copyPaste: qrCodeRes.qrcode,
           qrCodeBase64: qrCodeRes.imagemQrcode,
+          total: Number(pixPriceStr),
         });
       }
     } catch (error: any) {
@@ -419,119 +457,27 @@ export default async function handler(req: any, res: any) {
       });
     }
   }
-  
-  // 3. PROCESSO DE PAGAMENTO BOLETO (MERCADO PAGO VIA ORDERS)
+
+  // Boleto Efí: issue the entire cart and carry delivery slugs in provider-stored item names.
   if (paymentMethod === 'boleto') {
+    const doc = String(buyer.cpf || '').replace(/\D/g,'');
+    const addr = billingAddress || {};
+    if (![11,14].includes(doc.length) || !/^\d{8}$/.test(String(addr.zipCode || '').replace(/\D/g,'')) || !addr.street?.trim() || !addr.number?.trim() || !addr.neighborhood?.trim() || !addr.city?.trim() || !/^[A-Z]{2}$/.test(addr.state || '')) return res.status(400).json({error:'CPF/CNPJ e endereço completo são necessários para emitir boleto.'});
     try {
-      const mpAccessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
-      if (!mpAccessToken) {
-        throw new Error('MERCADOPAGO_ACCESS_TOKEN não configurada.');
-      }
-
-      const client = new MercadoPagoConfig({ accessToken: mpAccessToken });
-      const orderClient = new Order(client);
-
-      const cardPrice = finalTotal;
-      const externalRef = 'order_bol_' + Math.random().toString(36).substring(2, 10).toUpperCase();
-
-      const createOrderBody = {
-        type: 'online',
-        processing_mode: 'manual',
-        total_amount: cardPrice.toFixed(2),
-        description: 'Servicos de Tecnologia C2Tech',
-        external_reference: externalRef,
-        items: itemsWithPrices.map(({ prod, price }) => ({
-          title: prod?.name || 'Software',
-          description: prod?.name || 'Software',
-          picture_url: `https://c2tech.shop${prod?.imageUrl || ''}`,
-          category_id: 'electronics',
-          quantity: 1,
-          unit_price: price.toFixed(2)
-        })),
-        transactions: {
-          payments: [
-            {
-              amount: cardPrice.toFixed(2),
-              payment_method: {
-                id: 'bolbradesco',
-                type: 'ticket'
-              }
-            }
-          ]
-        },
-        payer: {
-          email: buyer.email,
-          first_name: buyer.name.trim().split(' ')[0],
-          last_name: buyer.name.trim().split(' ').slice(1).join(' ') || 'Silva',
-          identification: {
-            type: buyer.cpf.replace(/\D/g, '').length > 11 ? 'CNPJ' : 'CPF',
-            number: buyer.cpf.replace(/\D/g, '')
-          },
-          address: {
-            zip_code: billingAddress?.zipCode?.replace(/\D/g, '') || '01310100',
-            street_name: billingAddress?.street || 'Avenida Paulista',
-            street_number: billingAddress?.number || '1000',
-            neighborhood: billingAddress?.neighborhood || 'Bela Vista',
-            city: billingAddress?.city || 'São Paulo',
-            state: billingAddress?.state || 'SP'
-          },
-          phone: buyer.phone ? {
-            area_code: buyer.phone.replace(/\D/g, '').substring(0, 2),
-            number: buyer.phone.replace(/\D/g, '').substring(2)
-          } : undefined
-        }
-      };
-
-      const createRequestOptions = {
-        idempotencyKey: 'idemp_create_bol_' + Math.random().toString(36).substring(2, 10).toUpperCase(),
-        ...(deviceId ? { meliSessionId: deviceId } : {})
-      };
-      
-      console.log('Orders API (Boleto) - Order.create() payload:', JSON.stringify(createOrderBody));
-      
-      const orderRes = await orderClient.create({ body: createOrderBody, requestOptions: createRequestOptions });
-      const orderId = orderRes.id;
-      console.log('Orders API (Boleto) - Order criada com sucesso:', orderId);
-
-      // Processar boleto
-      const processRequestOptions = {
-        idempotencyKey: 'idemp_process_bol_' + Math.random().toString(36).substring(2, 10).toUpperCase(),
-        ...(deviceId ? { meliSessionId: deviceId } : {})
-      };
-      const processRes = await orderClient.process({ id: orderId, requestOptions: processRequestOptions });
-      console.log('Orders API (Boleto) - Order.process() resultado:', JSON.stringify({ id: processRes.id, status: processRes.status, status_detail: processRes.status_detail }));
-
-      // Se for boleto, o processamento devolve os dados em transactions.payments
-      const paymentDetails = processRes.transactions?.payments?.[0] as any;
-      let ticketUrl = paymentDetails?.external_resource_url || paymentDetails?.transaction_data?.ticket_url || '';
-      let barcode = paymentDetails?.barcode?.content || paymentDetails?.transaction_data?.barcode || '';
-
-      if (!ticketUrl && paymentDetails?.id) {
-        const paymentClient = new Payment(client);
-        try {
-          const payData = await paymentClient.get({ id: paymentDetails.id }) as any;
-          ticketUrl = payData.transaction_details?.external_resource_url || ticketUrl;
-          barcode = payData.transaction_details?.barcode?.content || barcode;
-        } catch (e) {
-          console.error("Falha ao buscar detalhes do pagamento boleto:", e);
-        }
-      }
-
-      return res.status(200).json({
-        success: true,
-        paymentMethod: 'boleto',
-        status: processRes.status || 'pending',
-        orderId: String(processRes.id),
-        ticketUrl,
-        barcode
+      const efi = getEfiChargesInstance();
+      const expireAt = new Date(Date.now()+3*86400000).toISOString().slice(0,10);
+      const customer = { ...(doc.length===11 ? {name:buyer.name,cpf:doc} : {juridical_person:{corporate_name:buyer.name,cnpj:doc}}), email:buyer.email, ...(buyer.phone ? {phone_number:buyer.phone.replace(/\D/g,'')} : {}), address:{street:addr.street,number:addr.number,neighborhood:addr.neighborhood,zipcode:addr.zipCode.replace(/\D/g,''),city:addr.city,state:addr.state,...(addr.complement ? {complement:addr.complement}: {})} };
+      const response = await efi.createOneStepCharge({}, {
+        items: itemsWithPrices.map(({prod,item,price}, index)=>({name: matchedProducts[index].name.slice(0,150)+' [c2:'+matchedProducts[index].slug+']',value:Math.round(price*100),amount:item.deviceCount || 1})),
+        metadata:{notification_url:'https://c2tech.shop/api/efi-boleto-webhook'},
+        payment:{banking_billet:{expire_at:expireAt,customer,...(discountAmount>0 ? {discount:{type:'currency',value:Math.round(discountAmount*100)}} : {}),message:'C2Tech - Entrega digital após confirmação do pagamento.'}}
       });
-    } catch (error: any) {
-      console.error('Erro no processamento do checkout Boleto Mercado Pago (Orders API):', error);
-      const errMsg = error.message || error;
-      return res.status(500).json({
-        error: 'Erro ao gerar o boleto bancário no Mercado Pago via Orders API',
-        details: errMsg
-      });
+      const data=response.data;
+      if(!data?.charge_id || !data?.barcode || !(data?.link || data?.billet_link))throw new Error('Resposta incompleta da Efí');
+      return res.status(200).json({success:true,paymentMethod:'boleto',chargeId:data.charge_id,barcode:data.barcode,ticketUrl:data.link || data.billet_link,expireAt,total:Math.round(finalTotal*100)/100});
+    }catch(error:any){
+      console.error('Falha ao emitir boleto Efí:',error?.error || error?.code || 'provider_error');
+      return res.status(502).json({error:'Não foi possível emitir o boleto pela Efí. Tente novamente ou escolha Pix/cartão.'});
     }
   }
 

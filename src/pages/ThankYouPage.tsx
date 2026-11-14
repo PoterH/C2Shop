@@ -1,6 +1,7 @@
+import { WhatsAppIcon } from '../components/WhatsAppIcon';
 import { useText } from '../hooks/useText';
 import React from 'react';
-import { BadgeCheck, Mail, MessageSquare, AlertCircle, ArrowRight } from 'lucide-react';
+import { BadgeCheck, Mail, AlertCircle, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const ThankYouPage: React.FC = () => {
@@ -17,7 +18,7 @@ export const ThankYouPage: React.FC = () => {
         <div className="bg-white rounded-3xl border border-slate-150 shadow-xl p-8 sm:p-10 text-center space-y-6">
 
           {/* Success Check Icon */}
-          <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 rounded-full bg-feedback-success/10 border border-feedback-success/20 text-feedback-success flex items-center justify-center mx-auto">
             <BadgeCheck className="w-10 h-10" />
           </div>
 
@@ -63,9 +64,9 @@ export const ThankYouPage: React.FC = () => {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-sm transition-all shadow-sm"
+              className="flex-1 flex items-center justify-center py-3 bg-feedback-success hover:bg-emerald-600 text-white font-bold rounded-2xl text-sm transition-all shadow-sm"
             >
-              <MessageSquare className="w-4 h-4 mr-2" />
+              <WhatsAppIcon className="w-4 h-4 mr-2" />
               {localize("Falar com suporte")}</a>
             <Link
               to="/"

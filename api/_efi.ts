@@ -50,3 +50,12 @@ export const getEfiInstance = () => {
   const EfiPayClass = EfiPay as any;
   return new EfiPayClass(options);
 };
+
+// The Charges API can be enabled on the same Efí application or use dedicated credentials.
+export const getEfiChargesInstance = () => {
+  const sandbox = process.env.EFI_SANDBOX !== 'false';
+  const client_id = process.env.EFI_CHARGES_CLIENT_ID || (sandbox ? process.env.EFI_SANDBOX_CLIENT_ID || process.env.EFI_CLIENT_ID : process.env.EFI_CLIENT_ID);
+  const client_secret = process.env.EFI_CHARGES_CLIENT_SECRET || (sandbox ? process.env.EFI_SANDBOX_CLIENT_SECRET || process.env.EFI_CLIENT_SECRET : process.env.EFI_CLIENT_SECRET);
+  if (!client_id || !client_secret) throw new Error('API de Emissão de cobranças da Efí não configurada.');
+  return new (EfiPay as any)({ sandbox, client_id, client_secret });
+};

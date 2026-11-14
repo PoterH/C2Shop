@@ -1,191 +1,50 @@
-import { useText } from '../hooks/useText';
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, Send, CheckCircle2 } from 'lucide-react';
+import { QrCode, CreditCard, Barcode, ArrowUpRight, ArrowRight, Mail, Check, Headphones, ShieldCheck, MonitorCheck, ChevronDown } from 'lucide-react';
+import { PaymentMethods } from '../components/PaymentMethods';
+import { WhatsAppIcon } from '../components/WhatsAppIcon';
+import { useText } from '../hooks/useText';
 
-export const DeliveryPaymentPage: React.FC = () => {
-  const localize = useText();
-  const whatsappNumber = '5581997349300';
-  const whatsappMessage = encodeURIComponent(localize('Olá, gostaria de tirar uma dúvida sobre a entrega digital e formas de pagamento da C2Tech.'));
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+const paymentOptions = [
+  { icon: QrCode, title: 'Pix', provider: 'Efí Bank', color: 'text-feedback-success-strong bg-emerald-50', description: 'Pague no aplicativo do seu banco com o QR Code ou o código copia e cola gerado no checkout.', detail: 'A confirmação é automática. A entrega digital é liberada após o pagamento ser confirmado.', tag: 'Confirmação automática' },
+  { icon: CreditCard, title: 'Cartão de crédito', provider: 'Cakto', color: 'text-blue-700 bg-blue-50', description: 'Você é direcionado ao pagamento da versão escolhida na Cakto. Confira o valor, as bandeiras e as condições de parcelamento antes de finalizar.', detail: 'Para vários itens ou combinações de versões, nosso atendimento prepara o pagamento pelo WhatsApp.', tag: 'Condições na Cakto' },
+  { icon: Barcode, title: 'Boleto bancário', provider: 'Efí Bank', color: 'text-violet-700 bg-violet-50', description: 'Gere o boleto no checkout e pague pelo aplicativo do banco ou em um local autorizado.', detail: 'CPF/CNPJ e endereço de cobrança são solicitados somente nesta opção. A entrega ocorre após a compensação.', tag: 'Aguarde a compensação' },
+];
+const questions = [
+  ['Paguei, mas ainda não recebi o e-mail. O que fazer?', 'Confira primeiro se o pagamento já foi confirmado. Depois, verifique as pastas Spam, Lixo eletrônico e Promoções. Se a mensagem não estiver lá, fale com a equipe e informe o número do pedido e o e-mail usado na compra.'],
+  ['A entrega é igual para todos os produtos?', 'A entrega é digital, mas o conteúdo depende do produto. Softwares com instalação local incluem o acesso aos arquivos e às instruções disponíveis para a versão escolhida. Assinaturas e contas privadas têm instruções de acesso próprias e validade conforme o plano contratado.'],
+  ['Posso comprar mais de um software no cartão?', 'Sim. Para reunir vários softwares em um pagamento no cartão, continue pelo WhatsApp indicado no checkout. Nosso atendimento prepara a compra e aplica 10% de desconto ao levar 2 softwares diferentes ou mais.'],
+  ['Estou fora do Brasil. Como faço o pagamento?', 'No checkout, selecione “Comprar do exterior” para acessar a opção de pagamento da Cakto correspondente ao produto. Para vários itens, fale com o atendimento pelo WhatsApp.'],
+  ['Como funcionam o suporte e o reembolso?', 'O suporte técnico para instalação e configuração é oferecido durante 30 dias, conforme as condições do produto. Para consultar as regras de cancelamento, substituição e reembolso, acesse nossos Termos de Uso.'],
+];
 
-return (
-    <div className="pt-28 pb-16 bg-white min-h-screen text-left">
-      {/* Top Breadcrumb */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 text-xs text-slate-500">
-        <Link to="/" className="hover:text-slate-800 transition-colors">
-          {localize("Início")}</Link>
-        <span className="mx-1.5 text-slate-300">/</span>
-        <span className="text-[#0b5ed7] font-semibold">{localize("Entrega e Pagamento")}</span>
-      </div>
+function DeliveryIllustration() {
+  return <svg viewBox="0 0 430 300" className="w-full max-w-[430px] h-auto" role="img" aria-label="Pagamento confirmado e entrega por e-mail">
+    <defs><linearGradient id="delivery-card" x2="1" y2="1"><stop stopColor="#fff"/><stop offset="1" stopColor="#dcecff"/></linearGradient><linearGradient id="delivery-envelope" x2="1" y2="1"><stop stopColor="#42c7ff"/><stop offset="1" stopColor="#075fe9"/></linearGradient></defs>
+    <circle cx="234" cy="151" r="125" fill="#388bcd" opacity=".12"/><circle cx="234" cy="151" r="100" fill="none" stroke="#78bded" opacity=".22" strokeDasharray="4 8"/>
+    <g transform="rotate(-9 210 145)"><rect x="108" y="37" width="209" height="213" rx="22" fill="#020d21" opacity=".25"/><rect x="108" y="27" width="209" height="213" rx="22" fill="url(#delivery-card)"/><rect x="131" y="50" width="42" height="42" rx="12" fill="#0068fa"/><path d="m142 71 7 7 14-17" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round"/><rect x="187" y="57" width="102" height="8" rx="4" fill="#183f68"/><rect x="187" y="75" width="73" height="6" rx="3" fill="#90adc8"/><rect x="131" y="112" width="163" height="6" rx="3" fill="#bfd2e3"/><rect x="131" y="130" width="139" height="6" rx="3" fill="#bfd2e3"/><rect x="131" y="148" width="149" height="6" rx="3" fill="#bfd2e3"/></g>
+    <rect x="169" y="154" width="183" height="121" rx="17" fill="#05152c" opacity=".2"/><rect x="169" y="147" width="183" height="121" rx="17" fill="url(#delivery-envelope)"/><path d="m172 155 79 64a15 15 0 0 0 19 0l79-64" fill="none" stroke="#abe7ff" strokeWidth="3"/><path d="m174 258 54-47m117 47-54-47" stroke="#76cfff" strokeWidth="2" opacity=".55"/>
+    <circle cx="342" cy="137" r="27" fill="#31d6a3"/><path d="m329 137 9 9 17-19" fill="none" stroke="#073c3b" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M49 203c4-37 52-35 62-12" fill="none" stroke="#7dd3fc" strokeWidth="2" strokeDasharray="5 6"/><path d="m103 176 12 19-23-2" fill="none" stroke="#7dd3fc" strokeWidth="2" strokeLinecap="round"/>
+    <circle cx="72" cy="93" r="5" fill="#56c7ff"/><circle cx="372" cy="231" r="4" fill="#56c7ff"/>
+  </svg>;
+}
 
-      {/* Dark Navy Hero Banner */}
-      <div className="bg-[#0f212e] text-white py-14 sm:py-16 px-4 text-center">
-        <div className="max-w-3xl mx-auto space-y-4">
-          <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-[#2196f3] tracking-tight">
-            {localize("Entrega Digital e Pagamento Seguro")}</h1>
-          <p className="text-slate-200 text-xs sm:text-sm leading-relaxed max-w-2xl mx-auto">
-            {localize("Na C2Tech entendemos que a rapidez na entrega e a segurança no pagamento são essenciais para a sua tranquilidade. Abaixo explicamos detalhadamente como funcionam nossas opções de envio imediato por e-mail e processamento criptografado de pagamentos.")}</p>
-        </div>
-      </div>
-
-      {/* Main Content Container */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 space-y-12">
-        {/* Two Top Highlight Cards (Matching Screenshot 2) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-          {/* Card 1: Pagamentos Seguros */}
-          <div className="bg-[#f4f6f8] rounded-2xl border border-slate-200/70 p-7 flex flex-col items-center text-center shadow-xs">
-            <div className="w-12 h-12 rounded-full bg-sky-100 text-[#0b5ed7] flex items-center justify-center mb-3">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <h2 className="font-display font-extrabold text-base text-slate-900 mb-1">
-              {localize("Pagamentos Seguros")}</h2>
-            <p className="text-xs text-slate-500 leading-relaxed mb-4">
-              {localize("Pagamento 100% protegido com")}<br />
-              {localize("criptografia SSL de 256 bits")}</p>
-            <p className="text-[11px] font-extrabold text-slate-800 mb-2">
-              {localize("Satisfação garantida ou seu dinheiro de volta")}<br />
-              <span className="font-semibold text-slate-600">{localize("Meios de pagamento disponíveis:")}</span>
-            </p>
-            <div className="bg-white border border-sky-200 rounded-xl px-4 py-2.5 flex flex-wrap items-center justify-center gap-2 shadow-2xs">
-              <span className="text-xs font-black text-[#32BCAD] tracking-tight">PIX</span>
-              <span className="text-slate-300">•</span>
-              <span className="text-xs font-black text-[#0E4595] italic">VISA</span>
-              <span className="inline-flex items-center">
-                <span className="w-3.5 h-3.5 rounded-full bg-[#EB001B] inline-block" />
-                <span className="w-3.5 h-3.5 rounded-full bg-[#F79E1B] inline-block -ml-1.5" />
-              </span>
-              <span className="text-[10px] font-black bg-[#0077A6] text-white px-1.5 py-0.5 rounded">
-                AMEX
-              </span>
-              <span className="text-[10px] font-black bg-slate-900 text-white px-1.5 py-0.5 rounded">
-                ELO
-              </span>
-            </div>
-          </div>
-
-          {/* Card 2: Entrega Imediata */}
-          <div className="bg-[#f4f6f8] rounded-2xl border border-slate-200/70 p-7 flex flex-col items-center text-center shadow-xs">
-            <div className="w-12 h-12 rounded-full bg-sky-100 text-[#0b5ed7] flex items-center justify-center mb-3">
-              <Send className="w-6 h-6" />
-            </div>
-            <h2 className="font-display font-extrabold text-base text-slate-900 mb-1">
-              {localize("Entrega Imediata")}</h2>
-            <p className="text-xs text-slate-500 leading-relaxed mb-4">
-              {localize("Envio automático em poucos minutos no seu e-mail")}</p>
-            <p className="text-[11px] font-extrabold text-slate-800 leading-snug mb-4 max-w-xs">
-              {localize("Entrega por e-mail do link exclusivo de download (Google Drive) e instruções passo a passo em vídeo")}</p>
-            <div className="mt-auto flex items-center justify-center gap-2 text-[#2196f3]">
-              <Send className="w-7 h-7 -rotate-12" />
-              <span className="w-16 border-b-2 border-dashed border-sky-300" />
-            </div>
-          </div>
-        </div>
-
-        {/* Detailed Text Sections */}
-        <div className="space-y-8 text-xs sm:text-sm text-slate-700 leading-relaxed">
-          {/* Section 1 */}
-          <section className="space-y-3 pb-6 border-b border-slate-200">
-            <h3 className="font-display font-extrabold text-base sm:text-lg text-slate-900">
-              {localize("Processamento de pagamento 100% seguro")}</h3>
-            <p>
-              {localize("Na ")}<strong>C2Tech</strong>{localize(", levamos a segurança das suas informações financeiras muito a sério e implementamos medidas rigorosas para garantir que sua compra seja totalmente protegida do início ao fim. Veja por que você pode confiar em nossa plataforma:")}</p>
-            <p>
-              <strong>{localize("Transações criptografadas (SSL):")}</strong> {localize(" Todas as informações transmitidas durante o checkout são criptografadas utilizando tecnologia padrão da indústria")}{localize(' ')}
-              <strong>{localize("Secure Sockets Layer (SSL de 256 bits)")}</strong>{localize(". Isso significa que seus dados estão blindados e jamais podem ser interceptados por terceiros.")}</p>
-            <p>
-              <strong>{localize("Gateways Homologados (Efí Bank e Cakto):")}</strong> {localize(" Nossos pagamentos via Pix são processados em tempo real diretamente pelo ")}<strong>{localize("Efí Bank (antiga Gerencianet)")}</strong>{localize(", instituição de pagamento homologada pelo Banco Central do Brasil, e os pagamentos via Cartão de Crédito são processados pela ")}<strong>Cakto</strong> {localize(" com certificação")}{localize(' ')}
-              <strong>PCI DSS Compliance</strong>.
-            </p>
-            <p>
-              <strong>{localize("Nenhum armazenamento de dados de cartão:")}</strong> {localize(" Nós não gravamos nem temos acesso aos dados do seu cartão de crédito em nossos servidores. Quando você realiza o pagamento, os dados são processados exclusivamente pela operadora autorizada, e nós recebemos apenas a confirmação de liberação do seu pedido para disparar o seu software.")}</p>
-          </section>
-
-          {/* Section 2 */}
-          <section className="space-y-3 pb-6 border-b border-slate-200">
-            <h3 className="font-display font-extrabold text-base sm:text-lg text-slate-900">
-              {localize("Meios de Pagamento")}</h3>
-            <p>
-              {localize("Aceitamos os principais métodos de pagamento do Brasil para que você escolha a opção mais prática:")}</p>
-
-            <div className="space-y-2.5 pt-1">
-              <div>
-                <h4 className="font-bold text-slate-900">{localize("Pix (Aprovação Instantânea)")}</h4>
-                <p className="text-slate-600">
-                  {localize("Ao escolher o Pix em nosso checkout transparente, um QR Code exclusivo e código \"Pix Copia e Cola\" são gerados na hora. Assim que você confirma o pagamento no aplicativo do seu banco, nosso sistema reconhece em poucos segundos e libera automaticamente o envio do software para o seu e-mail.")}</p>
-              </div>
-
-              <div>
-                <h4 className="font-bold text-slate-900">
-                  {localize("Cartão de Crédito (Visa, Mastercard, Elo, American Express e Hipercard)")}</h4>
-                <p className="text-slate-600">
-                  {localize("Aceitamos todas as principais bandeiras de cartão de crédito, com opção de pagamento à vista ou parcelado em até 12x através do ambiente seguro da Cakto. A aprovação costuma ocorrer em menos de 1 minuto e o envio no e-mail também é totalmente automático.")}</p>
-              </div>
-            </div>
-          </section>
-
-          {/* Section 3 */}
-          <section className="space-y-3 pb-6 border-b border-slate-200">
-            <h3 className="font-display font-extrabold text-base sm:text-lg text-slate-900">
-              {localize("Como funciona a Entrega Digital")}</h3>
-            <p>
-              {localize("Sabemos que você precisa do seu software funcionando o quanto antes para estudar ou trabalhar. Por isso, nossa entrega é ")}<strong>{localize("100% digital e automatizada")}</strong>:
-            </p>
-            <ul className="space-y-2 pl-1">
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <span>
-                  <strong>{localize("Softwares Completos de Acesso Vitalício:")}</strong> {localize(" Assim que o pagamento é aprovado, você recebe um e-mail contendo o botão de acesso direto à nossa pasta exclusiva no ")}<strong>{localize("Google Drive de alta velocidade")}</strong>{localize(", com o instalador completo da versão escolhida e um ")}<strong>{localize("vídeo tutorial passo a passo")}</strong>{localize(' ')}
-                  {localize("mostrando cada clique da instalação e ativação definitiva.")}</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <span>
-                  <strong>{localize("Chaves Originais e Planos de Assinatura:")}</strong> {localize(" Para chaves de ativação do Windows ou assinaturas oficiais (como Autodesk All Apps), o acesso e as credenciais são entregues imediatamente por e-mail e WhatsApp com acompanhamento da nossa equipe.")}</span>
-              </li>
-            </ul>
-            <p className="text-slate-600 pt-1">
-              <em>{localize("Importante:")}</em> {localize(" Em alguns casos, o provedor de e-mail pode filtrar mensagens automáticas na aba ")}<strong>Spam</strong>, <strong>{localize("Lixo Eletrônico")}</strong> {localize(" ou")}{localize(' ')}
-              <strong>{localize("Promoções")}</strong>{localize(". Caso não localize o e-mail em até 5 minutos após a compra, basta chamar nosso")}{localize(' ')}
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#0b5ed7] font-bold hover:underline"
-              >
-                {localize("suporte no WhatsApp clicando aqui")}</a>{localize(' ')}
-              {localize("que reenviamos seu link imediatamente.")}</p>
-          </section>
-
-          {/* Section 4 */}
-          <section className="space-y-3 pb-6 border-b border-slate-200">
-            <h3 className="font-display font-extrabold text-base sm:text-lg text-slate-900">
-              {localize("Garantia de Suporte Técnico (30 Dias) e Reembolso")}</h3>
-            <p>
-              {localize("Todos os nossos softwares vitalícios possuem ")}<strong>{localize("funcionamento vitalício")}</strong>{localize(' ')}
-              {localize("sem mensalidades, acompanhados de ")}<strong>{localize("30 dias de garantia de suporte técnico")}</strong>{localize(' ')}
-              {localize("gratuito via WhatsApp e acesso remoto (AnyDesk/TeamViewer). Caso nossa equipe técnica comprove impossibilidade de instalação ou funcionamento no seu computador dentro do prazo de garantia, realizamos a substituição ou o reembolso integral. Para mais detalhes, consulte nossos")}{localize(' ')}
-              <Link to="/termos" className="text-[#0b5ed7] font-bold hover:underline">
-                {localize("Termos de Uso e Política de Garantia")}</Link>
-              .
-            </p>
-          </section>
-
-          {/* Section 5 */}
-          <section className="space-y-3">
-            <h3 className="font-display font-extrabold text-base sm:text-lg text-slate-900">
-              {localize("Fale Conosco")}</h3>
-            <p>
-              {localize("Se você tiver qualquer dúvida sobre o envio digital, compatibilidade de versões ou formas de pagamento, nossa equipe de atendimento está disponível todos os dias pelo")}{localize(' ')}
-              <strong>WhatsApp +55 (81) 99734-9300</strong> {localize(" e pelo e-mail")}{localize(' ')}
-              <strong>c2tech2025@gmail.com</strong>{localize(". Você também pode acessar nossa página de")}{localize(' ')}
-              <Link to="/contato" className="text-[#0b5ed7] font-bold hover:underline">
-                {localize("Atendimento ao Cliente aqui")}</Link>
-              .
-            </p>
-          </section>
-        </div>
-      </div>
+export function DeliveryPaymentPage() {
+  const text = useText();
+  const whatsapp = 'https://wa.me/5581997349300?text='+encodeURIComponent('Olá, tenho uma dúvida sobre entrega e pagamento na C2Tech.');
+  return <div className="delivery-page pt-28 xl:pt-36 pb-16 bg-white text-slate-900">
+    <header className="bg-[#0f212e] text-white px-5 py-12 sm:py-16"><div className="max-w-6xl mx-auto grid lg:grid-cols-[1.2fr_.8fr] items-center gap-8"><div><p className="text-xs font-semibold uppercase tracking-[.2em] text-sky-300">{text('Da sua escolha ao primeiro acesso')}</p><h1 className="mt-4 text-4xl sm:text-5xl font-semibold tracking-tight leading-tight">{text('Entrega e pagamento.')}<span className="block text-sky-300 mt-2">{text('Tudo no seu tempo, com clareza.')}</span></h1><p className="max-w-xl mt-5 text-base sm:text-lg leading-relaxed text-slate-200">{text('Saiba como pagar, o que acontece após a confirmação e onde encontrar os arquivos ou as instruções de acesso da sua compra.')}</p><div className="mt-7 flex flex-wrap gap-3"><a href="#pagamentos" className="inline-flex gap-2 items-center rounded-xl bg-action-primary hover:bg-blue-500 px-5 py-3 text-sm font-semibold">{text('Formas de pagamento')}<ArrowRight className="w-4 h-4"/></a><a href="#entrega" className="inline-flex gap-2 items-center rounded-xl border border-slate-500 hover:bg-white/10 px-5 py-3 text-sm font-semibold">{text('Como vou receber')}<ArrowRight className="w-4 h-4"/></a></div></div><div className="flex justify-center"><DeliveryIllustration/></div></div></header>
+    <div className="max-w-6xl mx-auto px-5 sm:px-8">
+      <section className="py-12 sm:py-16"><div className="grid sm:grid-cols-3 gap-7">{[{icon:MonitorCheck,title:'Escolha sua versão',body:'Confira a plataforma, a versão e o tipo de acesso na página do produto.'},{icon:ShieldCheck,title:'Confirme o pagamento',body:'Finalize pela forma escolhida e aguarde a confirmação do pagamento.'},{icon:Mail,title:'Receba e comece',body:'Abra o e-mail da compra e siga as instruções correspondentes ao seu produto.'}].map(({icon:Icon,title,body},i)=><div key={title} className="flex gap-4"><div className="w-12 h-12 shrink-0 rounded-2xl bg-blue-50 text-action-primary flex items-center justify-center"><Icon className="w-6 h-6" strokeWidth={1.6}/></div><div><p className="text-xs text-action-primary font-semibold mb-2">0{i+1}</p><h2 className="text-xl font-semibold">{text(title)}</h2><p className="mt-2 text-sm leading-relaxed text-slate-600">{text(body)}</p></div></div>)}</div></section>
+      <section id="pagamentos" className="scroll-mt-40 border-t border-slate-200 pt-12"><p className="text-xs font-semibold uppercase tracking-[.18em] text-action-primary">{text('Você escolhe como pagar')}</p><h2 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight">{text('Três formas de seguir em frente.')}</h2><p className="mt-4 max-w-2xl text-lg text-slate-600 leading-relaxed">{text('Cada forma de pagamento tem seu próprio processo de confirmação. Veja o que esperar em cada uma.')}</p>
+        <div className="mt-9 grid lg:grid-cols-3 gap-6">{paymentOptions.map(({icon:Icon,title,provider,color,description,detail,tag})=><article key={title} className="rounded-3xl border border-slate-200 bg-[#f5f8fb] p-7 sm:p-8 flex flex-col"><div className={'w-16 h-16 rounded-2xl flex items-center justify-center '+color}><Icon className="w-9 h-9" strokeWidth={1.5}/></div><p className="mt-6 text-xs uppercase tracking-wider text-slate-500 font-semibold">{provider}</p><h3 className="mt-2 text-2xl font-semibold">{text(title)}</h3><p className="mt-4 text-[15px] leading-relaxed text-slate-600">{text(description)}</p><p className="mt-4 text-[15px] leading-relaxed text-slate-600">{text(detail)}</p><div className="mt-auto pt-6"><span className={'inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold '+color}><Check className="w-4 h-4"/>{text(tag)}</span></div></article>)}</div>
+        <div className="mt-6 flex flex-col sm:flex-row gap-5 sm:items-center sm:justify-between border border-slate-200 rounded-2xl p-5"><p className="text-sm text-slate-600">{text('As bandeiras e condições disponíveis são exibidas ao finalizar o pagamento.')}</p><div className="w-full max-w-[330px] shrink-0"><PaymentMethods/></div></div>
+        <div className="mt-6 rounded-2xl bg-blue-50 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5 justify-between"><p className="text-sm sm:text-base leading-relaxed text-slate-700"><strong className="block text-slate-900 mb-1">{text('Vai levar 2 softwares ou mais?')}</strong>{text('Para pagar vários softwares juntos no cartão ou pelo exterior, fale com a equipe e receba 10% de desconto na compra de 2 softwares diferentes ou mais.')}</p><a href={whatsapp} target="_blank" rel="noopener noreferrer" className="shrink-0 inline-flex items-center gap-2 text-blue-700 font-semibold text-sm"><WhatsAppIcon className="w-5 h-5"/>{text('Preparar minha compra')}<ArrowUpRight className="w-4 h-4"/></a></div>
+      </section>
+      <section id="entrega" className="scroll-mt-40 mt-14 sm:mt-20 rounded-[28px] bg-[#0d2038] text-white grid lg:grid-cols-2 gap-9 p-7 sm:p-12"><div><p className="text-xs uppercase tracking-[.18em] font-semibold text-sky-300">{text('Da confirmação ao seu e-mail')}</p><h2 className="mt-4 text-3xl sm:text-4xl font-semibold tracking-tight leading-tight">{text('Sua entrega é digital. Seu próximo passo fica claro.')}</h2><p className="mt-5 text-base sm:text-lg text-slate-300 leading-relaxed">{text('O envio é liberado após a confirmação do pagamento. No boleto, é necessário aguardar a compensação. Para contas e assinaturas, siga as orientações e os prazos informados no produto.')}</p><div className="mt-7 flex items-center gap-4 rounded-2xl bg-white/5 border border-white/10 p-5"><Mail className="w-8 h-8 text-sky-300 shrink-0" strokeWidth={1.5}/><p className="text-sm text-slate-300 leading-relaxed">{text('Confira e repita seu e-mail no checkout. É por ele que você recebe as informações da compra.')}</p></div></div><div className="space-y-5">{[{title:'Instalação local',body:'Você recebe o acesso aos arquivos da versão escolhida e às instruções disponíveis, incluindo os tutoriais em vídeo do produto.'},{title:'Chaves, contas e assinaturas',body:'Você recebe as instruções de ativação ou acesso conforme o produto. No Pacote Autodesk, a conta é privada e o acesso vale pelo período contratado.'},{title:'Não encontrou a mensagem?',body:'Confira Spam, Lixo eletrônico e Promoções. Se ainda não localizar, envie o número do pedido e o e-mail da compra ao atendimento.'}].map(({title,body},i)=><div key={title} className="flex gap-4 border-b border-white/10 pb-5 last:border-0 last:pb-0"><span className="text-sky-300 text-sm font-semibold pt-1">0{i+1}</span><div><h3 className="text-xl font-semibold">{text(title)}</h3><p className="mt-2 text-sm sm:text-base text-slate-300 leading-relaxed">{text(body)}</p></div></div>)}</div></section>
+      <section className="grid md:grid-cols-2 gap-8 py-14 sm:py-16"><div className="border-l-2 border-action-primary pl-6"><ShieldCheck className="w-8 h-8 text-action-primary" strokeWidth={1.5}/><h2 className="mt-4 text-2xl font-semibold">{text('Dados do cartão ficam no pagamento.')}</h2><p className="mt-4 text-base text-slate-600 leading-relaxed">{text('O pagamento com cartão é realizado no ambiente da Cakto. Você não precisa informar os dados do cartão à equipe da C2Tech por chat, e-mail ou WhatsApp.')}</p></div><div className="border-l-2 border-sky-300 pl-6"><Headphones className="w-8 h-8 text-action-primary" strokeWidth={1.5}/><h2 className="mt-4 text-2xl font-semibold">{text('Suporte para ajudar você a começar.')}</h2><p className="mt-4 text-base text-slate-600 leading-relaxed">{text('Conte com 30 dias de suporte técnico para instalação e configuração, conforme as condições do produto. Consulte também as regras de cancelamento e reembolso.')}</p><Link to="/termos" className="mt-4 inline-flex items-center gap-2 text-action-primary font-semibold text-sm hover:underline">{text('Consultar Termos de Uso')}<ArrowUpRight className="w-4 h-4"/></Link></div></section>
+      <section className="border-t border-slate-200 pt-12"><h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">{text('Respostas para seguir com tranquilidade.')}</h2><div className="mt-7 divide-y divide-slate-200">{questions.map(([title,answer])=><details key={title} className="group py-5"><summary className="flex gap-4 items-center justify-between cursor-pointer list-none text-base sm:text-lg font-semibold [&::-webkit-details-marker]:hidden">{text(title)}<ChevronDown className="w-5 h-5 shrink-0 text-action-primary transition-transform group-open:rotate-180"/></summary><p className="mt-4 max-w-3xl text-base leading-relaxed text-slate-600">{text(answer)}</p></details>)}</div></section>
+      <section className="mt-12 rounded-3xl bg-blue-50 p-7 sm:p-9 flex flex-col sm:flex-row sm:items-center justify-between gap-6"><div><h2 className="text-2xl font-semibold">{text('Ainda ficou alguma dúvida?')}</h2><p className="mt-2 text-slate-600">{text('Atendimento todos os dias, das 09:00 às 20:00, no horário de Brasília.')}</p></div><Link to="/contato" className="inline-flex shrink-0 self-start sm:self-auto items-center gap-3 bg-action-primary hover:bg-action-primary-hover text-white rounded-xl px-6 py-3 font-semibold">{text('Fale com a C2Tech')}<ArrowUpRight className="w-5 h-5"/></Link></section>
     </div>
-  );
-};
+  </div>;
+}

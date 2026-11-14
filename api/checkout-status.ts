@@ -1,3 +1,4 @@
+import { getEfiChargesInstance } from './_efi.js';
 import { getEfiInstance, isMockMode } from './_efi.js';
 
 export default async function handler(req: any, res: any) {
@@ -13,8 +14,13 @@ export default async function handler(req: any, res: any) {
     return res.status(405).json({ error: 'Método não permitido' });
   }
 
-  const { txid, created } = req.query;
+  const { txid, created, chargeId } = req.query;
 
+  if (chargeId) {
+    if(!/^\d+$/.test(String(chargeId)))return res.status(400).json({error:'Cobrança inválida'});
+    try { const response=await getEfiChargesInstance().detailCharge({id:Number(chargeId)}); return res.status(200).json({success:true,status:['paid','settled'].includes(response.data?.status)?'CONCLUIDA':response.data?.status}); }
+    catch {return res.status(502).json({error:'Não foi possível consultar o boleto.'});}
+  }
   if (!txid) {
     return res.status(400).json({ error: 'txid é obrigatório' });
   }

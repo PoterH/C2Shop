@@ -1,29 +1,28 @@
+import { MobileNavigation } from './MobileNavigation';
+import { WhatsAppIcon } from './WhatsAppIcon';
 import { useText } from '../hooks/useText';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Menu,
   X,
-  MessageCircle,
   Search,
   Home as HomeIcon,
   ChevronDown,
   ChevronRight,
   CloudDownload,
   Lock,
-  User,
   ShoppingCart,
   Compass,
   Video,
-  Wrench,
-  LayoutGrid,
+  BriefcaseBusiness,
+  Ruler,
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useCurrency, CURRENCIES, type CurrencyCode } from '../context/CurrencyContext';
 import { useLanguage } from '../context/LanguageContext';
 import { products } from '../data/products';
 import { catalogLink } from '../data/catalogNavigation';
-import { SantaHat } from './ChristmasDecorations';
 
 /* ============================================================================
  * INLINE SVG FLAGS (Brazil | Merged MX+AR+CL+PE | Merged PT+MZ)
@@ -155,9 +154,9 @@ interface MegaMenuCategory {
 const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
   {
     id: 'microsoft-utilitarios',
-    label: 'Microsoft',
-    icon: <LayoutGrid className="w-4 h-4 text-slate-700 shrink-0" />,
-    categoryFilter: 'Microsoft',
+    label: 'Produtividade & Utilitários',
+    icon: <BriefcaseBusiness className="w-4 h-4 text-slate-700 shrink-0" />,
+    categoryFilter: 'Produtividade & Utilitários',
     columns: [
       {
         title: 'Microsoft Office & Windows',
@@ -218,9 +217,9 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
   },
   {
     id: 'marcenaria-especializados',
-    label: 'Marcenaria',
-    icon: <Wrench className="w-4 h-4 text-slate-700 shrink-0" />,
-    categoryFilter: 'Marcenaria',
+    label: 'Projetos Técnicos',
+    icon: <Ruler className="w-4 h-4 text-slate-700 shrink-0" />,
+    categoryFilter: 'Projetos Técnicos',
     columns: [
       {
         title: 'Marcenaria & Móveis Planejados',
@@ -228,8 +227,8 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
         items: [
           { name: 'Promob Plus (2024 Enterprise e 2026 Pro)', slug: 'promob-plus-professional-2026' },
           { name: 'Vectric Aspire Pro 12.5 (CNC Router)', slug: 'vectric-aspire-pro-12-5' },
-          { name: 'Rhinoceros 9 (Rhino 3D)', slug: 'rhinoceros-9' },
-          { name: 'SketchUp Pro (2021 a 2026)', slug: 'sketchup-pro-2026-windows' },
+          { name: 'Rhinoceros', slug: 'rhinoceros-9' },
+          { name: 'SketchUp Pro (2021 a 2027)', slug: 'sketchup-pro-2026-windows' },
         ],
       },
       {
@@ -263,7 +262,7 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
         items: [
           { name: 'Autodesk AutoCAD (2019 a 2027)', slug: 'autocad-2027-windows' },
           { name: 'Autodesk Revit (2024 a 2027)', slug: 'revit-2027' },
-          { name: 'SketchUp Pro (2021 a 2026)', slug: 'sketchup-pro-2026-windows' },
+          { name: 'SketchUp Pro (2021 a 2027)', slug: 'sketchup-pro-2026-windows' },
           { name: 'Graphisoft ArchiCAD (28, 29 e 30 BRA)', slug: 'archicad-30-bra' },
           { name: 'Autodesk Civil 3D 2027', slug: 'civil-3d-2027' },
           { name: 'ZWCAD Professional 2026', slug: 'zwcad-professional-2026' },
@@ -273,13 +272,14 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
         title: 'Cálculo, Estruturas & Render',
         seeAllLink: catalogLink('Cálculo, Estruturas & Render'),
         items: [
+          { name: 'TQS 24.7', slug: 'tqs-24-7' },
           { name: 'AltoQi Eberick + Builder (2024 a 2026)', slug: 'eberick-builder-2025' },
           { name: 'CYPE Completo (2025.d e 2026.a)', slug: 'cypecad-2026' },
           { name: 'SolidWorks 2026 Premium', slug: 'solidworks-2026' },
           { name: 'Tekla Structures 2026', slug: 'tekla-structures-2026' },
           { name: 'V-Ray 7 para SketchUp/3ds Max', slug: 'vray-7-windows' },
           { name: 'Chaos Enscape 3D Real-Time', slug: 'chaos-enscape-windows' },
-          { name: 'Autodesk Todos os Apps (Assinatura)', slug: 'autodesk-all-apps' },
+          { name: 'Pacote Autodesk 86+ Apps Originais', slug: 'autodesk-all-apps' },
         ],
       },
     ],
@@ -289,15 +289,15 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
 
 function getMegaCategoryLabel(id: string, label: string, lang: string): string {
   if (lang === 'en') {
-    if (id === 'microsoft-utilitarios') return 'Microsoft';
+    if (id === 'microsoft-utilitarios') return 'Productivity & Utilities';
     if (id === 'multimidia-design') return 'Multimedia';
-    if (id === 'marcenaria-especializados') return 'Woodworking';
+    if (id === 'marcenaria-especializados') return 'Technical Projects';
     if (id === 'arquitetura-cad') return 'Architecture - CAD 3D';
   }
   if (lang === 'es') {
-    if (id === 'microsoft-utilitarios') return 'Microsoft';
+    if (id === 'microsoft-utilitarios') return 'Productividad y Utilidades';
     if (id === 'multimidia-design') return 'Multimedia';
-    if (id === 'marcenaria-especializados') return 'Carpintería';
+    if (id === 'marcenaria-especializados') return 'Proyectos Técnicos';
     if (id === 'arquitetura-cad') return 'Arquitectura - CAD 3D';
   }
   return label;
@@ -360,7 +360,14 @@ const HeaderContent: React.FC = () => {
 
   // Mega-menu active category ID
   const [activeMegaId, setActiveMegaId] = useState<string | null>(null);
+  const [renderedMegaId, setRenderedMegaId] = useState<string | null>(null);
   const megaCloseTimeoutRef = useRef<number | null>(null);
+  const megaNavRef = useRef<HTMLElement | null>(null);
+  const megaNavItemsRef = useRef(new Map<string, HTMLAnchorElement>());
+  const indicatorPositionedRef = useRef(false);
+  const indicatorFrameRef = useRef<number | null>(null);
+  const [tabsIndicator, setTabsIndicator] = useState({ x: 0, width: 0, visible: false });
+  const [tabsIndicatorReady, setTabsIndicatorReady] = useState(false);
 
   // Top bar dropdowns
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
@@ -368,7 +375,7 @@ const HeaderContent: React.FC = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { cartItems, setIsCartOpen } = useCart();
+  const { cartItems, cartAddVersion, setIsCartOpen } = useCart();
   const { currency, setCurrency, currencyInfo, formatPrice } = useCurrency();
   const { language, setLanguage, t } = useLanguage();
 
@@ -397,6 +404,7 @@ const HeaderContent: React.FC = () => {
       megaCloseTimeoutRef.current = null;
     }
     setActiveMegaId(id);
+    setRenderedMegaId(id);
   };
 
   const handleMegaLeave = () => {
@@ -406,14 +414,61 @@ const HeaderContent: React.FC = () => {
   };
 
   const activeCategoryData = MEGA_MENU_CATEGORIES.find((c) => c.id === activeMegaId);
+  const renderedCategoryData = MEGA_MENU_CATEGORIES.find((c) => c.id === renderedMegaId);
+  const activeRouteCategoryId = location.pathname === '/catalogo'
+    ? MEGA_MENU_CATEGORIES.find((category) => category.categoryFilter === new URLSearchParams(location.search).get('categoria'))?.id
+    : null;
+  const selectedNavId = activeMegaId ?? activeRouteCategoryId ?? (location.pathname === '/' ? 'home' : null);
+
+  useLayoutEffect(() => {
+    const nav = megaNavRef.current;
+    const selectedItem = selectedNavId ? megaNavItemsRef.current.get(selectedNavId) : null;
+
+    if (!nav || !selectedItem) {
+      setTabsIndicator((current) => current.visible ? { ...current, visible: false } : current);
+      return;
+    }
+
+    const updateIndicator = () => {
+      const navRect = nav.getBoundingClientRect();
+      const itemRect = selectedItem.getBoundingClientRect();
+      if (navRect.width === 0 || itemRect.width === 0) return;
+
+      const nextPosition = {
+        x: itemRect.left - navRect.left - nav.clientLeft,
+        width: itemRect.width,
+        visible: true,
+      };
+
+      if (!indicatorPositionedRef.current) {
+        indicatorPositionedRef.current = true;
+        setTabsIndicatorReady(false);
+        setTabsIndicator(nextPosition);
+        if (indicatorFrameRef.current !== null) cancelAnimationFrame(indicatorFrameRef.current);
+        indicatorFrameRef.current = requestAnimationFrame(() => setTabsIndicatorReady(true));
+      } else {
+        setTabsIndicator(nextPosition);
+      }
+    };
+
+    updateIndicator();
+    const resizeObserver = new ResizeObserver(updateIndicator);
+    resizeObserver.observe(nav);
+    resizeObserver.observe(selectedItem);
+
+    return () => {
+      resizeObserver.disconnect();
+      if (indicatorFrameRef.current !== null) cancelAnimationFrame(indicatorFrameRef.current);
+    };
+  }, [selectedNavId, language]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 bg-white shadow-xs border-b border-slate-200/80">
+    <header className="site-header fixed top-0 left-0 right-0 z-40 bg-white shadow-xs border-b border-slate-200/80">
       {/* ===================================================================== */}
       {/* 1. TOP DARK STRIP ("TARJA")                                           */}
       {/* ===================================================================== */}
-      <div className="bg-[#0f172a] text-slate-200 text-[11px] sm:text-xs">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-8.5 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="bg-[#0f172a] text-slate-200 text-[11px] sm:text-xs xl:text-sm">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 h-8.5 flex items-center justify-between gap-2 sm:gap-4">
           {/* Left: Sobre nós | Fale conosco */}
           <div className="flex items-center gap-2.5 font-medium whitespace-nowrap shrink-0">
             <Link to="/sobre-nos" className="hover:text-white transition-colors">
@@ -433,7 +488,7 @@ const HeaderContent: React.FC = () => {
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 font-semibold transition-colors"
             >
-              <MessageCircle className="w-3.5 h-3.5 shrink-0" />
+              <WhatsAppIcon className="w-3.5 h-3.5 shrink-0" />
               <span>+55 81 99734-9300</span>
             </a>
 
@@ -566,7 +621,7 @@ const HeaderContent: React.FC = () => {
                       </div>
                     </div>
                     {language === 'pt-BR' && (
-                      <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
+                      <span className="text-[10px] font-extrabold text-feedback-success-strong bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
                         {localize("Ativo")}</span>
                     )}
                   </button>
@@ -595,7 +650,7 @@ const HeaderContent: React.FC = () => {
                       </div>
                     </div>
                     {language === 'en' ? (
-                      <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
+                      <span className="text-[10px] font-extrabold text-feedback-success-strong bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
                         Active
                       </span>
                     ) : (
@@ -628,7 +683,7 @@ const HeaderContent: React.FC = () => {
                       </div>
                     </div>
                     {language === 'es' ? (
-                      <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
+                      <span className="text-[10px] font-extrabold text-feedback-success-strong bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
                         {localize(t('active_badge'))}
                       </span>
                     ) : (
@@ -661,7 +716,7 @@ const HeaderContent: React.FC = () => {
                       </div>
                     </div>
                     {language === 'pt-PT' ? (
-                      <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
+                      <span className="text-[10px] font-extrabold text-feedback-success-strong bg-emerald-100 px-2.5 py-0.5 rounded-full shrink-0">
                         {localize(t('active_badge'))}
                       </span>
                     ) : (
@@ -680,8 +735,14 @@ const HeaderContent: React.FC = () => {
       {/* ===================================================================== */}
       {/* 2. MAIN HEADER BAR & MEGA-MENU POPUP                                  */}
       {/* ===================================================================== */}
-      <div className="relative bg-white" onMouseLeave={handleMegaLeave}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4">
+      <div
+        className="relative bg-white"
+        onMouseLeave={handleMegaLeave}
+        onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) handleMegaLeave();
+        }}
+      >
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 h-16 xl:h-24 flex items-center justify-between gap-2 sm:gap-4">
           {isMobileSearchActive ? (
             /* Active Mobile Search Bar State */
             <div className="flex items-center w-full animate-fade-in">
@@ -695,7 +756,7 @@ const HeaderContent: React.FC = () => {
                   placeholder={t('nav_search_short')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm bg-slate-100 border-none rounded-xl text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-accent-blue/20"
+                  className="w-full pl-10 pr-4 py-2 text-sm bg-slate-100 border-none rounded-xl text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-action-primary/20"
                 />
               </form>
               <button
@@ -710,33 +771,49 @@ const HeaderContent: React.FC = () => {
               {/* Left: Brand Logo + Name (Proportioned & aligned like PrimeLicense) */}
               <Link to="/" className="flex items-center gap-2.5 group shrink-0 whitespace-nowrap">
                 <div className="brand-logo relative shrink-0">
+                  <img src="/images/santa-hat.png" alt="" aria-hidden="true" className="brand-christmas-hat" />
                   <img
                     src="/images/logo.webp"
                     alt="Logo C2Tech"
-                    className="w-9 h-9 rounded-xl object-cover shadow-2xs transition-transform duration-300 group-hover:scale-105 shrink-0"
+                    className="relative z-10 w-9 h-9 xl:w-12 xl:h-12 rounded-xl object-cover shadow-2xs transition-transform duration-300 group-hover:scale-105 shrink-0"
                   />
-                  {/* Chapeuzinho Natalino C2Tech: Perfeitamente vestido na ponta superior esquerda do ícone */}
-                  <SantaHat className="brand-hat" />
                 </div>
                 <div className="flex flex-col justify-center">
-                  <span className="font-display font-black text-[21px] text-slate-900 tracking-tight leading-none">
+                  <span className="font-display font-black text-[21px] xl:text-[30px] text-slate-900 tracking-tight leading-none">
                     C2Tech
                   </span>
-                  <span className="text-[10.5px] font-medium text-slate-500 tracking-tight leading-none mt-1">
+                  <span className="text-[10.5px] xl:text-sm font-medium text-slate-500 tracking-tight leading-none mt-1">
                     {localize(t('brand_subtitle'))}
                   </span>
                 </div>
               </Link>
 
               {/* Center: Pill Navigation Bar with Single-Line Items */}
-              <nav className="hidden xl:flex items-center bg-[#f4f6f8] rounded-full px-3.5 py-1.5 border border-slate-200/50 gap-1 shrink-0">
+              <nav
+                ref={megaNavRef}
+                data-indicator-ready={tabsIndicatorReady}
+                className="header-main-nav t-tabs hidden xl:flex items-center bg-[#f4f6f8] rounded-2xl px-3.5 py-1.5 border border-slate-200/50 gap-1 shrink-0"
+              >
+                <span
+                  className="t-tabs-pill"
+                  aria-hidden="true"
+                  style={{
+                    '--tabs-x': `${tabsIndicator.x}px`,
+                    '--tabs-width': `${tabsIndicator.visible ? tabsIndicator.width : 0}px`,
+                    opacity: tabsIndicator.visible ? 1 : 0,
+                  } as React.CSSProperties}
+                />
                 <Link
                   to="/"
+                  ref={(element) => {
+                    if (element) megaNavItemsRef.current.set('home', element);
+                    else megaNavItemsRef.current.delete('home');
+                  }}
                   onMouseEnter={() => setActiveMegaId(null)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-semibold whitespace-nowrap transition-colors ${
-                    location.pathname === '/'
-                      ? 'bg-white text-slate-900 shadow-2xs'
-                      : 'text-slate-700 hover:text-slate-950 hover:bg-white/60'
+                  className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-base min-[1440px]:text-lg font-medium whitespace-nowrap transition-colors ${
+                    location.pathname === '/' && !activeMegaId
+                      ? 'text-slate-900'
+                      : 'text-slate-700 hover:text-slate-950'
                   }`}
                 >
                   <HomeIcon className="w-3.5 h-3.5 text-slate-800 shrink-0" />
@@ -749,21 +826,26 @@ const HeaderContent: React.FC = () => {
                     <div
                       key={cat.id}
                       onMouseEnter={() => handleMegaEnter(cat.id)}
-                      className="relative shrink-0"
+                      className="relative z-10 shrink-0"
                     >
                       <Link
                         to={catalogLink(cat.categoryFilter)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-semibold whitespace-nowrap transition-all ${
-                          isCatOpen
-                            ? 'bg-white text-[#0b5ed7] shadow-2xs'
-                            : 'text-slate-700 hover:text-slate-950 hover:bg-white/60'
+                        ref={(element) => {
+                          if (element) megaNavItemsRef.current.set(cat.id, element);
+                          else megaNavItemsRef.current.delete(cat.id);
+                        }}
+                        aria-haspopup="true"
+                        aria-expanded={isCatOpen}
+                        onFocus={() => handleMegaEnter(cat.id)}
+                        className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-base min-[1440px]:text-lg font-medium whitespace-nowrap transition-colors ${
+                          'text-slate-700 hover:text-slate-950'
                         }`}
                       >
                         {cat.icon}
                         <span>{localize(getMegaCategoryLabel(cat.id, cat.label, language))}</span>
                         <ChevronDown
                           className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${
-                            isCatOpen ? 'rotate-180 text-[#0b5ed7]' : 'text-slate-500'
+                            isCatOpen ? 'rotate-180 text-slate-500' : 'text-slate-500'
                           }`}
                         />
                       </Link>
@@ -820,25 +902,20 @@ const HeaderContent: React.FC = () => {
                   <Search className="w-5 h-5" />
                 </button>
 
-                {/* Support / Contact Icon */}
-                <Link
-                  to="/contato"
-                  className="hidden sm:block p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"
-                  title={localize("Central de Atendimento e Suporte")}
-                >
-                  <User className="w-4 h-4" />
-                </Link>
-
                 {/* Cart Button `( 0 )` on a single unbroken line */}
                 <button
                   type="button"
                   onClick={() => setIsCartOpen(true)}
                   className="flex items-center gap-1.5 px-2 py-1.5 text-slate-700 hover:text-slate-950 hover:bg-slate-100 rounded-full transition-colors cursor-pointer whitespace-nowrap shrink-0"
-                  aria-label={localize("Carrinho de compras")}
+                  aria-label={`${localize("Carrinho de compras")} (${cartItems.length})`}
                 >
-                  <ShoppingCart className="w-4 h-4 shrink-0" />
-                  <span className="text-[13px] font-medium text-slate-600 whitespace-nowrap leading-none">
-                    ( {cartItems.length} )
+                  <span className="relative inline-flex">
+                    <ShoppingCart className="w-5 h-5 shrink-0" fill="currentColor" strokeWidth={1.6} />
+                    {cartItems.length > 0 && (
+                      <span key={cartAddVersion} className="t-badge" data-animate={cartAddVersion > 0} aria-hidden="true">
+                        <span className="t-badge-dot">{cartItems.length}</span>
+                      </span>
+                    )}
                   </span>
                 </button>
 
@@ -860,25 +937,36 @@ const HeaderContent: React.FC = () => {
         {/* SMOOTH MEGA-MENU POPUP (Matching Screenshot 1)                      */}
         {/* =================================================================== */}
         <div
+          data-origin="top-center"
+          aria-hidden={!activeCategoryData}
           onMouseEnter={() => {
             if (megaCloseTimeoutRef.current) {
               window.clearTimeout(megaCloseTimeoutRef.current);
               megaCloseTimeoutRef.current = null;
             }
           }}
+          onFocus={() => {
+            if (megaCloseTimeoutRef.current) {
+              window.clearTimeout(megaCloseTimeoutRef.current);
+              megaCloseTimeoutRef.current = null;
+            }
+          }}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) handleMegaLeave();
+          }}
           onMouseLeave={handleMegaLeave}
-          className={`hidden xl:block absolute left-0 right-0 top-full z-50 transition-all duration-250 ease-out origin-top ${
+          className={`t-dropdown hidden xl:block absolute left-0 right-0 top-full z-50 ${
             activeCategoryData
-              ? 'visible opacity-100 translate-y-0 pointer-events-auto'
-              : 'invisible opacity-0 -translate-y-2 pointer-events-none'
+              ? 'is-open'
+              : 'is-closing'
           }`}
         >
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-1 pb-4">
-            {activeCategoryData && (
+          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-1 pb-4">
+            {renderedCategoryData && (
               <div className="bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-7 grid grid-cols-12 gap-8 text-left">
                 {/* Left 6 Columns: Subcategory Lists + "Ver todos >" */}
                 <div className="col-span-6 grid grid-cols-2 gap-6 border-r border-slate-100 pr-6">
-                  {activeCategoryData.columns.map((col, idx) => (
+                  {renderedCategoryData.columns.map((col, idx) => (
                     <div key={idx} className="flex flex-col justify-between space-y-4">
                       <div className="space-y-3">
                         <h4 className="font-display font-extrabold text-sm text-slate-900">
@@ -890,7 +978,7 @@ const HeaderContent: React.FC = () => {
                               <Link
                                 to={`/produto/${item.slug}`}
                                 onClick={() => setActiveMegaId(null)}
-                                className="text-xs text-slate-600 hover:text-[#0b5ed7] hover:translate-x-0.5 inline-block transition-all font-medium"
+                                className="text-sm text-slate-600 hover:text-[#0b5ed7] hover:translate-x-0.5 inline-block transition-all font-medium"
                               >
                                 {localize(item.name)}
                               </Link>
@@ -915,7 +1003,7 @@ const HeaderContent: React.FC = () => {
 
                 {/* Right 6 Columns: 3 Featured Product Boxes with "Economize" badge */}
                 <div className="col-span-6 grid grid-cols-3 gap-4 items-start">
-                  {activeCategoryData.featuredSlugs.map((slug) => {
+                  {renderedCategoryData.featuredSlugs.map((slug) => {
                     const prod = products.find((p) => p.slug === slug);
                     if (!prod) return null;
                     const savings = Math.max(0, prod.originalPrice - prod.price);
@@ -983,8 +1071,8 @@ const HeaderContent: React.FC = () => {
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <div className="brand-logo relative shrink-0">
-                  <img src="/images/logo.webp" alt="C2Tech" className="w-7 h-7 rounded-lg object-cover" />
-                  <SantaHat className="brand-hat" />
+                  <img src="/images/santa-hat.png" alt="" aria-hidden="true" className="brand-christmas-hat" />
+                  <img src="/images/logo.webp" alt="C2Tech" className="relative z-10 w-7 h-7 rounded-lg object-cover" />
                 </div>
                 <span className="font-display font-black text-slate-900 text-lg">C2Tech</span>
               </div>
@@ -1016,7 +1104,7 @@ const HeaderContent: React.FC = () => {
                   </span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </Link>
-                {cat.columns.map(col => <Link key={col.title} to={col.seeAllLink} className="block py-2 pl-6 text-xs text-slate-600 hover:text-blue-600">{localize(getMegaColumnTitle(col.title, language))}</Link>)}
+                {cat.columns.map(col => <Link key={col.title} to={col.seeAllLink} className="block py-2 pl-6 text-xs text-slate-600 hover:text-action-primary">{localize(getMegaColumnTitle(col.title, language))}</Link>)}
                 </div>
               ))}
             </div>
@@ -1039,7 +1127,7 @@ const HeaderContent: React.FC = () => {
                 rel="noopener noreferrer"
                 className="flex items-center justify-center w-full py-3 px-4 rounded-xl bg-emerald-600 text-white font-bold text-sm shadow-sm"
               >
-                <MessageCircle className="w-4 h-4 mr-2" />
+                <WhatsAppIcon className="w-4 h-4 mr-2" />
                 WhatsApp: +55 81 99734-9300
               </a>
             </div>
@@ -1052,5 +1140,5 @@ const HeaderContent: React.FC = () => {
 
 export const Header: React.FC = () => {
   const location = useLocation();
-  return <HeaderContent key={location.pathname + location.search} />;
+  return <><MobileNavigation /><HeaderContent key={location.pathname + location.search} /></>;
 };

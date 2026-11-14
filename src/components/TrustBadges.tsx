@@ -1,3 +1,4 @@
+import { useText } from '../hooks/useText';
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { CheckCircle2, X, Lock, Award, CloudDownload, RefreshCw } from 'lucide-react';
@@ -20,7 +21,7 @@ export const TrustpilotLogo: React.FC<{ starSize?: string; textSize?: string; cl
 }) => (
   <div className={`inline-flex items-center gap-1.5 select-none ${className}`}>
     <TrustpilotStarIcon className={starSize} />
-    <span className={`font-display font-extrabold tracking-tight text-slate-900 ${textSize}`}>
+    <span style={{ fontFamily: 'Arial, Helvetica, sans-serif' }} className={`font-normal tracking-[-0.3px] text-[#191919] ${textSize}`}>
       Trustpilot
     </span>
   </div>
@@ -43,20 +44,19 @@ export const TrustpilotStars: React.FC<{
     <div className={`inline-flex shrink-0 items-center gap-0.5 ${className}`}>
       {[1, 2, 3, 4, 5].map((star) => {
         const isActive = star <= count;
-        const imgSrc = isActive
-          ? isFourStar
-            ? '/images/trustpilot-star-4.png'
-            : '/images/trustpilot-star-5.png'
-          : '/images/trustpilot-star-inactive.png';
-
+        const color = isActive ? (isFourStar ? '#73cf42' : '#00b67a') : '#dcdce6';
         return (
-          <img
+          <svg
             key={star}
-            src={imgSrc}
-            alt={isActive ? `${count} estrelas` : 'estrela vazia'}
-            className={`${size} rounded-[2px] object-cover shrink-0 select-none shadow-2xs`}
-            loading="eager"
-          />
+            viewBox="0 0 32 32"
+            role="img"
+            aria-label={isActive ? `${count} estrelas` : 'estrela vazia'}
+            className={`${size} shrink-0 select-none`}
+          >
+            <rect width="32" height="32" fill={color} />
+            <path d="m16 5 2.7 8.3h8.7l-7.1 5.1 2.7 8.3-7-5.1-7 5.1 2.7-8.3-7.1-5.1h8.7Z" fill="#fff" />
+            <path d="m16 21.6 5.1-1.3-.8-1.9Z" fill={color} />
+          </svg>
         );
       })}
     </div>
@@ -67,19 +67,20 @@ export const TrustpilotStars: React.FC<{
 export const TrustpilotRatingHorizontal: React.FC<{
   onOpenModal?: () => void;
   className?: string;
-}> = ({ onOpenModal, className = '' }) => {
+  compact?: boolean;
+}> = ({ onOpenModal, className = '', compact = false }) => {
   const { t } = useLanguage();
   return (
     <button
       type="button"
       onClick={onOpenModal}
-      className={`trust-rating group flex w-full flex-wrap items-center justify-center gap-3 py-2 text-sm text-slate-800 cursor-pointer sm:w-auto sm:justify-start ${className}`}
+      className={`trust-rating group flex w-full items-center justify-center py-2 text-sm text-slate-800 cursor-pointer sm:w-auto sm:justify-start ${compact ? 'flex-nowrap gap-2 whitespace-nowrap' : 'flex-wrap gap-3'} ${className}`}
       title={t('trustpilot_reviews_modal_title')}
     >
-      <span className="hidden lg:inline text-slate-600">{t('trustpilot_what_customers_say')}</span>
+      {!compact && <span className="hidden lg:inline text-slate-600">{t('trustpilot_what_customers_say')}</span>}
       <span className="hidden sm:inline font-semibold">{t('trustpilot_excellent')}</span>
-      <TrustpilotStars count={5} size="w-5 h-5" />
-      <span className="hidden sm:inline text-slate-600">4.8 {t('trustpilot_score_based_on')} <span className="underline">{t('trustpilot_reviews_count')}</span></span>
+      <TrustpilotStars count={5} size={compact ? 'w-4 h-4 sm:w-5 sm:h-5' : 'w-5 h-5'} />
+      <span className="hidden sm:inline text-slate-600 text-xs">{!compact && <>4.8 {t('trustpilot_score_based_on')} </>}<span className="underline underline-offset-2">{t('trustpilot_reviews_count')}</span></span>
       <TrustpilotLogo starSize="w-5 h-5" textSize="text-sm" />
     </button>
   );
@@ -94,7 +95,7 @@ export const TrustGuaranteesPill: React.FC<{
   return (
     <div
       onClick={onOpenModal}
-      className={`inline-flex flex-col sm:flex-row items-start sm:items-center bg-white border border-slate-200/90 rounded-2xl sm:rounded-full px-3.5 sm:px-5 py-2 sm:py-2.5 shadow-2xs hover:border-slate-300 transition-all cursor-pointer group gap-2.5 sm:gap-3.5 lg:gap-4.5 ${className}`}
+      className={`trust-benefits inline-flex flex-col sm:flex-row items-start sm:items-center bg-slate-50/80 rounded-2xl px-4 py-3 shadow-sm transition-all cursor-pointer group gap-3 sm:gap-3.5 ${className}`}
       title="Ver garantias de compra segura"
     >
       {/* Uso Vitalício */}
@@ -106,8 +107,8 @@ export const TrustGuaranteesPill: React.FC<{
           loading="eager"
         />
         <div>
-          <p className="text-[11px] sm:text-xs font-bold text-slate-800 leading-tight">{t('badge_lifetime')}</p>
-          <p className="text-[9.5px] sm:text-[10px] text-slate-500 leading-snug mt-0.5 whitespace-nowrap">
+          <p className="text-xs sm:text-xs font-bold text-slate-800 leading-tight">{t('badge_lifetime')}</p>
+          <p className="text-xs sm:text-xs text-slate-500 leading-snug mt-0.5 whitespace-nowrap">
             {t('badge_lifetime_sub')}
           </p>
         </div>
@@ -122,8 +123,8 @@ export const TrustGuaranteesPill: React.FC<{
           loading="eager"
         />
         <div>
-          <p className="text-[11px] sm:text-xs font-bold text-slate-800 leading-tight">{t('badge_guaranteed')}</p>
-          <p className="text-[9.5px] sm:text-[10px] text-slate-500 leading-snug mt-0.5 whitespace-nowrap">
+          <p className="text-xs sm:text-xs font-bold text-slate-800 leading-tight">{t('badge_guaranteed')}</p>
+          <p className="text-xs sm:text-xs text-slate-500 leading-snug mt-0.5 whitespace-nowrap">
             {t('badge_guaranteed_sub')}
           </p>
         </div>
@@ -138,8 +139,8 @@ export const TrustGuaranteesPill: React.FC<{
           loading="eager"
         />
         <div>
-          <p className="text-[11px] sm:text-xs font-bold text-slate-800 leading-tight">{t('badge_digital_delivery')}</p>
-          <p className="text-[9.5px] sm:text-[10px] text-slate-500 leading-snug mt-0.5 whitespace-nowrap">
+          <p className="text-xs sm:text-xs font-bold text-slate-800 leading-tight">{t('badge_digital_delivery')}</p>
+          <p className="text-xs sm:text-xs text-slate-500 leading-snug mt-0.5 whitespace-nowrap">
             {t('badge_digital_delivery_sub')}
           </p>
         </div>
@@ -154,6 +155,25 @@ export const TrustGuaranteesModal: React.FC<{
   onClose: () => void;
 }> = ({ isOpen, onClose }) => {
   const { language, t } = useLanguage();
+  const text = useText();
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+      if (event.key === 'Tab') {
+        const controls = Array.from(document.querySelectorAll<HTMLElement>('.trust-reviews-modal button, .trust-reviews-modal a[href]'));
+        const first = controls[0]; const last = controls[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.querySelector<HTMLButtonElement>('.trust-reviews-modal button')?.focus();
+    return () => { document.body.style.overflow = previousOverflow; document.removeEventListener('keydown', onKeyDown); previousFocus?.focus(); };
+  }, [isOpen, onClose]);
   if (!isOpen) return null;
 
   const trustpilotReviews = [
@@ -220,7 +240,7 @@ export const TrustGuaranteesModal: React.FC<{
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-2xl max-h-[90vh] bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col animate-scale-up"
+        role="dialog" aria-modal="true" aria-label="Avaliações e garantias" className="trust-reviews-modal relative w-full max-w-4xl max-h-[92dvh] bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col animate-scale-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -228,17 +248,17 @@ export const TrustGuaranteesModal: React.FC<{
           <div className="flex items-center gap-3">
             <TrustpilotStarIcon className="w-8 h-8 shrink-0" />
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-display font-black text-slate-900 text-lg">Trustpilot</span>
-                <span className="text-[10px] font-black uppercase tracking-wider bg-[#08ad88]/15 text-[#067a5f] px-2 py-0.5 rounded-full">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-normal text-slate-900 text-2xl">Trustpilot</span>
+                <span className="text-xs font-black uppercase tracking-wider bg-[#08ad88]/15 text-[#067a5f] px-2 py-0.5 rounded-full">
                   {language === 'en' ? 'Verified Reviews' : language === 'es' ? 'Opiniones Verificadas' : 'Avaliações Verificadas'}
                 </span>
               </div>
-              <div className="flex items-center gap-2 mt-0.5">
-                <TrustpilotStars count={5} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
+              <div className="flex flex-wrap items-center gap-2 mt-1">
+                <TrustpilotStars count={5} size="w-5 h-5" />
                 <span className="text-xs font-extrabold text-slate-800">4.8 / 5</span>
                 <span className="text-xs text-slate-500 font-medium">
-                  {language === 'en' ? '(1,782 satisfied customers)' : language === 'es' ? '(1.782 clientes satisfechos)' : '(1.782 clientes satisfeitos)'}
+                  {language === 'en' ? '(1,785 satisfied customers)' : language === 'es' ? '(1.785 clientes satisfechos)' : '(1.785 clientes satisfeitos)'}
                 </span>
               </div>
             </div>
@@ -261,22 +281,22 @@ export const TrustGuaranteesModal: React.FC<{
                 <Award className="w-4 h-4 text-emerald-600 shrink-0" />
                 <span>{t('badge_lifetime')}</span>
               </div>
-              <p className="text-[11px] text-slate-600 leading-relaxed">
-                {language === 'es'
+              <p className="text-xs text-slate-600 leading-relaxed">
+                {text(language === 'es'
                   ? 'Sin suscripciones ni cobros recurrentes. Pagas una única vez.'
-                  : 'Sem assinaturas ou cobranças recorrentes. Você paga uma única vez.'}
+                  : 'Sem assinaturas ou cobranças recorrentes. Você paga uma única vez.')}
               </p>
             </div>
 
             <div className="p-3.5 rounded-2xl bg-blue-50/60 border border-blue-100 space-y-1">
               <div className="flex items-center gap-2 text-blue-800 font-bold text-xs">
-                <CloudDownload className="w-4 h-4 text-blue-600 shrink-0" />
+                <CloudDownload className="w-4 h-4 text-action-primary shrink-0" />
                 <span>{language === 'en' ? 'Instant Delivery' : language === 'es' ? 'Envío Inmediato' : 'Envio Imediato'}</span>
               </div>
-              <p className="text-[11px] text-slate-600 leading-relaxed">
-                {language === 'es'
+              <p className="text-xs text-slate-600 leading-relaxed">
+                {text(language === 'es'
                   ? 'Recibe el enlace de Google Drive en tu correo y WhatsApp en minutos.'
-                  : 'Receba o link do Google Drive no seu e-mail e WhatsApp em minutos.'}
+                  : 'Receba o link do Google Drive no seu e-mail e WhatsApp em minutos.')}
               </p>
             </div>
 
@@ -285,10 +305,10 @@ export const TrustGuaranteesModal: React.FC<{
                 <RefreshCw className="w-4 h-4 text-amber-600 shrink-0" />
                 <span>{language === 'en' ? '7-Day Guarantee' : language === 'es' ? '7 Días de Garantía' : '7 Dias de Garantia'}</span>
               </div>
-              <p className="text-[11px] text-slate-600 leading-relaxed">
-                {language === 'es'
+              <p className="text-xs text-slate-600 leading-relaxed">
+                {text(language === 'es'
                   ? 'Si no funciona como se promete, devolvemos el 100% de tu dinero.'
-                  : 'Se não funcionar como prometido, devolvemos 100% do seu valor.'}
+                  : 'Se não funcionar como prometido, devolvemos 100% do seu valor.')}
               </p>
             </div>
           </div>
@@ -296,9 +316,9 @@ export const TrustGuaranteesModal: React.FC<{
           {/* Customer Reviews List */}
           <div className="space-y-3">
             <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">
-              {language === 'es'
+              {text(language === 'es'
                 ? 'Últimas Opiniones de Clientes Verificados en Trustpilot'
-                : 'Últimos Depoimentos de Clientes Verificados no Trustpilot'}
+                : 'Últimos Depoimentos de Clientes Verificados no Trustpilot')}
             </h4>
 
             <div className="space-y-3">
@@ -316,24 +336,24 @@ export const TrustGuaranteesModal: React.FC<{
                         <p className="text-xs font-bold text-slate-900 leading-none">
                           {rev.author}
                         </p>
-                        <p className="text-[10px] text-slate-500 mt-0.5">{rev.location}</p>
+                        <p className="text-xs text-slate-500 mt-0.5">{rev.location}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <TrustpilotStars count={rev.rating} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
-                      <span className="text-[10px] text-slate-400 font-medium">{rev.date}</span>
+                      <span className="text-xs text-slate-400 font-medium">{text(rev.date)}</span>
                     </div>
                   </div>
 
-                  <p className="text-xs font-extrabold text-slate-900">{rev.title}</p>
-                  <p className="text-xs text-slate-600 leading-relaxed">{rev.comment}</p>
+                  <p className="text-xs font-extrabold text-slate-900">{text(rev.title)}</p>
+                  <p className="text-xs text-slate-600 leading-relaxed">{text(rev.comment)}</p>
 
-                  <div className="pt-1 flex items-center gap-1 text-[10px] font-bold text-[#067a5f]">
+                  <div className="pt-1 flex items-center gap-1 text-xs font-bold text-[#067a5f]">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#08ad88]" />
                     <span>
-                      {language === 'es'
+                      {text(language === 'es'
                         ? 'Compra Verificada vía Trustpilot'
-                        : 'Compra Verificada via Trustpilot'}
+                        : 'Compra Verificada via Trustpilot')}
                     </span>
                   </div>
                 </div>
@@ -347,7 +367,7 @@ export const TrustGuaranteesModal: React.FC<{
           <div className="flex items-center gap-1.5">
             <Lock className="w-3.5 h-3.5 text-emerald-600" />
             <span className="font-semibold text-slate-700">
-              {language === 'es' ? 'Ambiente Seguro y Protegido' : 'Ambiente Seguro e Protegido'}
+              {text(language === 'es' ? 'Ambiente Seguro y Protegido' : 'Ambiente Seguro e Protegido')}
             </span>
           </div>
           <button

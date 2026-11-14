@@ -2,6 +2,7 @@ import type { Product, LicenseOption } from './products';
 
 // Mapping for products that have a single global/Windows version
 export const INTERNATIONAL_PRODUCT_CHECKOUTS: Record<string, string> = {
+  tqs_24_7: 'https://pay.cakto.com.br/rwnz4ws',
   geo5_2024_win: 'https://pay.cakto.com.br/wnwwtv3',
   inventor_pro_2027: 'https://pay.cakto.com.br/37735sw',
   civil3d_2027: 'https://pay.cakto.com.br/8scpmou',
@@ -20,6 +21,8 @@ export const INTERNATIONAL_PRODUCT_CHECKOUTS: Record<string, string> = {
   wondershare_recoverit_13: 'https://pay.cakto.com.br/36sg8ge',
   fl_studio_2025: 'https://pay.cakto.com.br/kuqjs4e',
   filmora_15: 'https://pay.cakto.com.br/3fq3yv4',
+  altoqi_visus_2026: 'https://pay.cakto.com.br/3f5thmj',
+  eberick_builder_2025: 'https://pay.cakto.com.br/33tbjgj',
 
   // Adobe Products Default (Windows)
   photoshop_2026: 'https://pay.cakto.com.br/vpgiw9h',
@@ -48,6 +51,8 @@ export const INTERNATIONAL_OPTION_CHECKOUTS: Record<string, string> = {
   revit_2027_2027: 'https://pay.cakto.com.br/v2cr8ee',
 
   // SketchUp Pro
+  sketchup_2026_win_20271: 'https://pay.cakto.com.br/3c8sik6',
+  sketchup_2026_win_20272: 'https://pay.cakto.com.br/3bnzc7t',
   sketchup_2026_win_2021: 'https://pay.cakto.com.br/39i3zxa',
   sketchup_2026_win_2024: 'https://pay.cakto.com.br/v2zmw9g',
   sketchup_2026_win_2025: 'https://pay.cakto.com.br/46uu52z',
@@ -60,9 +65,9 @@ export const INTERNATIONAL_OPTION_CHECKOUTS: Record<string, string> = {
   solidworks_2026_2026: 'https://pay.cakto.com.br/aypd6zo',
 
   // AltoQi Eberick + Builder
-  eberick_builder_2025_2024: 'https://pay.cakto.com.br/cgxe9xf',
-  eberick_builder_2025_2025: 'https://pay.cakto.com.br/38q782i',
-  eberick_builder_2025_2026: 'https://pay.cakto.com.br/3a4vxmt',
+  eberick_builder_2025_2024: 'https://pay.cakto.com.br/33tbjgj',
+  eberick_builder_2025_2025: 'https://pay.cakto.com.br/7jw8eyi_847943',
+  eberick_builder_2025_2026: 'https://pay.cakto.com.br/8x4fckr',
 
   // CYPE
   cype_2026_20251: 'https://pay.cakto.com.br/3672xji',
@@ -123,6 +128,7 @@ export const INTERNATIONAL_OPTION_CHECKOUTS: Record<string, string> = {
 
 // Secondary lookup by downloadSlug (extra safety)
 export const INTERNATIONAL_SLUG_CHECKOUTS: Record<string, string> = {
+  'tqs-24-7': 'https://pay.cakto.com.br/rwnz4ws',
   'autocad-2019-windows': 'https://pay.cakto.com.br/w2y6f75_1247182',
   'autocad-2024-windows': 'https://pay.cakto.com.br/yibwpho',
   'autocad-2025-windows': 'https://pay.cakto.com.br/sdujqqx',
@@ -136,6 +142,8 @@ export const INTERNATIONAL_SLUG_CHECKOUTS: Record<string, string> = {
   'revit-2026': 'https://pay.cakto.com.br/37bwbt8',
   'revit-2027': 'https://pay.cakto.com.br/v2cr8ee',
 
+  'sketchup-pro-2027-windows': 'https://pay.cakto.com.br/3c8sik6',
+  'sketchup-pro-2027-macos': 'https://pay.cakto.com.br/3bnzc7t',
   'sketchup-pro-2021-windows': 'https://pay.cakto.com.br/39i3zxa',
   'sketchup-pro-2024-windows': 'https://pay.cakto.com.br/v2zmw9g',
   'sketchup-pro-2025-windows': 'https://pay.cakto.com.br/46uu52z',
@@ -146,9 +154,10 @@ export const INTERNATIONAL_SLUG_CHECKOUTS: Record<string, string> = {
   'solidworks-2025': 'https://pay.cakto.com.br/wfidgca',
   'solidworks-2026': 'https://pay.cakto.com.br/aypd6zo',
 
-  'eberick-builder-2024-plena': 'https://pay.cakto.com.br/cgxe9xf',
-  'eberick-builder-2025': 'https://pay.cakto.com.br/38q782i',
-  'eberick-builder-2026-infinity': 'https://pay.cakto.com.br/3a4vxmt',
+  'eberick-builder-2024-plena': 'https://pay.cakto.com.br/33tbjgj',
+  'eberick-builder-2025': 'https://pay.cakto.com.br/7jw8eyi_847943',
+  'eberick-builder-2026-infinity': 'https://pay.cakto.com.br/8x4fckr',
+  'altoqi-visus-2026': 'https://pay.cakto.com.br/3f5thmj',
 
   'cypecad-2025': 'https://pay.cakto.com.br/3672xji',
   'cypecad-2026': 'https://pay.cakto.com.br/3cpy9f8',

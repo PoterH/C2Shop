@@ -1,400 +1,157 @@
+import { WhatsAppIcon } from './WhatsAppIcon';
 import { useText } from '../hooks/useText';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, MessageCircle, Shield, FileText } from 'lucide-react';
+import { Mail, Shield, FileText } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { SantaHat, FooterGarlandLine } from './ChristmasDecorations';
 
 export const Footer: React.FC = () => {
   const localize = useText();
   const { language } = useLanguage();
   const currentYear = new Date().getFullYear();
-
   const whatsappNumber = '5581997349300';
   const whatsappMessage = encodeURIComponent(localize('Olá, tenho interesse em um software da C2Tech e gostaria de tirar uma dúvida.'));
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+  const copy = (pt: string, en: string, es: string) => localize(language === 'en' ? en : language === 'es' ? es : pt);
+
+  const linkClass = 'inline-flex min-h-8 items-center text-sm text-slate-300 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-300';
 
   return (
-    <footer className="relative bg-[#020617] text-slate-400 pt-28 pb-16 z-0 border-t border-slate-800/90 overflow-x-clip">
-      {/* Guirlanda Natalina Decorativa Sobre a Linha do Footer */}
-      <FooterGarlandLine />
+    <footer className="relative overflow-x-clip border-t border-slate-800 bg-brand-navy pt-24 pb-8 text-slate-300">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 border-b border-slate-700/80 pb-10 sm:grid-cols-2 lg:grid-cols-[1.45fr_0.8fr_0.95fr_1.1fr] lg:gap-12">
+          <div className="space-y-5">
+            <Link to="/" className="inline-flex items-center gap-3 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-300">
+              <img src="/images/logo.webp" alt="" width="40" height="40" className="h-10 w-10 rounded-xl object-cover" />
+              <span>
+                <span className="block font-display text-lg font-extrabold leading-tight text-white">C2Tech</span>
+                <span className="block text-xs text-slate-300">{localize('Licenças Digitais')}</span>
+              </span>
+            </Link>
 
-      {/* Morphing Glowing Background Blobs (Similar to the Hero) */}
-      <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0">
-        <div className="absolute -bottom-20 -left-20 w-[350px] h-[350px] md:w-[500px] md:h-[500px] opacity-40">
-          <div className="w-full h-full bg-gradient-to-br from-[#00d2ff]/20 via-[#0066FF]/15 to-[#0a21a5]/20 rounded-full blur-[80px] md:blur-[120px] animate-morph-blob-1"></div>
-        </div>
-        <div className="absolute -bottom-10 -right-20 w-[350px] h-[350px] md:w-[500px] md:h-[500px] opacity-40">
-          <div className="w-full h-full bg-gradient-to-tr from-[#0066FF]/18 via-[#00d2ff]/15 to-[#0a21a5]/18 rounded-full blur-[80px] md:blur-[120px] animate-morph-blob-2"></div>
-        </div>
+            <p className="max-w-sm text-sm leading-relaxed text-slate-300">
+              {copy(
+                'Soluções digitais profissionais, entrega rápida e suporte de instalação. As condições de acesso variam conforme o produto e o plano.',
+                'Professional digital solutions, fast delivery and installation support. Access terms vary by product and plan.',
+                'Soluciones digitales profesionales, entrega rápida y soporte de instalación. Las condiciones de acceso varían según el producto y el plan.'
+              )}
+            </p>
 
-        {/* Subtle Tech Grid Overlay */}
-        <div className="absolute inset-0 bg-grid-tech opacity-40"></div>
-        <div className="absolute inset-0 bg-dot-tech opacity-30"></div>
-      </div>
-
-      {/* Main Container */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* Glassmorphism Card Wrapper */}
-        <div className="bg-slate-950/40 backdrop-blur-xl border border-slate-800/60 rounded-3xl p-8 md:p-12 shadow-2xl">
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
-
-            {/* Column 1 & 2: Brand Info */}
-            <div className="space-y-6 col-span-1 md:col-span-2">
-              <Link to="/" className="inline-block group">
-                <div className="brand-logo relative inline-flex shrink-0">
-                  <img
-                    src="/images/logo.webp"
-                    alt="Logo C2Tech"
-                    className="w-10 h-10 rounded-xl object-cover shadow-[0_0_15px_rgba(7,212,243,0.25)] group-hover:scale-105 transition-transform duration-300"
-                  />
-                  {/* Chapeuzinho Natalino C2Tech: Perfeitamente vestido na ponta superior esquerda do ícone */}
-                  <SantaHat className="brand-hat" />
-                </div>
-              </Link>
-              <div className="space-y-3">
-                <h2 className="text-white text-lg sm:text-xl font-bold font-display tracking-tight leading-snug">
-                  {localize(language === 'en'
-                    ? 'You focus on the project. C2Tech handles the rest.'
-                    : language === 'es'
-                    ? 'Tú te enfocas en el proyecto. C2Tech cuida del resto.'
-                    : 'Você foca no projeto. A C2Tech cuida do resto.')}
-                </h2>
-                <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
-                  {localize(language === 'en'
-                    ? 'We offer professional digital solutions with fast delivery, lifetime access and assisted installation support. Acquire robust software with no subscriptions and no recurring fees.'
-                    : language === 'es'
-                    ? 'Ofrecemos soluciones digitales profesionales con entrega rápida, acceso vitalicio y soporte de instalación asistida. Adquiere software robusto sin suscripciones ni cuotas recurrentes.'
-                    : 'Oferecemos soluções digitais profissionais com entrega rápida, acesso vitalício e suporte de instalação assistida. Adquira softwares robustos sem assinaturas e sem taxas recorrentes.')}
-                </p>
-              </div>
-
-              {/* Circular Social Buttons with Glassmorphism */}
-              <div className="flex items-center gap-3 pt-2">
-                <a
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-full bg-slate-950/50 hover:bg-emerald-500/10 border border-slate-800 hover:border-emerald-500/40 flex items-center justify-center transition-all duration-300 text-slate-400 hover:text-emerald-400 group shadow-sm"
-                  aria-label={localize("WhatsApp Suporte")}
-                >
-                  <MessageCircle className="w-5 h-5 transition-transform group-hover:scale-110" />
-                </a>
-                <a
-                  href="https://www.instagram.com/c2techoficial/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-full bg-slate-950/50 hover:bg-pink-500/10 border border-slate-800 hover:border-pink-500/40 flex items-center justify-center transition-all duration-300 text-slate-400 hover:text-pink-400 group shadow-sm"
-                  aria-label="Instagram"
-                >
-                  <svg className="w-5 h-5 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                  </svg>
-                </a>
-                <a
-                  href="https://www.youtube.com/@C2Tech.Oficial"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-full bg-slate-950/50 hover:bg-red-500/10 border border-slate-800 hover:border-red-500/40 flex items-center justify-center transition-all duration-300 text-slate-400 hover:text-red-500 group shadow-sm"
-                  aria-label="YouTube"
-                >
-                  <svg className="w-5 h-5 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
-                    <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
-                  </svg>
-                </a>
-              </div>
-            </div>
-
-            {/* Column 3: Atalhos */}
-            <div className="space-y-4">
-              <h3 className="text-white font-semibold font-display text-base tracking-tight">{localize("Atalhos")}</h3>
-              <ul className="space-y-2.5 text-sm">
+            <nav aria-label={copy('Redes sociais', 'Social media', 'Redes sociales')}>
+              <ul className="flex flex-wrap gap-x-5 gap-y-2">
                 <li>
-                  <Link to="/" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    {localize("Início")}</Link>
-                </li>
-                <li>
-                  <Link to="/catalogo" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    {localize("Catálogo de Softwares")}</Link>
-                </li>
-                <li>
-                  <Link to="/sobre-nos" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    {localize("Sobre Nós")}</Link>
-                </li>
-                <li>
-                  <Link to="/entrega-e-pagamento" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    {localize("Entrega e Pagamento Seguro")}</Link>
-                </li>
-                <li>
-                  <Link to="/contato" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    {localize("Fale Conosco / Suporte")}</Link>
-                </li>
-                <li>
-                  <Link to="/faq" className="hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    {localize("FAQ / Dúvidas")}</Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Column 4: Legal */}
-            <div className="space-y-4">
-              <h3 className="text-white font-semibold font-display text-base tracking-tight">Legal</h3>
-              <ul className="space-y-2.5 text-sm">
-                <li>
-                  <Link to="/termos" className="flex items-center hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    <FileText className="w-4 h-4 mr-2 text-slate-500" />
-                    {localize("Termos de Uso")}</Link>
-                </li>
-                <li>
-                  <Link to="/privacidade" className="flex items-center hover:text-white hover:underline decoration-sky-500/50 underline-offset-4 transition-all">
-                    <Shield className="w-4 h-4 mr-2 text-slate-500" />
-                    {localize("Política de Privacidade")}</Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Column 5: Contato & Info */}
-            <div className="space-y-4">
-              <h3 className="text-white font-semibold font-display text-base tracking-tight">{localize("Fale conosco")}</h3>
-              <ul className="space-y-3 text-sm">
-                <li className="flex items-center">
-                  <Mail className="w-4 h-4 mr-2 text-slate-500" />
-                  <a href="mailto:c2tech2025@gmail.com" className="hover:text-white transition-colors break-all">
-                    c2tech2025@gmail.com
+                  <a href="https://www.instagram.com/c2techoficial/" target="_blank" rel="noopener noreferrer" className={linkClass}>
+                    <svg className="mr-2 h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                    </svg>
+                    Instagram
                   </a>
                 </li>
-                <li className="pt-3 border-t border-slate-800/60">
-                  <div className="flex flex-col gap-2">
-                    <span className="flex items-center text-xs">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
-                      {localize("Servidores Online")}</span>
-                    <span className="flex items-center text-xs text-slate-500">
-                      {localize("SSL Criptografado")}</span>
-                  </div>
+                <li>
+                  <a href="https://www.youtube.com/@C2Tech.Oficial" target="_blank" rel="noopener noreferrer" className={linkClass}>
+                    <svg className="mr-2 h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
+                      <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
+                    </svg>
+                    YouTube
+                  </a>
                 </li>
               </ul>
-            </div>
-
+            </nav>
           </div>
 
-          {/* Payment Methods & Security Section */}
-          <div className="footer-credentials grid grid-cols-1 lg:grid-cols-2 gap-6 my-8 pt-8 border-t border-slate-800/60">
-            {/* Left: Payment Methods */}
-            <div className="footer-credential-panel space-y-4 text-left">
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block font-sans">
-                {localize("Meios de Pagamento")}</span>
-              <div className="footer-payment-grid">
-                {/* Pix */}
-                <div className="footer-payment-card" title="Pix">
-                  <svg viewBox="0 0 72 32" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
-                    <g transform="translate(8, 3)">
-                      <path d="M13.2 2.1c-.2-.2-.5-.2-.7 0L7.3 7.3c-.3.3-.3.8 0 1.1l5.2 5.2c.2.2.5.2.7 0l5.2-5.2c.3-.3.3-.8 0-1.1L13.2 2.1zm-6.8 6.8c-.2-.2-.5-.2-.7 0L.5 14.1c-.3.3-.3.8 0 1.1l5.2 5.2c.2.2.5.2.7 0l5.2-5.2c.3-.3.3-.8 0-1.1l-5.2-5.2zm13.6 0c-.2-.2-.5-.2-.7 0l-5.2 5.2c-.3.3-.3.8 0 1.1l5.2 5.2c.2.2.5.2.7 0l5.2-5.2c.3-.3.3-.8 0-1.1l-5.2-5.2zm-6.8 6.8c-.2-.2-.5-.2-.7 0l-5.2 5.2c-.3.3-.3.8 0 1.1l5.2 5.2c.2.2.5.2.7 0l5.2-5.2c.3-.3.3-.8 0-1.1l-5.2-5.2z" fill="#32BCAD" />
-                      <text x="30" y="19" fill="#32BCAD" fontFamily="sans-serif" fontWeight="950" fontSize="17.5" letterSpacing="0.2">pix</text>
-                    </g>
-                  </svg>
-                </div>
-                {/* Mastercard */}
-                <div className="footer-payment-card" title="Mastercard">
-                  <svg viewBox="0 0 85 50" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="28" cy="25" r="21" fill="#FF1E00" />
-                    <circle cx="56" cy="25" r="21" fill="#FF9900" />
-                    <g fill="#FF5F00">
-                      <path d="M 42 7 A 21 21 0 0 1 42 43 A 21 21 0 0 1 42 7 Z" opacity="0.4"/>
-                    </g>
-                    <text x="42" y="29" fill="#FFFFFF" fontFamily="Impact, Arial Black, sans-serif" fontWeight="bold" fontStyle="italic" fontSize="9.5" textAnchor="middle" stroke="#000000" strokeWidth="1.2" paintOrder="stroke fill">MasterCard</text>
-                  </svg>
-                </div>
-                {/* Visa */}
-                <div className="footer-payment-card" title="Visa">
-                  <svg viewBox="0 0 100 32" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
-                    <g transform="skewX(-12) translate(10, 0)">
-                      <path d="M5 6 L18 6 L12 18 L2 18 Z" fill="#F7A21C" />
-                      <text x="14" y="26" fill="#0E4595" fontFamily="sans-serif" fontWeight="950" fontSize="26" fontStyle="italic" letterSpacing="-1.5">VISA</text>
-                    </g>
-                  </svg>
-                </div>
-                {/* Amex */}
-                <div className="footer-payment-card" title="American Express">
-                  <svg viewBox="0 0 50 50" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="50" height="50" rx="3" fill="#0077A6" />
-                    <text x="25" y="18" fill="#FFFFFF" fontFamily="sans-serif" fontWeight="900" fontSize="5.5" textAnchor="middle" letterSpacing="0.2">AMERICAN</text>
-                    <text x="25" y="28" fill="#FFFFFF" fontFamily="sans-serif" fontWeight="950" fontSize="7.5" textAnchor="middle" letterSpacing="0.4">EXPRESS</text>
-                    <circle cx="6" cy="41" r="1.2" fill="none" stroke="#FFFFFF" strokeWidth="0.4"/>
-                    <text x="6" y="42.2" fill="#FFFFFF" fontFamily="sans-serif" fontSize="2" textAnchor="middle" fontWeight="bold">R</text>
-                  </svg>
-                </div>
-                {/* PayPal */}
-                <div className="footer-payment-card" title="PayPal">
-                  <svg viewBox="0 0 110 32" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
-                    <g transform="skewX(-12) translate(8, 0)">
-                      <g transform="translate(0, 2)">
-                        <path d="M7.5 2 L1.5 25 L6.5 25 L7.8 19 L11.5 19 C15 19 17.5 17 18.2 13 C18.9 9 16.5 6 12 6 H7.5 L7.5 2 Z" fill="#003087" />
-                        <path d="M11 7 L5 30 L10 30 L11.3 24 L15 24 C18.5 24 21 22 21.7 18 C22.4 14 20 11 15.5 11 H11 L11 7 Z" fill="#0079C1" opacity="0.9" />
-                      </g>
-                      <text x="26" y="24" fill="#003087" fontFamily="sans-serif" fontWeight="950" fontStyle="italic" fontSize="19" letterSpacing="-0.8">Pay</text>
-                      <text x="59" y="24" fill="#0079C1" fontFamily="sans-serif" fontWeight="950" fontStyle="italic" fontSize="19" letterSpacing="-0.8">Pal</text>
-                    </g>
-                  </svg>
-                </div>
-                {/* Hipercard */}
-                <div className="footer-payment-card" title="Hipercard">
-                  <svg viewBox="0 0 120 45" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="10" y="6" width="100" height="33" rx="6" fill="#B0101A" transform="skewX(-14)" />
-                    <text x="58" y="27" fill="#FFFFFF" fontFamily="sans-serif" fontWeight="950" fontStyle="italic" fontSize="14" textAnchor="middle" letterSpacing="-0.5">Hipercard</text>
-                  </svg>
-                </div>
-                {/* Elo */}
-                <div className="footer-payment-card" title="Elo">
-                  <svg viewBox="0 0 50 50" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="25" cy="25" r="23" fill="#111111" />
-                    <text x="14" y="32" fill="#FFFFFF" fontFamily="sans-serif" fontWeight="900" fontSize="16" letterSpacing="-0.5">el</text>
-                    <g transform="translate(34, 25) scale(0.7)">
-                      <path d="M -8 -3 A 9 9 0 0 1 3 -9" fill="none" stroke="#E21B26" strokeWidth="4" strokeLinecap="round"/>
-                      <path d="M 5 -6 A 9 9 0 0 1 8 5" fill="none" stroke="#00A2E2" strokeWidth="4" strokeLinecap="round"/>
-                      <path d="M 6 8 A 9 9 0 0 1 -7 5" fill="none" stroke="#F4A21A" strokeWidth="4" strokeLinecap="round"/>
-                    </g>
-                  </svg>
-                </div>
-                {/* Boleto */}
-                <div className="footer-payment-card" data-payment="boleto" title={localize("Boleto Bancário")}>
-                  <svg viewBox="0 0 65 50" className="h-full w-full object-contain" xmlns="http://www.w3.org/2000/svg">
-                    <g transform="translate(8, 6) scale(0.7)">
-                      <rect x="0" y="0" width="6" height="32" fill="#000" />
-                      <rect x="9" y="0" width="2" height="32" fill="#000" />
-                      <rect x="13" y="0" width="8" height="32" fill="#000" />
-                      <rect x="24" y="0" width="3" height="32" fill="#000" />
-                      <rect x="30" y="0" width="6" height="32" fill="#000" />
-                      <rect x="39" y="0" width="2" height="32" fill="#000" />
-                      <rect x="43" y="0" width="8" height="32" fill="#000" />
-                      <rect x="54" y="0" width="3" height="32" fill="#000" />
-                      <rect x="60" y="0" width="6" height="32" fill="#000" />
-                    </g>
-                    <text x="32.5" y="36" fill="#000000" fontFamily="sans-serif" fontWeight="900" fontSize="6.5" textAnchor="middle" letterSpacing="-0.1">{localize("Boleto")}</text>
-                    <text x="32.5" y="43" fill="#000000" fontFamily="sans-serif" fontWeight="900" fontSize="6.5" textAnchor="middle" letterSpacing="-0.1">{localize("Bancário")}</text>
-                  </svg>
-                </div>
-              </div>
-            </div>
+          <nav aria-labelledby="footer-shop-title">
+            <h2 id="footer-shop-title" className="mb-3 font-display text-base font-bold text-white">
+              {copy('Loja', 'Shop', 'Tienda')}
+            </h2>
+            <ul className="space-y-1">
+              <li><Link to="/" className={linkClass}>{localize('Início')}</Link></li>
+              <li><Link to="/catalogo" className={linkClass}>{localize('Catálogo de Softwares')}</Link></li>
+            </ul>
+          </nav>
 
-            {/* Right: Security Certificates & Partners */}
-            <div className="footer-credential-panel space-y-4 text-left">
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block font-sans">
-                {localize("Segurança & Parceiros")}</span>
-              <div className="footer-partner-grid">
-                <div className="footer-trust-slot">
-                {/* Selo Oficial Trustpilot */}
-                <div className="flex items-center gap-2 bg-slate-900/60 border border-[#08ad88]/40 rounded-xl px-3 py-1.5 hover:border-[#08ad88] transition-all shadow-sm" title="Avaliações Verificadas no Trustpilot">
-                  <img src="/images/trustpilot-star.png" alt="Trustpilot" className="w-6 h-6 object-contain shrink-0" />
-                  <div className="text-left">
-                    <p className="text-[10px] font-black text-white leading-tight flex items-center gap-1">
-                      <span>Trustpilot</span>
-                      <span className="text-[#08ad88] font-extrabold">4.8/5</span>
-                    </p>
-                    <p className="text-[8px] text-slate-400 leading-none mt-0.5">Avaliações Verificadas</p>
-                  </div>
-                </div>
+          <nav aria-labelledby="footer-help-title">
+            <h2 id="footer-help-title" className="mb-3 font-display text-base font-bold text-white">
+              {copy('Ajuda', 'Help', 'Ayuda')}
+            </h2>
+            <ul className="space-y-1">
+              <li><Link to="/entrega-e-pagamento" className={linkClass}>{localize('Entrega e Pagamento Seguro')}</Link></li>
+              <li><Link to="/contato" className={linkClass}>{localize('Fale Conosco / Suporte')}</Link></li>
+              <li><Link to="/faq" className={linkClass}>{localize('FAQ / Dúvidas')}</Link></li>
+            </ul>
+          </nav>
 
-                </div>
+          <nav aria-labelledby="footer-company-title">
+            <h2 id="footer-company-title" className="mb-3 font-display text-base font-bold text-white">
+              {copy('Empresa e legal', 'Company & legal', 'Empresa y legal')}
+            </h2>
+            <ul className="space-y-1">
+              <li><Link to="/sobre-nos" className={linkClass}>{localize('Sobre Nós')}</Link></li>
+              <li>
+                <Link to="/termos" className={linkClass}>
+                  <FileText className="mr-2 h-4 w-4 shrink-0 text-slate-400" aria-hidden="true" />
+                  {localize('Termos de Uso')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacidade" className={linkClass}>
+                  <Shield className="mr-2 h-4 w-4 shrink-0 text-slate-400" aria-hidden="true" />
+                  {localize('Política de Privacidade')}
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </div>
 
-                {/* Selo Corel Partner */}
-                <div className="footer-partner-card" title="Corel Authorized Partner">
-                  <svg viewBox="36 57 348 108" className="footer-partner-logo" role="img" aria-label="Corel Authorized Partner" focusable="false">
-                    <image href="/images/corel-partner.webp" width="420" height="236" />
-                  </svg>
-                </div>
-
-                {/* Selo Autodesk */}
-                <div className="footer-partner-card" title="Autodesk Authorized Reseller">
-                  <svg viewBox="56 75 307 86" className="footer-partner-logo" role="img" aria-label="Autodesk Authorized Reseller" focusable="false">
-                    <image href="/images/autodesk-reseller.webp" width="420" height="236" />
-                  </svg>
-                </div>
-
-                {/* Selo Microsoft Partner */}
-                <div className="footer-partner-card" title="Microsoft Partner Network">
-                  <svg viewBox="77 71 264 84" className="footer-partner-logo" role="img" aria-label="Microsoft Partner Network" focusable="false">
-                    <image href="/images/microsoft-partner.webp" width="420" height="236" />
-                  </svg>
-                </div>
-
-                {/* Selo Promob Authorized Reseller */}
-                <div className="footer-partner-card" title="Promob Authorized Reseller">
-                  <svg viewBox="53 65 319 107" className="footer-partner-logo" role="img" aria-label="Promob Authorized Reseller" focusable="false">
-                    <image href="/images/promob-reseller.webp" width="420" height="236" />
-                  </svg>
-                </div>
-
-                {/* Selo Compra 100% Segura */}
-                <div className="footer-assurance-card border-emerald-500/20">
-                  <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400">
-                    <svg viewBox="0 0 24 24" className="w-4.5 h-4.5 stroke-current fill-none" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
-                  </div>
-                  <div className="text-left">
-                    <p className="text-[9px] font-extrabold text-white leading-tight uppercase tracking-wider">
-                      {localize(language === 'en' ? '100% Secure Purchase' : 'Compra 100% Segura')}
-                    </p>
-                    <p className="text-[8px] text-slate-450 text-slate-400 leading-none">
-                      {localize(language === 'en' ? 'SSL Encryption (HTTPS)' : language === 'es' ? 'Cifrado SSL (HTTPS)' : 'Criptografia SSL (HTTPS)')}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Selo Loja Protegida */}
-                <div className="footer-assurance-card border-sky-500/20">
-                  <div className="w-8 h-8 rounded-full bg-sky-500/10 flex items-center justify-center text-sky-400">
-                    <svg viewBox="0 0 24 24" className="w-4.5 h-4.5 stroke-current fill-none" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    </svg>
-                  </div>
-                  <div className="text-left">
-                    <p className="text-[9px] font-extrabold text-white leading-tight uppercase tracking-wider">
-                      {localize(language === 'en' ? 'Protected Store' : language === 'es' ? 'Tienda Protegida' : 'Loja Protegida')}
-                    </p>
-                    <p className="text-[8px] text-slate-450 text-slate-400 leading-none">
-                      {localize(language === 'en' ? '100% Secure Environment' : language === 'es' ? 'Ambiente 100% Seguro' : 'Ambiente 100% Seguro')}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Separator */}
-          <hr className="border-slate-800/60 my-10" />
-
-          {/* Legal Compliance Text (Licença Alternativa) - Clean styling */}
-          <div className="text-[11px] text-slate-500/80 space-y-3 max-w-5xl leading-relaxed">
-            <p>
-              <strong>{localize(language === 'en' ? 'Important informative note:' : language === 'es' ? 'Nota informativa importante:' : 'Nota informativa importante:')}</strong>{localize(' ')}
-              {localize(language === 'en'
-                ? 'The products sold on this website are provided under an alternative license for personal and professional local use. The purchased access is lifetime for the specific version purchased, configured for local machine use without the need for recurring subscriptions or monthly fees.'
-                : language === 'es'
-                ? 'Los productos comercializados en este sitio web se suministran bajo la modalidad de licencia alternativa para uso personal y profesional de forma local. El acceso adquirido es vitalicio para la versión específica comprada, configurada para funcionamiento en máquina local sin necesidad de suscripciones recurrentes ni mensualidades.'
-                : 'Os produtos comercializados neste site são fornecidos sob a modalidade de licença alternativa para uso pessoal e profissional de forma local. O acesso adquirido é vitalício para a versão específica comprada, configurada para funcionamento em máquina local sem necessidade de assinaturas recorrentes ou mensalidades.')}
+        <section aria-labelledby="footer-contact-title" className="grid gap-5 border-b border-slate-700/80 py-7 lg:grid-cols-[1fr_auto_auto] lg:items-center lg:gap-8">
+          <div>
+            <h2 id="footer-contact-title" className="font-display text-base font-bold text-white">
+              {copy('Precisa de ajuda?', 'Need help?', '¿Necesitas ayuda?')}
+            </h2>
+            <p className="mt-1 text-sm text-slate-300">
+              {copy('Fale com a equipe C2Tech.', 'Contact the C2Tech team.', 'Habla con el equipo de C2Tech.')}
             </p>
           </div>
 
-          {/* Separator */}
-          <hr className="border-slate-800/60 my-6" />
-
-          {/* Bottom Bar: Copyright & CNPJ */}
-          <div className="flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-4">
-            <p className="text-center sm:text-left">
-              &copy; {currentYear} C2Tech. {localize(language === 'en' ? 'All rights reserved.' : language === 'es' ? 'Todos los derechos reservados.' : 'Todos os direitos reservados.')}
+          <div>
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 max-w-full flex-wrap items-center justify-center gap-2 rounded-lg bg-feedback-success-strong px-4 py-2 font-semibold text-white transition-colors hover:bg-emerald-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-emerald-300 sm:justify-start">
+              <WhatsAppIcon className="h-5 w-5 shrink-0" aria-hidden="true" />
+              {copy('Falar no WhatsApp', 'Chat on WhatsApp', 'Hablar por WhatsApp')}
+              <span className="break-words font-normal text-emerald-50">+55 (81) 99734-9300</span>
+            </a>
+            <p className="mt-2 text-xs text-slate-300">
+              {copy('Todos os dias, das 09h às 20h (horário de Brasília)', 'Daily, 9 am–8 pm (Brasília time)', 'Todos los días, de 09:00 a 20:00 (hora de Brasilia)')}
             </p>
-            <div className="text-slate-600 text-[10px]">
-              {localize(language === 'en' ? 'Focus on the project, technology within your reach.' : language === 'es' ? 'Foco en el proyecto, tecnología a su alcance.' : 'Foco no projeto, tecnologia ao seu alcance.')}
-            </div>
           </div>
 
+          <a href="mailto:c2tech2025@gmail.com" className="inline-flex min-h-10 items-center gap-2 text-sm text-slate-200 underline decoration-slate-500 underline-offset-4 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-300">
+            <Mail className="h-4 w-4 shrink-0" aria-hidden="true" />
+            c2tech2025@gmail.com
+          </a>
+        </section>
+
+        <section aria-labelledby="footer-terms-title" className="border-b border-slate-700/80 py-7">
+          <h2 id="footer-terms-title" className="font-display text-sm font-bold text-white">
+            {copy('Licenças e prazos de acesso', 'Licenses and access terms', 'Licencias y plazos de acceso')}
+          </h2>
+          <p className="mt-2 max-w-[72ch] text-sm leading-relaxed text-slate-300">
+            {copy(
+              'Os produtos têm modalidades e prazos de acesso diferentes. Alguns oferecem acesso vitalício à versão adquirida; outros têm planos por prazo determinado. Antes da compra, confira as informações do produto sobre versão, compatibilidade, prazo e atualizações.',
+              'Products have different license types and access periods. Some provide lifetime access to the purchased version; others have time-limited plans. Before buying, check the product information for version, compatibility, access period and updates.',
+              'Los productos tienen diferentes modalidades de licencia y plazos de acceso. Algunos ofrecen acceso de por vida a la versión adquirida; otros tienen planes por tiempo limitado. Antes de comprar, consulta la información del producto sobre versión, compatibilidad, plazo y actualizaciones.'
+            )}
+          </p>
+        </section>
+
+        <div className="flex flex-col gap-2 pt-5 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between lg:pr-72">
+          <p className="text-center sm:text-left">
+            &copy; {currentYear} C2Tech. {copy('Todos os direitos reservados.', 'All rights reserved.', 'Todos los derechos reservados.')}
+          </p>
+          <p className="text-center sm:text-right">
+            {copy('Foco no projeto, tecnologia ao seu alcance.', 'Focus on the project, technology within your reach.', 'Foco en el proyecto, tecnología a tu alcance.')}
+          </p>
         </div>
       </div>
     </footer>

@@ -1,8 +1,13 @@
+import { CardReturnPage } from './pages/CardReturnPage';
+import { MobileSearchEntry, MobileSearchPage } from './components/MobileSearch';
 import { PageMetadata } from './components/PageMetadata';
 import { lazy, Suspense, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
+import { LiveChat } from './components/LiveChat';
+const CartPage = lazy(() => import('./pages/CartPage').then(module => ({ default: module.CartPage })));
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage').then(module => ({ default: module.CheckoutPage })));
 const Home = lazy(() => import('./pages/Home').then(module => ({ default: module.Home })));
 const Catalog = lazy(() => import('./pages/Catalog').then(module => ({ default: module.Catalog })));
 const ProductDetail = lazy(() => import('./pages/ProductDetail').then(module => ({ default: module.ProductDetail })));
@@ -45,15 +50,20 @@ return (
         <CartProvider>
         <BrowserRouter>
           <ScrollToTop />
+          <MobileSearchEntry />
           <PageMetadata />
-          <div className="flex flex-col min-h-screen bg-white text-slate-800 antialiased selection:bg-accent-blue/10 selection:text-accent-blue">
+          <div className="flex flex-col min-h-screen bg-white text-slate-800 antialiased selection:bg-action-primary/10 selection:text-action-primary">
             {/* Sticky Header */}
             <Header />
 
             {/* Main Content Area */}
-            <main className="flex-grow">
-              <Suspense fallback={<div className="min-h-[60vh] pt-32 flex justify-center" role="status" aria-label="Loading"><span className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>}>
+            <main className="flex-grow xl:pt-8">
+              <Suspense fallback={<div className="min-h-[60vh] pt-32 flex justify-center" role="status" aria-label="Loading"><span className="w-8 h-8 border-2 border-action-primary border-t-transparent rounded-full animate-spin" /></div>}>
               <Routes>
+                <Route path="/buscar" element={<MobileSearchPage />} />
+                <Route path="/carrinho" element={<CartPage />} />
+                <Route path="/pagamento-cartao" element={<CardReturnPage />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/catalogo" element={<Catalog />} />
                 <Route path="/produto/:slug" element={<ProductDetail />} />
@@ -75,9 +85,11 @@ return (
 
             {/* Footer */}
             <Footer />
+            <CartDrawer />
+            <LiveChat />
 
             {/* Cart Drawer */}
-            <CartDrawer />
+
             <Analytics />
           </div>
         </BrowserRouter>

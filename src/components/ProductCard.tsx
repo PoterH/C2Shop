@@ -1,14 +1,13 @@
+import { galleryImageSource } from '../data/galleryImages';
 import { useText } from '../hooks/useText';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Send, Info, Star, ShoppingCart } from 'lucide-react';
+import { Info, Star } from 'lucide-react';
 import type { Product } from '../data/products';
 import { reviewsData } from '../data/reviews';
-import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
-import { getEffectiveCheckoutUrl } from '../data/internationalCheckouts';
 import { useCurrency } from '../context/CurrencyContext';
-import { translateCategory } from '../utils/i18n';
+import { AnimatedPrice } from './AnimatedPrice';
 
 interface ProductCardProps {
   product: Product;
@@ -16,8 +15,7 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const localize = useText();
-  const { addToCart } = useCart();
-  const { language, isInternational, t } = useLanguage();
+  const { language, t } = useLanguage();
   const { formatPrice } = useCurrency();
   const productReviews = reviewsData[product.id] || [];
   const averageRating = productReviews.length > 0
@@ -31,62 +29,23 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     ? formatPrice(product.recurrencePrice)
     : undefined;
 
-  // Determine OS Icon
-  const renderOSIcon = () => {
-    if (product.compatibility === 'Windows') {
-      return (
-        <span className="inline-flex items-center text-xs text-slate-500 font-medium">
-          <svg className="w-3 h-3 mr-1.5 fill-current text-slate-400" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 3.449L9.75 2.1v9.45H0V3.449zM0 12.45h9.75v9.45L0 20.551v-8.1zM11.25 1.89L24 0v11.55H11.25V1.89zM11.25 12.45H24v11.55l-12.75-1.89v-9.66z" />
-          </svg>
-          Windows
-        </span>
-      );
-    } else if (product.compatibility === 'macOS') {
-      return (
-        <span className="inline-flex items-center text-xs text-slate-500 font-medium">
-          <svg className="w-3.5 h-3.5 mr-1 fill-current text-slate-400 -mt-0.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.21.67-2.93 1.49-.62.69-1.16 1.84-1.01 2.96 1.12.09 2.27-.57 2.95-1.39z"/>
-          </svg>
-          macOS
-        </span>
-      );
-    } else {
-      return (
-        <span className="inline-flex items-center text-xs text-slate-500 font-medium gap-1">
-          <svg className="w-3 h-3 fill-current text-slate-400" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 3.449L9.75 2.1v9.45H0V3.449zM0 12.45h9.75v9.45L0 20.551v-8.1zM11.25 1.89L24 0v11.55H11.25V1.89zM11.25 12.45H24v11.55l-12.75-1.89v-9.66z" />
-          </svg>
-          <svg className="w-3.5 h-3.5 fill-current text-slate-400 -mt-0.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.21.67-2.93 1.49-.62.69-1.16 1.84-1.01 2.96 1.12.09 2.27-.57 2.95-1.39z"/>
-          </svg>
-          <span className="text-[10px] sm:text-xs">Win / Mac</span>
-        </span>
-      );
-    }
-  };
-
 
   return (
-    <div className="relative group bg-white rounded-3xl border border-slate-100 hover:border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full">
-      {product.isRecommended && (
-        <div className="absolute -top-3 left-4 z-20 bg-red-600 text-white text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg shadow-[0_4px_12px_rgba(220,38,38,0.4)] flex items-center gap-1 border border-red-500">
-          <Star className="w-3.5 h-3.5 fill-current" /> {localize(" RECOMENDADO")}</div>
-      )}
+    <div className="product-card relative group bg-white rounded-card border border-slate-100 hover:border-slate-200 shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col h-full">
       <Link to={`/produto/${product.slug}`} className="flex flex-col flex-1 hover:no-underline text-inherit">
         {/* Product Image / Visual Area */}
-        <div className="relative h-44 bg-slate-50 rounded-t-[23px] flex items-center justify-center border-b border-slate-50 overflow-hidden">
+        <div className="product-card-visual relative h-[210px] sm:h-[241px] bg-white rounded-t-card flex items-center justify-center overflow-hidden">
           {product.imageUrl ? (
             <img
-              src={product.imageUrl}
+              src={galleryImageSource(product.imageUrl)}
               alt={product.name}
-              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              className="motion-card-image absolute inset-0 w-full h-full p-3 object-contain"
               loading="lazy"
             />
           ) : (
             <>
               {/* Soft Decorative Gradient in Background */}
-              <div className="absolute inset-0 bg-radial from-slate-100 to-slate-50 group-hover:scale-105 transition-transform duration-500"></div>
+              <div className="motion-card-image absolute inset-0 bg-radial from-slate-100 to-slate-50"></div>
 
               {/* Mockup software card representation */}
               <div className="relative w-28 h-32 bg-slate-900 text-white rounded-xl shadow-lg border border-slate-700/50 flex flex-col justify-between p-3.5 transform group-hover:-translate-y-1.5 transition-transform duration-300">
@@ -94,7 +53,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   <span className="text-xl font-bold font-display tracking-tight text-white select-none">
                     C2
                   </span>
-                  <span className="bg-white/10 text-white/90 text-[8px] font-bold px-1.5 py-0.5 rounded uppercase">
+                  <span className="bg-white/10 text-white/90 text-xs font-bold px-1.5 py-0.5 rounded uppercase">
                     {localize(product.compatibility)}
                   </span>
                 </div>
@@ -103,14 +62,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   <span className="text-xs font-semibold leading-tight line-clamp-2 text-slate-200">
                     {localize(product.name)}
                   </span>
-                  <span className="text-[9px] text-accent-blue font-medium mt-0.5">
+                  <span className="text-xs text-action-primary font-medium mt-0.5">
                     v{localize(product.version.split(' ')[0])}
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between border-t border-white/10 pt-1.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
-                  <span className="text-[7px] text-white/60 font-semibold tracking-wider uppercase">
+                  <span className="text-xs text-white/60 font-semibold tracking-wider uppercase">
                     {localize("Vitalício")}</span>
                 </div>
               </div>
@@ -129,113 +88,50 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           )}
         </div>
 
-        {/* Product Info */}
-        <div className="p-3 sm:p-5 pb-0 flex-1 flex flex-col">
-          {/* Category & OS */}
-          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
-            <span className="text-[9px] sm:text-[11px] font-bold text-accent-blue uppercase tracking-wider truncate pr-1">
-              {localize(translateCategory(product.category, language))}
+        <div className="px-3.5 sm:px-5 pt-3 pb-4 flex-1 flex flex-col gap-2">
+          {product.originalPrice > product.price && !product.recurrencePrice && (
+            <span className="self-start rounded bg-feedback-success-strong px-2 py-1 text-xs font-semibold text-white">
+              {localize(language === 'en' ? 'Save ' : language === 'es' ? 'Ahorra ' : 'Economize ')}{formatPrice(product.originalPrice - product.price)}
             </span>
-            {renderOSIcon()}
-          </div>
-
-          {/* Title */}
-          <h3 className="font-display font-bold text-sm sm:text-lg leading-tight sm:leading-normal text-slate-900 group-hover:text-accent-blue transition-colors duration-200 mb-1">
+          )}
+          <h3 className="font-display font-semibold text-base sm:text-lg leading-snug text-slate-900 group-hover:text-action-primary transition-colors">
             {localize(product.name)}
           </h3>
-
-          {/* Rating Summary */}
+          <div className="space-y-1 text-[10px] sm:text-xs leading-snug text-slate-600">
+            <p className="line-clamp-1" title={product.compatibility}>
+              <span className="font-semibold text-slate-700">
+                {localize(language === 'en' ? 'Compatible with' : language === 'es' ? 'Compatible con' : 'Compatível com')}:
+              </span>{' '}
+              {localize(product.compatibility)}
+            </p>
+            <p className="line-clamp-1" title={product.version}>
+              <span className="font-semibold text-slate-700">
+                {localize(language === 'en' ? 'Version' : language === 'es' ? 'Versión' : 'Versão')}:
+              </span>{' '}
+              {localize(product.version)}
+            </p>
+          </div>
           {productReviews.length > 0 && (
-            <div className="flex items-center space-x-1 text-[11px] mb-1.5">
-              <div className="flex space-x-0.5">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    className={`w-3.5 h-3.5 ${
-                      star <= Math.round(parseFloat(averageRating))
-                        ? 'fill-amber-400 text-amber-400'
-                        : 'text-slate-200 fill-slate-200'
-                    }`}
-                  />
+            <div className="flex items-center gap-1 text-xs" aria-label={localize(averageRating + ' / 5')}>
+              <div className="flex gap-0.5" aria-hidden="true">
+                {[1, 2, 3, 4, 5].map(star => (
+                  <Star key={star} className={`w-4 h-4 sm:w-5 sm:h-5 ${star <= Math.round(Number(averageRating)) ? 'fill-amber-400 text-amber-400' : 'fill-slate-200 text-slate-200'}`} />
                 ))}
               </div>
-              <span className="font-bold text-slate-700">{localize(averageRating)}</span>
-              <span className="text-slate-400">({productReviews.length})</span>
+              <span className="text-slate-500">({productReviews.length})</span>
             </div>
           )}
-
-          {/* Version Badge for clarity */}
-          <div className="mb-2 sm:mb-4">
-            <span className="inline-block bg-slate-100 text-slate-600 text-[9px] sm:text-[11px] font-medium px-1.5 sm:px-2 py-0.5 rounded">
-              {localize(product.version.length > 20 ? product.version.slice(0, 18) + '...' : product.version)}
-            </span>
-          </div>
-
-          {/* Pricing & CTA */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-2 sm:mb-4 gap-1 sm:gap-0">
-            <div className="flex flex-col">
-              {product.isSubscription ? (
-                <>
-                  <span className="text-[9px] sm:text-[10px] text-slate-400 font-medium">
-                    {localize(product.recurrencePrice ? `Único: ${formattedPrice}` : `De: ${formattedOriginalPrice}`)}
-                  </span>
-                  <span className="text-base sm:text-xl font-display font-extrabold text-slate-900 tracking-tight leading-none sm:leading-normal">
-                    {localize("Por: ")}<span className="text-purple-600">{product.recurrencePrice ? formattedRecurrencePrice : formattedPrice}</span><span className="text-[10px] sm:text-xs text-slate-500 font-normal">{localize("/mês")}</span>
-                  </span>
-                  <span className="text-[8px] sm:text-[9px] text-emerald-600 font-bold uppercase tracking-wider hidden sm:block">
-                    {localize("Desconto na assinatura")}</span>
-                </>
-              ) : (
-                <>
-                  <span className="text-[9px] sm:text-[10px] text-slate-400 line-through">
-                    {localize(t('original_price'))} {localize(formattedOriginalPrice)}
-                  </span>
-                  <span className="text-base sm:text-xl font-display font-extrabold text-slate-900 tracking-tight leading-none sm:leading-normal">
-                    {localize(t('for_price'))} <span className="text-accent-blue">{localize(formattedPrice)}</span>
-                  </span>
-                  <span className="text-[8px] sm:text-[9px] text-emerald-600 font-semibold uppercase hidden sm:block">
-                    {localize(language === 'en' ? 'No monthly fees' : language === 'es' ? 'Sin mensualidades' : 'Sem mensalidades')}
-                  </span>
-                </>
-              )}
-            </div>
-
-            <span className="text-[8px] sm:text-[10px] text-slate-400 bg-slate-50 border border-slate-100 rounded px-1.5 py-0.5 font-medium shrink-0 self-start sm:self-auto">
-              {localize(isInternational ? (language === 'en' ? 'Card / Pay' : language === 'es' ? 'Tarjeta / Pay' : 'Cartões / Pay') : 'Pix / Cartão')}
-            </span>
-          </div>
-
-          {/* Badges / Status */}
-          <div className="flex flex-col items-start gap-1 mb-2">
-            {product.unavailable ? (
-              <span className="bg-rose-50 text-rose-700 text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center border border-rose-200 uppercase tracking-wider">
-                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-rose-500 mr-1.5 animate-pulse"></span>
-                {localize("Indisponível")}</span>
-            ) : product.isSubscription ? (
-              <span className="bg-purple-50 text-purple-700 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center border border-purple-200">
-                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-purple-500 mr-1.5 animate-pulse"></span>
-                {localize(product.id === 'autodesk_all_apps' ? 'Produto original' : 'Plano mensal')}
-              </span>
-            ) : (
-              <>
-                {product.category === 'Chaves de Ativação' ? (
-                  <span className="bg-amber-50 text-amber-700 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center border border-amber-200">
-                    <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-amber-500 mr-1.5"></span>
-                    {localize("Chave original")}</span>
-                ) : (
-                  <span className="bg-emerald-50 text-emerald-700 text-[8px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center border border-emerald-200">
-                    <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
-                    {localize(t('badge_lifetime'))}
-                  </span>
-                )}
-                {product.category !== 'Chaves de Ativação' && (
-                  <span className="text-emerald-600 text-[9px] sm:text-[11px] font-semibold flex items-center mt-0.5">
-                    <Send className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1 shrink-0" />
-                    <span className="truncate">{localize(language === 'en' ? 'Instant delivery' : language === 'es' ? 'Entrega inmediata' : 'Entrega imediata')}</span>
-                  </span>
-                )}
-              </>
+          <div className="mt-auto pt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <AnimatedPrice
+              value={product.recurrencePrice || product.price}
+              formatted={product.recurrencePrice ? formattedRecurrencePrice! : formattedPrice}
+              className="text-xl sm:text-2xl font-display font-extrabold text-action-primary tracking-tight"
+            />
+            {product.isSubscription && <span className="text-xs font-normal text-slate-600">{localize('/mês')}</span>}
+            {product.originalPrice > product.price && !product.recurrencePrice && (
+              <span className="text-xs sm:text-sm text-slate-500 line-through">{formattedOriginalPrice}</span>
             )}
+            {product.isSubscription && <span className="w-full text-xs text-slate-600">{localize('Assinatura')}</span>}
           </div>
         </div>
       </Link>
@@ -245,30 +141,32 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {product.unavailable ? (
           <Link
             to={`/produto/${product.slug}`}
-            className="flex items-center justify-center py-2.5 px-4 border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors duration-200 w-full"
+            className="t-learn flex items-center justify-center py-2.5 px-4 border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors duration-200 w-full"
           >
             <Info className="w-3.5 h-3.5 mr-1.5 text-slate-400" />
             {localize(language === 'en' ? 'View software details' : language === 'es' ? 'Ver detalles del software' : 'Ver detalhes do software')}
+            <LearnMoreChevron />
           </Link>
         ) : (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              if (isInternational && (!product.licenseOptions || product.licenseOptions.length === 0)) {
-                const url = getEffectiveCheckoutUrl(product, undefined, true);
-                window.open(url, '_blank', 'noopener,noreferrer');
-              } else {
-                addToCart(product);
-              }
-            }}
-            className="flex items-center justify-center w-full py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-xs font-bold text-white transition-all duration-200 shadow-[0_4px_12px_rgba(16,185,129,0.3)] hover:shadow-[0_6px_16px_rgba(16,185,129,0.4)] border-none text-center transform hover:-translate-y-0.5 active:translate-y-0"
-            id={`add-to-cart-${product.id}`}
+          <Link
+            to={`/produto/${product.slug}`}
+            className="t-learn motion-press flex items-center justify-center w-full min-h-11 py-3 px-3 rounded-control bg-sky-50 hover:bg-sky-100 text-sm font-bold text-action-primary border-none text-center focus-visible:outline-2 focus-visible:outline-action-primary focus-visible:outline-offset-2"
+            id={`view-details-${product.id}`}
           >
-            <ShoppingCart className="w-4 h-4 mr-1.5" />
-            {localize(isInternational ? t('want_this') : 'Quero levar')}
-          </button>
+            {localize(language === 'en' ? 'View details' : language === 'es' ? 'Ver detalles' : 'Ver detalhes')}
+            <LearnMoreChevron />
+          </Link>
         )}
       </div>
     </div>
   );
 };
+
+const LearnMoreChevron: React.FC = () => (
+  <span className="t-learn-chevron ml-1.5 inline-flex" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path className="t-learn-arm t-learn-arm-top" d="M6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path className="t-learn-arm t-learn-arm-bot" d="M10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  </span>
+);

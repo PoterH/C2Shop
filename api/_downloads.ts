@@ -1,4 +1,14 @@
+import { products } from './_products.js';
+
 export const DOWNLOAD_LINKS: Record<string, string> = {
+"revit-2024": "https://drive.google.com/drive/folders/1i31lC4zUxAAYyKLRqNuR79fdnCmPvBpr?usp=drive_link",
+"revit-2025": "https://drive.google.com/drive/folders/1-XFTsL415cVi4mJ6HCYD78B3_H_o5SgD?usp=drive_link",
+"rhinoceros-8-mac": "https://drive.google.com/drive/folders/1gKuIUT5TqObb3V-znZtlKYx0NZNwp6rb?usp=drive_link",
+"fl-studio-2025-producer-edition": "https://drive.google.com/drive/folders/1puLyWQPEB_NgWhxAOC6yYyhycO5V5AZF?usp=drive_link",
+  'tqs-24-7': 'https://drive.google.com/drive/folders/1XjuMbUacZXd1F5A3z8bJw6Do7e__AOLY?usp=sharing',
+  'parallels-desktop-27': "https://drive.google.com/drive/folders/1z6eL7yiGFPsDWAjZdA7Yl5dhK5Q_uz2V?usp=sharing",
+  'sketchup-pro-2027-windows': 'https://drive.google.com/drive/folders/1rcSMvCV5MFqJunxKwrAR3_olmBFtuNZT?usp=sharing',
+  'sketchup-pro-2027-macos': 'https://drive.google.com/drive/folders/1AzyE3jJ1ER1RKyA6sI-dfCn1uvbJqAcM?usp=drive_link',
   'revit-2027': 'https://drive.google.com/open?id=1YdxxNNicaiknsAAVaqHMK2ol7tEFldr_',
   'autocad-2027-windows': 'https://drive.google.com/open?id=1E2tzYel-p9sUbNFJTc69eZx1Cu2Psghk',
   'autocad-2026-windows': 'https://drive.google.com/drive/folders/1dPfNigOwUAm9HzpQJopKDrB-dLKhirt6?usp=drive_link',
@@ -97,5 +107,12 @@ export const DOWNLOAD_LINKS: Record<string, string> = {
 };
 
 export function getDownloadLink(slug: string): string {
+  // Edition-specific links from the shared catalog take precedence over old aliases.
+  for (const product of products) {
+    const option = product.licenseOptions?.find(option => option.downloadSlug === slug);
+    if (option?.driveUrl) return option.driveUrl;
+  }
+  const product = products.find(product => product.slug === slug);
+  if (product?.driveUrl) return product.driveUrl;
   return DOWNLOAD_LINKS[slug] || `https://wa.me/5581997349300?text=Olá,%20acabei%20de%20comprar%20um%20software%20e%20gostaria%20de%20receber%20o%20link%20de%20download.`;
 }

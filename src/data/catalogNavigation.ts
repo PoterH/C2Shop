@@ -2,7 +2,7 @@ import type { Product } from './products';
 // Curated collections allow tools to appear in every relevant profession.
 export const CATALOG_SECTIONS = [
   {
-    "title": "Microsoft",
+    "title": "Produtividade & Utilitários",
     "groups": [
       {
         "title": "Microsoft Office & Windows",
@@ -49,7 +49,7 @@ export const CATALOG_SECTIONS = [
     ]
   },
   {
-    "title": "Marcenaria",
+    "title": "Projetos Técnicos",
     "groups": [
       {
         "title": "Marcenaria & Móveis Planejados",
@@ -94,6 +94,7 @@ export const CATALOG_SECTIONS = [
       {
         "title": "Cálculo, Estruturas & Render",
         "slugs": [
+          "tqs-24-7",
           "eberick-builder-2025",
           "cypecad-2026",
           "solidworks-2026",
@@ -111,9 +112,17 @@ export const CATALOG_SECTIONS = [
   }
 ];
 export const catalogLink = (title: string) => '/catalogo?categoria=' + encodeURIComponent(title);
+const CATEGORY_ALIASES: Record<string, string> = {
+  Microsoft: 'Produtividade & Utilitários',
+  Marcenaria: 'Projetos Técnicos',
+};
+
+export const resolveCatalogCategory = (title: string) => CATEGORY_ALIASES[title] ?? title;
+
 export function matchesCatalogCategory(product: Product, title: string): boolean {
- if (title === 'Todos') return true;
- const section = CATALOG_SECTIONS.find(s => s.title === title);
- const groups = section?.groups ?? CATALOG_SECTIONS.flatMap(s => s.groups).filter(g => g.title === title);
- return groups.length ? groups.some(g => g.slugs.includes(product.slug)) : product.category === title;
+ const resolvedTitle = resolveCatalogCategory(title);
+ if (resolvedTitle === 'Todos') return true;
+ const section = CATALOG_SECTIONS.find(s => s.title === resolvedTitle);
+ const groups = section?.groups ?? CATALOG_SECTIONS.flatMap(s => s.groups).filter(g => g.title === resolvedTitle);
+ return groups.length ? groups.some(g => g.slugs.includes(product.slug)) : product.category === resolvedTitle;
 }

@@ -1,7 +1,8 @@
+import { WhatsAppIcon } from '../components/WhatsAppIcon';
 import { useText } from '../hooks/useText';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, CreditCard, Mail, Settings, ArrowRight, MessageSquare } from 'lucide-react';
+import { ShoppingBag, CreditCard, Mail, Settings, ArrowRight } from 'lucide-react';
 
 export const HowItWorksPage: React.FC = () => {
   const localize = useText();
@@ -38,7 +39,7 @@ export const HowItWorksPage: React.FC = () => {
 
         {/* Header */}
         <div className="text-center space-y-4 mb-16">
-          <span className="bg-emerald-500/10 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider inline-block">
+          <span className="bg-feedback-success/10 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider inline-block">
             {localize("Processo Simples e Transparente")}</span>
           <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
             {localize("Como funciona a C2Tech?")}</h1>
@@ -77,7 +78,7 @@ export const HowItWorksPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
             <Link
               to="/catalogo"
-              className="px-6 py-3.5 bg-accent-blue hover:bg-accent-blue-dark text-white font-bold rounded-2xl shadow hover:shadow-lg transition-all flex items-center justify-center"
+              className="px-6 py-3.5 bg-action-primary hover:bg-action-primary-hover text-white font-bold rounded-2xl shadow hover:shadow-lg transition-all flex items-center justify-center"
             >
               {localize("Navegar no catálogo")}<ArrowRight className="w-5 h-5 ml-2" />
             </Link>
@@ -87,7 +88,7 @@ export const HowItWorksPage: React.FC = () => {
               rel="noopener noreferrer"
               className="px-6 py-3.5 bg-slate-800 hover:bg-slate-755 text-slate-200 hover:text-white font-bold rounded-2xl border border-slate-700 transition-all flex items-center justify-center"
             >
-              <MessageSquare className="w-5 h-5 text-emerald-500 mr-2" />
+              <WhatsAppIcon className="w-5 h-5 text-feedback-success mr-2" />
               {localize("Tirar dúvidas no WhatsApp")}</a>
           </div>
         </div>

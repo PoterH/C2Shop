@@ -1,6 +1,7 @@
+import { WhatsAppIcon } from '../components/WhatsAppIcon';
 import { useText } from '../hooks/useText';
 import React from 'react';
-import { MessageSquare, Clock, ShieldAlert, HelpCircle } from 'lucide-react';
+import { Clock, ShieldAlert, HelpCircle } from 'lucide-react';
 
 export const SupportPage: React.FC = () => {
   const localize = useText();
@@ -14,7 +15,7 @@ export const SupportPage: React.FC = () => {
 
         {/* Header */}
         <div className="text-center space-y-4 mb-12">
-          <span className="bg-emerald-500/10 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider inline-block">
+          <span className="bg-feedback-success/10 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider inline-block">
             {localize("Suporte Técnico Especializado")}</span>
           <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
             {localize("Central de Suporte C2Tech")}</h1>
@@ -43,7 +44,7 @@ export const SupportPage: React.FC = () => {
                 <h4 className="text-sm font-bold text-slate-900">{localize("Horário de Atendimento")}</h4>
                 <p className="text-xs text-slate-500 leading-relaxed">
                   {localize("Segunda a Domingo")}<br />
-                  <strong>{localize("Das 09:00 às 22:00")}</strong>
+                  <strong>{localize("Das 09:00 às 20:00")}</strong>
                 </p>
               </div>
             </div>
@@ -76,9 +77,9 @@ export const SupportPage: React.FC = () => {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl shadow-lg transition-all"
+              className="inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-feedback-success hover:bg-emerald-600 text-white font-bold rounded-2xl shadow-lg transition-all"
             >
-              <MessageSquare className="w-5 h-5 mr-2" />
+              <WhatsAppIcon className="w-5 h-5 mr-2" />
               {localize("Falar com suporte no WhatsApp")}</a>
           </div>
 

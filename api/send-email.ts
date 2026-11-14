@@ -1,3 +1,4 @@
+import { deliverBoleto } from './_boleto.js';
 import { products } from './_products.js';
 import { getEfiInstance, isMockMode } from './_efi.js';
 import { sendConfirmationEmail } from './_email.js';
@@ -17,12 +18,17 @@ export default async function handler(req: any, res: any) {
     return res.status(405).json({ error: 'Método não permitido' });
   }
 
-  const { txid, productSlug, products: items, buyer, subOption } = req.body;
+  const { txid, productSlug, products: items, buyer, subOption, paymentMethod } = req.body;
 
   if (!txid || (!productSlug && (!items || !Array.isArray(items))) || !buyer || !buyer.email || !buyer.name) {
     return res.status(400).json({ error: 'Parâmetros obrigatórios ausentes' });
   }
 
+  if(paymentMethod === 'boleto') {
+    if(!/^\d+$/.test(String(txid)))return res.status(400).json({error:'Boleto inválido.'});
+    try {const result=await deliverBoleto(Number(txid));return res.status(result.paid?200:400).json({success:result.paid});}
+    catch{return res.status(502).json({error:'Falha ao entregar boleto confirmado.'});}
+  }
   // Backwards compatibility for single productSlug and array of products
   let emailItems: Array<{ slug: string }> = [];
   if (items && Array.isArray(items)) {
@@ -50,6 +56,7 @@ export default async function handler(req: any, res: any) {
     });
   }
 
+  let confirmedTotal: number | undefined;
   // Validação de segurança: verifica no Efí Bank se a transação do Pix realmente foi paga (CONCLUIDA)
   const isMock = isMockMode() || txid.startsWith('mock_');
   if (!isMock) {
@@ -60,6 +67,8 @@ export default async function handler(req: any, res: any) {
       }
 
       const response = await efi.pixDetailCharge({ txid });
+      const paidValue = Number(response.valor?.original);
+      if (Number.isFinite(paidValue) && paidValue > 0) confirmedTotal = paidValue;
       if (response.status !== 'CONCLUIDA') {
         return res.status(400).json({ 
           success: false, 
@@ -93,6 +102,15 @@ export default async function handler(req: any, res: any) {
       };
     });
 
+    if (confirmedTotal !== undefined) {
+      const weight = processedProducts.reduce((sum, item) => sum + item.price, 0);
+      let remaining = Math.round(confirmedTotal * 100);
+      processedProducts.forEach((item, index) => {
+        const cents = index === processedProducts.length - 1 ? remaining : Math.round(confirmedTotal! * 100 * item.price / weight);
+        item.price = cents / 100;
+        remaining -= cents;
+      });
+    }
     const totalValue = processedProducts.reduce((acc, item) => acc + item.price, 0);
     const clientIp = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() || req.socket?.remoteAddress;
     const userAgent = req.headers['user-agent'];

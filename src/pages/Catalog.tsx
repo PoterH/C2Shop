@@ -9,7 +9,7 @@ import {
   TrustGuaranteesModal
 } from '../components/TrustBadges';
 import { products } from '../data/products';
-import { CATALOG_SECTIONS, catalogLink, matchesCatalogCategory } from '../data/catalogNavigation';
+import { matchesCatalogCategory, resolveCatalogCategory } from '../data/catalogNavigation';
 import { ProductCard } from '../components/ProductCard';
 import {
   ChevronDown,
@@ -29,6 +29,16 @@ const CATEGORY_INFO: Record<string, CategoryInfo> = {
     title: 'Softwares Profissionais',
     shortDesc: 'Compre softwares profissionais com ativação permanente e sem mensalidades recorrentes. Tenha acesso às principais ferramentas de engenharia, arquitetura, design gráfico, escritório, marcenaria e odontologia digital com entrega imediata e garantia de funcionamento vitalício.',
     fullDesc: 'Trabalhe com máxima produtividade e economia adquirindo licenças definitivas com ativação facilitada. Todos os programas acompanham instalador simplificado, entrega digital instantânea via e-mail e WhatsApp, e suporte técnico especializado pronto para auxiliar você em cada etapa de instalação e uso.'
+  },
+  'Produtividade & Utilitários': {
+    title: 'Produtividade & Utilitários',
+    shortDesc: 'Aplicativos de escritório, sistemas Windows e ferramentas para PDF, virtualização e recuperação de dados.',
+    fullDesc: 'Encontre Microsoft Office e Windows, além de Adobe Acrobat, Parallels Desktop, Wondershare PDFelement e Recoverit. A compatibilidade e a versão variam conforme cada produto.'
+  },
+  'Projetos Técnicos': {
+    title: 'Projetos Técnicos',
+    shortDesc: 'Softwares para móveis planejados e CNC, modelagem, projetos elétricos, odontologia digital e engenharia.',
+    fullDesc: 'A coleção reúne Promob, Vectric Aspire, Rhinoceros, SketchUp, Proteus, Exocad, SisDEA, GEO5, Inventor e Navisworks. Confira a compatibilidade e a versão na página de cada produto.'
   },
   'Engenharia e Arquitetura': {
     title: 'Engenharia e Arquitetura',
@@ -97,7 +107,7 @@ export const Catalog: React.FC = () => {
   const localize = useText();
   const [searchParams, setSearchParams] = useSearchParams();
   const searchTerm = searchParams.get('q') || '';
-  const selectedCategory = searchParams.get('categoria') || 'Todos';
+  const selectedCategory = resolveCatalogCategory(searchParams.get('categoria') || 'Todos');
   const [sortBy, setSortBy] = useState<SortOption>('sales_desc');
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
@@ -143,7 +153,7 @@ export const Catalog: React.FC = () => {
   // Filtered and sorted products
   const sortedProducts = useMemo(() => {
     const searchTerm = searchParams.get('q') || '';
-    const selectedCategory = searchParams.get('categoria') || 'Todos';
+    const selectedCategory = resolveCatalogCategory(searchParams.get('categoria') || 'Todos');
     const filtered = products.filter((product) => {
       // 1. Search term filter
       if (searchTerm.trim()) {
@@ -203,7 +213,7 @@ export const Catalog: React.FC = () => {
 
         {/* Breadcrumb Navigation */}
         <nav className="flex items-center gap-1.5 text-xs text-slate-500 mb-3">
-          <Link to="/" className="hover:text-blue-600 transition-colors">
+          <Link to="/" className="hover:text-action-primary transition-colors">
             {localize(t('breadcrumb_home'))}
           </Link>
           <span>/</span>
@@ -214,7 +224,7 @@ export const Catalog: React.FC = () => {
               newParams.delete('categoria');
               setSearchParams(newParams, { replace: true });
             }}
-            className="hover:text-blue-600 transition-colors"
+            className="hover:text-action-primary transition-colors"
           >
             {localize(t('nav_catalog'))}
           </Link>
@@ -227,9 +237,9 @@ export const Catalog: React.FC = () => {
         </nav>
 
         {/* Trust Header: Trustpilot Rating (Left) & Guarantees Pill (Right) */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 pb-5 border-b border-slate-200/80">
-          <div className="max-w-full overflow-x-auto">
-            <TrustpilotRatingHorizontal onOpenModal={() => setIsGuaranteesModalOpen(true)} />
+        <div className="catalog-trust-row flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 mb-6 pb-5 border-b border-slate-200/80">
+          <div className="min-w-0 shrink-0">
+            <TrustpilotRatingHorizontal compact onOpenModal={() => setIsGuaranteesModalOpen(true)} />
           </div>
           <TrustGuaranteesPill onOpenModal={() => setIsGuaranteesModalOpen(true)} />
         </div>
@@ -251,7 +261,7 @@ export const Catalog: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-              className="inline-flex items-center text-xs sm:text-sm font-semibold text-[#0066FF] hover:text-blue-700 hover:underline mt-2 transition-colors focus:outline-none"
+              className="inline-flex items-center text-sm sm:text-base font-semibold text-[#0066FF] hover:text-blue-700 hover:underline mt-2 transition-colors focus:outline-none"
             >
               {localize(isDescriptionExpanded ? (language === 'en' ? 'Read less' : language === 'es' ? 'Leer menos' : 'Ler menos') : (language === 'en' ? 'Read more...' : language === 'es' ? 'Leer más...' : 'Ler mais...'))}
             </button>
@@ -259,7 +269,7 @@ export const Catalog: React.FC = () => {
 
           {/* Search Term active notification (if user searched via header) */}
           {searchTerm && (
-            <div className="mt-4 flex items-center justify-between bg-blue-50 border border-blue-200/70 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-blue-900 max-w-4xl">
+            <div className="mt-4 flex items-center justify-between bg-blue-50 border border-blue-200/70 rounded-xl px-4 py-2.5 text-sm sm:text-base text-blue-900 max-w-4xl">
               <div className="flex items-center gap-2">
                 <Search className="w-4 h-4 text-[#0066FF] shrink-0" />
                 <span>{localize(language === 'en' ? 'Search results for:' : language === 'es' ? 'Resultados de la búsqueda por:' : 'Resultados da busca por:')} <strong>"{localize(searchTerm)}"</strong></span>
@@ -278,32 +288,38 @@ export const Catalog: React.FC = () => {
 
         {/* Sub-bar: Products Count (Left) & Sort Dropdown (Right) */}
         <div className="border-y border-slate-200/80 py-3.5 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div className="text-xs sm:text-sm text-slate-500 font-medium">
+          <div className="text-sm sm:text-base text-slate-500 font-medium">
             {localize(language === 'en' ? 'Showing' : language === 'es' ? 'Mostrando' : 'Exibindo')} <span className="font-bold text-slate-800">{sortedProducts.length}</span> {localize(sortedProducts.length === 1 ? (language === 'en' ? 'product' : language === 'es' ? 'producto' : 'produto') : (language === 'en' ? 'products' : language === 'es' ? 'productos' : 'produtos'))} {localize(language === 'en' ? 'in category' : language === 'es' ? 'en la categoría' : 'na categoria')}
           </div>
 
-          <div className="flex items-center gap-2 relative self-start sm:self-auto" ref={dropdownRef}>
-            <span className="text-xs sm:text-sm text-slate-500 font-medium whitespace-nowrap">
+          <div className="t-acc flex items-center gap-2 relative self-start sm:self-auto" ref={dropdownRef} data-open={isSortOpen ? 'true' : 'false'}>
+            <span className="text-sm sm:text-base text-slate-500 font-medium whitespace-nowrap">
               {localize(language === 'es' ? 'Ordenar por:' : 'Ordenar por:')}
             </span>
 
             <button
               type="button"
               onClick={() => setIsSortOpen(!isSortOpen)}
-              className="inline-flex items-center justify-between gap-2.5 bg-white border border-slate-300 hover:border-slate-400 text-slate-700 text-xs sm:text-sm font-medium px-3.5 py-2 rounded-xl shadow-xs transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/20 min-w-[170px]"
+              className="inline-flex items-center justify-between gap-2.5 bg-white border border-slate-300 hover:border-slate-400 text-slate-700 text-sm sm:text-base font-medium px-3.5 py-2 rounded-xl shadow-xs transition-colors focus:outline-none focus:ring-2 focus:ring-action-primary/20 min-w-[170px]"
               aria-haspopup="listbox"
               aria-expanded={isSortOpen}
+              aria-controls="catalog-sort-options"
             >
               <span className="truncate">{localize(currentSortItem.label)}</span>
-              <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ${isSortOpen ? 'rotate-180 text-[#0066FF]' : ''}`} />
+              <span className="t-acc-chevron inline-flex shrink-0" aria-hidden="true">
+                <ChevronDown className="w-4 h-4 text-slate-400" />
+              </span>
             </button>
 
-            {/* Dropdown Menu matching Screenshot 3 */}
-            {isSortOpen && (
-              <div
-                className="absolute right-0 top-full mt-1.5 w-60 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 z-30"
-                role="listbox"
-              >
+            <div
+              id="catalog-sort-options"
+              className="t-acc-panel absolute right-0 top-full mt-1.5 w-60 z-30"
+              role="listbox"
+              aria-label={localize('Opções de ordenação')}
+              aria-hidden={!isSortOpen}
+              inert={!isSortOpen}
+            >
+              <div className="t-acc-panel-inner bg-white border border-slate-200 rounded-xl shadow-xl py-1.5">
                 {SORT_OPTIONS.map((option) => {
                   const isSelected = option.id === sortBy;
                   return (
@@ -314,7 +330,7 @@ export const Catalog: React.FC = () => {
                         setSortBy(option.id);
                         setIsSortOpen(false);
                       }}
-                      className={`w-full text-left px-3.5 py-2 text-xs sm:text-sm flex items-center justify-between transition-colors ${
+                      className={`w-full text-left px-3.5 py-2 text-sm sm:text-base flex items-center justify-between transition-colors ${
                         isSelected
                           ? 'bg-blue-50 text-[#0066FF] font-semibold'
                           : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-normal'
@@ -328,23 +344,13 @@ export const Catalog: React.FC = () => {
                   );
                 })}
               </div>
-            )}
+            </div>
           </div>
         </div>
 
-        <nav aria-label={localize('Categorias do catálogo')} className="mb-6 flex flex-wrap items-start gap-2">
-          <Link to="/catalogo" className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-blue-600">{localize('Todos')}</Link>
-          {CATALOG_SECTIONS.map(section => <details key={section.title} open={section.title === selectedCategory || section.groups.some(g => g.title === selectedCategory)} className="rounded-xl border border-slate-200 bg-white p-2 text-sm">
-            <summary className="cursor-pointer font-semibold text-slate-700">{localize(section.title)}</summary>
-            <div className="flex flex-col gap-2 pt-3">
-              <Link to={catalogLink(section.title)} className="text-blue-600">{localize('Ver todos')} — {localize(section.title)}</Link>
-              {section.groups.map(group => <Link key={group.title} to={catalogLink(group.title)} aria-current={selectedCategory === group.title ? 'page' : undefined} className="text-slate-600 aria-[current=page]:text-blue-600 aria-[current=page]:font-bold">{localize(group.title)}</Link>)}
-            </div>
-          </details>)}
-        </nav>
         {/* Products Grid */}
         {sortedProducts.length > 0 ? (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8">
+          <div className="grid grid-cols-1 min-[380px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {sortedProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -357,7 +363,7 @@ export const Catalog: React.FC = () => {
             <h3 className="font-display font-bold text-slate-900 text-base sm:text-lg">
               {localize(language === 'en' ? 'No matching software found' : language === 'es' ? 'No se encontró ningún software correspondiente' : 'Nenhum software correspondente encontrado')}
             </h3>
-            <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
+            <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
               {localize(searchTerm
                 ? `Não encontramos resultados para "${searchTerm}". Tente buscar por outro termo ou explore outras categorias.`
                 : 'Não encontramos softwares para a seleção atual. Tente selecionar outra categoria ou fale com nosso suporte via WhatsApp.')}
@@ -370,7 +376,7 @@ export const Catalog: React.FC = () => {
                   const newParams = new URLSearchParams();
                   setSearchParams(newParams, { replace: true });
                 }}
-                className="px-5 py-2.5 bg-[#0066FF] hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all"
+                className="px-5 py-2.5 bg-[#0066FF] hover:bg-action-primary-hover text-white rounded-xl text-xs font-bold shadow-sm transition-all"
               >
                 {localize(language === 'en' ? 'View all software' : language === 'es' ? 'Ver todos los softwares' : 'Ver todos os softwares')}
               </button>
