@@ -409,10 +409,10 @@ export const Home: React.FC = () => {
           <ol className="grid grid-cols-1 md:grid-cols-4 gap-8 border-t border-slate-200 pt-6">
 
             {steps.map((step, index) => (
-              <li key={index} className="space-y-3">
-                <img src={step.icon} alt="" aria-hidden="true" className="h-10 w-10 object-contain" />
+              <li key={index} className="flex flex-col items-center text-center md:items-start md:text-left space-y-3">
+                <img src={step.icon} alt="" aria-hidden="true" className="h-10 w-10 object-contain mx-auto md:mx-0" />
                 <h3 className="font-display font-bold text-base text-slate-900">{localize(step.title)}</h3>
-                <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">{localize(step.desc)}</p>
+                <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-xs md:max-w-none">{localize(step.desc)}</p>
               </li>
             ))}
           </ol>
