@@ -1,8 +1,69 @@
 @import "tailwindcss";
 
+/* ============================================================================
+   Typography - Scoutie Sans (woff2)
+   Hierarchy: ExtraLight (200), Light (300), Regular (400), Medium (500),
+              SemiBold (600), Bold (700), ExtraBold (800)
+   ============================================================================ */
+@font-face {
+  font-family: 'Scoutie Sans';
+  src: url('/fonts/ScoutieSans-ExtraLight.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Scoutie Sans';
+  src: url('/fonts/ScoutieSans-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Scoutie Sans';
+  src: url('/fonts/ScoutieSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Scoutie Sans';
+  src: url('/fonts/ScoutieSans-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Scoutie Sans';
+  src: url('/fonts/ScoutieSans-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Scoutie Sans';
+  src: url('/fonts/ScoutieSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Scoutie Sans';
+  src: url('/fonts/ScoutieSans-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
-  --font-sans: 'Inter', sans-serif;
-  --font-display: 'Lato', 'Inter', sans-serif;
+  --font-sans: 'Scoutie Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Scoutie Sans', sans-serif;
   --spacing: 0.25rem;
 
   /* Brand roles: actions, structure and feedback. */
@@ -88,6 +149,116 @@
   --acc-collapse: 250ms;
   --acc-chevron: 250ms;
   --acc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Checkbox check & radio check transition tokens (transitions.dev). */
+  --check-box: 150ms;
+  --check-draw: 350ms;
+  --check-delay: 0ms;
+  --check-uncheck: 150ms;
+  --check-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --check-len: 15;
+}
+
+.t-check {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid #cbd5e1;
+  background: #ffffff;
+  color: #ffffff;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition:
+    background var(--check-box) var(--check-ease),
+    border-color var(--check-box) var(--check-ease),
+    box-shadow var(--check-box) var(--check-ease),
+    transform var(--check-box) var(--check-ease);
+}
+.t-check:hover {
+  border-color: #94a3b8;
+}
+.t-check[aria-checked="true"] {
+  background: var(--color-action-primary);
+  border-color: var(--color-action-primary);
+  box-shadow: 0 2px 6px rgb(0 102 255 / 0.28);
+}
+.t-check svg {
+  width: 11px;
+  height: 11px;
+  overflow: visible;
+  pointer-events: none;
+}
+.t-check svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.85;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: var(--check-len, 15);
+  stroke-dashoffset: var(--check-len, 15);
+  transition: stroke-dashoffset var(--check-uncheck) var(--check-ease);
+}
+.t-check[aria-checked="true"] svg path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--check-draw) var(--check-ease) var(--check-delay);
+}
+
+.t-radio-dot {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 19px;
+  height: 19px;
+  border-radius: 9999px;
+  border: 1.75px solid #cbd5e1;
+  background: #ffffff;
+  color: #ffffff;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition:
+    background var(--check-box) var(--check-ease),
+    border-color var(--check-box) var(--check-ease),
+    box-shadow var(--check-box) var(--check-ease),
+    transform var(--check-box) var(--check-ease);
+}
+.t-radio-dot[aria-checked="true"] {
+  background: var(--color-action-primary);
+  border-color: var(--color-action-primary);
+  box-shadow: 0 2px 7px rgb(0 102 255 / 0.3);
+}
+.t-radio-dot svg {
+  width: 10.5px;
+  height: 10.5px;
+  overflow: visible;
+  pointer-events: none;
+}
+.t-radio-dot svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: var(--check-len, 15);
+  stroke-dashoffset: var(--check-len, 15);
+  transition: stroke-dashoffset var(--check-uncheck) var(--check-ease);
+}
+.t-radio-dot[aria-checked="true"] svg path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--check-draw) var(--check-ease) var(--check-delay);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-check,
+  .t-check svg path,
+  .t-radio-dot,
+  .t-radio-dot svg path {
+    transition: none !important;
+  }
 }
 
 .t-acc-panel {
@@ -263,42 +434,9 @@
 }
 
 .t-subtle-number {
-  display: inline-flex;
-  align-items: baseline;
+  display: inline;
   white-space: pre;
   font-variant-numeric: tabular-nums;
-}
-
-.t-subtle-char { display: inline-block; }
-.t-subtle-slot { position: relative; display: inline-block; }
-.t-subtle-new { display: inline-block; }
-.t-subtle-old { position: absolute; inset: 0; text-align: center; pointer-events: none; }
-.t-subtle-number.is-animating .t-subtle-new {
-  animation: t-subtle-in var(--t-subtle-duration) var(--t-subtle-easing) both;
-}
-.t-subtle-number.is-animating .t-subtle-old {
-  animation: t-subtle-out var(--t-subtle-duration) var(--t-subtle-easing) both;
-}
-
-@keyframes t-subtle-in {
-  from {
-    transform: translateY(calc(var(--t-subtle-distance) * var(--t-subtle-direction, 1))) scale(var(--t-subtle-scale));
-    opacity: 0;
-    filter: blur(var(--t-subtle-blur));
-  }
-}
-
-@keyframes t-subtle-out {
-  to {
-    transform: translateY(calc(var(--t-subtle-distance) * var(--t-subtle-direction, 1) * -1)) scale(var(--t-subtle-scale));
-    opacity: 0;
-    filter: blur(var(--t-subtle-blur));
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .t-subtle-number .t-subtle-new { animation: none !important; }
-  .t-subtle-number .t-subtle-old { display: none; }
 }
 
 .motion-feedback {
@@ -385,6 +523,12 @@
   .product-card:hover .motion-card-image { transform: scale(1.02); }
 }
 
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 html, body {
   font-family: var(--font-sans);
   background-color: var(--color-surface-page);
@@ -399,6 +543,13 @@ html, body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
+  font-weight: 700;
+  text-wrap: balance;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  letter-spacing: -0.028em;
 }
 
 /* Custom Scrollbar for premium feel */
@@ -635,13 +786,77 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 479px) { .footer-payment-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
-/* Keep the review widget typography independent from the storefront display font. */
-.trust-review-strip { font-family: Arial, Helvetica, sans-serif; color: #191919; }
-.trust-review-strip .font-display { font-family: inherit; }
-.trust-review-strip .trust-review-author { line-height: 1.4; }
-
+/* Keep Trustpilot typography independent from the storefront's bold typeface. */
+.trust-rating,
+.trust-rating *,
+.trust-review-strip,
+.trust-review-strip *,
+.trust-reviews-modal,
+.trust-reviews-modal * { font-family: Arial, Helvetica, sans-serif; }
+.trust-review-strip { color: #191919; }
+.trust-review-strip .trust-review-author { line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .trust-review-strip button > div > div > span.font-extrabold { font-weight: 400; letter-spacing: -0.4px; }
-.trust-review-strip .trust-review-author { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Interactive hover states for Trustpilot stars, verified badges, and review counts */
+.trust-star-box {
+  transition: filter 180ms ease, transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.trust-rating:hover .trust-star-box[data-active="true"],
+.trust-summary-btn:hover .trust-star-box[data-active="true"],
+.trust-review-card:hover .trust-star-box[data-active="true"],
+.trust-stars-group:hover .trust-star-box[data-active="true"] {
+  filter: brightness(0.88);
+}
+.trust-stars-group .trust-star-box[data-active="true"]:hover {
+  filter: brightness(0.78);
+  transform: translateY(-1px) scale(1.04);
+}
+
+.trust-reviews-count {
+  transition: color 180ms ease, text-decoration-color 180ms ease;
+}
+.trust-rating:hover .trust-reviews-count,
+.trust-summary-btn:hover .trust-reviews-count {
+  color: #00875a;
+  text-decoration-color: #00875a;
+}
+.trust-reviews-count:hover {
+  color: #006b47 !important;
+  text-decoration-color: #006b47 !important;
+  text-decoration-thickness: 2px;
+}
+
+.trust-verified-badge {
+  transition: color 180ms ease, transform 180ms ease;
+}
+.trust-verified-icon {
+  transition: fill 180ms ease, color 180ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.trust-verified-text {
+  transition: color 180ms ease, text-decoration-color 180ms ease;
+}
+.trust-review-card:hover .trust-verified-badge,
+.trust-verified-badge:hover {
+  color: #191919;
+}
+.trust-review-card:hover .trust-verified-icon {
+  fill: #2d2d2d;
+  transform: scale(1.06);
+}
+.trust-verified-badge:hover .trust-verified-icon {
+  fill: #009664;
+  transform: scale(1.15);
+}
+.trust-verified-badge:hover .trust-verified-text {
+  color: #00875a;
+  text-decoration-color: #00875a;
+}
+.trust-rating:hover .trust-logo-star,
+.trust-summary-btn:hover .trust-logo-star,
+.trust-logo:hover .trust-logo-star {
+  filter: brightness(0.9);
+  transform: scale(1.06);
+}
 
 @media (min-width: 1280px) {
  .site-header .header-main-nav svg { width: 20px; height: 20px; }
@@ -656,7 +871,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Tuck the hat opening behind the logo so it rests on the upper-left corner. */
 .brand-christmas-hat { position: absolute; top: -30%; left: -24%; width: 80%; height: 80%; object-fit: contain; pointer-events: none; z-index: 0; }
 
-/* About and delivery pages inherit the storefront's Lato + Inter typography. */
+/* Institutional pages inherit the storefront's system typography. */
 .about-commitment { background-image: radial-gradient(ellipse at top left, #21578566, transparent 60%); }
 .trust-reviews-modal .text-xs { font-size: 14px; line-height: 1.5; }
 .trust-reviews-modal .text-sm { font-size: 16px; line-height: 1.6; }
@@ -724,7 +939,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Compact hero with a transparent product-art grid that reacts to the pointer. */
 .home-hero-content{gap:12px}
-.home-hero-showcase{--hero-top-space:56px;--hero-bottom-space:16px;position:relative;width:110vw;max-width:none;height:calc(500px + var(--hero-top-space) + var(--hero-bottom-space));margin-top:calc(-1 * var(--hero-top-space));margin-bottom:calc(-1 * var(--hero-bottom-space));margin-left:0;transform:none;isolation:isolate}
+.home-hero-showcase{--hero-top-space:56px;--hero-bottom-space:16px;position:relative;width:100vw;max-width:none;height:calc(500px + var(--hero-top-space) + var(--hero-bottom-space));margin-top:calc(-1 * var(--hero-top-space));margin-bottom:calc(-1 * var(--hero-bottom-space));margin-left:0;transform:none;isolation:isolate}
 .home-hero-customer-proof{--avatar-duration:220ms;--avatar-easing:cubic-bezier(.2,.8,.2,1);--avatar-lift:3px;--avatar-scale:1.035;position:absolute;top:calc(50% - 76px);left:50%;z-index:20;display:flex;align-items:center;gap:10px;transform:translateX(-50%);color:#fff;font-size:13px;font-weight:600;letter-spacing:.01em;text-shadow:0 1px 2px rgb(0 0 0 / .98),0 3px 8px rgb(0 0 0 / .95),0 0 16px rgb(0 0 0 / .72);white-space:nowrap;filter:drop-shadow(0 4px 7px rgb(0 0 0 / .68)) drop-shadow(0 8px 16px rgb(0 0 0 / .4))}
 .home-hero-avatars{display:flex;align-items:center;padding:2px}
 .home-hero-avatars img{width:30px;height:30px;flex:none;object-fit:cover;border:2px solid #0b1426;border-radius:50%;box-shadow:0 2px 6px rgb(0 0 0 / .85),0 7px 14px rgb(0 0 0 / .6);transition:transform var(--avatar-duration) var(--avatar-easing),box-shadow var(--avatar-duration) var(--avatar-easing)}
@@ -734,30 +949,27 @@ h1, h2, h3, h4, h5, h6 {
 .t-avatar-group:hover .home-hero-avatars img:nth-child(3){transition-delay:40ms}
 .t-avatar-group:hover .home-hero-avatars img:nth-child(4){transition-delay:60ms}
 .t-avatar-group:hover .home-hero-avatars img:nth-child(5){transition-delay:80ms}
-.home-hero-gridmotion{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;mask-image:linear-gradient(to right,transparent 0%,#000 1.5%,#000 98.5%,transparent 100%),linear-gradient(to bottom,#000 0%,#000 98.5%,transparent 100%);mask-composite:intersect;-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 1.5%,#000 98.5%,transparent 100%),linear-gradient(to bottom,#000 0%,#000 98.5%,transparent 100%);-webkit-mask-composite:source-in}
-.grid-motion{position:relative;width:100%;height:100%;overflow:hidden;isolation:isolate}
-.grid-motion__plane{position:absolute;top:50%;left:50%;transform-style:preserve-3d;will-change:transform}
-.grid-motion__row{position:absolute;left:0;display:flex;align-items:center;gap:var(--grid-gap);will-change:transform}
-.grid-motion__tile{position:relative;display:flex;flex:none;align-items:center;justify-content:center;width:var(--grid-tile-width);height:var(--grid-tile-height);overflow:visible;background:transparent;opacity:calc(1 - var(--grid-row-dim,var(--grid-dim)) * (1 - var(--grid-spot,0)));transition:opacity 180ms ease,transform 220ms cubic-bezier(.2,.8,.2,1)}
-.grid-motion__tile img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none;filter:drop-shadow(0 8px 10px rgb(0 0 0 / .14))}
-@media(hover:hover) and (pointer:fine){.grid-motion__tile:hover{z-index:5;opacity:1!important;transform:translateY(-5px) scale(1.06)}.grid-motion__tile:hover img{filter:drop-shadow(0 14px 18px rgb(0 0 0 / .28)) brightness(1.06)}}
+.home-hero-gridmotion{position:absolute;inset:0;z-index:0}
+/* Soft legibility halo behind the search — a gradient, never a box. */
+.home-hero-showcase::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 42% 30% at 50% 50%,rgb(10 15 29 / .42) 0%,rgb(10 15 29 / .16) 55%,transparent 100%)}
 .home-hero-search{position:absolute;top:50%;left:50%;width:min(100% - 32px,640px);transform:translate(-50%,-50%)}
 .home-hero-search form{box-shadow:0 7px 18px rgb(2 8 23 / .28),0 18px 40px rgb(2 8 23 / .32)}
 @media(max-width:639px){
  html,body{scroll-behavior:auto;overscroll-behavior-y:none}
- .home-hero{padding-top:104px;padding-bottom:0}
- .home-hero-content{gap:8px}
+ .home-hero{padding-top:100px;padding-bottom:0}
+ .home-hero-content{gap:0;padding-left:0;padding-right:0}
  .home-hero h1>span:first-child{font-size:18px;line-height:1.25}
  .home-hero h1>span:last-child{font-size:27px;line-height:1.15;margin-top:2px}
- .home-hero-showcase{display:flex;width:110vw;max-width:none;height:auto;margin-top:0;margin-bottom:0;margin-left:0;transform:none;flex-direction:column;gap:2px}
- .home-hero-customer-proof{position:relative;top:auto;left:auto;order:0;align-self:center;margin:12px 0 6px;transform:none;font-size:12px}
+ .home-hero-showcase{position:relative;display:block;width:100vw;max-width:none;height:340px;margin-top:0;margin-bottom:0;margin-left:0;transform:none;isolation:isolate}
+ .home-hero-showcase::after{display:block;background:radial-gradient(ellipse 78% 40% at 50% 54%,rgb(10 15 29 / .38) 0%,rgb(10 15 29 / .14) 60%,transparent 100%)}
+ .home-hero-customer-proof{position:absolute;top:calc(50% - 62px);left:50%;z-index:20;margin:0;transform:translateX(-50%);font-size:12px}
  .home-hero-avatars img{width:28px;height:28px}
- .home-hero-search{position:relative;top:auto;left:auto;order:1;width:100%;max-width:none;padding:0 calc(5vw + 16px);transform:none}
+ .home-hero-search{position:absolute;top:calc(50% + 12px);left:50%;z-index:20;width:calc(100vw - 28px);max-width:440px;padding:0;transform:translate(-50%,-50%)}
  .home-hero-search form{min-height:48px;margin:0;padding:4px 5px 4px 12px;gap:6px}
  .home-hero-search form input{font-size:14px;padding-top:9px;padding-bottom:9px}
- .home-hero-search form button{padding:9px 12px;font-size:13px}
+ .home-hero-search form button{padding:9px 14px;font-size:13px}
  .home-hero-search p{display:none}
- .home-hero-gridmotion{position:relative;inset:auto;order:2;width:100%;height:200px;mask-image:linear-gradient(to right,transparent 0%,#000 1.5%,#000 98.5%,transparent 100%),linear-gradient(to bottom,#000 0%,#000 98.5%,transparent 100%);mask-composite:intersect;-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 1.5%,#000 98.5%,transparent 100%),linear-gradient(to bottom,#000 0%,#000 98.5%,transparent 100%);-webkit-mask-composite:source-in}
+ .home-hero-gridmotion{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;--gm-dim:0.12!important}
  .home-trustpilot-intro{padding-left:12px;padding-right:12px}
  .home-trustpilot-intro .trust-review-strip{margin-top:0;margin-bottom:6px;padding-top:8px;padding-bottom:8px}
  .home-trustpilot-intro .trust-review-summary{padding-bottom:0}
@@ -771,10 +983,9 @@ h1, h2, h3, h4, h5, h6 {
 @media(max-width:360px){
  .home-hero h1>span:first-child{font-size:16px}
  .home-hero h1>span:last-child{font-size:24px}
- .home-hero-gridmotion{height:184px}
+ .home-hero-showcase{height:310px}
 }
 @media(prefers-reduced-motion:reduce){
- .grid-motion__tile{transition:none}
  .home-hero-avatars img{transition:none}
 }
 
@@ -810,4 +1021,27 @@ h1, h2, h3, h4, h5, h6 {
 @media(prefers-reduced-motion:reduce){
  .t-acc-panel,.t-acc-panel-inner,.t-acc-chevron{transition:none!important}
  .t-acc-panel-inner{filter:none}
+}
+
+.home-software-logo-loop{color:#0f172a}
+.home-software-logo-loop .home-software-logo-mark{
+ display:block;
+ width:var(--logoloop-logoHeight);
+ height:var(--logoloop-logoHeight);
+ background-color:currentColor;
+ -webkit-mask-position:center;
+ mask-position:center;
+ -webkit-mask-repeat:no-repeat;
+ mask-repeat:no-repeat;
+ -webkit-mask-size:contain;
+ mask-size:contain;
+ transition:filter 180ms cubic-bezier(.16,1,.3,1)
+}
+.home-software-logo-loop .logoloop__item[data-color]:hover .home-software-logo-mark,
+.home-software-logo-loop .logoloop__item[data-color]:focus-within .home-software-logo-mark,
+.home-software-logo-loop .logoloop__item[data-color][data-active] .home-software-logo-mark{
+ filter:drop-shadow(0 1px 4px color-mix(in srgb,currentColor 48%,transparent))
+}
+@media(prefers-reduced-motion:reduce){
+ .home-software-logo-loop .home-software-logo-mark{transition:none}
 }

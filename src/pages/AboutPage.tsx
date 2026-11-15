@@ -8,7 +8,7 @@ import { WhatsAppIcon } from '../components/WhatsAppIcon';
 
 const benefits = [
   { icon: MonitorCheck, title: 'A solução certa para seu computador', text: 'Versões e plataformas organizadas para você conferir a compatibilidade com Windows ou macOS antes de comprar.' },
-  { icon: CreditCard, title: 'Pagamento com etapas claras', text: 'Pix e boleto pela Efí Bank, cartão pela Cakto. Você escolhe a forma de pagamento e acompanha as informações do pedido.' },
+  { icon: CreditCard, title: 'Pagamento com etapas claras', text: 'Pix, cartão de crédito, boleto e pagamento internacional. Você escolhe a forma de pagamento e acompanha as informações do pedido.' },
   { icon: Headphones, title: 'Gente de verdade para ajudar', text: 'Atendimento pelo WhatsApp e e-mail, de segunda a domingo, das 09:00 às 20:00, no horário de Brasília.' },
   { icon: BookOpen, title: 'Orientação do início à instalação', text: 'Instruções e tutoriais em vídeo para acompanhar cada etapa. E, quando surgir uma dúvida, você pode falar com a equipe.' },
   { icon: ShieldCheck, title: '30 dias de suporte técnico', text: 'Auxílio na instalação e configuração durante o período de suporte. Consulte as condições e o escopo do atendimento nos termos.' },

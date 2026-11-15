@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, CircleCheck } from 'lucide-react';
+import { ChevronLeft, CircleCheck } from 'lucide-react';
+import { LearnMoreChevron } from './LearnMoreChevron';
 import { useLanguage } from '../context/LanguageContext';
 import { TrustpilotStars, TrustpilotLogo, TrustGuaranteesModal } from './TrustBadges';
 const TRUSTPILOT_REVIEWS_EN = [
@@ -208,14 +209,17 @@ export function StoreReviews({ summaryOnly = false }: { summaryOnly?: boolean })
               <button
                 type="button"
                 onClick={() => setIsGuaranteesModalOpen(true)}
-                className="space-y-2 cursor-pointer group text-center"
+                className="trust-summary-btn space-y-2 cursor-pointer group text-center"
               >
-                <p className="font-normal text-2xl text-[#191919]">{t('trustpilot_excellent')}</p>
+                <p className="font-normal text-2xl text-[#191919] transition-colors duration-200 group-hover:text-black">{t('trustpilot_excellent')}</p>
                 <div className="flex items-center justify-center gap-1">
                   <TrustpilotStars count={5} size="w-[30px] h-[30px]" />
                 </div>
                 <p className="text-xs text-[#191919]">
-                  {t('trustpilot_based_on_bar')} <span className="underline font-semibold text-slate-900">{t('trustpilot_bar_reviews')}</span>
+                  {t('trustpilot_based_on_bar')}{' '}
+                  <span className="trust-reviews-count underline underline-offset-2 font-semibold text-slate-900">
+                    {t('trustpilot_bar_reviews')}
+                  </span>
                 </p>
                 <div className="pt-1 flex items-center justify-center">
                   <TrustpilotLogo starSize="w-6 h-6" textSize="text-lg" />
@@ -245,14 +249,19 @@ export function StoreReviews({ summaryOnly = false }: { summaryOnly?: boolean })
                   return (
                     <div
                       key={item.id}
-                      className="min-w-0 text-left space-y-2"
+                      className="trust-review-card min-w-0 text-left space-y-2 rounded-lg p-1.5 -m-1.5 transition-colors duration-200"
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <TrustpilotStars count={item.rating ?? 5} size="w-[18px] h-[18px]" />
-                        <span className="inline-flex items-center gap-1 whitespace-nowrap text-xs text-[#545454]">
-                          <CircleCheck className="w-3.5 h-3.5 fill-[#545454] text-white" strokeWidth={2.5} />
-                          <span className="underline underline-offset-2">{t('trustpilot_verified')}</span>
-                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setIsGuaranteesModalOpen(true)}
+                          className="trust-verified-badge inline-flex items-center gap-1 whitespace-nowrap text-xs text-[#545454] cursor-pointer"
+                          title={t('trustpilot_reviews_modal_title')}
+                        >
+                          <CircleCheck className="trust-verified-icon w-3.5 h-3.5 fill-[#545454] text-white" strokeWidth={2.5} />
+                          <span className="trust-verified-text underline underline-offset-2">{t('trustpilot_verified')}</span>
+                        </button>
                       </div>
                       <p className="trust-review-author text-xs text-[#545454]">
                         <span className="font-semibold text-[#545454]">{item.author}</span>, {item.timeAgo}
@@ -273,14 +282,19 @@ export function StoreReviews({ summaryOnly = false }: { summaryOnly?: boolean })
                   return (
                     <div
                       key={item.id}
-                      className="min-w-0 text-left space-y-1.5"
+                      className="trust-review-card min-w-0 text-left space-y-1.5 rounded-lg p-2 -m-2 transition-colors duration-200"
                     >
                       <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
                         <TrustpilotStars count={item.rating ?? 5} size="w-[18px] h-[18px]" />
-                        <span className="inline-flex items-center gap-1 whitespace-nowrap text-xs text-[#545454]">
-                          <CircleCheck className="w-3.5 h-3.5 fill-[#545454] text-white" strokeWidth={2.5} />
-                          <span className="underline underline-offset-2">{t('trustpilot_verified')}</span>
-                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setIsGuaranteesModalOpen(true)}
+                          className="trust-verified-badge inline-flex items-center gap-1 whitespace-nowrap text-xs text-[#545454] cursor-pointer"
+                          title={t('trustpilot_reviews_modal_title')}
+                        >
+                          <CircleCheck className="trust-verified-icon w-3.5 h-3.5 fill-[#545454] text-white" strokeWidth={2.5} />
+                          <span className="trust-verified-text underline underline-offset-2">{t('trustpilot_verified')}</span>
+                        </button>
                       </div>
 
                       <p className="trust-review-author text-xs text-[#545454]">
@@ -302,10 +316,10 @@ export function StoreReviews({ summaryOnly = false }: { summaryOnly?: boolean })
                 onClick={() =>
                   setTrustpilotSlideIndex((prev) => (prev + 1) % activeTrustpilotReviews.length)
                 }
-                className="w-6 h-6 rounded-full border border-[#545454] bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0 ml-2 cursor-pointer shadow-2xs"
+                className="t-learn w-6 h-6 rounded-full border border-[#545454] bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0 ml-2 cursor-pointer shadow-2xs"
                 aria-label="Próxima avaliação"
               >
-                <ChevronRight className="w-4 h-4" />
+                <LearnMoreChevron className="ml-0" size={16} />
               </button>
             </div>}
           </div>

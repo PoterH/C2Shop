@@ -1,18 +1,18 @@
 import { WhatsAppIcon } from '../components/WhatsAppIcon';
 import { HomeTrustpilot } from '../components/HomeTrustpilot';
+import { LearnMoreChevron } from '../components/LearnMoreChevron';
 import { useText } from '../hooks/useText';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Search,
-  ArrowRight,
   ChevronDown,
   ChevronLeft,
-  ChevronRight,
 } from 'lucide-react';
 import { products } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
 import { GridMotion, type GridMotionItem } from '../components/GridMotion';
+import LogoLoop, { type LogoLoopImage } from '../components/LogoLoop';
 import { useLanguage } from '../context/LanguageContext';
 
 const HOME_PRODUCT_FILTERS = [
@@ -26,6 +26,19 @@ const HOME_PRODUCT_FILTERS = [
 const heroGridCards: GridMotionItem[] = [
   1, 2, 5, 7, 17, 20, 28, 38, 41, 44, 48, 52, 53, 55, 59, 65, 67, 71, 78, 93, 96, 98,
 ].map((number) => ({ src: `/images/grid-cards/trimmed/card-${String(number).padStart(2, '0')}.png` }));
+
+const softwareBrandLogos: LogoLoopImage[] = [
+  { src: '/images/company-logos/brand-01.png', alt: '', hoverColor: '#ed1c24' },
+  { src: '/images/company-logos/brand-02.png', alt: '', hoverColor: '#0696d7' },
+  { src: '/images/company-logos/brand-03.png', alt: '', hoverColor: '#006699' },
+  { src: '/images/company-logos/brand-04.png', alt: '', hoverColor: '#5146e5' },
+  { src: '/images/company-logos/brand-05.png', alt: '', hoverColor: '#7d7d7d' },
+  { src: '/images/company-logos/brand-06.png', alt: '', hoverColor: '#00a4ef' },
+  { src: '/images/company-logos/brand-07.png', alt: '', hoverColor: '#0b70a8' },
+  { src: '/images/company-logos/brand-08.png', alt: '', hoverColor: '#f26522' },
+  { src: '/images/company-logos/brand-09.png', alt: '', hoverColor: '#3264d8' },
+  { src: '/images/company-logos/brand-10.png', alt: '', hoverColor: '#41b883' },
+];
 
 export const Home: React.FC = () => {
   const localize = useText();
@@ -199,7 +212,25 @@ export const Home: React.FC = () => {
               </div>
               <span>{language === 'en' ? '+5,000 satisfied customers' : language === 'es' ? '+5.000 clientes satisfechos' : '+5.000 clientes satisfeitos'}</span>
             </div>
-            <GridMotion items={heroGridCards} className="home-hero-gridmotion" rows={3} aspectRatio={0.68} gap={12} angle={-2} speed={18} spotlight={0.48} dim={0.2} />
+            <GridMotion
+              items={heroGridCards}
+              className="home-hero-gridmotion"
+              rows={3}
+              aspectRatio={0.68}
+              gap={18}
+              radius={0}
+              angle={-8}
+              tilt={0}
+              speed={22}
+              direction="alternate"
+              parallax={0.5}
+              spotlight={0.62}
+              dim={0.28}
+              fade={0.38}
+              fit="contain"
+              borderless
+              tileColor="transparent"
+            />
             {/* Hero catalog search */}
             <div className="home-hero-search w-full max-w-2xl relative z-20">
             <form
@@ -256,8 +287,39 @@ export const Home: React.FC = () => {
             </p>
           </div>
 
+          <div className="mb-5 mt-1 sm:mb-6">
+            <LogoLoop
+              logos={softwareBrandLogos}
+              speed={46}
+              direction="left"
+              logoHeight={32}
+              gap={44}
+              hoverSpeed={0}
+              fadeOut
+              fadeOutWidth={0.1}
+              draggable
+              scaleOnHover={false}
+              intro={false}
+              ariaLabel={localize('Marcas dos softwares disponíveis')}
+              className="home-software-logo-loop"
+              renderItem={(item) => {
+                if (!('src' in item)) return item.node;
+                return (
+                  <span
+                    aria-hidden="true"
+                    className="home-software-logo-mark"
+                    style={{
+                      WebkitMaskImage: `url("${item.src}")`,
+                      maskImage: `url("${item.src}")`,
+                    }}
+                  />
+                );
+              }}
+            />
+          </div>
+
           {/* Categories Slider/Tabs */}
-          <div className="flex overflow-x-auto pb-4 mb-8 scrollbar-none justify-center -mx-4 px-4 gap-2">
+          <div className="mb-8 flex flex-wrap justify-center gap-2 px-1 pb-4">
             {HOME_PRODUCT_FILTERS.map((filter) => (
               <button
                 key={filter.id}
@@ -301,10 +363,10 @@ export const Home: React.FC = () => {
               {/* Right Navigation Arrow */}
               <button
                 onClick={scrollRight}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 z-30 w-11 h-11 rounded-full bg-white hover:bg-slate-50 border border-slate-200 shadow-md hover:shadow-lg flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none opacity-0 group-hover/carousel:opacity-100 focus-visible:opacity-100"
+                className="t-learn absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 z-30 w-11 h-11 rounded-full bg-white hover:bg-slate-50 border border-slate-200 shadow-md hover:shadow-lg flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none opacity-0 group-hover/carousel:opacity-100 focus-visible:opacity-100 text-slate-700"
                 aria-label={localize("Próximo")}
               >
-                <ChevronRight className="w-5 h-5 text-slate-700" />
+                <LearnMoreChevron className="ml-0" size={20} />
               </button>
             </div>
           ) : (
@@ -317,10 +379,10 @@ export const Home: React.FC = () => {
           <div className="text-center mt-12">
             <Link
               to="/catalogo"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-control bg-white border border-slate-200 hover:border-slate-300 text-sm font-bold text-slate-800 hover:text-slate-900 transition-colors duration-200"
+              className="t-learn inline-flex items-center justify-center px-6 py-3 rounded-control bg-white border border-slate-200 hover:border-slate-300 text-sm font-bold text-slate-800 hover:text-slate-900 transition-colors duration-200"
             >
               <span>{localize("Ver catálogo de softwares completo")}</span>
-              <ArrowRight className="w-4 h-4 ml-2 text-slate-500" />
+              <LearnMoreChevron className="ml-2 text-slate-500" size={16} />
             </Link>
           </div>
 

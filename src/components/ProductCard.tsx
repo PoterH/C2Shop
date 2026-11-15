@@ -8,6 +8,7 @@ import { reviewsData } from '../data/reviews';
 import { useLanguage } from '../context/LanguageContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { AnimatedPrice } from './AnimatedPrice';
+import { LearnMoreChevron } from './LearnMoreChevron';
 
 interface ProductCardProps {
   product: Product;
@@ -161,12 +162,3 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     </div>
   );
 };
-
-const LearnMoreChevron: React.FC = () => (
-  <span className="t-learn-chevron ml-1.5 inline-flex" aria-hidden="true">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path className="t-learn-arm t-learn-arm-top" d="M6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      <path className="t-learn-arm t-learn-arm-bot" d="M10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  </span>
-);

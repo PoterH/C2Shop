@@ -1,147 +1,310 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { isValidElement, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+
+import './GridMotion.css';
+
+/**
+ * GridMotion — port of the React Bits component (JS + CSS variant) to TypeScript.
+ * Adds `fit` so transparent product artwork keeps its own cut ("contain")
+ * instead of being cropped into rounded photo tiles.
+ */
 
 export interface GridMotionItem {
   src: string;
   alt?: string;
 }
 
+type GridItem = string | ReactNode | GridMotionItem;
+
+type Tile =
+  | { kind: 'empty' }
+  | { kind: 'node'; node: ReactNode }
+  | { kind: 'image'; src: string; alt: string }
+  | { kind: 'text'; text: string };
+
 interface GridMotionProps {
-  items: GridMotionItem[];
-  className?: string;
+  items?: GridItem[];
   rows?: number;
   aspectRatio?: number;
   gap?: number;
+  radius?: number;
   angle?: number;
+  tilt?: number;
   speed?: number;
+  direction?: 'alternate' | 'left' | 'right';
+  parallax?: number;
   spotlight?: number;
   dim?: number;
+  grayscale?: boolean;
+  fade?: number;
+  tileColor?: string;
+  textColor?: string;
+  theme?: 'dark' | 'light';
+  /** How images fill the tile. `contain` keeps transparent artwork uncropped. */
+  fit?: 'cover' | 'contain';
+  /** Hide the 1px inner tile border (useful for transparent artwork). */
+  borderless?: boolean;
+  className?: string;
+  style?: CSSProperties;
 }
+
+const THEMES = {
+  dark: { tile: '#1b1922', text: 'rgba(255, 255, 255, 0.78)', border: 'rgba(255, 255, 255, 0.07)' },
+  light: { tile: '#f4f4f5', text: '#3f3f46', border: 'rgba(24, 24, 27, 0.08)' },
+};
+
+const DIRECTIONS = ['alternate', 'left', 'right'];
+const IMAGE = /^(https?:\/\/|\/\/|\/|\.\.?\/|data:image\/|blob:)|\.(avif|gif|jpe?g|png|svg|webp)(\?.*)?$/i;
+const INERTIA = [0.42, 0.32, 0.26, 0.22];
+const PACE = [1, 0.86, 1.12, 0.94];
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const wrap = (value: number, total: number) => ((value % total) + total) % total;
+const smoothstep = (edge0: number, edge1: number, value: number) => {
+  const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+  return t * t * (3 - 2 * t);
+};
 
-/** Lightweight React implementation of the Grid Motion treatment for product artwork. */
+const feather = (side: string, zone: number) => {
+  const stops: string[] = [];
+  for (let i = 0; i <= 12; i++) {
+    const t = i / 12;
+    const alpha = t * t * t * (t * (t * 6 - 15) + 10);
+    stops.push(`rgba(0, 0, 0, ${alpha.toFixed(4)}) ${(t * zone).toFixed(2)}%`);
+  }
+  const mirrored = stops.map((_, i) => {
+    const t = (12 - i) / 12;
+    const alpha = t * t * t * (t * (t * 6 - 15) + 10);
+    return `rgba(0, 0, 0, ${alpha.toFixed(4)}) ${(100 - t * zone).toFixed(2)}%`;
+  });
+  return `linear-gradient(${side}, ${stops.join(', ')}, ${mirrored.join(', ')})`;
+};
+
+const toTile = (item: GridItem): Tile => {
+  if (item === null || item === undefined || item === false) return { kind: 'empty' };
+  if (isValidElement(item)) return { kind: 'node', node: item };
+  if (typeof item === 'object' && 'src' in (item as object) && typeof (item as GridMotionItem).src === 'string') {
+    const image = item as GridMotionItem;
+    return { kind: 'image', src: image.src, alt: image.alt ?? '' };
+  }
+  const text = String(item).trim();
+  return IMAGE.test(text) ? { kind: 'image', src: text, alt: '' } : { kind: 'text', text };
+};
+
+const EMPTY: Tile = { kind: 'empty' };
+
+const TileView = ({ tile }: { tile: Tile }) => (
+  <div className="grid-motion__tile">
+    {tile.kind === 'image' && <img src={tile.src} alt={tile.alt} draggable={false} decoding="async" />}
+    {tile.kind === 'text' && <span className="grid-motion__text">{tile.text}</span>}
+    {tile.kind === 'node' && tile.node}
+  </div>
+);
+
 export function GridMotion({
-  items,
+  items = [],
+  rows = 4,
+  aspectRatio = 1.33,
+  gap = 16,
+  radius = 14,
+  angle = -12,
+  tilt = 0,
+  speed = 24,
+  direction = 'alternate',
+  parallax = 0.5,
+  spotlight = 0.6,
+  dim = 0.35,
+  grayscale = false,
+  fade = 0.5,
+  tileColor,
+  textColor,
+  theme = 'dark',
+  fit = 'cover',
+  borderless = false,
   className = '',
-  rows = 3,
-  aspectRatio = 0.78,
-  gap = 20,
-  angle = -7,
-  speed = 16,
-  spotlight = 0.42,
-  dim = 0.24,
+  style,
 }: GridMotionProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const planeRef = useRef<HTMLDivElement>(null);
-  const pointerRef = useRef({ x: 0, y: 0, active: false });
+  const motionRef = useRef({
+    offsets: [] as number[],
+    shifts: [] as number[],
+    intro: 0,
+    pointer: { x: 0, y: 0, active: false },
+  });
   const [size, setSize] = useState({ width: 0, height: 0 });
-  const tiles = useMemo(() => items.filter((item) => item.src), [items]);
-  const rowCount = Math.max(1, Math.round(rows));
-  const visibleRows = size.width > 0 && size.width < 640 ? Math.min(2, rowCount) : rowCount;
+  const palette = THEMES[theme] ?? THEMES.dark;
+  const settings = {
+    rows: clamp(Math.round(rows), 1, 12),
+    aspect: clamp(aspectRatio, 0.3, 4),
+    gap: Math.max(0, gap),
+    angle,
+    tilt: clamp(tilt, 0, 75),
+    speed,
+    direction: DIRECTIONS.includes(direction) ? direction : 'alternate',
+    parallax: clamp(parallax, 0, 1),
+    spotlight: clamp(spotlight, 0, 1),
+    dim: clamp(dim, 0, 1),
+    fade: clamp(fade, 0, 1),
+  };
+  const settingsRef = useRef(settings);
+  settingsRef.current = settings;
+
+  const layout = useMemo(() => {
+    const { width, height } = size;
+    if (!width || !height) return null;
+    const effectiveRows = width < 640 ? Math.min(2, settings.rows) : settings.rows;
+    const turn = (settings.angle * Math.PI) / 180;
+    const lean = (settings.tilt * Math.PI) / 180;
+    const cos = Math.abs(Math.cos(turn));
+    const sin = Math.abs(Math.sin(turn));
+    const planeHeight = ((width * sin + height * cos) / Math.max(0.3, Math.cos(lean))) * 1.12;
+    const planeWidth = (width * cos + height * sin) * (1 + Math.sin(lean) * 0.9) * 1.12;
+    const tileHeight = Math.max(16, (planeHeight - settings.gap * (effectiveRows - 1)) / effectiveRows);
+    const tileWidth = tileHeight * settings.aspect;
+    const step = tileWidth + settings.gap;
+    const perRow = Math.ceil(planeWidth / step) + 1;
+    const period = perRow * step;
+    return {
+      rows: effectiveRows,
+      planeWidth,
+      planeHeight,
+      tileWidth,
+      tileHeight,
+      step,
+      perRow,
+      period,
+      copies: Math.ceil(planeWidth / period) + 2,
+      top: (planeHeight - effectiveRows * tileHeight - (effectiveRows - 1) * settings.gap) / 2,
+      perspective: Math.max(width, height) * 1.5,
+    };
+  }, [size, settings.angle, settings.tilt, settings.rows, settings.gap, settings.aspect]);
+
+  const tiles = useMemo(() => items.map(toTile), [items]);
 
   useEffect(() => {
     const root = rootRef.current;
-    if (!root) return;
+    if (!root) return undefined;
     const observer = new ResizeObserver(() => {
-      setSize({ width: root.clientWidth, height: root.clientHeight });
+      const width = Math.round(root.clientWidth);
+      const height = Math.round(root.clientHeight);
+      setSize((current) => (current.width === width && current.height === height ? current : { width, height }));
     });
     observer.observe(root);
-    return () => observer.disconnect();
+    const motion = motionRef.current;
+    const onMove = (event: PointerEvent) => {
+      motion.pointer.x = event.clientX;
+      motion.pointer.y = event.clientY;
+      motion.pointer.active = true;
+    };
+    const onUp = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') motion.pointer.active = false;
+    };
+    const onLeave = () => {
+      motion.pointer.active = false;
+    };
+    window.addEventListener('pointermove', onMove, { passive: true });
+    window.addEventListener('pointerdown', onMove, { passive: true });
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('blur', onLeave);
+    document.documentElement.addEventListener('pointerleave', onLeave);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerdown', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('blur', onLeave);
+      document.documentElement.removeEventListener('pointerleave', onLeave);
+    };
   }, []);
-
-  const layout = useMemo(() => {
-    if (!size.width || !size.height) return null;
-    const radians = (angle * Math.PI) / 180;
-    const sin = Math.abs(Math.sin(radians));
-    const cos = Math.max(0.01, Math.abs(Math.cos(radians)));
-    const rotatedViewportHeight = size.width * sin + size.height * cos;
-    // Keep product artwork at a natural, viewport-height-based size. Deriving
-    // tile height from the rotated width makes cards grow on ultrawide screens.
-    const tileHeight = Math.min(
-      (rotatedViewportHeight - gap * (visibleRows - 1)) / visibleRows,
-      size.height / visibleRows,
-      280,
-    );
-    const tileWidth = tileHeight * aspectRatio;
-    const step = tileWidth + gap;
-    const rowStackHeight = visibleRows * tileHeight + gap * (visibleRows - 1);
-    // Trim the unused transparent area above/below the rows. The plane now
-    // bleeds naturally past the viewport while each card keeps its own size.
-    const planeHeight = rowStackHeight;
-    const planeWidth = (size.width + planeHeight * sin) / cos;
-    const columns = Math.ceil(planeWidth / step) + 3;
-    const rowOffsetY = 0;
-    return { planeWidth, planeHeight, tileWidth, tileHeight, step, columns, rowOffsetY, period: columns * step, rowWidth: columns * step * 3 };
-  }, [size, angle, gap, visibleRows, aspectRatio]);
 
   useEffect(() => {
     const root = rootRef.current;
     const plane = planeRef.current;
-    if (!root || !plane || !layout || tiles.length === 0) return;
+    if (!root || !plane || !layout) return undefined;
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // Start each row across the viewport so both rows fill the hero immediately.
-    const offsets = Array.from({ length: visibleRows }, (_, row) => layout.period * (row % 2 === 0 ? 0.5 : 0.62));
-    const spotlightValues = new WeakMap<HTMLElement, number>();
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    const motion = motionRef.current;
+    const rowEls = Array.from(plane.children) as HTMLElement[];
+    const tileEls = rowEls.map((row) => Array.from(row.children) as HTMLElement[]);
+    const spots = tileEls.map((list) => new Float32Array(list.length));
+    const written = tileEls.map((list) => new Float32Array(list.length));
     let raf = 0;
     let last = performance.now();
-    let isVisible = true;
+    let visible = true;
     let alive = true;
-
-    const onPointerMove = (event: PointerEvent) => {
-      const rect = root.getBoundingClientRect();
-      pointerRef.current = {
-        x: event.clientX - rect.left - rect.width / 2,
-        y: event.clientY - rect.top - rect.height / 2,
-        active: event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom,
-      };
-    };
-    const onPointerLeave = () => { pointerRef.current.active = false; };
-
-    root.addEventListener('pointermove', onPointerMove, { passive: true });
-    root.addEventListener('pointerleave', onPointerLeave);
+    if (motion.intro >= 1) plane.style.opacity = '1';
 
     const frame = (now: number) => {
-      if (!alive) return;
-      // Clear the completed frame id before deciding whether to schedule another.
-      // Otherwise it stays truthy while the grid is off-screen and blocks a restart.
       raf = 0;
+      if (!alive) return;
+      const s = settingsRef.current;
       const dt = Math.min(0.05, Math.max(0.001, (now - last) / 1000));
       last = now;
-      const pointer = pointerRef.current;
-      const turn = (angle * Math.PI) / 180;
-      const focusX = pointer.x * Math.cos(turn) + pointer.y * Math.sin(turn);
-      const focusY = -pointer.x * Math.sin(turn) + pointer.y * Math.cos(turn);
-      const reach = Math.max(layout.tileWidth, layout.tileHeight) * (1.3 + spotlight * 2.4);
 
-      Array.from(plane.children).forEach((rowElement, rowIndex) => {
-        const row = rowElement as HTMLElement;
-        const driftDirection = rowIndex % 2 === 0 ? -1 : 1;
-        if (!reducedMotion) offsets[rowIndex] += speed * driftDirection * dt;
-        const x = -layout.period + wrap(offsets[rowIndex], layout.period);
-        row.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`;
+      if (motion.intro < 1) {
+        motion.intro = Math.min(1, motion.intro + dt / 0.9);
+        plane.style.opacity = String(1 - (1 - motion.intro) ** 3);
+      }
 
-        Array.from(row.children).forEach((tileElement, tileIndex) => {
-          const tile = tileElement as HTMLElement;
-          const tileX = x - layout.planeWidth / 2 + layout.tileWidth / 2 + tileIndex * layout.step;
-          const tileY = layout.rowOffsetY + layout.tileHeight / 2 + rowIndex * (layout.tileHeight + gap) - layout.planeHeight / 2;
-          const distance = Math.hypot(tileX - focusX, tileY - focusY);
-          const target = pointer.active && spotlight > 0 ? 1 - clamp((distance - reach * 0.22) / (reach * 0.78), 0, 1) : 0;
-          const current = spotlightValues.get(tile) ?? 0;
-          const next = current + (target - current) * (1 - Math.exp(-dt / 0.2));
-          if (Math.abs(next - current) > 0.01) {
-            spotlightValues.set(tile, next);
-            tile.style.setProperty('--grid-spot', next.toFixed(3));
+      const rect = root.getBoundingClientRect();
+      const scale = rect.width ? root.clientWidth / rect.width : 1;
+      const halfWidth = root.clientWidth / 2 || 1;
+      const halfHeight = root.clientHeight / 2 || 1;
+      const px = (motion.pointer.x - rect.left) * scale - halfWidth;
+      const py = (motion.pointer.y - rect.top) * scale - halfHeight;
+      const inside = motion.pointer.active && Math.abs(px) <= halfWidth && Math.abs(py) <= halfHeight;
+      const lean = (s.tilt * Math.PI) / 180;
+      const turn = (s.angle * Math.PI) / 180;
+      const depth = layout.perspective;
+      let flatY = py;
+      let flatX = px;
+      if (lean > 0.0001) {
+        flatY = (py * depth) / (depth * Math.cos(lean) + py * Math.sin(lean));
+        flatX = (px * (depth - flatY * Math.sin(lean))) / depth;
+      }
+      const planeX = flatX * Math.cos(turn) + flatY * Math.sin(turn);
+      const planeY = -flatX * Math.sin(turn) + flatY * Math.cos(turn);
+      const nudge = motion.pointer.active ? clamp(px / halfWidth, -1, 1) : 0;
+      const reach = (0.6 + 2.2 * s.spotlight) * Math.max(layout.tileWidth, layout.tileHeight);
+      const settle = 1 - Math.exp(-dt / 0.22);
+
+      rowEls.forEach((row, r) => {
+        const drift = s.direction === 'left' ? -1 : s.direction === 'right' ? 1 : r % 2 ? 1 : -1;
+        if (motion.offsets[r] === undefined) {
+          motion.offsets[r] = r * layout.step * 0.37;
+          motion.shifts[r] = 0;
+        }
+        if (!reduce) motion.offsets[r] += s.speed * drift * PACE[r % PACE.length] * dt;
+        const target = reduce ? 0 : s.parallax * layout.tileWidth * 1.2 * nudge * (r % 2 ? -1 : 1);
+        motion.shifts[r] += (target - motion.shifts[r]) * (1 - Math.exp(-dt / INERTIA[r % INERTIA.length]));
+        const x = -layout.period + wrap(motion.offsets[r] + motion.shifts[r], layout.period);
+        row.style.transform = `translate3d(${x.toFixed(2)}px, 0, 0)`;
+
+        const rowY = layout.top + r * (layout.tileHeight + s.gap) + layout.tileHeight / 2 - layout.planeHeight / 2;
+        const left = x - layout.planeWidth / 2 + layout.tileWidth / 2;
+        const list = tileEls[r];
+        const values = spots[r];
+        const marks = written[r];
+        for (let k = 0; k < list.length; k++) {
+          let wanted = 0;
+          if (inside && s.spotlight > 0) {
+            const distance = Math.hypot(left + k * layout.step - planeX, rowY - planeY) / reach;
+            wanted = 1 - smoothstep(0.25, 1, distance);
           }
-        });
+          values[k] += (wanted - values[k]) * settle;
+          if (Math.abs(values[k] - marks[k]) > 0.004 || (wanted === 0 && values[k] < 0.004 && marks[k] !== 0)) {
+            marks[k] = values[k] < 0.004 ? 0 : values[k];
+            list[k].style.setProperty('--spot', marks[k].toFixed(3));
+          }
+        }
       });
-      if (isVisible) raf = requestAnimationFrame(frame);
+
+      if (visible) raf = requestAnimationFrame(frame);
     };
 
     const visibility = new IntersectionObserver((entries) => {
-      isVisible = entries.some((entry) => entry.isIntersecting);
-      if (isVisible && !raf) {
+      visible = entries.some((entry) => entry.isIntersecting);
+      if (visible && !raf) {
         last = performance.now();
         raf = requestAnimationFrame(frame);
       }
@@ -153,45 +316,80 @@ export function GridMotion({
       alive = false;
       cancelAnimationFrame(raf);
       visibility.disconnect();
-      root.removeEventListener('pointermove', onPointerMove);
-      root.removeEventListener('pointerleave', onPointerLeave);
     };
-  }, [layout, tiles, visibleRows, angle, speed, spotlight]);
+  }, [layout, tiles]);
+
+  const rowTiles = layout
+    ? Array.from({ length: layout.rows }, (_, r) =>
+        Array.from({ length: layout.perRow }, (_, j) =>
+          tiles.length ? tiles[(r * layout.perRow + j) % tiles.length] : EMPTY,
+        ),
+      )
+    : [];
+  const effectiveFade = size.width > 0 && size.width < 640 ? Math.min(settings.fade, 0.24) : settings.fade;
+  const mask =
+    effectiveFade > 0
+      ? `${feather('to right', effectiveFade * 34)}, ${feather('to bottom', effectiveFade * 44)}`
+      : undefined;
+
+  const rootClass = [
+    'grid-motion',
+    grayscale && 'grid-motion--gray',
+    fit === 'contain' && 'grid-motion--contain',
+    borderless && 'grid-motion--borderless',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <div ref={rootRef} className={`grid-motion ${className}`} role="img" aria-label="Artes dos softwares disponíveis na loja">
-      {layout && tiles.length > 0 && (
+    <div
+      ref={rootRef}
+      className={rootClass}
+      style={
+        {
+          '--gm-tile': tileColor ?? palette.tile,
+          '--gm-text': textColor ?? palette.text,
+          '--gm-border': palette.border,
+          '--gm-radius': `${Math.max(0, radius)}px`,
+          '--gm-dim': settings.dim,
+          perspective: layout && settings.tilt > 0 ? `${layout.perspective}px` : undefined,
+          maskImage: mask,
+          WebkitMaskImage: mask,
+          maskComposite: mask ? 'intersect' : undefined,
+          WebkitMaskComposite: mask ? 'source-in' : undefined,
+          ...style,
+        } as CSSProperties
+      }
+    >
+      {layout && (
         <div
           ref={planeRef}
           className="grid-motion__plane"
-          style={{
-            width: layout.planeWidth,
-            height: layout.planeHeight,
-          transform: `translate(-50%,-50%) rotateZ(${angle}deg)`,
-            '--grid-gap': `${gap}px`,
-            '--grid-tile-width': `${layout.tileWidth}px`,
-            '--grid-tile-height': `${layout.tileHeight}px`,
-            '--grid-dim': dim,
-          } as React.CSSProperties}
+          aria-hidden="true"
+          style={
+            {
+              width: layout.planeWidth,
+              height: layout.planeHeight,
+              transform: `translate(-50%, -50%) rotateX(${settings.tilt}deg) rotateZ(${settings.angle}deg)`,
+              '--gm-gap': `${settings.gap}px`,
+              '--gm-tile-w': `${layout.tileWidth}px`,
+              '--gm-tile-h': `${layout.tileHeight}px`,
+              '--gm-font': `${clamp(layout.tileHeight * 0.12, 12, 32)}px`,
+            } as CSSProperties
+          }
         >
-          {Array.from({ length: visibleRows }, (_, rowIndex) => {
-            const hasCenterRow = visibleRows >= 3;
-            const isCenterRow = rowIndex === Math.floor(visibleRows / 2);
-            const rowDim = hasCenterRow ? (isCenterRow ? dim * 0.12 : Math.min(0.58, dim + 0.27)) : dim;
-            return (
-            <div className="grid-motion__row" key={rowIndex} style={{ top: layout.rowOffsetY + rowIndex * (layout.tileHeight + gap), width: layout.rowWidth, '--grid-row-dim': rowDim } as React.CSSProperties}>
-              {Array.from({ length: layout.columns * 3 }, (_, columnIndex) => {
-                const item = tiles[(rowIndex * layout.columns + columnIndex) % tiles.length];
-                return (
-                  <div className="grid-motion__tile" key={`${rowIndex}-${columnIndex}`}>
-                    <img src={item.src} alt="" draggable={false} decoding="async" loading="eager" />
-                  </div>
-                );
-              })}
+          {rowTiles.map((sequence, r) => (
+            <div key={r} className="grid-motion__row" style={{ top: layout.top + r * (layout.tileHeight + settings.gap) }}>
+              {Array.from({ length: layout.copies * layout.perRow }, (_, k) => (
+                <TileView key={k} tile={sequence[k % layout.perRow]} />
+              ))}
             </div>
-          );})}
+          ))}
         </div>
       )}
     </div>
   );
 }
+
+export default GridMotion;

@@ -1,8 +1,9 @@
 import { WhatsAppIcon } from '../components/WhatsAppIcon';
+import { LearnMoreChevron } from '../components/LearnMoreChevron';
 import { useText } from '../hooks/useText';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, CreditCard, Mail, Settings, ArrowRight } from 'lucide-react';
+import { ShoppingBag, CreditCard, Mail, Settings } from 'lucide-react';
 
 export const HowItWorksPage: React.FC = () => {
   const localize = useText();
@@ -78,9 +79,9 @@ export const HowItWorksPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
             <Link
               to="/catalogo"
-              className="px-6 py-3.5 bg-action-primary hover:bg-action-primary-hover text-white font-bold rounded-2xl shadow hover:shadow-lg transition-all flex items-center justify-center"
+              className="t-learn px-6 py-3.5 bg-action-primary hover:bg-action-primary-hover text-white font-bold rounded-2xl shadow hover:shadow-lg transition-all flex items-center justify-center"
             >
-              {localize("Navegar no catálogo")}<ArrowRight className="w-5 h-5 ml-2" />
+              {localize("Navegar no catálogo")}<LearnMoreChevron className="ml-2" size={18} />
             </Link>
             <a
               href={whatsappUrl}

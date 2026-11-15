@@ -1,7 +1,8 @@
 import { WhatsAppIcon } from '../components/WhatsAppIcon';
+import { LearnMoreChevron } from '../components/LearnMoreChevron';
 import { useText } from '../hooks/useText';
 import React from 'react';
-import { BadgeCheck, Mail, AlertCircle, ArrowRight } from 'lucide-react';
+import { BadgeCheck, Mail, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const ThankYouPage: React.FC = () => {
@@ -70,9 +71,9 @@ export const ThankYouPage: React.FC = () => {
               {localize("Falar com suporte")}</a>
             <Link
               to="/"
-              className="flex-1 flex items-center justify-center py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl text-sm transition-all"
+              className="t-learn flex-1 flex items-center justify-center py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl text-sm transition-all"
             >
-              {localize("Voltar ao Início")}<ArrowRight className="w-4 h-4 ml-2 text-slate-500" />
+              {localize("Voltar ao Início")}<LearnMoreChevron className="ml-2 text-slate-500" size={16} />
             </Link>
           </div>
 

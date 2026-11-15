@@ -1,18 +1,24 @@
 const methods = [
-  { name: 'Pix', file: 'pix' },
-  { name: 'Visa', file: 'visa' },
-  { name: 'Mastercard', file: 'mastercard' },
-  { name: 'American Express', file: 'american-express' },
-  { name: 'Elo', file: 'elo' },
+  { name: 'American Express', file: 'amex.png', heightClass: 'h-8 sm:h-9' },
+  { name: 'Visa', file: 'visa.png', heightClass: 'h-5 sm:h-6' },
+  { name: 'Mastercard', file: 'mastercard.png', heightClass: 'h-8 sm:h-9' },
+  { name: 'Elo', file: 'elo.png', heightClass: 'h-5 sm:h-6' },
+  { name: 'Pix', file: 'pix.png', heightClass: 'h-6 sm:h-7' },
+  { name: 'Boleto Bancário', file: 'boleto.png', heightClass: 'h-7 sm:h-8' },
 ];
 
 export function PaymentMethods() {
   return (
-    <div className="grid w-full max-w-sm grid-cols-5 items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2">
+    <div className="flex flex-wrap items-center justify-start sm:justify-end gap-4 sm:gap-5">
       {methods.map(method => (
-        <div key={method.file} className="flex h-9 min-w-0 items-center justify-center rounded-md bg-white">
-          <img src={`/images/payments/${method.file}.svg`} alt={method.name} width="44" height="30" className="h-7 w-full object-contain" loading="lazy" />
-        </div>
+        <img
+          key={method.file}
+          src={`/images/payments/${method.file}`}
+          alt={method.name}
+          title={method.name}
+          className={`${method.heightClass} w-auto object-contain select-none`}
+          loading="lazy"
+        />
       ))}
     </div>
   );

@@ -1,5 +1,6 @@
 import { MobileNavigation } from './MobileNavigation';
 import { WhatsAppIcon } from './WhatsAppIcon';
+import { LearnMoreChevron } from './LearnMoreChevron';
 import { useText } from '../hooks/useText';
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -9,7 +10,6 @@ import {
   Search,
   Home as HomeIcon,
   ChevronDown,
-  ChevronRight,
   CloudDownload,
   Lock,
   ShoppingCart,
@@ -22,6 +22,7 @@ import { useCart } from '../context/CartContext';
 import { useCurrency, CURRENCIES, type CurrencyCode } from '../context/CurrencyContext';
 import { useLanguage } from '../context/LanguageContext';
 import { products } from '../data/products';
+import { galleryImageSource } from '../data/galleryImages';
 import { catalogLink } from '../data/catalogNavigation';
 
 /* ============================================================================
@@ -357,6 +358,8 @@ const HeaderContent: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isDesktopSearchOpen, setIsDesktopSearchOpen] = useState(false);
   const [isMobileSearchActive, setIsMobileSearchActive] = useState(false);
+  const desktopSearchRef = useRef<HTMLDivElement | null>(null);
+  const desktopSearchInputRef = useRef<HTMLInputElement | null>(null);
 
   // Mega-menu active category ID
   const [activeMegaId, setActiveMegaId] = useState<string | null>(null);
@@ -397,6 +400,25 @@ const HeaderContent: React.FC = () => {
   useEffect(() => () => {
     if (megaCloseTimeoutRef.current) window.clearTimeout(megaCloseTimeoutRef.current);
   }, []);
+
+  useEffect(() => {
+    if (!isDesktopSearchOpen) return;
+    requestAnimationFrame(() => desktopSearchInputRef.current?.focus());
+    const handlePointerDown = (event: MouseEvent) => {
+      if (desktopSearchRef.current && !desktopSearchRef.current.contains(event.target as Node)) {
+        setIsDesktopSearchOpen(false);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsDesktopSearchOpen(false);
+    };
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isDesktopSearchOpen]);
 
   const handleMegaEnter = (id: string) => {
     if (megaCloseTimeoutRef.current) {
@@ -843,8 +865,8 @@ const HeaderContent: React.FC = () => {
                         {cat.icon}
                         <span>{localize(getMegaCategoryLabel(cat.id, cat.label, language))}</span>
                         <ChevronDown
-                          className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${
-                            isCatOpen ? 'rotate-180 text-slate-500' : 'text-slate-500'
+                          className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 text-slate-500 ${
+                            isCatOpen ? 'rotate-0' : 'rotate-180'
                           }`}
                         />
                       </Link>
@@ -855,40 +877,51 @@ const HeaderContent: React.FC = () => {
 
               {/* Right: Search, Contact Icon & Shopping Cart `( 0 )` */}
               <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap">
-                {/* Desktop Search Form / Toggle */}
-                <div className="hidden md:flex items-center">
-                  {isDesktopSearchOpen ? (
-                    <form onSubmit={handleSearch} className="relative flex items-center">
+                {/* Desktop Search Dropdown (opens downward without pushing cart icon) */}
+                <div ref={desktopSearchRef} className="hidden md:flex items-center relative">
+                  <button
+                    type="button"
+                    onClick={() => setIsDesktopSearchOpen((prev) => !prev)}
+                    aria-expanded={isDesktopSearchOpen}
+                    className={`p-1.5 rounded-full transition-colors cursor-pointer ${
+                      isDesktopSearchOpen
+                        ? 'text-[#0b5ed7] bg-blue-50'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                    }`}
+                    aria-label={localize("Pesquisar")}
+                    title={localize("Pesquisar softwares")}
+                  >
+                    <Search className="w-4 h-4" />
+                  </button>
+
+                  <div
+                    className={`absolute right-0 top-full mt-2.5 w-72 sm:w-80 z-50 transition-all duration-200 origin-top-right ${
+                      isDesktopSearchOpen
+                        ? 'visible opacity-100 translate-y-0 scale-100 pointer-events-auto'
+                        : 'invisible opacity-0 -translate-y-1.5 scale-95 pointer-events-none'
+                    }`}
+                  >
+                    <form
+                      onSubmit={handleSearch}
+                      className="bg-white rounded-2xl shadow-xl border border-slate-200/90 p-2 flex items-center gap-1.5"
+                    >
                       <input
+                        ref={desktopSearchInputRef}
                         type="text"
-                        autoFocus
                         placeholder={t('nav_search_short')}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        onBlur={() => {
-                          if (!searchQuery.trim()) setIsDesktopSearchOpen(false);
-                        }}
-                        className="w-40 lg:w-44 pl-3 pr-8 py-1.5 text-xs bg-slate-100 border border-slate-200 rounded-full text-slate-800 focus:outline-none focus:border-[#0b5ed7] focus:bg-white transition-all"
+                        className="flex-1 min-w-0 pl-3 pr-2 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200/80 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#0b5ed7] focus:bg-white transition-all"
                       />
                       <button
                         type="submit"
-                        className="absolute right-2.5 text-slate-500 hover:text-slate-800 cursor-pointer"
+                        className="p-2 bg-[#0b5ed7] hover:bg-blue-700 text-white rounded-xl transition-colors cursor-pointer shrink-0"
                         aria-label={localize("Pesquisar")}
                       >
-                        <Search className="w-3.5 h-3.5" />
+                        <Search className="w-4 h-4" />
                       </button>
                     </form>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setIsDesktopSearchOpen(true)}
-                      className="p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
-                      aria-label={localize("Pesquisar")}
-                      title={localize("Pesquisar softwares")}
-                    >
-                      <Search className="w-4 h-4" />
-                    </button>
-                  )}
+                  </div>
                 </div>
 
                 {/* Mobile Search Button */}
@@ -990,10 +1023,10 @@ const HeaderContent: React.FC = () => {
                         <Link
                           to={col.seeAllLink}
                           onClick={() => setActiveMegaId(null)}
-                          className="inline-flex items-center gap-0.5 text-xs font-bold text-[#0b5ed7] hover:underline"
+                          className="t-learn inline-flex items-center gap-0.5 text-xs font-bold text-[#0b5ed7] hover:underline"
                         >
                           <span>{localize(language === 'en' ? 'View all' : 'Ver todos')}</span>
-                          <ChevronRight className="w-3.5 h-3.5" />
+                          <LearnMoreChevron className="ml-0.5" size={14} />
                         </Link>
                       </div>
                     </div>
@@ -1016,7 +1049,7 @@ const HeaderContent: React.FC = () => {
                         <div className="w-28 h-32 flex items-center justify-center mb-3 overflow-hidden rounded-lg">
                           {prod.imageUrl ? (
                             <img
-                              src={prod.imageUrl}
+                              src={galleryImageSource(prod.imageUrl)}
                               alt={prod.name}
                               className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                             />
@@ -1094,13 +1127,13 @@ const HeaderContent: React.FC = () => {
                 <div key={cat.id}>
                 <Link
                   to={catalogLink(cat.categoryFilter)}
-                  className="flex items-center justify-between py-2 text-sm font-semibold text-slate-700 hover:text-[#0b5ed7] border-b border-slate-50"
+                  className="t-learn flex items-center justify-between py-2 text-sm font-semibold text-slate-700 hover:text-[#0b5ed7] border-b border-slate-50"
                 >
                   <span className="flex items-center gap-2">
                     {cat.icon}
                     {localize(getMegaCategoryLabel(cat.id, cat.label, language))}
                   </span>
-                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                  <LearnMoreChevron className="text-slate-400" size={16} />
                 </Link>
                 {cat.columns.map(col => <Link key={col.title} to={col.seeAllLink} className="block py-2 pl-6 text-xs text-slate-600 hover:text-action-primary">{localize(getMegaColumnTitle(col.title, language))}</Link>)}
                 </div>

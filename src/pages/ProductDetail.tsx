@@ -1,6 +1,7 @@
 import { LifetimeSeal } from '../components/LifetimeSeal';
 import { AnimatedPrice } from '../components/AnimatedPrice';
 import { JellyRadio } from '../components/JellyRadio';
+import { LearnMoreChevron } from '../components/LearnMoreChevron';
 import { galleryImageSource } from '../data/galleryImages';
 import { StoreReviews } from '../components/StoreReviews';
 import { ReviewComment } from '../components/ReviewComment';
@@ -222,6 +223,17 @@ const ProductDetailContent: React.FC = () => {
   }, [product]);
 
   useEffect(() => {
+    const options = product?.licenseOptions;
+    const cheapest = options?.reduce<LicenseOption | undefined>(
+      (acc, option) => (!acc || option.price < acc.price ? option : acc),
+      undefined
+    );
+    setSelectedLicenseOption(cheapest);
+    setQuantity(1);
+    setActiveThumbIndex(0);
+  }, [product]);
+
+  useEffect(() => {
     if (product) {
       trackEvent('ViewContent', {
         content_name: product.name,
@@ -272,39 +284,6 @@ const ProductDetailContent: React.FC = () => {
     return [...sameCategory, ...others].slice(0, 8);
   }, [product]);
 
-  // Essential Plugins Recommendation Logic
-  const [selectedVrayHost, setSelectedVrayHost] = useState<'SketchUp' | 'Revit' | 'Rhinoceros'>(() => slug?.includes('revit') ? 'Revit' : slug?.includes('rhino') ? 'Rhinoceros' : 'SketchUp');
-
-  const enscapeProduct = useMemo(() => products.find((p) => p.id === 'enscape'), []);
-  const vrayProduct = useMemo(() => products.find((p) => p.id === 'vray_7'), []);
-
-  const isHostSoftware = useMemo(() => {
-    if (!product) return false;
-    return (
-      product.id === 'sketchup_2026_win' || product.slug.includes('sketchup') ||
-      product.id === 'revit_2027' || product.slug.includes('revit') ||
-      product.id === 'rhinoceros_8' || product.slug.includes('rhino') ||
-      product.id === 'archicad_30' || product.slug.includes('archicad')
-    );
-  }, [product]);
-
-  const supportsVray = useMemo(() => {
-    if (!product) return false;
-    return (
-      product.id === 'sketchup_2026_win' || product.slug.includes('sketchup') ||
-      product.id === 'revit_2027' || product.slug.includes('revit') ||
-      product.id === 'rhinoceros_8' || product.slug.includes('rhino')
-    );
-  }, [product]);
-
-  const hostName = useMemo(() => {
-    if (!product) return 'Software';
-    if (product.id === 'revit_2027' || product.slug.includes('revit')) return 'Revit';
-    if (product.id === 'rhinoceros_8' || product.slug.includes('rhino')) return 'Rhinoceros';
-    if (product.id === 'archicad_30' || product.slug.includes('archicad')) return 'ArchiCAD';
-    return 'SketchUp';
-  }, [product]);
-
   useEffect(() => {
     if (
       searchParams.get('checkout') === 'true' &&
@@ -346,26 +325,6 @@ const ProductDetailContent: React.FC = () => {
       .filter((opt) => opt.platform === selectedPlatform)
       .sort((a, b) => a.price - b.price);
   }, [hasPlatformYearMatrix, product, selectedPlatform]);
-
-  const isWindowsActive = selectedPlatform === 'Windows' && product?.compatibility !== 'macOS';
-  const showEssentialPlugins = isWindowsActive && isHostSoftware;
-
-  const handleAddVrayFromBanner = () => {
-    if (!vrayProduct) return;
-    const targetOption = vrayProduct.licenseOptions?.find(
-      (opt) => opt.year === selectedVrayHost || opt.label.toLowerCase().includes(selectedVrayHost.toLowerCase())
-    ) || {
-      quantity: selectedVrayHost === 'SketchUp' ? 1 : selectedVrayHost === 'Revit' ? 2 : 3,
-      label: `V-Ray 7 para ${selectedVrayHost}`,
-      platform: 'Windows' as const,
-      year: selectedVrayHost,
-      price: 87.90,
-      originalPrice: 149.90,
-      checkoutUrl: 'https://pay.cakto.com.br/t5qr5by_847341',
-      imageUrl: '/images/products/vray-7-windows.webp'
-    };
-    addToCart(vrayProduct, 'avulso', targetOption, 1);
-  };
 
   if (!product) {
     return (
@@ -855,14 +814,12 @@ const ProductDetailContent: React.FC = () => {
                 {/* Validade */}
                 <div className="space-y-1.5">
                   <label className="block text-xs font-semibold text-slate-700">{localize(t('validity'))}</label>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      className="px-4 py-2 rounded-md text-xs font-bold border-2 border-[#0b5ed7] text-[#0b5ed7] bg-blue-50/40 shadow-xs cursor-default"
-                    >
-                      {localize(t('lifetime'))}
-                    </button>
-                  </div>
+                  <JellyRadio
+                    ariaLabel={localize(t('validity'))}
+                    value="lifetime"
+                    items={[{ value: 'lifetime', label: localize(t('lifetime')) }]}
+                    onChange={() => {}}
+                  />
                 </div>
 
                 {/* Ano / Versão */}
@@ -870,7 +827,7 @@ const ProductDetailContent: React.FC = () => {
                   <label className="block text-xs font-semibold text-slate-700">{localize(t('year'))}</label>
                   <JellyRadio
                     ariaLabel={localize(t('year'))}
-                    value={String(selectedLicenseOption?.quantity ?? '')}
+                    value={String(selectedLicenseOption?.quantity ?? availableYearsForPlatform[0]?.quantity ?? '')}
                     items={availableYearsForPlatform.map((opt) => ({
                       value: String(opt.quantity),
                       label: opt.year,
@@ -888,25 +845,32 @@ const ProductDetailContent: React.FC = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
                     <label className="block text-xs font-semibold text-slate-700">{localize(t('platform'))}</label>
-                    <div className="flex flex-wrap gap-2">
-                      <span className="px-4 py-2 rounded-md text-xs font-bold border-2 border-[#0b5ed7] text-[#0b5ed7] bg-blue-50/40">
-                        {localize(product.compatibility)}
-                      </span>
-                    </div>
+                    <JellyRadio
+                      ariaLabel={localize(t('platform'))}
+                      value={product.compatibility}
+                      items={[{ value: product.compatibility, label: localize(product.compatibility) }]}
+                      onChange={() => {}}
+                    />
                   </div>
 
                   <div className="space-y-1.5">
                     <label className="block text-xs font-semibold text-slate-700">{localize(t('validity'))}</label>
-                    <div className="flex flex-wrap gap-2">
-                      <span className="px-4 py-2 rounded-md text-xs font-bold border-2 border-[#0b5ed7] text-[#0b5ed7] bg-blue-50/40">
-                        {localize(product.isSubscription ? t('subscription') : t('lifetime'))}
-                      </span>
-                    </div>
+                    <JellyRadio
+                      ariaLabel={localize(t('validity'))}
+                      value="validity"
+                      items={[
+                        {
+                          value: 'validity',
+                          label: localize(product.isSubscription ? t('subscription') : t('lifetime')),
+                        },
+                      ]}
+                      onChange={() => {}}
+                    />
                   </div>
                 </div>
 
-                {/* Standard licenseOptions if present (e.g. Windows keys 1/2/3 PCs or Autodesk All Apps plans) */}
-                {product.licenseOptions && product.licenseOptions.length > 0 && (
+                {/* Standard licenseOptions if present (e.g. Eberick + Builder, Autodesk All Apps plans) or single version */}
+                {product.licenseOptions && product.licenseOptions.length > 0 ? (
                   <div className="space-y-1.5">
                     <label className="block text-xs font-semibold text-slate-700">
                       {localize(product.isSubscription
@@ -915,27 +879,43 @@ const ProductDetailContent: React.FC = () => {
                         ? 'Escolha a versão'
                         : t('choose_license'))}
                     </label>
-                    <div className="flex flex-wrap gap-2">
-                      {product.licenseOptions.map((opt) => {
-                        const isSelected = selectedLicenseOption?.quantity === opt.quantity;
-                        return (
-                          <button
-                            key={opt.quantity}
-                            type="button"
-                            onClick={() => setSelectedLicenseOption(opt)}
-                            className={`px-3.5 py-2 rounded-md text-xs font-bold transition-all cursor-pointer border ${
-                              isSelected
-                                ? 'border-2 border-[#0b5ed7] text-[#0b5ed7] bg-blue-50/40 shadow-xs'
-                                : 'border-slate-300 text-slate-700 bg-white hover:border-slate-400'
-                            }`}
-                          >
-                            {localize(product.id === 'autodesk_all_apps' || product.id === 'eberick_builder_2025' || opt.label.startsWith('Versão')
-                              ? opt.label
-                              : `${opt.label} — ${formatPrice(opt.price)}`)}
-                          </button>
-                        );
-                      })}
-                    </div>
+                    <JellyRadio
+                      ariaLabel={localize(
+                        product.isSubscription
+                          ? 'Escolha a duração da assinatura'
+                          : product.id === 'eberick_builder_2025'
+                          ? 'Escolha a versão'
+                          : t('choose_license')
+                      )}
+                      value={String(selectedLicenseOption?.quantity ?? product.licenseOptions[0]?.quantity ?? '')}
+                      items={product.licenseOptions.map((opt) => ({
+                        value: String(opt.quantity),
+                        label: localize(
+                          product.id === 'autodesk_all_apps' ||
+                            product.id === 'eberick_builder_2025' ||
+                            opt.label.startsWith('Versão')
+                            ? opt.label
+                            : `${opt.label} — ${formatPrice(opt.price)}`
+                        ),
+                      }))}
+                      onChange={(_, index) => {
+                        const opt = product.licenseOptions?.[index];
+                        if (opt) {
+                          setSelectedLicenseOption(opt);
+                          setActiveThumbIndex(0);
+                        }
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-semibold text-slate-700">{localize('Versão')}</label>
+                    <JellyRadio
+                      ariaLabel={localize('Versão')}
+                      value={product.version}
+                      items={[{ value: product.version, label: localize(product.version) }]}
+                      onChange={() => {}}
+                    />
                   </div>
                 )}
 
@@ -1061,12 +1041,9 @@ const ProductDetailContent: React.FC = () => {
                     navigate('/checkout');
                   }}
                   id={`detail-buy-now-${product.id}`}
-                  className="specular-press w-full bg-slate-950 hover:bg-slate-800 text-white font-bold text-sm py-3.5 px-6 rounded-md shadow-md transition-all cursor-pointer flex items-center justify-center gap-2.5"
+                  className="specular-press w-full bg-slate-950 hover:bg-slate-800 text-white font-bold text-sm py-3.5 px-6 rounded-md shadow-md transition-all cursor-pointer flex items-center justify-center text-center"
                 >
                   <span>{localize(isInternational ? t('buy_now') : 'Comprar agora')}</span>
-                  <span className="inline-flex items-center gap-1.5 text-xs font-extrabold bg-white/15 px-2 py-0.5 rounded text-emerald-300">
-                    {localize(isInternational ? t('buy_now_badge') : 'PIX • CARTÃO')}
-                  </span>
                 </button>
                 {isInternational && (
                   <p className="text-xs text-slate-500 text-center leading-relaxed pt-1">
@@ -1083,161 +1060,6 @@ const ProductDetailContent: React.FC = () => {
         {/* =================================================================== */}
         <StoreReviews />
 
-        {/* =================================================================== */}
-        {/* ESSENTIAL PLUGINS RECOMMENDATION BANNER (Windows only)              */}
-        {/* =================================================================== */}
-        {showEssentialPlugins && (
-          <div className="my-10 p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-[#0e1628] border border-blue-900/40 text-white shadow-xl relative overflow-hidden">
-            {/* Subtle background glow */}
-            <div className="absolute -top-24 -right-24 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div className="relative z-10 space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-white/10 pb-5">
-                <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>{localize("Plugins Essenciais Recomendados (Windows)")}</span>
-                  </div>
-                  <h3 className="font-display font-black text-xl sm:text-2xl text-white tracking-tight">
-                    {localize("Potencialize seu ")}{hostName} {localize(" com ")}{supportsVray ? 'Renderizadores Profissionais' : 'Renderização em Tempo Real'}
-                  </h3>
-                  <p className="text-sm sm:text-base text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                    O {hostName} {localize(" é indispensável para arquitetura e projetos 3D. Para transformar seus modelos em imagens e vídeos fotorrealistas de alto impacto para clientes, ")}{supportsVray ? 'estes dois motores de render são indispensáveis:' : 'o plugin Chaos Enscape é indispensável:'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Plugin Cards */}
-              <div className={supportsVray ? "grid grid-cols-1 md:grid-cols-2 gap-4" : "flex justify-center"}>
-                {/* Chaos Enscape Card */}
-                <div className={`p-5 rounded-xl bg-white/[0.04] border border-white/10 hover:border-blue-500/40 transition-all flex flex-col justify-between group ${
-                  !supportsVray ? 'max-w-xl w-full' : ''
-                }`}>
-                  <div className="space-y-3">
-                    <div className="flex items-start gap-4">
-                      <img
-                        src="/images/products/chaos-enscape-windows.webp"
-                        alt="Chaos Enscape"
-                        className="w-16 h-16 rounded-xl object-cover bg-slate-800 border border-white/10 shrink-0 shadow-sm"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="inline-flex items-center gap-1 text-xs font-extrabold uppercase tracking-wider text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded mb-1">
-                          {localize("Tempo Real & VR")}</div>
-                        <h4 className="font-display font-bold text-base text-white group-hover:text-sky-300 transition-colors">
-                          Chaos Enscape
-                        </h4>
-                        <p className="text-xs text-slate-400 line-clamp-2 mt-0.5">
-                          {localize("Renderize instantaneamente enquanto você desenha no ")}{hostName}{localize(". Ideal para apresentações ao vivo e passeios virtuais interativos.")}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between gap-3">
-                    <div>
-                      <span className="text-xs text-slate-400 block font-medium">{localize("Licença Vitalícia")}</span>
-                      <span className="font-display font-black text-lg text-emerald-400">{formatPrice(enscapeProduct?.price ?? 97.90)}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Link
-                        to="/produto/chaos-enscape-windows"
-                        className="px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all"
-                      >
-                        {localize("Ver Detalhes")}</Link>
-                      {enscapeProduct && (
-                        <button
-                          type="button"
-                          onClick={() => addToCart(enscapeProduct)}
-                          className="px-3.5 py-2 rounded-lg bg-action-primary hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
-                        >
-                          <ShoppingCart className="w-3.5 h-3.5" />
-                          <span>{localize("Adicionar")}</span>
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Chaos V-Ray 7 Card */}
-                {supportsVray && (
-                  <div className="p-5 rounded-xl bg-white/[0.04] border border-white/10 hover:border-amber-500/40 transition-all flex flex-col justify-between group">
-                    <div className="space-y-3">
-                      <div className="flex items-start gap-4">
-                        <img
-                          src="/images/products/vray-7-windows.webp"
-                          alt="Chaos V-Ray 7"
-                          className="w-16 h-16 rounded-xl object-cover bg-slate-800 border border-white/10 shrink-0 shadow-sm"
-                        />
-                        <div className="min-w-0 flex-1">
-                          <div className="inline-flex items-center gap-1 text-xs font-extrabold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded mb-1">
-                            {localize("Fotorrealismo Máximo")}</div>
-                          <h4 className="font-display font-bold text-base text-white group-hover:text-amber-300 transition-colors">
-                            Chaos V-Ray 7
-                          </h4>
-                          <p className="text-xs text-slate-400 line-clamp-2 mt-0.5">
-                            {localize("O padrão mundial da indústria de arquitetura. Iluminação física, materiais hiper-realistas e render cinematográfico de altíssima precisão.")}</p>
-                        </div>
-                      </div>
-
-                      {/* Host Software Selector (SketchUp, Revit, Rhinoceros) */}
-                      <div className="pt-2 border-t border-white/10">
-                        <div className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
-                          <span>{localize("Selecione a versão:")}</span>
-                          <span className="text-amber-300 font-extrabold">{selectedVrayHost}</span>
-                        </div>
-                        <div className="grid grid-cols-3 gap-1.5">
-                          {(['SketchUp', 'Revit', 'Rhinoceros'] as const).map((host) => {
-                            const isSelected = selectedVrayHost === host;
-                            return (
-                              <button
-                                key={host}
-                                type="button"
-                                onClick={() => setSelectedVrayHost(host)}
-                                className={`py-1.5 px-2 rounded-lg text-xs font-bold transition-all text-center border cursor-pointer ${
-                                  isSelected
-                                    ? 'bg-amber-500/25 border-amber-400 text-amber-300 shadow-xs ring-1 ring-amber-400/30'
-                                    : 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10 hover:text-white'
-                                }`}
-                              >
-                                {host}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between gap-3">
-                      <div>
-                        <span className="text-xs text-slate-400 block font-medium">{localize("Licença Vitalícia")}</span>
-                        <span className="font-display font-black text-lg text-emerald-400">{formatPrice(vrayProduct?.price ?? 87.90)}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Link
-                          to="/produto/vray-7-windows"
-                          className="px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all"
-                        >
-                          {localize("Ver Detalhes")}</Link>
-                        {vrayProduct && (
-                          <button
-                            type="button"
-                            onClick={handleAddVrayFromBanner}
-                            className="px-3.5 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
-                          >
-                            <ShoppingCart className="w-3.5 h-3.5" />
-                            <span>{localize("Adicionar")}</span>
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* =================================================================== */}
         {/* 3-TABBED INFORMATION CONTAINER (DESCRIÇÃO | ESPECIFICAÇÕES | ATIVAÇÃO) */}
         {/* =================================================================== */}
         <div className="bg-[#f4f6f8] rounded-2xl border border-slate-200/80 p-5 sm:p-8 mb-14">
@@ -1836,10 +1658,10 @@ const ProductDetailContent: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => scrollRelated('right')}
-                  className="w-8 h-8 rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center cursor-pointer"
+                  className="t-learn w-8 h-8 rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center cursor-pointer"
                   aria-label={localize("Próximo")}
                 >
-                  <ChevronRight className="w-4 h-4" />
+                  <LearnMoreChevron className="ml-0" size={16} />
                 </button>
               </div>
             </div>
@@ -1912,7 +1734,7 @@ const ProductDetailContent: React.FC = () => {
 
                     <div className="pt-3 mt-2 border-t border-slate-100 space-y-2.5">
                       <div className="flex items-baseline gap-1.5">
-                        <span className="font-display font-black text-sm text-[#0b5ed7]">
+                        <span className="font-black text-sm text-[#0b5ed7]">
                           {localize(formatPrice(rel.price))}
                         </span>
                         <span className="text-xs text-slate-400 line-through">
@@ -1922,9 +1744,11 @@ const ProductDetailContent: React.FC = () => {
 
                       <Link
                         to={`/produto/${rel.slug}`}
-                        className="block w-full py-2 text-center bg-blue-50 hover:bg-[#0b5ed7] text-[#0b5ed7] hover:text-white font-bold text-xs rounded-md transition-colors"
+                        className="t-learn flex items-center justify-center w-full py-2 text-center bg-blue-50 hover:bg-[#0b5ed7] text-[#0b5ed7] hover:text-white font-bold text-xs rounded-md transition-colors"
                       >
-                        {localize("Detalhes")}</Link>
+                        <span>{localize("Detalhes")}</span>
+                        <LearnMoreChevron className="ml-1" size={14} />
+                      </Link>
                     </div>
                   </div>
                 );

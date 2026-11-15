@@ -640,7 +640,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                     {discountAmount > 0 && (
                       <div className="flex justify-between items-center text-xs text-emerald-600 font-semibold pt-2 border-t border-slate-200/60">
                         <span>{localize("Desconto (10% OFF10)")}</span>
-                        <span>-{localize(discountAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))}</span>
+                        <span >-{localize(discountAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))}</span>
                       </div>
                     )}
                   </>
@@ -728,13 +728,17 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                     <input
                       id="checkout-terms"
                       type="checkbox"
-                      className="t-input peer appearance-none w-4 h-4 border-2 border-slate-300 rounded bg-white checked:bg-action-primary checked:border-action-primary transition-all cursor-pointer"
+                      className="sr-only"
                       checked={termsAccepted}
                       onChange={(e) => setTermsAccepted(e.target.checked)}
                     />
-                    <CheckCircle2 className="absolute w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
+                    <span className="t-input t-check" aria-checked={termsAccepted} aria-hidden="true">
+                      <svg viewBox="0 0 10.1668 10.1668">
+                        <path d="M1 5.52L3.92 9.17L9.17 1" />
+                      </svg>
+                    </span>
                   </div>
-                  <span className="text-[11px] text-slate-500 leading-snug">
+                  <span className="text-[11px] text-slate-500 leading-snug select-none">
                     {localize("Li e concordo com os ")}<a href="/termos" target="_blank" rel="noopener noreferrer" className="text-action-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>{localize("Termos e Condições")}</a> {localize(" de compra, uso e suporte.")}</span>
                 </label>
               </div>

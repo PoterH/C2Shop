@@ -8,7 +8,7 @@ export const TrustpilotStarIcon: React.FC<{ className?: string }> = ({ className
   <img
     src="/images/trustpilot-star.png"
     alt="Trustpilot"
-    className={`inline-block object-contain shrink-0 select-none ${className}`}
+    className={`trust-logo-star inline-block object-contain shrink-0 select-none transition-transform duration-200 ${className}`}
     loading="eager"
   />
 );
@@ -19,7 +19,7 @@ export const TrustpilotLogo: React.FC<{ starSize?: string; textSize?: string; cl
   textSize = 'text-base',
   className = ''
 }) => (
-  <div className={`inline-flex items-center gap-1.5 select-none ${className}`}>
+  <div className={`trust-logo inline-flex items-center gap-1.5 select-none ${className}`}>
     <TrustpilotStarIcon className={starSize} />
     <span style={{ fontFamily: 'Arial, Helvetica, sans-serif' }} className={`font-normal tracking-[-0.3px] text-[#191919] ${textSize}`}>
       Trustpilot
@@ -41,7 +41,7 @@ export const TrustpilotStars: React.FC<{
   const isFourStar = count === 4;
 
   return (
-    <div className={`inline-flex shrink-0 items-center gap-0.5 ${className}`}>
+    <div className={`trust-stars-group inline-flex shrink-0 items-center gap-0.5 ${className}`}>
       {[1, 2, 3, 4, 5].map((star) => {
         const isActive = star <= count;
         const color = isActive ? (isFourStar ? '#73cf42' : '#00b67a') : '#dcdce6';
@@ -51,7 +51,8 @@ export const TrustpilotStars: React.FC<{
             viewBox="0 0 32 32"
             role="img"
             aria-label={isActive ? `${count} estrelas` : 'estrela vazia'}
-            className={`${size} shrink-0 select-none`}
+            data-active={isActive ? 'true' : 'false'}
+            className={`trust-star-box ${size} shrink-0 select-none`}
           >
             <rect width="32" height="32" fill={color} />
             <path d="m16 5 2.7 8.3h8.7l-7.1 5.1 2.7 8.3-7-5.1-7 5.1 2.7-8.3-7.1-5.1h8.7Z" fill="#fff" />
@@ -77,10 +78,10 @@ export const TrustpilotRatingHorizontal: React.FC<{
       className={`trust-rating group flex w-full items-center justify-center py-2 text-sm text-slate-800 cursor-pointer sm:w-auto sm:justify-start ${compact ? 'flex-nowrap gap-2 whitespace-nowrap' : 'flex-wrap gap-3'} ${className}`}
       title={t('trustpilot_reviews_modal_title')}
     >
-      {!compact && <span className="hidden lg:inline text-slate-600">{t('trustpilot_what_customers_say')}</span>}
-      <span className="hidden sm:inline font-semibold">{t('trustpilot_excellent')}</span>
+      {!compact && <span className="hidden lg:inline text-slate-600 transition-colors duration-200 group-hover:text-slate-900">{t('trustpilot_what_customers_say')}</span>}
+      <span className="hidden sm:inline font-semibold transition-colors duration-200 group-hover:text-black">{t('trustpilot_excellent')}</span>
       <TrustpilotStars count={5} size={compact ? 'w-4 h-4 sm:w-5 sm:h-5' : 'w-5 h-5'} />
-      <span className="hidden sm:inline text-slate-600 text-xs">{!compact && <>4.8 {t('trustpilot_score_based_on')} </>}<span className="underline underline-offset-2">{t('trustpilot_reviews_count')}</span></span>
+      <span className="hidden sm:inline text-slate-600 text-xs">{!compact && <>4.8 {t('trustpilot_score_based_on')} </>}<span className="trust-reviews-count underline underline-offset-2">{t('trustpilot_reviews_count')}</span></span>
       <TrustpilotLogo starSize="w-5 h-5" textSize="text-sm" />
     </button>
   );
@@ -250,14 +251,14 @@ export const TrustGuaranteesModal: React.FC<{
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-normal text-slate-900 text-2xl">Trustpilot</span>
-                <span className="text-xs font-black uppercase tracking-wider bg-[#08ad88]/15 text-[#067a5f] px-2 py-0.5 rounded-full">
+                <span className="trust-verified-pill text-xs font-black uppercase tracking-wider bg-[#08ad88]/15 text-[#067a5f] px-2 py-0.5 rounded-full transition-all duration-200 hover:bg-[#00b67a]/25 hover:text-[#045d48] hover:scale-105 select-none">
                   {language === 'en' ? 'Verified Reviews' : language === 'es' ? 'Opiniones Verificadas' : 'Avaliações Verificadas'}
                 </span>
               </div>
               <div className="flex flex-wrap items-center gap-2 mt-1">
                 <TrustpilotStars count={5} size="w-5 h-5" />
                 <span className="text-xs font-extrabold text-slate-800">4.8 / 5</span>
-                <span className="text-xs text-slate-500 font-medium">
+                <span className="trust-reviews-count text-xs text-slate-500 font-medium transition-colors duration-200 hover:text-[#191919]">
                   {language === 'en' ? '(1,785 satisfied customers)' : language === 'es' ? '(1.785 clientes satisfechos)' : '(1.785 clientes satisfeitos)'}
                 </span>
               </div>
@@ -348,8 +349,8 @@ export const TrustGuaranteesModal: React.FC<{
                   <p className="text-xs font-extrabold text-slate-900">{text(rev.title)}</p>
                   <p className="text-xs text-slate-600 leading-relaxed">{text(rev.comment)}</p>
 
-                  <div className="pt-1 flex items-center gap-1 text-xs font-bold text-[#067a5f]">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#08ad88]" />
+                  <div className="trust-verified-badge pt-1 inline-flex items-center gap-1 text-xs font-bold text-[#067a5f] transition-colors duration-200 hover:text-[#045d48]">
+                    <CheckCircle2 className="trust-verified-icon w-3.5 h-3.5 text-[#08ad88] transition-transform duration-200" />
                     <span>
                       {text(language === 'es'
                         ? 'Compra Verificada vía Trustpilot'

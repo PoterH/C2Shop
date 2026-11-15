@@ -24,7 +24,7 @@ export const Footer: React.FC = () => {
             <Link to="/" className="inline-flex items-center gap-3 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-300">
               <img src="/images/logo.webp" alt="" width="40" height="40" className="h-10 w-10 rounded-xl object-cover" />
               <span>
-                <span className="block font-display text-lg font-extrabold leading-tight text-white">C2Tech</span>
+                <span className="font-display block text-lg font-extrabold leading-tight text-white">C2Tech</span>
                 <span className="block text-xs text-slate-300">{localize('Licenças Digitais')}</span>
               </span>
             </Link>
