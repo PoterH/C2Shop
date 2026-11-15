@@ -580,9 +580,25 @@ export const TrustGuaranteesModal: React.FC<{
     >
       <p
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-[960px] text-white/80 text-[11.5px] sm:text-[12px] font-normal tracking-wide text-center mb-1.5 px-2 select-text"
+        onCopy={(e) => e.preventDefault()}
+        onCut={(e) => e.preventDefault()}
+        onContextMenu={(e) => e.preventDefault()}
+        onDragStart={(e) => e.preventDefault()}
+        style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
+        className="w-full max-w-[960px] text-[11.5px] sm:text-[12px] font-normal tracking-wide text-center mb-1.5 px-2 select-none"
       >
-        Visualização reduzida do site https://br.trustpilot.com/review/c2tech.shop
+        <span
+          className="t-shimmer"
+          data-text="Visualização reduzida do site https://br.trustpilot.com/review/c2tech"
+          style={
+            {
+              '--shimmer-base': 'rgba(255, 255, 255, 0.65)',
+              '--shimmer-highlight': '#ffffff',
+            } as React.CSSProperties
+          }
+        >
+          Visualização reduzida do site https://br.trustpilot.com/review/c2tech
+        </span>
       </p>
 
       <div
