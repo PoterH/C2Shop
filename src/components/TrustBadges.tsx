@@ -176,7 +176,6 @@ export const TrustGuaranteesModal: React.FC<{
 }> = ({ isOpen, onClose }) => {
   const { language } = useLanguage();
   const text = useText();
-  const [sitePreviewSrc, setSitePreviewSrc] = useState('/images/trustpilot-site-preview.png');
   const [selectedStarFilter, setSelectedStarFilter] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -561,13 +560,15 @@ export const TrustGuaranteesModal: React.FC<{
           <div className="bg-white border-b border-[#e5e5e5]">
             <div className="max-w-[820px] mx-auto px-4 sm:px-6 pt-6 pb-5">
               <div className="flex items-start gap-4 sm:gap-5">
-                {/* Real Website Screenshot Thumbnail matching Trustpilot company avatar */}
-                <div className="w-[104px] h-[80px] sm:w-[122px] sm:h-[94px] rounded border border-[#d6d6d6] overflow-hidden shrink-0 bg-[#061126] shadow-2xs">
+                {/* Official C2Tech Company Logo matching Trustpilot claimed company avatar */}
+                <div className="w-[88px] h-[88px] sm:w-[104px] sm:h-[104px] rounded-md border border-[#e5e5e5] overflow-hidden shrink-0 bg-[#0058d3] shadow-2xs">
                   <img
-                    src={sitePreviewSrc}
-                    alt="Prévia da loja c2tech.shop"
-                    onError={() => setSitePreviewSrc('/images/trustpilot-c2tech-thumb.png')}
-                    className="w-full h-full object-cover object-top select-none"
+                    src="/images/trustpilot-company-logo.jpg"
+                    alt="C2Tech"
+                    onError={(e) => {
+                      e.currentTarget.src = '/images/logo.png';
+                    }}
+                    className="w-full h-full object-cover select-none"
                   />
                 </div>
 
