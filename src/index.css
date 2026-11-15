@@ -962,17 +962,13 @@ h1 {
 
 /* Interactive hover states for Trustpilot stars, verified badges, and review counts */
 .trust-star-box {
-  transition: filter 180ms ease, transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: filter 180ms ease;
 }
 .trust-rating:hover .trust-star-box[data-active="true"],
 .trust-summary-btn:hover .trust-star-box[data-active="true"],
 .trust-review-card:hover .trust-star-box[data-active="true"],
 .trust-stars-group:hover .trust-star-box[data-active="true"] {
   filter: brightness(0.88);
-}
-.trust-stars-group .trust-star-box[data-active="true"]:hover {
-  filter: brightness(0.78);
-  transform: translateY(-1px) scale(1.04);
 }
 
 .trust-reviews-count {
@@ -1018,7 +1014,6 @@ h1 {
 .trust-summary-btn:hover .trust-logo-star,
 .trust-logo:hover .trust-logo-star {
   filter: brightness(0.9);
-  transform: scale(1.06);
 }
 
 @media (min-width: 1280px) {

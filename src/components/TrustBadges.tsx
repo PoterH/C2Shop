@@ -27,7 +27,7 @@ export const TrustpilotStarIcon: React.FC<{ className?: string }> = ({ className
   <img
     src="/images/trustpilot-star.png"
     alt="Trustpilot"
-    className={`trust-logo-star inline-block object-contain shrink-0 select-none transition-transform duration-200 ${className}`}
+    className={`trust-logo-star inline-block object-contain shrink-0 select-none transition-[filter] duration-200 ${className}`}
     loading="eager"
   />
 );
