@@ -2,10 +2,11 @@ import { useText } from '../hooks/useText';
 import React, { useState, useMemo, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import {
-  CheckCircle2,
   X,
   Search,
   ThumbsUp,
+  Share2,
+  Flag,
   MapPin,
   ShieldCheck,
   Check,
@@ -19,6 +20,7 @@ import {
 import {
   TRUSTPILOT_REVIEW_BASE_DAYS,
   formatTrustpilotDaysAgo,
+  formatTrustpilotExperienceDate,
   formatTrustpilotReviewCount,
 } from '../utils/trustpilotMetrics';
 
@@ -40,7 +42,7 @@ export const TrustpilotLogo: React.FC<{ starSize?: string; textSize?: string; cl
 }) => (
   <div className={`trust-logo inline-flex items-center gap-1.5 select-none ${className}`}>
     <TrustpilotStarIcon className={starSize} />
-    <span style={{ fontFamily: 'Arial, Helvetica, sans-serif' }} className={`font-normal tracking-[-0.3px] text-[#191919] ${textSize}`}>
+    <span className={`font-bold tracking-[-0.3px] text-[#191919] ${textSize}`}>
       Trustpilot
     </span>
   </div>
@@ -57,13 +59,13 @@ export const TrustpilotStars: React.FC<{
   size = 'w-5 h-5',
   className = ''
 }) => {
-  const isFourStar = count === 4;
+  const activeColor = count === 3 ? '#ffce00' : count === 4 ? '#73cf42' : '#00b67a';
 
   return (
     <div className={`trust-stars-group inline-flex shrink-0 items-center gap-0.5 ${className}`}>
       {[1, 2, 3, 4, 5].map((star) => {
         const isActive = star <= count;
-        const color = isActive ? (isFourStar ? '#73cf42' : '#00b67a') : '#dcdce6';
+        const color = isActive ? activeColor : '#dcdce6';
         return (
           <svg
             key={star}
@@ -336,13 +338,18 @@ export const TrustGuaranteesModal: React.FC<{
     };
   }, [isOpen, onClose]);
 
+  const reviewCountUnitLabel =
+    language === 'en' ? '1 review' : language === 'es' ? '1 opinión' : '1 avaliação';
+
   const trustpilotReviews = useMemo(
     () => [
       {
         id: 1,
         author: 'Carlos Eduardo M.',
-        location: language === 'en' ? 'New York, US' : language === 'es' ? 'Madrid, ES' : 'São Paulo, SP',
+        avatarColor: '#ea670c',
+        location: `BR • ${reviewCountUnitLabel}`,
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[1], language),
+        experienceDate: formatTrustpilotExperienceDate(TRUSTPILOT_REVIEW_BASE_DAYS[1], language),
         title:
           language === 'en'
             ? 'Delivery in under 2 minutes and very detailed video tutorial'
@@ -356,13 +363,15 @@ export const TrustGuaranteesModal: React.FC<{
               ? 'Pagué con tarjeta y el enlace de Google Drive llegó al correo al instante. El tutorial en video enseña todo paso a paso sin complicaciones. Ya lo estoy usando en mi trabajo.'
               : 'Paguei pelo Pix e o link do Google Drive chegou no e-mail na mesma hora. O tutorial em vídeo ensina tudo passo a passo sem complicação. Já estou usando no meu trabalho.',
         rating: 4,
-        baseHelpful: 14,
+        baseHelpful: 1,
       },
       {
         id: 2,
         author: 'Fernanda S. Oliveira',
-        location: language === 'en' ? 'Miami, US' : language === 'es' ? 'Ciudad de México, MX' : 'Belo Horizonte, MG',
+        avatarColor: '#78909c',
+        location: `BR • ${reviewCountUnitLabel}`,
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[2], language),
+        experienceDate: formatTrustpilotExperienceDate(TRUSTPILOT_REVIEW_BASE_DAYS[2], language),
         title:
           language === 'en'
             ? 'Outstanding value for money and 10/10 support'
@@ -376,13 +385,15 @@ export const TrustGuaranteesModal: React.FC<{
               ? 'Es el segundo software que les compro. Tuve una duda en la instalación en mi Mac y el soporte respondió en menos de 5 minutos por WhatsApp. ¡Funcionando de maravilla sin mensualidades!'
               : 'É o segundo software que compro com eles. Tive uma dúvida na instalação no meu Mac e o suporte respondeu em menos de 5 minutos pelo WhatsApp. Funcionando liso sem mensalidade!',
         rating: 5,
-        baseHelpful: 21,
+        baseHelpful: 1,
       },
       {
         id: 3,
         author: 'Roberto Almeida Jr.',
-        location: language === 'en' ? 'London, UK' : language === 'es' ? 'Buenos Aires, AR' : 'Curitiba, PR',
+        avatarColor: '#7b1fa2',
+        location: `BR • ${reviewCountUnitLabel}`,
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[3], language),
+        experienceDate: formatTrustpilotExperienceDate(TRUSTPILOT_REVIEW_BASE_DAYS[3], language),
         title:
           language === 'en'
             ? 'Best digital license store'
@@ -396,13 +407,15 @@ export const TrustGuaranteesModal: React.FC<{
               ? 'Software completo, con todas las funciones desbloqueadas y sin bloqueos. Muy transparente, lo recomiendo con total confianza a todos los arquitectos e ingenieros.'
               : 'Software completo, com todas as funções desbloqueadas e sem travamento. Muito transparente, recomendo de olhos fechados a todos os arquitetos e engenheiros.',
         rating: 5,
-        baseHelpful: 18,
+        baseHelpful: 0,
       },
       {
         id: 4,
         author: 'Juliana Costa',
-        location: language === 'es' ? 'Santiago, CL' : 'Rio de Janeiro, RJ',
+        avatarColor: '#4527a0',
+        location: `BR • ${reviewCountUnitLabel}`,
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[4], language),
+        experienceDate: formatTrustpilotExperienceDate(TRUSTPILOT_REVIEW_BASE_DAYS[4], language),
         title:
           language === 'en'
             ? 'Flawless lifetime activation'
@@ -416,13 +429,15 @@ export const TrustGuaranteesModal: React.FC<{
               ? 'Estaba cansada de pagar suscripciones costosas cada mes. Compré para probar y superó mis expectativas. Archivo limpio, rápido y de por vida.'
               : 'Estava cansada de pagar mensalidade cara todo mês. Comprei para testar e superou minhas expectativas. Arquivo limpo, rápido e vitalício.',
         rating: 5,
-        baseHelpful: 12,
+        baseHelpful: 2,
       },
       {
         id: 5,
         author: 'Marcos Vinícius T.',
-        location: language === 'es' ? 'Lima, PE' : 'Porto Alegre, RS',
+        avatarColor: '#00796b',
+        location: `BR • ${reviewCountUnitLabel}`,
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[5], language),
+        experienceDate: formatTrustpilotExperienceDate(TRUSTPILOT_REVIEW_BASE_DAYS[5], language),
         title:
           language === 'en'
             ? 'Total trust and fast support'
@@ -436,13 +451,15 @@ export const TrustGuaranteesModal: React.FC<{
               ? 'Compré el paquete completo. El equipo fue super amable y atento. ¡Nota máxima!'
               : 'Comprei o pacote completo. A equipe foi super educada e atenciosa. Nota máxima!',
         rating: 5,
-        baseHelpful: 9,
+        baseHelpful: 1,
       },
       {
         id: 6,
         author: 'Henrique B. Vasconcelos',
-        location: 'Florianópolis, SC',
+        avatarColor: '#c2185b',
+        location: `BR • ${reviewCountUnitLabel}`,
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[6], language),
+        experienceDate: formatTrustpilotExperienceDate(TRUSTPILOT_REVIEW_BASE_DAYS[6], language),
         title:
           language === 'en'
             ? 'Impeccable service and license working 100%'
@@ -456,13 +473,15 @@ export const TrustGuaranteesModal: React.FC<{
               ? 'Instalé en Windows 11 sin ningún error. El video explicativo muestra cada detalle y la activación quedó permanente a la primera.'
               : 'Instalei no Windows 11 sem nenhum erro. O vídeo explicativo mostra cada detalhe e a ativação ficou permanente de primeira.',
         rating: 5,
-        baseHelpful: 15,
+        baseHelpful: 2,
       },
       {
         id: 7,
         author: 'Patrícia Mendonça',
-        location: 'Campinas, SP',
+        avatarColor: '#1565c0',
+        location: `BR • ${reviewCountUnitLabel}`,
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[7], language),
+        experienceDate: formatTrustpilotExperienceDate(TRUSTPILOT_REVIEW_BASE_DAYS[7], language),
         title:
           language === 'en'
             ? 'Fast Google Drive download and WhatsApp support'
@@ -476,13 +495,15 @@ export const TrustGuaranteesModal: React.FC<{
               ? 'Descargué a máxima velocidad por Google Drive. Todo organizado en carpetas con el video tutorial incluido. ¡Lo recomiendo mucho!'
               : 'Baixei na velocidade máxima pelo Google Drive. Tudo organizado em pastas com o vídeo tutorial junto. Recomendo demais!',
         rating: 5,
-        baseHelpful: 11,
+        baseHelpful: 1,
       },
       {
         id: 8,
         author: 'Leonardo G. Farias',
-        location: 'Brasília, DF',
+        avatarColor: '#5d4037',
+        location: `BR • ${reviewCountUnitLabel}`,
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[8], language),
+        experienceDate: formatTrustpilotExperienceDate(TRUSTPILOT_REVIEW_BASE_DAYS[8], language),
         title:
           language === 'en'
             ? 'Best investment for our architecture studio'
@@ -496,10 +517,10 @@ export const TrustGuaranteesModal: React.FC<{
               ? 'Equipamos 3 equipos del estudio. Todo funciona perfectamente y con garantía real de funcionamiento.'
               : 'Equipamos 3 máquinas aqui do escritório. Tudo rodando perfeitamente e com garantia real de funcionamento.',
         rating: 5,
-        baseHelpful: 19,
+        baseHelpful: 1,
       },
     ],
-    [language]
+    [language, reviewCountUnitLabel]
   );
 
   if (!isOpen) return null;
@@ -1218,7 +1239,7 @@ export const TrustGuaranteesModal: React.FC<{
                   </button>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="divide-y divide-[#e5e5e5]">
                   {paginatedReviews.map((rev, idx) => {
                     const isHelpful = !!helpfulVotes[rev.id];
                     const helpfulCount = rev.baseHelpful + (isHelpful ? 1 : 0);
@@ -1229,90 +1250,142 @@ export const TrustGuaranteesModal: React.FC<{
                         activeKey={feedActiveKey}
                         delayMs={cardBaseDelay + idx * cardStepDelay}
                         skeleton={
-                          <div className="border border-[#ecece6] rounded-xl p-4 h-full w-full space-y-3 bg-white">
-                            <div className="flex items-center justify-between gap-2">
-                              <div className="flex items-center gap-2.5">
-                                <div className="t-skel-circle w-8 h-8 shrink-0" />
+                          <div className="py-5 h-full w-full space-y-3 bg-white">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex items-center gap-3">
+                                <div className="t-skel-circle w-11 h-11 shrink-0" />
                                 <div className="space-y-1.5">
-                                  <div className="t-skel-bar w-28 h-3" />
-                                  <div className="t-skel-bar w-20 h-2.5" />
+                                  <div className="t-skel-bar w-32 h-3.5" />
+                                  <div className="t-skel-bar w-20 h-3" />
                                 </div>
                               </div>
-                              <div className="flex items-center gap-2">
-                                <div className="flex items-center gap-0.5">
-                                  {[1, 2, 3, 4, 5].map((s) => (
-                                    <div key={s} className="t-skel-box w-4 h-4 rounded-[2px]" />
-                                  ))}
-                                </div>
-                                <div className="t-skel-bar w-14 h-2.5" />
-                              </div>
+                              <div className="t-skel-bar w-24 h-3" />
                             </div>
-                            <div className="t-skel-bar w-3/4 h-3.5" />
+                            <div className="flex items-center gap-0.5 pt-0.5">
+                              {[1, 2, 3, 4, 5].map((s) => (
+                                <div key={s} className="t-skel-box w-5 h-5 rounded-[2px]" />
+                              ))}
+                            </div>
+                            <div className="t-skel-bar w-3/5 h-4" />
                             <div className="space-y-1.5">
-                              <div className="t-skel-bar w-full h-2.5" />
-                              <div className="t-skel-bar w-5/6 h-2.5" />
+                              <div className="t-skel-bar w-full h-3" />
+                              <div className="t-skel-bar w-4/5 h-3" />
                             </div>
-                            <div className="pt-1 flex items-center justify-between">
-                              <div className="t-skel-bar w-40 h-2.5" />
-                              <div className="t-skel-box w-20 h-6 rounded-full" />
+                            <div className="flex items-center gap-2 pt-0.5">
+                              <div className="t-skel-box w-32 h-5 rounded-[4px]" />
+                              <div className="t-skel-box w-36 h-5 rounded-[4px]" />
+                            </div>
+                            <div className="pt-1 flex items-center gap-5">
+                              <div className="t-skel-bar w-12 h-3.5" />
+                              <div className="t-skel-bar w-24 h-3.5" />
+                              <div className="t-skel-bar w-4 h-3.5" />
                             </div>
                           </div>
                         }
                       >
-                        <article className="border border-[#e5e5e5] rounded-xl p-4 space-y-2.5 text-left bg-white">
-                          <div className="flex items-center justify-between gap-2 flex-wrap">
-                            <div className="flex items-center gap-2.5">
-                              <div className="w-8 h-8 rounded-full bg-[#08ad88] text-white font-bold text-[12px] flex items-center justify-center shrink-0">
+                        <article className="py-5 first:pt-2 text-left bg-white">
+                          {/* Row 1: Reviewer Avatar + Name + (BR • 1 avaliação) on Left, Date on Top-Right */}
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div
+                                className="w-11 h-11 rounded-full text-white font-semibold text-[18px] flex items-center justify-center shrink-0 select-none"
+                                style={{ backgroundColor: rev.avatarColor }}
+                              >
                                 {rev.author[0]}
                               </div>
-                              <div>
-                                <p className="text-[13px] font-bold text-[#191919] leading-tight">
+                              <div className="min-w-0">
+                                <p className="text-[14.5px] font-bold text-[#191919] leading-snug truncate">
                                   {rev.author}
                                 </p>
-                                <p className="text-[11px] text-[#696969] mt-0.5">{rev.location}</p>
+                                <p className="text-[12.5px] text-[#696969] leading-snug mt-0.5">
+                                  {rev.location}
+                                </p>
                               </div>
                             </div>
 
-                            <div className="flex items-center gap-2">
-                              <TrustpilotStars count={rev.rating} size="w-4 h-4" />
-                              <span className="text-[12px] text-[#696969] font-medium">{rev.date}</span>
-                            </div>
+                            <span className="text-[12.5px] text-[#696969] shrink-0 pt-0.5">
+                              {rev.date}
+                            </span>
                           </div>
 
-                          <h4 className="text-[13.5px] font-bold text-[#191919] leading-snug">
+                          {/* Row 2: Stars directly below the author/avatar row */}
+                          <div className="mt-3">
+                            <TrustpilotStars count={rev.rating} size="w-5 h-5" />
+                          </div>
+
+                          {/* Row 3 & 4: Review Title & Review Text */}
+                          <h4 className="mt-2.5 text-[15px] font-bold text-[#191919] leading-snug">
                             {text(rev.title)}
                           </h4>
-                          <p className="text-[12.5px] text-[#4a4a4a] leading-relaxed">
+                          <p className="mt-1.5 text-[13.5px] text-[#191919] leading-relaxed">
                             {text(rev.comment)}
                           </p>
 
-                          <div className="pt-1 flex items-center justify-between gap-2 flex-wrap">
-                            <div className="trust-verified-badge inline-flex items-center gap-1 text-[11.5px] font-bold text-[#067a5f]">
-                              <CheckCircle2 className="trust-verified-icon w-3.5 h-3.5 text-[#08ad88] shrink-0" />
-                              <span>
-                                {language === 'en'
-                                  ? 'Verified Purchase via Trustpilot'
-                                  : language === 'es'
-                                    ? 'Compra Verificada vía Trustpilot'
-                                    : 'Compra Verificada via Trustpilot'}
-                              </span>
-                            </div>
+                          {/* Row 5: Two Grey Badges (Experience Date + Avaliação não solicitada) */}
+                          <div className="mt-3 flex flex-wrap items-center gap-2">
+                            <span className="inline-flex items-center bg-[#f1f1ef] text-[#545454] text-[12px] font-medium px-2 py-0.5 rounded-[4px]">
+                              {rev.experienceDate}
+                            </span>
+                            <span className="inline-flex items-center bg-[#f1f1ef] text-[#545454] text-[12px] font-medium px-2 py-0.5 rounded-[4px]">
+                              {language === 'en'
+                                ? 'Unprompted review'
+                                : language === 'es'
+                                  ? 'Opinión no solicitada'
+                                  : 'Avaliação não solicitada'}
+                            </span>
+                          </div>
 
+                          {/* Row 6: Bottom Actions (Útil, Compartilhar, Flag) */}
+                          <div className="mt-3.5 flex items-center gap-5 text-[12.5px] text-[#545454]">
                             <button
                               type="button"
                               onClick={() =>
                                 setHelpfulVotes((prev) => ({ ...prev, [rev.id]: !prev[rev.id] }))
                               }
-                              className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors cursor-pointer ${
+                              className={`inline-flex items-center gap-1.5 transition-colors cursor-pointer ${
                                 isHelpful
-                                  ? 'bg-[#e6f9f1] border-[#00b67a] text-[#005138]'
-                                  : 'bg-white border-[#e5e5e5] text-[#545454] hover:bg-[#f7f7f2]'
+                                  ? 'text-[#005138] font-semibold'
+                                  : 'text-[#545454] hover:text-[#191919]'
                               }`}
                             >
-                              <ThumbsUp className="w-3 h-3" />
+                              <ThumbsUp className="w-4 h-4 stroke-[1.75]" />
+                              <span>{language === 'en' ? 'Useful' : 'Útil'}</span>
+                              {helpfulCount > 0 && (
+                                <strong className="font-bold text-[#191919]">{helpfulCount}</strong>
+                              )}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (typeof navigator !== 'undefined' && navigator.clipboard) {
+                                  void navigator.clipboard.writeText(window.location.href);
+                                }
+                              }}
+                              className="inline-flex items-center gap-1.5 text-[#545454] hover:text-[#191919] transition-colors cursor-pointer"
+                            >
+                              <Share2 className="w-4 h-4 stroke-[1.75]" />
                               <span>
-                                {language === 'en' ? 'Useful' : 'Útil'} ({helpfulCount})
+                                {language === 'en'
+                                  ? 'Share'
+                                  : language === 'es'
+                                    ? 'Compartir'
+                                    : 'Compartilhar'}
                               </span>
+                            </button>
+
+                            <button
+                              type="button"
+                              aria-label={
+                                language === 'en'
+                                  ? 'Report review'
+                                  : language === 'es'
+                                    ? 'Denunciar opinión'
+                                    : 'Sinalizar avaliação'
+                              }
+                              className="inline-flex items-center justify-center text-[#545454] hover:text-[#191919] transition-colors cursor-pointer"
+                            >
+                              <Flag className="w-4 h-4 stroke-[1.75]" />
                             </button>
                           </div>
                         </article>

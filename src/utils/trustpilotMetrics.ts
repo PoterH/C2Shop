@@ -4,27 +4,113 @@ const MS_PER_DAY = 86_400_000;
 const BASE_REVIEW_COUNT = 1785;
 
 /**
- * Base elapsed days for each of the 5 Trustpilot store reviews on the anchor date (2026-11-14):
- * 1: Carlos Eduardo M. (2 days)
- * 2: Fernanda S. Oliveira (4 days)
- * 3: Roberto Almeida Jr. (7 days)
- * 4: Juliana Costa (9 days)
- * 5: Marcos Vinícius T. (14 days)
+ * Base elapsed days for each Trustpilot store review on the anchor date (2026-11-14).
+ * Reviews 1 and 2 are within the first week (<= 7 days); reviews 3..8 are older than 1 week
+ * so they display their formatted calendar date per Trustpilot's real UI convention.
  */
 export const TRUSTPILOT_REVIEW_BASE_DAYS: Record<number, number> = {
   1: 2,
   2: 4,
-  3: 7,
-  4: 9,
-  5: 14,
-  6: 18,
-  7: 21,
-  8: 26,
+  3: 11,
+  4: 23,
+  5: 44,
+  6: 79,
+  7: 114,
+  8: 149,
 };
+
+const PT_SHORT_MONTHS = [
+  'jan.',
+  'fev.',
+  'mar.',
+  'abr.',
+  'mai.',
+  'jun.',
+  'jul.',
+  'ago.',
+  'set.',
+  'out.',
+  'nov.',
+  'dez.',
+];
+
+const PT_LONG_MONTHS = [
+  'janeiro',
+  'fevereiro',
+  'março',
+  'abril',
+  'maio',
+  'junho',
+  'julho',
+  'agosto',
+  'setembro',
+  'outubro',
+  'novembro',
+  'dezembro',
+];
+
+const ES_SHORT_MONTHS = [
+  'ene.',
+  'feb.',
+  'mar.',
+  'abr.',
+  'may.',
+  'jun.',
+  'jul.',
+  'ago.',
+  'sept.',
+  'oct.',
+  'nov.',
+  'dic.',
+];
+
+const ES_LONG_MONTHS = [
+  'enero',
+  'febrero',
+  'marzo',
+  'abril',
+  'mayo',
+  'junio',
+  'julio',
+  'agosto',
+  'septiembre',
+  'octubre',
+  'noviembre',
+  'diciembre',
+];
+
+const EN_SHORT_MONTHS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+const EN_LONG_MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
 
 /**
  * Computes full calendar days elapsed since the Trustpilot baseline anchor date (2026-11-14).
- * Uses local calendar midnight so the day counter increments naturally every day at 00:00.
  */
 export function getTrustpilotElapsedDays(now: Date = new Date()): number {
   const currentDayMidnight = new Date(
@@ -37,14 +123,12 @@ export function getTrustpilotElapsedDays(now: Date = new Date()): number {
     0
   ).getTime();
 
-  // Anchor date: November 14, 2026 (or same month/day-1 in visitor's clock year if clock < Nov 14, 2026)
   const anchor2026 = new Date(2026, 10, 14, 0, 0, 0, 0).getTime();
 
   if (currentDayMidnight >= anchor2026) {
     return Math.max(0, Math.round((currentDayMidnight - anchor2026) / MS_PER_DAY));
   }
 
-  // Fallback if visitor device clock is set to an earlier date (e.g., 2025 or early 2026)
   const fallbackAnchor = new Date(now.getFullYear(), 0, 1, 0, 0, 0, 0).getTime();
   return Math.max(1, Math.round((currentDayMidnight - fallbackAnchor) / MS_PER_DAY));
 }
@@ -57,7 +141,26 @@ export function getTrustpilotReviewDaysAgo(baseDays: number, now: Date = new Dat
 }
 
 /**
- * Formats the real elapsed day count for a Trustpilot review according to the active language.
+ * Computes the calendar Date object for a review based on its `baseDays` offset from the anchor date.
+ */
+export function getTrustpilotReviewDate(baseDays: number, now: Date = new Date()): Date {
+  const currentDayMidnight = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    0,
+    0,
+    0,
+    0
+  ).getTime();
+  const days = getTrustpilotReviewDaysAgo(baseDays, now);
+  return new Date(currentDayMidnight - days * MS_PER_DAY);
+}
+
+/**
+ * Formats the review header date:
+ * - If <= 7 days (within 1 week): relative days ("Há 3 dias")
+ * - If > 7 days (older than 1 week): short calendar date ("27 de ago. de 2026")
  */
 export function formatTrustpilotDaysAgo(
   baseDays: number,
@@ -66,13 +169,51 @@ export function formatTrustpilotDaysAgo(
 ): string {
   const days = getTrustpilotReviewDaysAgo(baseDays, now);
 
+  if (days <= 7) {
+    if (language === 'en') {
+      return days === 1 ? '1 day ago' : `${days} days ago`;
+    }
+    if (language === 'es') {
+      return days === 1 ? 'Hace 1 día' : `Hace ${days} días`;
+    }
+    return days === 1 ? 'Há 1 dia' : `Há ${days} dias`;
+  }
+
+  const dateObj = getTrustpilotReviewDate(baseDays, now);
+  const dayNum = dateObj.getDate();
+  const monthIdx = dateObj.getMonth();
+  const yearNum = dateObj.getFullYear();
+
   if (language === 'en') {
-    return days === 1 ? '1 day ago' : `${days} days ago`;
+    return `${EN_SHORT_MONTHS[monthIdx]} ${dayNum}, ${yearNum}`;
   }
   if (language === 'es') {
-    return days === 1 ? 'Hace 1 día' : `Hace ${days} días`;
+    return `${dayNum} de ${ES_SHORT_MONTHS[monthIdx]} de ${yearNum}`;
   }
-  return days === 1 ? 'Há 1 dia' : `Há ${days} dias`;
+  return `${dayNum} de ${PT_SHORT_MONTHS[monthIdx]} de ${yearNum}`;
+}
+
+/**
+ * Formats the full experience date shown inside the grey badge below the review text
+ * (e.g. "27 de agosto de 2026" / "23 de julho de 2026").
+ */
+export function formatTrustpilotExperienceDate(
+  baseDays: number,
+  language: LanguageCode,
+  now: Date = new Date()
+): string {
+  const dateObj = getTrustpilotReviewDate(baseDays, now);
+  const dayNum = dateObj.getDate();
+  const monthIdx = dateObj.getMonth();
+  const yearNum = dateObj.getFullYear();
+
+  if (language === 'en') {
+    return `${EN_LONG_MONTHS[monthIdx]} ${dayNum}, ${yearNum}`;
+  }
+  if (language === 'es') {
+    return `${dayNum} de ${ES_LONG_MONTHS[monthIdx]} de ${yearNum}`;
+  }
+  return `${dayNum} de ${PT_LONG_MONTHS[monthIdx]} de ${yearNum}`;
 }
 
 /**
@@ -83,7 +224,6 @@ export function getTrustpilotReviewCount(now: Date = new Date()): number {
   let total = BASE_REVIEW_COUNT;
 
   for (let day = 1; day <= elapsedDays; day++) {
-    // Deterministic daily increment of 1 or 2 reviews per day
     const dailyIncrement = ((day * 5 + 1) % 2) + 1;
     total += dailyIncrement;
   }
