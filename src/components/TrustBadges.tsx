@@ -899,7 +899,7 @@ export const TrustGuaranteesModal: React.FC<{
                   <div className="space-y-1.5 text-[12px] text-[#191919]">
                     <div className="flex items-center gap-2">
                       <MapPin className="w-3.5 h-3.5 text-[#545454] shrink-0" />
-                      <span>{language === 'en' ? 'United States' : 'Estados Unidos'}</span>
+                      <span>{language === 'en' ? 'Brazil' : 'Brasil'}</span>
                     </div>
                     <button
                       type="button"
