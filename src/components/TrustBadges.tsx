@@ -11,7 +11,7 @@ import {
   Check,
   ChevronDown,
   ChevronUp,
-  Bell,
+  User,
   Info,
   PenLine,
   ExternalLink,
@@ -462,14 +462,21 @@ export const TrustGuaranteesModal: React.FC<{
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-xs animate-fade-in"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-xs animate-fade-in"
       onClick={onClose}
     >
+      <p
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-[960px] text-white/80 text-[11.5px] sm:text-[12px] font-normal tracking-wide text-center mb-1.5 px-2 select-text"
+      >
+        Visualização reduzida do site https://br.trustpilot.com/review/c2tech.shop
+      </p>
+
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Trustpilot — C2tech"
-        className="trust-reviews-modal relative w-full max-w-[960px] max-h-[93dvh] bg-white rounded-xl shadow-2xl border border-[#dcdcdc] overflow-hidden flex flex-col animate-scale-up text-[#191919]"
+        className="trust-reviews-modal relative w-full max-w-[960px] max-h-[89dvh] bg-white rounded-xl shadow-2xl border border-[#dcdcdc] overflow-hidden flex flex-col animate-scale-up text-[#191919]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 1. Authentic Trustpilot White Top Header Bar */}
@@ -526,13 +533,14 @@ export const TrustGuaranteesModal: React.FC<{
             >
               Blog
             </button>
-            <Bell className="w-4 h-4 text-[#191919] hidden md:block shrink-0" />
 
-            <div className="hidden sm:flex items-center gap-1.5">
-              <span className="w-7 h-7 rounded-full border border-[#e5e5e5] bg-white flex items-center justify-center overflow-hidden shrink-0">
-                <img src="/images/logo.png" alt="C Tech" className="w-5 h-5 object-contain" />
+            <div className="hidden sm:flex items-center gap-1.5 text-[#545454]">
+              <span className="w-7 h-7 rounded-full border border-[#d6d6d6] bg-[#f5f4f0] flex items-center justify-center shrink-0">
+                <User className="w-3.5 h-3.5 text-[#696969]" />
               </span>
-              <span className="font-medium text-[#191919]">C Tech</span>
+              <span className="font-medium text-[#191919]">
+                {language === 'en' ? 'Log in' : language === 'es' ? 'Acceder' : 'Acessar'}
+              </span>
             </div>
 
             <button
