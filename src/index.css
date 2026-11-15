@@ -442,47 +442,9 @@
   transition-duration: 200ms;
 }
 
-.t-page-reveal.is-nav-revealing {
-  opacity: 0.96;
-  filter: blur(var(--reveal-blur));
-}
-.t-page-reveal.is-nav-revealing.is-nav-revealed {
-  opacity: 1;
-  filter: none;
-  transition:
-    opacity var(--reveal-dur) var(--reveal-ease),
-    filter var(--reveal-dur) var(--reveal-ease);
-}
-
-.t-img-loading {
-  opacity: 0;
-  filter: blur(var(--reveal-blur));
-}
-.t-img-revealed {
-  opacity: 1;
-  filter: blur(0);
-  transition:
-    opacity var(--reveal-dur) var(--reveal-ease),
-    filter var(--reveal-dur) var(--reveal-ease);
-}
-
-.product-cover.t-skel[data-state="loading"] {
-  min-width: 230px;
-  min-height: 320px;
-}
-@media (min-width: 640px) {
-  .product-cover.t-skel[data-state="loading"] {
-    min-width: 265px;
-    min-height: 383px;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .t-skel-skeleton,
   .t-skel-content,
-  .t-page-reveal,
-  .t-img-loading,
-  .t-img-revealed,
   .t-nav-loader-bar,
   .t-nav-loader-fill {
     transition: none !important;

@@ -1,5 +1,4 @@
 import { galleryImageSource } from '../data/galleryImages';
-import { SkeletonImage } from './SkeletonReveal';
 import { useText } from '../hooks/useText';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -38,11 +37,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {/* Product Image / Visual Area */}
         <div className="product-card-visual relative h-[210px] sm:h-[241px] bg-white rounded-t-card flex items-center justify-center overflow-hidden">
           {product.imageUrl ? (
-            <SkeletonImage
+            <img
               src={galleryImageSource(product.imageUrl)}
               alt={product.name}
-              wrapperClassName="w-full h-full"
-              contentClassName="w-full h-full relative"
               className="motion-card-image absolute inset-0 w-full h-full p-3 object-contain"
               loading="lazy"
             />

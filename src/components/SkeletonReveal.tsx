@@ -1,99 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-
-interface SkeletonImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  src: string;
-  wrapperClassName?: string;
-  skeletonClassName?: string;
-  contentClassName?: string;
-  skeletonChildren?: React.ReactNode;
-  children?: React.ReactNode;
-}
-
-/**
- * Real-loading Skeleton Loader & Reveal wrapper (transitions.dev `skeleton-loader-and-reveal`).
- * - Never delays rendering: if the image is already in browser cache (`node.complete`),
- *   it marks `.is-revealed` immediately on attach.
- * - While the image is genuinely downloading over the network, `.t-skel-skeleton.is-pulsing`
- *   occupies the exact visual slot and cross-fades + un-blurs (`--reveal-dur: 400ms`,
- *   `--reveal-blur: 2px`) the instant `onLoad` fires.
- */
-export const SkeletonImage: React.FC<SkeletonImageProps> = ({
-  src,
-  alt = '',
-  className = '',
-  wrapperClassName = '',
-  skeletonClassName = '',
-  contentClassName = '',
-  skeletonChildren,
-  children,
-  onLoad,
-  onError,
-  ...rest
-}) => {
-  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
-  const isRevealed = Boolean(src) && loadedSrc === src;
-
-  const handleImgRef = useCallback(
-    (node: HTMLImageElement | null) => {
-      if (node && node.complete && node.naturalWidth > 0 && loadedSrc !== src) {
-        setLoadedSrc(src);
-      }
-    },
-    [loadedSrc, src]
-  );
-
-  const handleLoad = useCallback(
-    (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-      setLoadedSrc(src);
-      onLoad?.(e);
-    },
-    [onLoad, src]
-  );
-
-  const handleError = useCallback(
-    (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-      setLoadedSrc(src);
-      onError?.(e);
-    },
-    [onError, src]
-  );
-
-  return (
-    <div
-      className={`t-skel ${isRevealed ? 'is-revealed' : ''} ${wrapperClassName}`.trim()}
-      data-state={isRevealed ? 'revealed' : 'loading'}
-    >
-      <div
-        className={`t-skel-skeleton ${isRevealed ? '' : 'is-pulsing'} ${skeletonClassName}`.trim()}
-        aria-hidden="true"
-      >
-        {skeletonChildren ?? (
-          <div className="w-full h-full flex flex-col items-center justify-center p-4 gap-2.5 bg-slate-50/90">
-            <span className="t-skel-box w-3/5 h-3/5 max-w-[140px] max-h-[160px] rounded-xl" />
-            <span className="t-skel-bar w-2/5 h-2.5 rounded-md" />
-          </div>
-        )}
-      </div>
-      <div className={`t-skel-content ${contentClassName}`.trim()}>
-        <img
-          ref={handleImgRef}
-          src={src}
-          alt={alt}
-          className={className}
-          onLoad={handleLoad}
-          onError={handleError}
-          {...rest}
-        />
-        {children}
-      </div>
-    </div>
-  );
-};
 
 /**
  * Route-aware `<Suspense>` fallback using `.t-skel` & `.t-skel-skeleton.is-pulsing`.
  * Only rendered while React is genuinely downloading a lazy route chunk over the network.
+ * Once the route mounts, real DOM elements and images render directly at full opacity
+ * without any wrapper or observer that could defer browser image loading.
  */
 export const PageRouteSkeleton: React.FC = () => {
   const pathname = typeof window !== 'undefined' ? window.location.pathname : '/';
@@ -212,130 +124,41 @@ export const PageRouteSkeleton: React.FC = () => {
 };
 
 /**
- * Site-wide real navigation & element loading boundary.
- * - Observes real route navigation and genuinely pending above-the-fold images inside `<main>`.
- * - Applies the transitions.dev `skeleton-loader-and-reveal` blur-crossfade reveal to newly
- *   loaded images and shows a top progress bar ONLY while real assets are still loading.
- * - Never delays page rendering or holds back content that is already loaded.
+ * Lightweight, non-blocking navigation indicator.
+ * Never sets opacity:0 or filter:blur on page content or images, ensuring every image
+ * and lazy-loaded asset renders natively without ever getting stuck blank.
  */
 export const PageNavigationReveal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { pathname, search } = useLocation();
-  const containerRef = useRef<HTMLDivElement>(null);
   const barWrapRef = useRef<HTMLDivElement>(null);
   const barFillRef = useRef<HTMLDivElement>(null);
   const isFirstMount = useRef(true);
 
   useEffect(() => {
-    const container = containerRef.current;
-    const barWrap = barWrapRef.current;
-    const barFill = barFillRef.current;
-    if (!container) return;
-
-    const cleanupFns: Array<() => void> = [];
-
-    // Attach real-load reveal to any uncached standalone <img> inside the page
-    const observeStandaloneImages = () => {
-      const imgs = container.querySelectorAll<HTMLImageElement>('img');
-      imgs.forEach((img) => {
-        if (img.closest('.t-skel') || img.closest('.home-hero-avatars') || img.dataset.tSkelObserved === '1') {
-          return;
-        }
-        img.dataset.tSkelObserved = '1';
-        if (img.complete && img.naturalWidth > 0) {
-          img.classList.remove('t-img-loading');
-          return;
-        }
-        img.classList.add('t-img-loading');
-        const finishImg = () => {
-          img.classList.remove('t-img-loading');
-          img.classList.add('t-img-revealed');
-        };
-        img.addEventListener('load', finishImg, { once: true });
-        img.addEventListener('error', finishImg, { once: true });
-        cleanupFns.push(() => {
-          img.removeEventListener('load', finishImg);
-          img.removeEventListener('error', finishImg);
-        });
-      });
-    };
-
-    observeStandaloneImages();
-
-    const mutationObserver = new MutationObserver(() => {
-      observeStandaloneImages();
-    });
-    mutationObserver.observe(container, { childList: true, subtree: true });
-    cleanupFns.push(() => mutationObserver.disconnect());
-
     if (isFirstMount.current) {
       isFirstMount.current = false;
-      return () => {
-        cleanupFns.forEach((fn) => fn());
-      };
+      return;
     }
 
-    // On real client-side route navigation, check if above-the-fold images are still loading
-    container.classList.remove('is-nav-revealed');
-    container.classList.add('is-nav-revealing');
-    const rafReveal = window.requestAnimationFrame(() => {
-      container.classList.add('is-nav-revealed');
-    });
-    cleanupFns.push(() => window.cancelAnimationFrame(rafReveal));
+    const barWrap = barWrapRef.current;
+    const barFill = barFillRef.current;
+    if (!barWrap || !barFill) return;
 
-    if (barWrap && barFill) {
-      const viewportHeight = window.innerHeight || 800;
-      const pendingCriticalImgs = Array.from(container.querySelectorAll<HTMLImageElement>('img')).filter(
-        (img) => {
-          if (img.complete) return false;
-          if (img.loading === 'lazy') return false;
-          const rect = img.getBoundingClientRect();
-          return rect.bottom > 0 && rect.top < viewportHeight * 1.1;
-        }
-      );
+    barWrap.setAttribute('data-active', 'true');
+    barFill.setAttribute('data-stage', 'loading');
 
-      barWrap.setAttribute('data-active', 'true');
-      barFill.setAttribute('data-stage', 'loading');
+    const finishTimer = window.setTimeout(() => {
+      barFill.setAttribute('data-stage', 'complete');
+    }, 120);
 
-      let completed = false;
-      const completeBar = () => {
-        if (completed) return;
-        completed = true;
-        barFill.setAttribute('data-stage', 'complete');
-        const hideTimer = window.setTimeout(() => {
-          barWrap.setAttribute('data-active', 'false');
-          barFill.setAttribute('data-stage', 'idle');
-        }, 260);
-        cleanupFns.push(() => window.clearTimeout(hideTimer));
-      };
-
-      if (pendingCriticalImgs.length === 0) {
-        const fastRaf = window.requestAnimationFrame(() => {
-          completeBar();
-        });
-        cleanupFns.push(() => window.cancelAnimationFrame(fastRaf));
-      } else {
-        let remaining = pendingCriticalImgs.length;
-        const onAssetDone = () => {
-          remaining -= 1;
-          if (remaining <= 0) {
-            completeBar();
-          }
-        };
-        pendingCriticalImgs.forEach((img) => {
-          img.addEventListener('load', onAssetDone, { once: true });
-          img.addEventListener('error', onAssetDone, { once: true });
-          cleanupFns.push(() => {
-            img.removeEventListener('load', onAssetDone);
-            img.removeEventListener('error', onAssetDone);
-          });
-        });
-        const maxWaitTimer = window.setTimeout(completeBar, 1200);
-        cleanupFns.push(() => window.clearTimeout(maxWaitTimer));
-      }
-    }
+    const hideTimer = window.setTimeout(() => {
+      barWrap.setAttribute('data-active', 'false');
+      barFill.setAttribute('data-stage', 'idle');
+    }, 320);
 
     return () => {
-      cleanupFns.forEach((fn) => fn());
+      window.clearTimeout(finishTimer);
+      window.clearTimeout(hideTimer);
     };
   }, [pathname, search]);
 
@@ -349,9 +172,7 @@ export const PageNavigationReveal: React.FC<{ children: React.ReactNode }> = ({ 
       >
         <div ref={barFillRef} className="t-nav-loader-fill" data-stage="idle" />
       </div>
-      <div ref={containerRef} className="t-page-reveal is-nav-revealed">
-        {children}
-      </div>
+      {children}
     </>
   );
 };

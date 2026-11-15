@@ -1,5 +1,4 @@
 import { galleryImageSource } from '../data/galleryImages';
-import { SkeletonImage } from './SkeletonReveal';
 import { Link } from 'react-router-dom';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import type { Product } from '../data/products';
@@ -13,15 +12,7 @@ export function CartLine({ item, compact = false, editable = true }: { item: Pro
   const text = useText();
   const key = cartItemKey(item);
   return <article className={`flex gap-4 py-5 ${compact ? '' : 'sm:gap-6'}`}>
-    <Link to={`/produto/${item.slug}`} onClick={() => setIsCartOpen(false)} className={`shrink-0 ${compact ? 'w-16' : 'w-20 sm:w-28'} flex items-start justify-center`}>
-      <SkeletonImage
-        src={galleryImageSource(item.selectedLicenseOption?.imageUrl || item.imageUrl || '')}
-        alt={item.name}
-        wrapperClassName="w-full"
-        className="w-full object-contain"
-        skeletonChildren={<span className="t-skel-box w-full h-full min-h-[64px] rounded-lg" />}
-      />
-    </Link>
+    <Link to={`/produto/${item.slug}`} onClick={() => setIsCartOpen(false)} className={`shrink-0 ${compact ? 'w-16' : 'w-20 sm:w-28'} flex items-start justify-center`}><img src={galleryImageSource(item.selectedLicenseOption?.imageUrl || item.imageUrl || '')} alt={item.name} className="w-full object-contain" /></Link>
     <div className="min-w-0 flex-1">
       <Link to={`/produto/${item.slug}`} onClick={() => setIsCartOpen(false)} className="font-bold text-action-primary leading-snug block">{text(item.name)}</Link>
       <dl className="text-xs text-slate-500 mt-2 space-y-1"><div>{text('Plataforma')}: {text(item.selectedLicenseOption?.platform || item.compatibility)}</div><div>{text('Versão')}: {text(itemVersion(item))}</div><div>{text(itemValidity(item))}</div></dl>

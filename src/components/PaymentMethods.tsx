@@ -17,7 +17,7 @@ export function PaymentMethods() {
           alt={method.name}
           title={method.name}
           className={`${method.heightClass} w-auto object-contain select-none`}
-          loading="lazy"
+          decoding="async"
         />
       ))}
     </div>

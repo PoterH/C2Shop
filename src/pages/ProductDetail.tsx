@@ -1,5 +1,4 @@
 import { LifetimeSeal } from '../components/LifetimeSeal';
-import { SkeletonImage } from '../components/SkeletonReveal';
 import { AnimatedPrice } from '../components/AnimatedPrice';
 import { JellyRadio } from '../components/JellyRadio';
 import { LearnMoreChevron } from '../components/LearnMoreChevron';
@@ -575,22 +574,17 @@ const ProductDetailContent: React.FC = () => {
               {activeThumb?.type === 'image' ? (
                 <div className="relative flex flex-col items-center justify-center w-full my-auto">
                   {activeThumb.imageUrl ? (
-                    <SkeletonImage
-                      src={galleryImageSource(activeThumb.imageUrl)}
-                      alt={`${product.name} - ${selectedVersionBadge}`}
-                      wrapperClassName="product-cover"
-                      className="product-gallery-image"
-                      fetchPriority="high"
-                      decoding="async"
-                      skeletonChildren={
-                        <div className="w-full h-full flex items-center justify-center p-2">
-                          <span className="t-skel-box w-full h-full rounded-2xl" />
-                        </div>
-                      }
-                    >
+                    <div className="product-cover">
+                      <img
+                        src={galleryImageSource(activeThumb.imageUrl)}
+                        alt={`${product.name} - ${selectedVersionBadge}`}
+                        className="product-gallery-image"
+                        fetchPriority="high"
+                        decoding="async"
+                      />
                       {savingsAmount > 0 && <div className="product-cover-overlay product-savings">{localize(t('save'))} {localize(formattedSavings)}</div>}
                       <div className="product-cover-overlay product-lifetime"><LifetimeSeal label={localize(product.isSubscription ? 'Original' : 'Vitalício')} /></div>
-                    </SkeletonImage>
+                    </div>
                   ) : (
                     <div className="w-56 h-72 bg-gradient-to-b from-slate-100 to-slate-200 rounded-xl shadow-xl border border-slate-300 flex flex-col justify-between p-5 text-left relative">
                       <div className="flex justify-between items-center border-b border-slate-300 pb-2">
