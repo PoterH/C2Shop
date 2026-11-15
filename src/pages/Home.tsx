@@ -1,5 +1,6 @@
 import { WhatsAppIcon } from '../components/WhatsAppIcon';
 import { HomeTrustpilot } from '../components/HomeTrustpilot';
+import { HeroBenefitsStack } from '../components/HeroBenefitsStack';
 import { LearnMoreChevron } from '../components/LearnMoreChevron';
 import { useText } from '../hooks/useText';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
@@ -258,6 +259,7 @@ export const Home: React.FC = () => {
               </button>
             </form>
             </div>
+            <HeroBenefitsStack />
           </div>
 
         </div>
