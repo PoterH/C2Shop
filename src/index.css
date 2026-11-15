@@ -873,9 +873,6 @@ h1 {
 
 /* Institutional pages inherit the storefront's system typography. */
 .about-commitment { background-image: radial-gradient(ellipse at top left, #21578566, transparent 60%); }
-.trust-reviews-modal .text-xs { font-size: 14px; line-height: 1.5; }
-.trust-reviews-modal .text-sm { font-size: 16px; line-height: 1.6; }
-@media (max-width: 479px) { .trust-reviews-modal > div:first-child { padding: 18px 14px; gap: 8px; } .trust-reviews-modal > div:first-child > div { min-width: 0; gap: 8px; } }
 
 /* Mobile navigation: compact header, full-screen catalog and persistent actions. */
 .mobile-site-header{position:fixed;inset:0 0 auto;z-index:40;background:var(--color-surface-page);border-bottom:1px solid var(--color-border-default)}

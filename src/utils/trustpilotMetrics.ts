@@ -17,6 +17,9 @@ export const TRUSTPILOT_REVIEW_BASE_DAYS: Record<number, number> = {
   3: 7,
   4: 9,
   5: 14,
+  6: 18,
+  7: 21,
+  8: 26,
 };
 
 /**
