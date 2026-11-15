@@ -3,7 +3,7 @@ import { HomeTrustpilot } from '../components/HomeTrustpilot';
 import { HeroBenefitsStack } from '../components/HeroBenefitsStack';
 import { LearnMoreChevron } from '../components/LearnMoreChevron';
 import { useText } from '../hooks/useText';
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Search,
@@ -41,6 +41,15 @@ const softwareBrandLogos: LogoLoopImage[] = [
   { src: '/images/company-logos/brand-10.png', alt: '', hoverColor: '#41b883' },
 ];
 
+const HERO_CUSTOMER_AVATARS = [
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&h=80&q=80',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&h=80&q=80',
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80&q=80',
+  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&h=80&q=80',
+  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=80&h=80&q=80',
+  'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=80&h=80&q=80',
+] as const;
+
 export const Home: React.FC = () => {
   const localize = useText();
   const navigate = useNavigate();
@@ -48,6 +57,33 @@ export const Home: React.FC = () => {
   const { language } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const avatarGroupRef = useRef<HTMLDivElement>(null);
+
+  const setAvatarShifts = useCallback((activeIdx: number | null, phase: 'in' | 'out') => {
+    const group = avatarGroupRef.current;
+    if (!group) return;
+    const cs = getComputedStyle(document.documentElement);
+    const lift = parseFloat(cs.getPropertyValue('--avatar-lift')) || -4;
+    const falloff = parseFloat(cs.getPropertyValue('--avatar-falloff')) || 0.45;
+    const scaleActive = parseFloat(cs.getPropertyValue('--avatar-scale')) || 1.05;
+    const dur = cs.getPropertyValue('--avatar-dur').trim() || '320ms';
+    const easeIn = cs.getPropertyValue('--avatar-ease-in').trim() || 'cubic-bezier(0.22, 1, 0.36, 1)';
+    const easeOut = cs.getPropertyValue('--avatar-ease-out').trim() || 'cubic-bezier(0.34, 3.85, 0.64, 1)';
+    const easing = phase === 'out' ? easeOut : easeIn;
+    const avatars = group.querySelectorAll<HTMLElement>('.t-avatar');
+    avatars.forEach((avatar, idx) => {
+      avatar.style.transition = `transform ${dur} ${easing}`;
+      if (activeIdx === null) {
+        avatar.style.setProperty('--shift', '0px');
+        avatar.style.setProperty('--scale-active', '1');
+        return;
+      }
+      const distance = Math.abs(idx - activeIdx);
+      const shift = lift * Math.pow(falloff, distance);
+      avatar.style.setProperty('--shift', `${shift.toFixed(2)}px`);
+      avatar.style.setProperty('--scale-active', distance === 0 ? String(scaleActive) : '1');
+    });
+  }, []);
 
   // Filter products for the landing page grid (show max 16 of active category)
   const filteredProducts = useMemo(() => products
@@ -203,15 +239,35 @@ export const Home: React.FC = () => {
 
         <div className="home-hero-content relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center gap-3 sm:gap-3 md:gap-4">
           <div className="home-hero-showcase">
-            <div className="home-hero-customer-proof t-avatar-group" aria-label={language === 'en' ? '+1,000 customers' : language === 'es' ? '+1000 clientes' : '+1000 clientes'}>
-              <div className="home-hero-avatars" aria-hidden="true">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64&q=80" alt="" />
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&h=64&q=80" alt="" />
-                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=64&h=64&q=80" alt="" />
-                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=64&h=64&q=80" alt="" />
-                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=64&h=64&q=80" alt="" />
+            <div
+              className="home-hero-customer-proof"
+              aria-label={language === 'en' ? '+1,000 Satisfied Customers' : language === 'es' ? '+1000 Clientes Satisfechos' : '+1000 Clientes Satisfeitos'}
+            >
+              <div
+                ref={avatarGroupRef}
+                className="home-hero-avatars"
+                aria-hidden="true"
+                onMouseLeave={() => setAvatarShifts(null, 'out')}
+              >
+                {HERO_CUSTOMER_AVATARS.map((src, idx) => (
+                  <div
+                    key={src}
+                    className="t-avatar home-hero-avatar"
+                    onMouseEnter={() => setAvatarShifts(idx, 'in')}
+                  >
+                    <img src={src} alt="" loading="eager" decoding="async" />
+                  </div>
+                ))}
+                <div
+                  className="t-avatar home-hero-avatar home-hero-avatar-more"
+                  onMouseEnter={() => setAvatarShifts(HERO_CUSTOMER_AVATARS.length, 'in')}
+                >
+                  +4
+                </div>
               </div>
-              <span>{language === 'en' ? '+1,000 customers' : language === 'es' ? '+1000 clientes' : '+1000 clientes'}</span>
+              <span className="home-hero-customer-label">
+                {language === 'en' ? '+1,000 Satisfied Customers' : language === 'es' ? '+1000 Clientes Satisfechos' : '+1000 Clientes Satisfeitos'}
+              </span>
             </div>
             <GridMotion
               items={heroGridCards}
