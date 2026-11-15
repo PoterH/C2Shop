@@ -42,12 +42,12 @@ const softwareBrandLogos: LogoLoopImage[] = [
 ];
 
 const HERO_CUSTOMER_AVATARS = [
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&h=80&q=80',
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&h=80&q=80',
-  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80&q=80',
-  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&h=80&q=80',
-  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=80&h=80&q=80',
-  'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=80&h=80&q=80',
+  '/images/avatars/customer-01.png',
+  '/images/avatars/customer-02.png',
+  '/images/avatars/customer-03.png',
+  '/images/avatars/customer-04.png',
+  '/images/avatars/customer-05.png',
+  '/images/avatars/customer-06.png',
 ] as const;
 
 export const Home: React.FC = () => {
