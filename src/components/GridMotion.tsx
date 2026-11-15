@@ -326,7 +326,7 @@ export function GridMotion({
         ),
       )
     : [];
-  const effectiveFade = size.width > 0 && size.width < 640 ? Math.min(settings.fade, 0.24) : settings.fade;
+  const effectiveFade = size.width > 0 && size.width < 640 ? 0.5 : settings.fade;
   const mask =
     effectiveFade > 0
       ? `${feather('to right', effectiveFade * 34)}, ${feather('to bottom', effectiveFade * 44)}`
