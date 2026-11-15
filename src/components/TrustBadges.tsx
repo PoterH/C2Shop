@@ -595,7 +595,7 @@ export const TrustGuaranteesModal: React.FC<{
       >
         <span
           className="t-shimmer"
-          data-text="Visualização reduzida do site https://br.trustpilot.com/review/c2tech"
+          data-text="Miniatura do site https://br.trustpilot.com/review/c2tech"
           style={
             {
               '--shimmer-base': 'rgba(255, 255, 255, 0.65)',
@@ -603,7 +603,7 @@ export const TrustGuaranteesModal: React.FC<{
             } as React.CSSProperties
           }
         >
-          Visualização reduzida do site https://br.trustpilot.com/review/c2tech
+          Miniatura do site https://br.trustpilot.com/review/c2tech
         </span>
       </p>
 
