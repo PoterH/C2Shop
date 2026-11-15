@@ -1,6 +1,7 @@
 import { CardReturnPage } from './pages/CardReturnPage';
 import { MobileSearchEntry, MobileSearchPage } from './components/MobileSearch';
 import { PageMetadata } from './components/PageMetadata';
+import { PageNavigationReveal, PageRouteSkeleton } from './components/SkeletonReveal';
 import { lazy, Suspense, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
@@ -58,7 +59,8 @@ return (
 
             {/* Main Content Area */}
             <main className="flex-grow xl:pt-8">
-              <Suspense fallback={<div className="min-h-[60vh] pt-32 flex justify-center" role="status" aria-label="Loading"><span className="w-8 h-8 border-2 border-action-primary border-t-transparent rounded-full animate-spin" /></div>}>
+              <PageNavigationReveal>
+              <Suspense fallback={<PageRouteSkeleton />}>
               <Routes>
                 <Route path="/buscar" element={<MobileSearchPage />} />
                 <Route path="/carrinho" element={<CartPage />} />
@@ -81,6 +83,7 @@ return (
                 <Route path="*" element={<Home />} />
               </Routes>
               </Suspense>
+              </PageNavigationReveal>
             </main>
 
             {/* Footer */}
