@@ -1,25 +1,25 @@
 import { useText } from '../hooks/useText';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import {
   CheckCircle2,
-  CircleCheck,
   X,
-  Lock,
   Search,
   ThumbsUp,
   MapPin,
   ShieldCheck,
-  CornerDownRight,
-  Clock,
   Check,
   ChevronDown,
+  ChevronUp,
+  Bell,
+  Info,
+  PenLine,
+  ExternalLink,
 } from 'lucide-react';
 import {
   TRUSTPILOT_REVIEW_BASE_DAYS,
   formatTrustpilotDaysAgo,
   formatTrustpilotReviewCount,
-  getTrustpilotReviewsLabel,
 } from '../utils/trustpilotMetrics';
 
 // Official Trustpilot Two-Tone Star (Authentic Star Logo)
@@ -169,18 +169,26 @@ export const TrustGuaranteesPill: React.FC<{
   );
 };
 
-// Trustpilot Company Profile Mini-Visualizer Modal
+// Trustpilot Authentic Profile Mini-Visualizer Modal
 export const TrustGuaranteesModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
 }> = ({ isOpen, onClose }) => {
-  const { language, t } = useLanguage();
+  const { language } = useLanguage();
   const text = useText();
+  const [sitePreviewSrc, setSitePreviewSrc] = useState('/images/trustpilot-site-preview.png');
   const [selectedStarFilter, setSelectedStarFilter] = useState<number | null>(null);
-  const [onlyWithReply, setOnlyWithReply] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showAllReviews, setShowAllReviews] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [integrityOpen, setIntegrityOpen] = useState(false);
+  const [showWriteReview, setShowWriteReview] = useState(false);
+  const [draftRating, setDraftRating] = useState(5);
+  const [draftTitle, setDraftTitle] = useState('');
+  const [draftComment, setDraftComment] = useState('');
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+  const [openAccordionIdx, setOpenAccordionIdx] = useState<number | null>(null);
   const [helpfulVotes, setHelpfulVotes] = useState<Record<number, boolean>>({});
+  const experienceRef = useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     if (!isOpen) return;
@@ -190,7 +198,11 @@ export const TrustGuaranteesModal: React.FC<{
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
       if (event.key === 'Tab') {
-        const controls = Array.from(document.querySelectorAll<HTMLElement>('.trust-reviews-modal button, .trust-reviews-modal input, .trust-reviews-modal a[href]'));
+        const controls = Array.from(
+          document.querySelectorAll<HTMLElement>(
+            '.trust-reviews-modal button, .trust-reviews-modal input, .trust-reviews-modal textarea, .trust-reviews-modal a[href]'
+          )
+        );
         const first = controls[0];
         const last = controls[controls.length - 1];
         if (event.shiftKey && document.activeElement === first) {
@@ -203,7 +215,7 @@ export const TrustGuaranteesModal: React.FC<{
       }
     };
     document.addEventListener('keydown', onKeyDown);
-    document.querySelector<HTMLButtonElement>('.trust-reviews-modal button')?.focus();
+    document.querySelector<HTMLButtonElement>('.trust-reviews-modal button[aria-label="Fechar"]')?.focus();
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener('keydown', onKeyDown);
@@ -216,11 +228,6 @@ export const TrustGuaranteesModal: React.FC<{
       {
         id: 1,
         author: 'Carlos Eduardo M.',
-        initials: 'CE',
-        avatarBg: '#fde8d7',
-        avatarText: '#431407',
-        authorReviewsCount: 3,
-        countryCode: language === 'en' ? 'US' : language === 'es' ? 'ES' : 'BR',
         location: language === 'en' ? 'New York, US' : language === 'es' ? 'Madrid, ES' : 'São Paulo, SP',
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[1], language),
         title:
@@ -231,28 +238,16 @@ export const TrustGuaranteesModal: React.FC<{
               : 'Entrega em menos de 2 minutos e vídeo bem detalhado',
         comment:
           language === 'en'
-            ? 'Paid instantly and the Google Drive download link arrived in my email right away. The step-by-step video tutorial explains everything clearly without any hassle. Already using it at work.'
+            ? 'Paid instantly and the Google Drive download link arrived in my email right away. The step-by-step video tutorial explains everything without complications. Already using it at work.'
             : language === 'es'
               ? 'Pagué con tarjeta y el enlace de Google Drive llegó al correo al instante. El tutorial en video enseña todo paso a paso sin complicaciones. Ya lo estoy usando en mi trabajo.'
               : 'Paguei pelo Pix e o link do Google Drive chegou no e-mail na mesma hora. O tutorial em vídeo ensina tudo passo a passo sem complicação. Já estou usando no meu trabalho.',
         rating: 4,
-        productTag: 'AutoCAD + Pacote Engenharia',
         baseHelpful: 14,
-        reply:
-          language === 'en'
-            ? 'Thank you for your feedback, Carlos! Count on our technical support team whenever you need.'
-            : language === 'es'
-              ? '¡Muchas gracias por tu comentario, Carlos! Cuenta con nuestro soporte técnico siempre que lo necesites.'
-              : 'Muito obrigado pela avaliação, Carlos! Ficamos felizes que o vídeo passo a passo tenha facilitado sua instalação. Conte sempre com nosso suporte!',
       },
       {
         id: 2,
         author: 'Fernanda S. Oliveira',
-        initials: 'FO',
-        avatarBg: '#d8f6e8',
-        avatarText: '#005138',
-        authorReviewsCount: 5,
-        countryCode: language === 'en' ? 'US' : language === 'es' ? 'MX' : 'BR',
         location: language === 'en' ? 'Miami, US' : language === 'es' ? 'Ciudad de México, MX' : 'Belo Horizonte, MG',
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[2], language),
         title:
@@ -263,54 +258,36 @@ export const TrustGuaranteesModal: React.FC<{
               : 'Excelente custo-benefício e suporte nota 10',
         comment:
           language === 'en'
-            ? 'This is the second software I bought from them. I had a quick question during installation on my Mac and support answered in under 5 minutes on WhatsApp. Running smoothly without monthly fees!'
+            ? 'This is the second software I bought from them. Had a question installing on my Mac and support answered in under 5 minutes on WhatsApp. Running smoothly without monthly fees!'
             : language === 'es'
               ? 'Es el segundo software que les compro. Tuve una duda en la instalación en mi Mac y el soporte respondió en menos de 5 minutos por WhatsApp. ¡Funcionando de maravilla sin mensualidades!'
               : 'É o segundo software que compro com eles. Tive uma dúvida na instalação no meu Mac e o suporte respondeu em menos de 5 minutos pelo WhatsApp. Funcionando liso sem mensalidade!',
         rating: 5,
-        productTag: 'SketchUp Pro + V-Ray (macOS)',
         baseHelpful: 21,
-        reply:
-          language === 'en'
-            ? 'Welcome back, Fernanda! It is always a pleasure helping you set up your Mac workstation.'
-            : language === 'es'
-              ? '¡Qué alegría tenerte de vuelta, Fernanda! Estamos siempre a disposición en WhatsApp.'
-              : 'Que alegria ter você de volta na C2Tech, Fernanda! Nossa equipe de suporte para Mac está sempre à disposição no WhatsApp.',
       },
       {
         id: 3,
         author: 'Roberto Almeida Jr.',
-        initials: 'RA',
-        avatarBg: '#e3ebff',
-        avatarText: '#1e3a8a',
-        authorReviewsCount: 2,
-        countryCode: language === 'en' ? 'GB' : language === 'es' ? 'AR' : 'BR',
         location: language === 'en' ? 'London, UK' : language === 'es' ? 'Buenos Aires, AR' : 'Curitiba, PR',
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[3], language),
         title:
           language === 'en'
-            ? 'The most reliable digital license store'
+            ? 'Best digital license store'
             : language === 'es'
               ? 'La mejor tienda de licencias digitales'
               : 'Melhor loja de licenças digitais do Brasil',
         comment:
           language === 'en'
-            ? 'Complete software with all features unlocked and zero lag. Very transparent service, I recommend it with total confidence to all architects and engineers.'
+            ? 'Complete software, with all features unlocked and no crashes. Very transparent, I recommend it wholeheartedly to all architects and engineers.'
             : language === 'es'
               ? 'Software completo, con todas las funciones desbloqueadas y sin bloqueos. Muy transparente, lo recomiendo con total confianza a todos los arquitectos e ingenieros.'
               : 'Software completo, com todas as funções desbloqueadas e sem travamento. Muito transparente, recomendo de olhos fechados a todos os arquitetos e engenheiros.',
         rating: 5,
-        productTag: 'Revit + Lumion Pro',
         baseHelpful: 18,
       },
       {
         id: 4,
         author: 'Juliana Costa',
-        initials: 'JC',
-        avatarBg: '#f3e8ff',
-        avatarText: '#581c87',
-        authorReviewsCount: 1,
-        countryCode: language === 'es' ? 'CL' : 'BR',
         location: language === 'es' ? 'Santiago, CL' : 'Rio de Janeiro, RJ',
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[4], language),
         title:
@@ -321,28 +298,16 @@ export const TrustGuaranteesModal: React.FC<{
               : 'Ativação vitalícia perfeita',
         comment:
           language === 'en'
-            ? 'I was tired of paying expensive monthly subscriptions. Bought it to test and it exceeded my expectations. Clean installer, fast download and lifetime access.'
+            ? 'I was tired of paying expensive monthly subscriptions. Bought it to test and it exceeded expectations. Clean file, fast and lifetime.'
             : language === 'es'
               ? 'Estaba cansada de pagar suscripciones costosas cada mes. Compré para probar y superó mis expectativas. Archivo limpio, rápido y de por vida.'
               : 'Estava cansada de pagar mensalidade cara todo mês. Comprei para testar e superou minhas expectativas. Arquivo limpo, rápido e vitalício.',
         rating: 5,
-        productTag: 'Pacote Adobe Creative Cloud',
         baseHelpful: 12,
-        reply:
-          language === 'en'
-            ? 'Thank you for trusting C2Tech, Juliana! Enjoy your lifetime tools.'
-            : language === 'es'
-              ? '¡Gracias por confiar en C2Tech, Juliana! Que disfrutes mucho tus programas.'
-              : 'Muito obrigado pela confiança, Juliana! Economia e estabilidade no trabalho fazem toda a diferença.',
       },
       {
         id: 5,
         author: 'Marcos Vinícius T.',
-        initials: 'MV',
-        avatarBg: '#fef3c7',
-        avatarText: '#78350f',
-        authorReviewsCount: 4,
-        countryCode: language === 'es' ? 'PE' : 'BR',
         location: language === 'es' ? 'Lima, PE' : 'Porto Alegre, RS',
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[5], language),
         title:
@@ -353,97 +318,72 @@ export const TrustGuaranteesModal: React.FC<{
               : 'Confiança total e suporte rápido',
         comment:
           language === 'en'
-            ? 'Bought the complete bundle. The team was super polite and attentive. Top marks!'
+            ? 'Bought the complete package. The team was super polite and attentive. Top marks!'
             : language === 'es'
               ? 'Compré el paquete completo. El equipo fue super amable y atento. ¡Nota máxima!'
               : 'Comprei o pacote completo. A equipe foi super educada e atenciosa. Nota máxima!',
         rating: 5,
-        productTag: 'Promob Plus Enterprise',
         baseHelpful: 9,
       },
       {
         id: 6,
         author: 'Henrique B. Vasconcelos',
-        initials: 'HV',
-        avatarBg: '#d8f6e8',
-        avatarText: '#005138',
-        authorReviewsCount: 6,
-        countryCode: 'BR',
         location: 'Florianópolis, SC',
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[6], language),
         title:
           language === 'en'
-            ? 'Remote installation support saved my deadline'
+            ? 'Impeccable service and license working 100%'
             : language === 'es'
-              ? 'El soporte de instalación salvó mi entrega'
+              ? 'Atención impecable y licencia funcionando al 100%'
               : 'Atendimento impecável e licença funcionando 100%',
         comment:
           language === 'en'
-            ? 'Installed Eberick and TQS on Windows 11 without any issues. The step-by-step video is crystal clear and the license is truly permanent.'
+            ? 'Installed on Windows 11 with zero errors. The explanatory video shows every step and permanent activation worked on the first try.'
             : language === 'es'
-              ? 'Instalé el software en Windows 11 sin ningún problema. El video paso a paso es clarísimo y la licencia es realmente permanente.'
+              ? 'Instalé en Windows 11 sin ningún error. El video explicativo muestra cada detalle y la activación quedó permanente a la primera.'
               : 'Instalei no Windows 11 sem nenhum erro. O vídeo explicativo mostra cada detalhe e a ativação ficou permanente de primeira.',
         rating: 5,
-        productTag: 'AltoQi Eberick + Builder',
         baseHelpful: 15,
       },
       {
         id: 7,
         author: 'Patrícia Mendonça',
-        initials: 'PM',
-        avatarBg: '#fde8d7',
-        avatarText: '#431407',
-        authorReviewsCount: 2,
-        countryCode: 'BR',
         location: 'Campinas, SP',
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[7], language),
         title:
           language === 'en'
-            ? 'Super fast delivery via Google Drive'
+            ? 'Fast Google Drive download and WhatsApp support'
             : language === 'es'
-              ? 'Descarga súper rápida por Google Drive'
+              ? 'Descarga rápida por Google Drive y soporte por WhatsApp'
               : 'Download rápido pelo Google Drive e suporte no WhatsApp',
         comment:
           language === 'en'
-            ? 'Downloaded at full speed from Google Drive. Everything organized in folders with the video tutorial included. Highly recommended!'
+            ? 'Downloaded at full speed via Google Drive. Everything organized in folders with the video tutorial included. Highly recommend!'
             : language === 'es'
-              ? 'Descargué a máxima velocidad desde Google Drive. Todo organizado en carpetas con el tutorial incluido. ¡Recomendadísimo!'
+              ? 'Descargué a máxima velocidad por Google Drive. Todo organizado en carpetas con el video tutorial incluido. ¡Lo recomiendo mucho!'
               : 'Baixei na velocidade máxima pelo Google Drive. Tudo organizado em pastas com o vídeo tutorial junto. Recomendo demais!',
         rating: 5,
-        productTag: 'CorelDRAW Graphics Suite',
         baseHelpful: 11,
       },
       {
         id: 8,
         author: 'Leonardo G. Farias',
-        initials: 'LF',
-        avatarBg: '#e3ebff',
-        avatarText: '#1e3a8a',
-        authorReviewsCount: 3,
-        countryCode: 'BR',
         location: 'Brasília, DF',
         date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[8], language),
         title:
           language === 'en'
             ? 'Best investment for our architecture studio'
             : language === 'es'
-              ? 'La mejor inversión para nuestro estudio'
+              ? 'La mejor inversión para nuestro estudio de arquitectura'
               : 'Melhor investimento para o nosso escritório de arquitetura',
         comment:
           language === 'en'
-            ? 'Equipped 3 workstations in our studio. Everything works offline and online with zero subscription headaches.'
+            ? 'Equipped 3 studio workstations. Everything runs smoothly with real support and lifetime guarantee.'
             : language === 'es'
-              ? 'Equipamos 3 computadoras en nuestro estudio. Todo funciona perfecto sin dolores de cabeza con suscripciones.'
+              ? 'Equipamos 3 equipos del estudio. Todo funciona perfectamente y con garantía real de funcionamiento.'
               : 'Equipamos 3 máquinas aqui do escritório. Tudo rodando perfeitamente e com garantia real de funcionamento.',
         rating: 5,
-        productTag: 'Archicad + Enscape 3D',
         baseHelpful: 19,
-        reply:
-          language === 'en'
-            ? 'Thank you for partnering with C2Tech for your studio, Leonardo!'
-            : language === 'es'
-              ? '¡Gracias por elegir a C2Tech para tu estudio, Leonardo!'
-              : 'Agradecemos a parceria de todo o escritório, Leonardo! Contem sempre com a C2Tech.',
       },
     ],
     [language]
@@ -452,600 +392,794 @@ export const TrustGuaranteesModal: React.FC<{
   if (!isOpen) return null;
 
   const formattedTotalCount = formatTrustpilotReviewCount(language);
-  const totalReviewsLabel = getTrustpilotReviewsLabel(language);
+  const scoreText = language === 'en' ? '4.8' : '4,8';
 
   const starDistribution = [
     { stars: 5, percent: 91, color: '#00b67a', label: language === 'en' ? '5-star' : language === 'es' ? '5 estrellas' : '5 estrelas' },
     { stars: 4, percent: 8, color: '#73cf42', label: language === 'en' ? '4-star' : language === 'es' ? '4 estrellas' : '4 estrelas' },
     { stars: 3, percent: 1, color: '#ffce00', label: language === 'en' ? '3-star' : language === 'es' ? '3 estrellas' : '3 estrelas' },
-    { stars: 2, percent: 0, color: '#ff8622', label: language === 'en' ? '2-star' : language === 'es' ? '2 estrellas' : '2 estrelas' },
-    { stars: 1, percent: 0, color: '#ff3722', label: language === 'en' ? '1-star' : language === 'es' ? '1 estrella' : '1 estrela' },
+    { stars: 2, percent: 0, color: '#d6d6d6', label: language === 'en' ? '2-star' : language === 'es' ? '2 estrellas' : '2 estrelas' },
+    { stars: 1, percent: 0, color: '#d6d6d6', label: language === 'en' ? '1-star' : language === 'es' ? '1 estrella' : '1 estrela' },
+  ];
+
+  const experienceItems = [
+    {
+      title: language === 'en' ? 'We are open to all' : language === 'es' ? 'Estamos abiertos a todos' : 'Estamos abertos a todos',
+      body: text('Qualquer cliente com uma experiência real pode compartilhar sua avaliação sem censura ou pagamento para ocultar críticas.'),
+    },
+    {
+      title: language === 'en' ? 'We fight fake reviews' : language === 'es' ? 'Luchamos contra las opiniones falsas' : 'Combatemos contra avaliações falsas',
+      body: text('Nossa tecnologia analisa padrões suspeitos e bloqueia avaliações automatizadas ou não autorizadas continuamente.'),
+    },
+    {
+      title: language === 'en' ? 'We show the latest reviews' : language === 'es' ? 'Mostramos las opiniones más recientes' : 'Mostramos as avaliações mais recentes',
+      body: text('As opiniões mais atuais aparecem no topo para refletir a qualidade real do atendimento e da entrega digital hoje.'),
+    },
+    {
+      title: language === 'en' ? 'We encourage constructive feedback' : language === 'es' ? 'Fomentamos el feedback constructivo' : 'Incentivamos o feedback construtivo',
+      body: text('Empresas verificadas podem responder aos clientes diretamente no perfil para resolver dúvidas e aprimorar o suporte.'),
+    },
+    {
+      title: language === 'en' ? 'Reviewers are verified by us' : language === 'es' ? 'Los autores son verificados' : 'Os avaliadores são verificados por nós',
+      body: text('Cada avaliação marcada como Verificada está vinculada a um pedido confirmado via convite automático pós-compra.'),
+    },
+    {
+      title: language === 'en' ? 'We fight bias' : language === 'es' ? 'Combatimos los prejuicios' : 'Combatemos o preconceito',
+      body: text('Moderação automática e humana garante um ambiente seguro e respeitoso para consumidores e empresas.'),
+    },
   ];
 
   const filteredReviews = trustpilotReviews.filter((rev) => {
     if (selectedStarFilter !== null && rev.rating !== selectedStarFilter) return false;
-    if (onlyWithReply && !rev.reply) return false;
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       return (
         rev.author.toLowerCase().includes(q) ||
         rev.title.toLowerCase().includes(q) ||
         rev.comment.toLowerCase().includes(q) ||
-        rev.productTag.toLowerCase().includes(q) ||
         rev.location.toLowerCase().includes(q)
       );
     }
     return true;
   });
 
-  const visibleReviews =
-    showAllReviews || selectedStarFilter !== null || onlyWithReply || searchQuery.trim()
-      ? filteredReviews
-      : filteredReviews.slice(0, 5);
+  const pageSize = 5;
+  const totalPages = Math.max(1, Math.ceil(filteredReviews.length / pageSize));
+  const safePage = Math.min(currentPage, totalPages);
+  const paginatedReviews = filteredReviews.slice((safePage - 1) * pageSize, safePage * pageSize);
 
-  const toggleHelpful = (id: number) => {
-    setHelpfulVotes((prev) => ({ ...prev, [id]: !prev[id] }));
+  const handleToggleStar = (stars: number) => {
+    setCurrentPage(1);
+    setSelectedStarFilter((prev) => (prev === stars ? null : stars));
+  };
+
+  const handleSubmitDraft = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!draftTitle.trim() && !draftComment.trim()) return;
+    setReviewSubmitted(true);
+    setDraftTitle('');
+    setDraftComment('');
   };
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/65 backdrop-blur-xs animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-xs animate-fade-in"
       onClick={onClose}
     >
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Perfil Verificado Trustpilot — C2Tech"
-        className="trust-reviews-modal relative w-full max-w-5xl max-h-[93dvh] bg-[#f7f7f2] rounded-2xl shadow-2xl border border-[#d6d6ce] overflow-hidden flex flex-col animate-scale-up text-[#191919]"
+        aria-label="Trustpilot — C2tech"
+        className="trust-reviews-modal relative w-full max-w-[960px] max-h-[93dvh] bg-white rounded-xl shadow-2xl border border-[#dcdcdc] overflow-hidden flex flex-col animate-scale-up text-[#191919]"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* 1. Authentic Trustpilot Top Navigation Bar (#1c1c1c) */}
-        <div className="bg-[#1c1c1c] text-white px-4 sm:px-6 py-3 flex items-center justify-between gap-3 shrink-0 border-b border-white/10">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="inline-flex items-center gap-1.5 shrink-0">
-              <TrustpilotStarIcon className="w-6 h-6" />
-              <span className="font-bold text-[19px] tracking-[-0.4px] text-white">Trustpilot</span>
-            </div>
+        {/* 1. Authentic Trustpilot White Top Header Bar */}
+        <header className="bg-white border-b border-[#e5e5e5] px-4 sm:px-6 h-[60px] flex items-center justify-between gap-3 shrink-0">
+          <div className="flex items-center gap-4 min-w-0 flex-1">
+            <TrustpilotLogo starSize="w-6 h-6" textSize="text-[19px] font-bold" />
 
-            <span className="hidden md:inline-block h-4 w-px bg-white/20" />
-
-            <div className="hidden md:flex items-center gap-1.5 text-[12px] text-white/75 truncate">
-              <span>{language === 'en' ? 'Categories' : language === 'es' ? 'Categorías' : 'Categorias'}</span>
-              <span className="text-white/40">›</span>
-              <span>{language === 'en' ? 'Software Store' : language === 'es' ? 'Tienda de Software' : 'Loja de Software'}</span>
-              <span className="text-white/40">›</span>
-              <span className="text-white font-semibold">C2Tech Licenças Digitais</span>
+            <div className="hidden sm:flex items-center gap-2 flex-1 max-w-[350px] rounded-full border border-[#d6d6d6] bg-white px-3.5 py-1.5 text-[12px] focus-within:border-[#191919] transition-colors">
+              <Search className="w-3.5 h-3.5 text-[#545454] shrink-0" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder={
+                  language === 'en'
+                    ? 'Search for another company or review...'
+                    : language === 'es'
+                      ? 'Buscar otras empresas u opiniones...'
+                      : 'Pesquisar outras empresas...'
+                }
+                className="w-full bg-transparent text-[12px] text-[#191919] placeholder:text-[#696969] focus:outline-none"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setCurrentPage(1);
+                  }}
+                  className="text-[#696969] hover:text-[#191919] cursor-pointer"
+                  aria-label="Limpar busca"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              )}
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 shrink-0">
-            <div className="inline-flex items-center gap-1.5 bg-[#00b67a]/20 border border-[#00b67a]/40 text-[#38f2b2] px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#00b67a] shrink-0" />
-              <span>
-                {language === 'en'
-                  ? 'Official Verified Profile'
-                  : language === 'es'
-                    ? 'Perfil Oficial Verificado'
-                    : 'Perfil Oficial Verificado'}
+          <div className="flex items-center gap-3.5 shrink-0 text-[12px] text-[#191919]">
+            <button
+              type="button"
+              onClick={() => experienceRef.current?.scrollIntoView({ behavior: 'smooth' })}
+              className="hidden md:inline-block font-medium hover:underline cursor-pointer"
+            >
+              {language === 'en' ? 'Categories' : language === 'es' ? 'Categorías' : 'Categorias'}
+            </button>
+            <button
+              type="button"
+              onClick={() => experienceRef.current?.scrollIntoView({ behavior: 'smooth' })}
+              className="hidden md:inline-block font-medium hover:underline cursor-pointer"
+            >
+              Blog
+            </button>
+            <Bell className="w-4 h-4 text-[#191919] hidden md:block shrink-0" />
+
+            <div className="hidden sm:flex items-center gap-1.5">
+              <span className="w-7 h-7 rounded-full border border-[#e5e5e5] bg-white flex items-center justify-center overflow-hidden shrink-0">
+                <img src="/images/logo.png" alt="C Tech" className="w-5 h-5 object-contain" />
               </span>
+              <span className="font-medium text-[#191919]">C Tech</span>
             </div>
 
             <button
               type="button"
+              onClick={() => setIntegrityOpen((v) => !v)}
+              className="hidden sm:inline-flex border border-[#005138] text-[#005138] hover:bg-[#f2f8f5] rounded-full px-3 py-1 text-[11px] font-semibold cursor-pointer transition-colors"
+            >
+              {language === 'en' ? 'For businesses' : language === 'es' ? 'Para empresas' : 'Para empresas'}
+            </button>
+
+            <button
+              type="button"
               onClick={onClose}
-              className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white/85 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-full hover:bg-[#f5f4f0] text-[#191919] flex items-center justify-center transition-colors cursor-pointer"
               aria-label="Fechar"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
-        </div>
+        </header>
 
-        {/* 2. Scrollable Authentic Profile View */}
-        <div className="flex-1 overflow-y-auto">
-          {/* Company Profile Hero Banner (White surface like Trustpilot Business Header) */}
-          <div className="bg-white border-b border-[#e5e5dd] px-4 sm:px-7 py-5">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
-              {/* Left: Company Identity & TrustScore */}
-              <div className="flex items-start sm:items-center gap-4">
-                <img
-                  src="/images/brand/c2-logo.png"
-                  alt="C2Tech"
-                  className="w-14 h-14 sm:w-16 sm:h-16 object-contain shrink-0 select-none"
-                />
+        {/* 2. Scrollable Trustpilot Profile Page Content */}
+        <div className="flex-1 overflow-y-auto bg-white">
+          {/* Profile Hero & Contact Info Section */}
+          <div className="bg-white border-b border-[#e5e5e5]">
+            <div className="max-w-[820px] mx-auto px-4 sm:px-6 pt-6 pb-5">
+              <div className="flex items-start gap-4 sm:gap-5">
+                {/* Real Website Screenshot Thumbnail matching Trustpilot company avatar */}
+                <div className="w-[104px] h-[80px] sm:w-[122px] sm:h-[94px] rounded border border-[#d6d6d6] overflow-hidden shrink-0 bg-[#061126] shadow-2xs">
+                  <img
+                    src={sitePreviewSrc}
+                    alt="Prévia da loja c2tech.shop"
+                    onError={() => setSitePreviewSrc('/images/trustpilot-c2tech-thumb.png')}
+                    className="w-full h-full object-cover object-top select-none"
+                  />
+                </div>
 
-                <div className="space-y-1.5 min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center gap-1 bg-[#d8f6e8] text-[#005138] border border-[#9ce6c6] px-2 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wide">
-                      <Check className="w-3 h-3 stroke-[3]" />
-                      {language === 'en' ? 'VERIFIED COMPANY' : language === 'es' ? 'EMPRESA VERIFICADA' : 'EMPRESA VERIFICADA'}
-                    </span>
-                    <span className="text-[12px] text-[#545454] font-medium">
+                {/* Company Name, Claimed Pill, Rating & Buttons */}
+                <div className="min-w-0 flex-1">
+                  <span className="inline-flex items-center gap-1.5 border border-[#d6d6d6] rounded-full px-2.5 py-0.5 text-[11px] text-[#191919] font-medium">
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#191919] shrink-0" />
+                    <span>
                       {language === 'en'
-                        ? '#1 in Professional Digital Licenses'
+                        ? 'Claimed profile • Oct 2024'
                         : language === 'es'
-                          ? 'Nº 1 en Licencias Digitales Profesionales'
-                          : 'Nº 1 em Licenças Digitais Profissionais'}
+                          ? 'Perfil reclamado • oct. de 2024'
+                          : 'Perfil reivindicado • out. de 2024'}
                     </span>
-                  </div>
+                  </span>
 
-                  <h2 className="text-xl sm:text-2xl font-bold text-[#191919] tracking-tight leading-tight">
-                    C2Tech — Licenças Digitais
+                  <h2 className="text-[24px] sm:text-[28px] font-bold text-[#191919] tracking-tight leading-tight mt-1.5">
+                    C2tech
                   </h2>
 
-                  <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 pt-0.5">
-                    <span className="text-[13px] text-[#545454]">
-                      {language === 'en' ? 'Reviews' : language === 'es' ? 'Opiniones' : 'Avaliações'}{' '}
-                      <strong className="text-[#191919] font-bold">{formattedTotalCount}</strong>
+                  <div className="flex flex-wrap items-center gap-2 mt-1 text-[13px] text-[#191919]">
+                    <span className="underline underline-offset-2 font-medium">
+                      {language === 'en' ? 'Reviews' : language === 'es' ? 'Opiniones' : 'Avaliações'} {formattedTotalCount}
                     </span>
-                    <span className="text-[#c8c8be]">•</span>
-                    <span className="text-[14px] font-bold text-[#191919]">{t('trustpilot_excellent')}</span>
-                    <TrustpilotStars count={5} size="w-6 h-6" />
-                    <span className="inline-flex items-center justify-center bg-[#191919] text-white text-[12px] font-bold px-2 py-0.5 rounded">
-                      4.8
-                    </span>
+                    <span className="text-[#696969]">•</span>
+                    <TrustpilotStars count={5} size="w-[18px] h-[18px]" />
+                    <strong className="font-bold text-[#191919]">{scoreText}</strong>
+                    <button
+                      type="button"
+                      onClick={() => setIntegrityOpen((v) => !v)}
+                      className="text-[#696969] hover:text-[#191919] cursor-pointer"
+                      aria-label="Informações sobre a pontuação"
+                    >
+                      <Info className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  {/* Primary & Secondary Action Buttons */}
+                  <div className="flex flex-wrap items-center gap-2.5 mt-3.5">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowWriteReview((prev) => !prev);
+                        setReviewSubmitted(false);
+                      }}
+                      className="bg-[#002f1e] hover:bg-[#00452c] text-white rounded-full px-4 py-2 text-[12px] font-bold inline-flex items-center gap-1.5 cursor-pointer transition-colors"
+                    >
+                      <PenLine className="w-3.5 h-3.5" />
+                      <span>
+                        {language === 'en'
+                          ? 'Write a review'
+                          : language === 'es'
+                            ? 'Escribe una opinión'
+                            : 'Escreva uma avaliação'}
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="bg-white hover:bg-[#f2f8f5] border border-[#005138] text-[#005138] rounded-full px-4 py-2 text-[12px] font-semibold inline-flex items-center gap-1.5 cursor-pointer transition-colors"
+                    >
+                      <span>
+                        {language === 'en' ? 'Visit website' : language === 'es' ? 'Visitar sitio web' : 'Visitar o site'}
+                      </span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 </div>
               </div>
 
-              {/* Right: Verified Store Guarantees Card (Trustpilot right-hand box style) */}
-              <div className="bg-[#fcfbf7] border border-[#e5e5dd] rounded-xl p-3.5 sm:p-4 lg:w-[360px] shrink-0 space-y-2.5">
-                <div className="flex items-center justify-between gap-2 pb-2 border-b border-[#ecece4]">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <CircleCheck className="w-4 h-4 fill-[#00b67a] text-white shrink-0" />
-                    <span className="text-[13px] font-bold text-[#191919] truncate">c2tech.shop</span>
-                  </div>
-                  <span className="text-[11px] font-semibold text-[#006b47] bg-[#d8f6e8] px-2 py-0.5 rounded">
-                    {language === 'en' ? 'Verified Domain' : language === 'es' ? 'Dominio Verificado' : 'Domínio Verificado'}
-                  </span>
-                </div>
+              <div className="border-t border-[#efefef] my-4 max-w-[520px]" />
 
-                <div className="grid grid-cols-1 gap-1.5 text-[12px] text-[#191919]">
-                  <div className="flex items-center gap-2">
-                    <Check className="w-3.5 h-3.5 text-[#00b67a] stroke-[2.75] shrink-0" />
+              {/* Platform Integrity Disclosure Banner */}
+              <div className="max-w-[520px]">
+                <button
+                  type="button"
+                  onClick={() => setIntegrityOpen((prev) => !prev)}
+                  className="w-full bg-[#f5f4f0] hover:bg-[#eceae3] rounded-xl px-3.5 py-2.5 flex items-center justify-between gap-3 text-left transition-colors cursor-pointer"
+                >
+                  <div className="flex items-start sm:items-center gap-2.5 text-[11px] text-[#191919] leading-snug">
+                    <ShieldCheck className="w-4 h-4 text-[#191919] shrink-0 mt-0.5 sm:mt-0" />
                     <span>
-                      <strong>{t('badge_lifetime')}:</strong>{' '}
-                      <span className="text-[#545454]">
-                        {text('Pagamento único, sem mensalidades')}
-                      </span>
+                      {language === 'en'
+                        ? 'We use technology to protect platform integrity, though individual reviews represent customer opinions'
+                        : language === 'es'
+                          ? 'Usamos tecnología para proteger la integridad de la plataforma y detectar reseñas automatizadas'
+                          : 'Usamos tecnologia para proteger a integridade da plataforma, mas não verificamos a veracidade das avaliações'}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Check className="w-3.5 h-3.5 text-[#00b67a] stroke-[2.75] shrink-0" />
-                    <span>
-                      <strong>{language === 'en' ? 'Instant Delivery' : language === 'es' ? 'Envío Inmediato' : 'Envio Imediato'}:</strong>{' '}
-                      <span className="text-[#545454]">
-                        {text('Link Google Drive + vídeo em 2 min')}
-                      </span>
-                    </span>
+                  {integrityOpen ? (
+                    <ChevronUp className="w-4 h-4 text-[#545454] shrink-0" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-[#545454] shrink-0" />
+                  )}
+                </button>
+                {integrityOpen && (
+                  <div className="mt-2 px-3.5 py-2.5 bg-[#faf9f6] border border-[#eceae3] rounded-xl text-[11px] text-[#545454] leading-relaxed">
+                    {text(
+                      'Todas as avaliações exibidas seguem as diretrizes da comunidade Trustpilot. Convites de avaliação são disparados automaticamente após compras aprovadas na c2tech.shop.'
+                    )}
                   </div>
+                )}
+              </div>
+
+              {/* Informações de contato row */}
+              <div className="mt-5 flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-12">
+                <span className="text-[14px] font-bold text-[#191919] shrink-0">
+                  {language === 'en'
+                    ? 'Contact information'
+                    : language === 'es'
+                      ? 'Información de contacto'
+                      : 'Informações de contato'}
+                </span>
+                <div className="space-y-1.5 text-[12px] text-[#191919]">
                   <div className="flex items-center gap-2">
-                    <Check className="w-3.5 h-3.5 text-[#00b67a] stroke-[2.75] shrink-0" />
-                    <span>
-                      <strong>{language === 'en' ? '7-Day Guarantee' : language === 'es' ? '7 Días de Garantía' : '7 Dias de Garantia'}:</strong>{' '}
-                      <span className="text-[#545454]">
-                        {text('Suporte remoto ou 100% de reembolso')}
-                      </span>
-                    </span>
+                    <MapPin className="w-3.5 h-3.5 text-[#545454] shrink-0" />
+                    <span>{language === 'en' ? 'United States' : 'Estados Unidos'}</span>
                   </div>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="flex items-center gap-2 text-[#191919] hover:underline cursor-pointer"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5 text-[#545454] shrink-0" />
+                    <span>c2tech.shop</span>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* 3. Main Two-Column Trustpilot Profile Layout */}
-          <div className="p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-[290px_minmax(0,1fr)] gap-5 items-start">
-            {/* Left Sidebar: Rating Distribution & Transparency */}
-            <div className="space-y-4 lg:sticky lg:top-4">
-              {/* Star Breakdown Card */}
-              <div className="bg-white border border-[#e5e5dd] rounded-xl p-4 space-y-3.5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-[16px] font-bold text-[#191919]">
-                      {language === 'en' ? 'Customer reviews' : language === 'es' ? 'Opiniones de clientes' : 'Avaliações dos clientes'}
-                    </h3>
-                    <p className="text-[12px] text-[#545454] mt-0.5">
-                      {totalReviewsLabel} {language === 'en' ? 'in total' : 'no total'}
+          {/* 3. Main Two-Column Reviews & Trustpilot Experience Section */}
+          <div className="max-w-[820px] mx-auto px-4 sm:px-6 py-7 grid grid-cols-1 md:grid-cols-[230px_minmax(0,1fr)] gap-7 items-start">
+            {/* Left Sidebar */}
+            <aside className="space-y-3 md:sticky md:top-4">
+              <div className="flex items-center gap-2">
+                <TrustpilotStarIcon className="w-6 h-6" />
+                <span className="text-[26px] font-bold text-[#191919] leading-none">{scoreText}</span>
+                <Info className="w-3.5 h-3.5 text-[#696969]" />
+              </div>
+
+              <div>
+                <h3 className="text-[15px] font-bold text-[#191919]">
+                  {language === 'en' ? 'All reviews' : language === 'es' ? 'Todas las opiniones' : 'Todas as avaliações'}{' '}
+                  <span className="font-normal text-[#545454]">({formattedTotalCount})</span>
+                </h3>
+                <p className="text-[11px] text-[#696969] mt-0.5">
+                  {formattedTotalCount}{' '}
+                  {language === 'en'
+                    ? 'reviews in the last 12 months'
+                    : language === 'es'
+                      ? 'opiniones en los últimos 12 meses'
+                      : 'avaliações nos últimos 12 meses'}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setShowWriteReview((prev) => !prev);
+                  setReviewSubmitted(false);
+                }}
+                className="w-full border border-[#005138] hover:bg-[#f2f8f5] text-[#005138] rounded-full py-1.5 px-3 text-[12px] font-semibold inline-flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+              >
+                <PenLine className="w-3.5 h-3.5" />
+                <span>
+                  {language === 'en'
+                    ? 'Write a review'
+                    : language === 'es'
+                      ? 'Escribe una opinión'
+                      : 'Escreva uma avaliação'}
+                </span>
+              </button>
+
+              <div className="flex items-center gap-1.5 text-[11px] text-[#191919] pt-0.5">
+                <span>
+                  {language === 'en'
+                    ? 'We verify reviews'
+                    : language === 'es'
+                      ? 'Verificamos las opiniones'
+                      : 'Nós verificamos as avaliações'}
+                </span>
+                <Info className="w-3.5 h-3.5 text-[#545454] shrink-0" />
+              </div>
+
+              {/* 5-Star Breakdown Card */}
+              <div className="border border-[#e5e5e5] rounded-xl p-3 space-y-2">
+                {starDistribution.map((row) => {
+                  const isChecked = selectedStarFilter === row.stars;
+                  const canFilter = row.percent > 0;
+                  return (
+                    <button
+                      key={row.stars}
+                      type="button"
+                      disabled={!canFilter}
+                      onClick={() => handleToggleStar(row.stars)}
+                      className={`w-full flex items-center gap-2 text-left text-[11px] rounded py-0.5 transition-colors ${
+                        canFilter ? 'cursor-pointer hover:bg-[#f7f7f2]' : 'opacity-55 cursor-default'
+                      }`}
+                    >
+                      <span
+                        className={`w-3.5 h-3.5 rounded-[3px] border flex items-center justify-center shrink-0 transition-colors ${
+                          isChecked
+                            ? 'bg-[#00b67a] border-[#00b67a] text-white'
+                            : 'border-[#c8c8be] bg-[#f5f5f5]'
+                        }`}
+                      >
+                        {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                      </span>
+                      <span className="text-[#191919] w-[54px] shrink-0">{row.label}</span>
+                      <div className="flex-1 h-2 bg-[#f0f0f0] rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-300"
+                          style={{
+                            width: `${row.percent > 0 ? Math.max(row.percent, 5) : 0}%`,
+                            backgroundColor: row.color,
+                          }}
+                        />
+                      </div>
+                      <span className="text-[#696969] w-7 text-right shrink-0">{row.percent}%</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {selectedStarFilter !== null && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedStarFilter(null);
+                    setCurrentPage(1);
+                  }}
+                  className="text-[11px] font-bold text-[#005138] underline cursor-pointer"
+                >
+                  {language === 'en' ? 'Clear rating filter' : language === 'es' ? 'Limpiar filtro' : 'Limpar filtro'}
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => experienceRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                className="text-[11px] text-[#191919] hover:underline inline-flex items-center gap-1 cursor-pointer pt-1"
+              >
+                <span className="underline">
+                  {language === 'en'
+                    ? 'How Trustpilot ranks reviews'
+                    : language === 'es'
+                      ? 'Cómo clasifica Trustpilot las opiniones'
+                      : 'Como a Trustpilot classifica as avaliações'}
+                </span>
+                <ExternalLink className="w-3 h-3 shrink-0" />
+              </button>
+            </aside>
+
+            {/* Right Main Column */}
+            <div className="space-y-4 min-w-0">
+              {/* Inline Review Composer inside Mini-Visualizer */}
+              {showWriteReview && (
+                <div className="border border-[#c5e8d9] bg-[#f6fcf9] rounded-xl p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-[13px] font-bold text-[#191919]">
+                      {language === 'en'
+                        ? 'Rate your experience with C2Tech'
+                        : language === 'es'
+                          ? 'Califica tu experiencia con C2Tech'
+                          : 'Avalie sua experiência com a C2Tech'}
+                    </h4>
+                    <button
+                      type="button"
+                      onClick={() => setShowWriteReview(false)}
+                      className="text-[#696969] hover:text-[#191919] cursor-pointer"
+                      aria-label="Fechar formulário"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {reviewSubmitted ? (
+                    <p className="text-[12px] text-[#005138] font-semibold">
+                      {text('Obrigado! Sua avaliação foi registrada e passará pela verificação automática da Trustpilot.')}
                     </p>
-                  </div>
-                  <div className="flex items-center gap-1 bg-[#f7f7f2] border border-[#e5e5dd] px-2.5 py-1 rounded-lg">
-                    <TrustpilotStarIcon className="w-4 h-4" />
-                    <span className="text-[15px] font-bold text-[#191919]">4.8</span>
-                    <span className="text-[11px] text-[#545454]">/ 5</span>
-                  </div>
-                </div>
-
-                {/* 5-star to 1-star interactive bars */}
-                <div className="space-y-2 pt-1">
-                  {starDistribution.map((row) => {
-                    const isSelected = selectedStarFilter === row.stars;
-                    const isClickable = row.stars >= 4;
-                    return (
+                  ) : (
+                    <form onSubmit={handleSubmitDraft} className="space-y-2.5">
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type="button"
+                            onClick={() => setDraftRating(star)}
+                            className="p-0.5 cursor-pointer"
+                            aria-label={`${star} estrelas`}
+                          >
+                            <div
+                              className="w-6 h-6 flex items-center justify-center rounded-xs text-white text-xs font-bold"
+                              style={{ backgroundColor: star <= draftRating ? '#00b67a' : '#dcdce6' }}
+                            >
+                              ★
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                      <input
+                        type="text"
+                        value={draftTitle}
+                        onChange={(e) => setDraftTitle(e.target.value)}
+                        placeholder={language === 'en' ? 'Review title...' : language === 'es' ? 'Título de tu opinión...' : 'Título da sua avaliação...'}
+                        className="w-full px-3 py-1.5 rounded-lg border border-[#d6d6d6] bg-white text-[12px] text-[#191919] focus:outline-none focus:border-[#00b67a]"
+                      />
+                      <textarea
+                        rows={2}
+                        value={draftComment}
+                        onChange={(e) => setDraftComment(e.target.value)}
+                        placeholder={language === 'en' ? 'Tell other customers about your purchase...' : language === 'es' ? 'Cuenta cómo fue tu compra...' : 'Conte como foi sua compra e instalação...'}
+                        className="w-full px-3 py-1.5 rounded-lg border border-[#d6d6d6] bg-white text-[12px] text-[#191919] focus:outline-none focus:border-[#00b67a]"
+                      />
                       <button
-                        key={row.stars}
-                        type="button"
-                        disabled={!isClickable}
-                        onClick={() =>
-                          setSelectedStarFilter((prev) => (prev === row.stars ? null : row.stars))
-                        }
-                        className={`w-full flex items-center gap-2.5 text-left py-1 px-1.5 rounded-lg transition-colors ${
-                          isClickable
-                            ? 'cursor-pointer hover:bg-[#f7f7f2]'
-                            : 'opacity-65 cursor-default'
-                        } ${isSelected ? 'bg-[#eefbf5] ring-1 ring-[#00b67a]' : ''}`}
+                        type="submit"
+                        className="bg-[#002f1e] hover:bg-[#00452c] text-white rounded-full px-4 py-1.5 text-[12px] font-bold cursor-pointer transition-colors"
                       >
-                        <span
-                          className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${
-                            isSelected
-                              ? 'bg-[#00b67a] border-[#00b67a] text-white'
-                              : 'border-[#8c8c8c] bg-white'
-                          }`}
-                        >
-                          {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
-                        </span>
-                        <span className="text-[12px] font-medium text-[#191919] w-[62px] shrink-0">
-                          {row.label}
-                        </span>
-                        <div className="flex-1 h-2.5 bg-[#ecece4] rounded-full overflow-hidden">
-                          <div
-                            className="h-full rounded-full transition-all duration-300"
-                            style={{
-                              width: `${Math.max(row.percent, row.percent > 0 ? 4 : 0)}%`,
-                              backgroundColor: row.color,
-                            }}
-                          />
-                        </div>
-                        <span className="text-[12px] font-semibold text-[#545454] w-9 text-right shrink-0">
-                          {row.percent === 0 ? '<1%' : `${row.percent}%`}
-                        </span>
+                        {language === 'en' ? 'Submit review' : language === 'es' ? 'Enviar opinión' : 'Publicar avaliação'}
                       </button>
-                    );
-                  })}
+                    </form>
+                  )}
                 </div>
+              )}
 
-                {selectedStarFilter !== null && (
+              {/* Light-Blue Notice Box matching real Trustpilot page */}
+              <div className="bg-[#e5f3ff] rounded-xl p-3.5 flex items-start gap-2.5 text-[11.5px] text-[#191919] leading-relaxed">
+                <Info className="w-4 h-4 text-[#191919] shrink-0 mt-0.5" />
+                <p>
+                  {language === 'en'
+                    ? 'Companies on Trustpilot are not allowed to offer incentives or pay to hide reviews. Reviews represent user opinions and not Trustpilot. '
+                    : language === 'es'
+                      ? 'Las empresas en Trustpilot no tienen permiso para ofrecer incentivos ni pagar para ocultar opiniones. Las reseñas son opiniones de usuarios y no de Trustpilot. '
+                      : 'As empresas no Trustpilot não têm permissão para oferecer incentivos ou pagar para ocultar avaliações. As avaliações são opiniões de usuários e não do Trustpilot. '}
                   <button
                     type="button"
-                    onClick={() => setSelectedStarFilter(null)}
-                    className="w-full text-center text-[12px] font-bold text-[#006b47] hover:underline pt-1 cursor-pointer"
+                    onClick={() => experienceRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                    className="underline font-medium cursor-pointer"
                   >
-                    {language === 'en' ? 'Show all ratings' : language === 'es' ? 'Mostrar todas las calificaciones' : 'Mostrar todas as notas'}
+                    {language === 'en' ? 'Read more' : language === 'es' ? 'Leer más' : 'Leia mais'}
                   </button>
-                )}
+                </p>
               </div>
 
-              {/* Company Transparency Card */}
-              <div className="bg-white border border-[#e5e5dd] rounded-xl p-4 space-y-3">
-                <div className="flex items-center justify-between border-b border-[#f0f0ea] pb-2.5">
-                  <h4 className="text-[14px] font-bold text-[#191919]">
-                    {language === 'en' ? 'Company activity' : language === 'es' ? 'Actividad de la empresa' : 'Transparência da empresa'}
-                  </h4>
-                  <span className="text-[11px] font-bold text-[#006b47] bg-[#d8f6e8] px-2 py-0.5 rounded">
-                    100% Auditado
-                  </span>
-                </div>
-
-                <ul className="space-y-2.5 text-[12px] text-[#333333]">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#00b67a] shrink-0 mt-0.5" />
-                    <span>
-                      {text('Convites automáticos enviados após cada pedido confirmado')}
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Clock className="w-4 h-4 text-[#00b67a] shrink-0 mt-0.5" />
-                    <span>
-                      {text('Responde a 99% das avaliações (tempo médio < 15 min)')}
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ShieldCheck className="w-4 h-4 text-[#00b67a] shrink-0 mt-0.5" />
-                    <span>
-                      {text('Identidade empresarial, CNPJ e suporte WhatsApp verificados')}
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Right Main Column: Search/Filter Bar + Authentic Review Cards */}
-            <div className="space-y-3.5 min-w-0">
-              {/* Filter & Search Bar */}
-              <div className="bg-white border border-[#e5e5dd] rounded-xl p-3.5 space-y-3">
-                <div className="flex flex-col sm:flex-row gap-2.5">
-                  <div className="relative flex-1">
-                    <Search className="w-4 h-4 text-[#696969] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder={
-                        language === 'en'
-                          ? 'Search reviews (e.g. Mac, WhatsApp, AutoCAD, Google Drive)...'
-                          : language === 'es'
-                            ? 'Buscar en las opiniones (ej: Mac, WhatsApp, AutoCAD)...'
-                            : 'Buscar nas avaliações (ex: Pix, Mac, WhatsApp, AutoCAD)...'
-                      }
-                      className="w-full pl-9 pr-8 py-2 bg-[#f7f7f2] border border-[#d6d6ce] rounded-lg text-[13px] text-[#191919] placeholder:text-[#696969] focus:outline-none focus:border-[#00b67a] focus:bg-white transition-colors"
-                    />
-                    {searchQuery && (
-                      <button
-                        type="button"
-                        onClick={() => setSearchQuery('')}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#696969] hover:text-[#191919] cursor-pointer"
-                        aria-label="Limpar busca"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                {/* Quick Filter Pills */}
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedStarFilter(null);
-                      setOnlyWithReply(false);
-                    }}
-                    className={`px-3 py-1 rounded-full text-[12px] font-semibold border transition-colors cursor-pointer ${
-                      selectedStarFilter === null && !onlyWithReply
-                        ? 'bg-[#191919] text-white border-[#191919]'
-                        : 'bg-white text-[#191919] border-[#d6d6ce] hover:bg-[#f2f2ec]'
-                    }`}
-                  >
-                    {language === 'en' ? `All (${formattedTotalCount})` : language === 'es' ? `Todas (${formattedTotalCount})` : `Todas (${formattedTotalCount})`}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setSelectedStarFilter((prev) => (prev === 5 ? null : 5))}
-                    className={`px-3 py-1 rounded-full text-[12px] font-semibold border transition-colors cursor-pointer ${
-                      selectedStarFilter === 5
-                        ? 'bg-[#00b67a] text-white border-[#00b67a]'
-                        : 'bg-white text-[#191919] border-[#d6d6ce] hover:bg-[#f2f2ec]'
-                    }`}
-                  >
-                    ★ 5 {language === 'en' ? 'stars' : language === 'es' ? 'estrellas' : 'estrelas'}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setSelectedStarFilter((prev) => (prev === 4 ? null : 4))}
-                    className={`px-3 py-1 rounded-full text-[12px] font-semibold border transition-colors cursor-pointer ${
-                      selectedStarFilter === 4
-                        ? 'bg-[#73cf42] text-[#191919] border-[#73cf42]'
-                        : 'bg-white text-[#191919] border-[#d6d6ce] hover:bg-[#f2f2ec]'
-                    }`}
-                  >
-                    ★ 4 {language === 'en' ? 'stars' : language === 'es' ? 'estrellas' : 'estrelas'}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setOnlyWithReply((prev) => !prev)}
-                    className={`px-3 py-1 rounded-full text-[12px] font-semibold border transition-colors cursor-pointer ${
-                      onlyWithReply
-                        ? 'bg-[#191919] text-white border-[#191919]'
-                        : 'bg-white text-[#191919] border-[#d6d6ce] hover:bg-[#f2f2ec]'
-                    }`}
-                  >
-                    {language === 'en' ? 'With store reply' : language === 'es' ? 'Con respuesta' : 'Com resposta da loja'}
-                  </button>
-                </div>
-              </div>
-
-              {/* Reviews Feed */}
-              {visibleReviews.length === 0 ? (
-                <div className="bg-white border border-[#e5e5dd] rounded-xl p-8 text-center space-y-2">
-                  <p className="text-[14px] font-bold text-[#191919]">
-                    {language === 'en'
-                      ? 'No reviews matched your filter'
-                      : language === 'es'
-                        ? 'Ninguna opinión coincide con tu filtro'
-                        : 'Nenhuma avaliação encontrada para este filtro'}
+              {/* Verified Customer Reviews List */}
+              {paginatedReviews.length === 0 ? (
+                <div className="border border-[#e5e5e5] rounded-xl p-6 text-center space-y-2">
+                  <p className="text-[13px] font-bold text-[#191919]">
+                    {text('Nenhuma avaliação encontrada para este filtro.')}
                   </p>
                   <button
                     type="button"
                     onClick={() => {
                       setSelectedStarFilter(null);
-                      setOnlyWithReply(false);
                       setSearchQuery('');
+                      setCurrentPage(1);
                     }}
-                    className="text-[13px] font-bold text-[#006b47] underline cursor-pointer"
+                    className="text-[12px] font-bold text-[#005138] underline cursor-pointer"
                   >
-                    {language === 'en' ? 'Clear filters' : language === 'es' ? 'Limpiar filtros' : 'Limpar filtros'}
+                    {text('Mostrar todas as avaliações')}
                   </button>
                 </div>
               ) : (
-                <div className="space-y-3.5">
-                  {visibleReviews.map((rev) => {
+                <div className="space-y-3">
+                  {paginatedReviews.map((rev) => {
                     const isHelpful = !!helpfulVotes[rev.id];
                     const helpfulCount = rev.baseHelpful + (isHelpful ? 1 : 0);
 
                     return (
                       <article
                         key={rev.id}
-                        className="bg-white border border-[#e5e5dd] hover:border-[#c8c8be] rounded-xl p-4 sm:p-5 transition-all text-left"
+                        className="border border-[#e5e5e5] rounded-xl p-4 space-y-2.5 text-left bg-white"
                       >
-                        {/* Top Reviewer Header (Authentic Trustpilot Consumer Header) */}
-                        <div className="flex items-center justify-between gap-3">
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div
-                              className="w-10 h-10 rounded-full font-bold text-[14px] flex items-center justify-center shrink-0 select-none"
-                              style={{ backgroundColor: rev.avatarBg, color: rev.avatarText }}
-                            >
-                              {rev.initials}
+                        <div className="flex items-center justify-between gap-2 flex-wrap">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-8 h-8 rounded-full bg-[#08ad88] text-white font-bold text-[12px] flex items-center justify-center shrink-0">
+                              {rev.author[0]}
                             </div>
-                            <div className="min-w-0">
-                              <p className="text-[14px] font-bold text-[#191919] truncate">
+                            <div>
+                              <p className="text-[13px] font-bold text-[#191919] leading-tight">
                                 {rev.author}
                               </p>
-                              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[12px] text-[#696969] mt-0.5">
-                                <span>
-                                  {rev.authorReviewsCount}{' '}
-                                  {rev.authorReviewsCount === 1
-                                    ? language === 'en'
-                                      ? 'review'
-                                      : language === 'es'
-                                        ? 'opinión'
-                                        : 'avaliação'
-                                    : language === 'en'
-                                      ? 'reviews'
-                                      : language === 'es'
-                                        ? 'opiniones'
-                                        : 'avaliações'}
-                                </span>
-                                <span>•</span>
-                                <span className="inline-flex items-center gap-1">
-                                  <MapPin className="w-3 h-3 text-[#696969]" />
-                                  {rev.countryCode} • {rev.location}
-                                </span>
-                              </div>
+                              <p className="text-[11px] text-[#696969] mt-0.5">{rev.location}</p>
                             </div>
                           </div>
 
-                          <span className="text-[12px] font-medium text-[#696969] whitespace-nowrap shrink-0">
-                            {rev.date}
-                          </span>
-                        </div>
-
-                        {/* Divider */}
-                        <div className="border-t border-[#f0f0ea] my-3" />
-
-                        {/* Stars + Verified Order Pill */}
-                        <div className="flex flex-wrap items-center justify-between gap-2">
                           <div className="flex items-center gap-2">
-                            <TrustpilotStars count={rev.rating} size="w-5 h-5" />
-                            <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#545454]">
-                              <CircleCheck className="w-3.5 h-3.5 fill-[#00b67a] text-white shrink-0" />
-                              {t('trustpilot_verified')}
-                            </span>
+                            <TrustpilotStars count={rev.rating} size="w-4 h-4" />
+                            <span className="text-[12px] text-[#696969] font-medium">{rev.date}</span>
                           </div>
                         </div>
 
-                        {/* Review Title & Body */}
-                        <h4 className="text-[15px] sm:text-[16px] font-bold text-[#191919] mt-2.5 leading-snug">
+                        <h4 className="text-[13.5px] font-bold text-[#191919] leading-snug">
                           {text(rev.title)}
                         </h4>
-                        <p className="text-[14px] text-[#191919] leading-[1.6] mt-1.5">
+                        <p className="text-[12.5px] text-[#4a4a4a] leading-relaxed">
                           {text(rev.comment)}
                         </p>
 
-                        {/* Experience Metadata Tags */}
-                        <div className="flex flex-wrap items-center gap-2 mt-3.5">
-                          <span className="inline-flex items-center gap-1 bg-[#f2f2ec] text-[#191919] text-[12px] px-2.5 py-1 rounded-md">
-                            <strong>
+                        <div className="pt-1 flex items-center justify-between gap-2 flex-wrap">
+                          <div className="trust-verified-badge inline-flex items-center gap-1 text-[11.5px] font-bold text-[#067a5f]">
+                            <CheckCircle2 className="trust-verified-icon w-3.5 h-3.5 text-[#08ad88] shrink-0" />
+                            <span>
                               {language === 'en'
-                                ? 'Date of experience:'
+                                ? 'Verified Purchase via Trustpilot'
                                 : language === 'es'
-                                  ? 'Fecha de la experiencia:'
-                                  : 'Data da experiência:'}
-                            </strong>{' '}
-                            {rev.date}
-                          </span>
+                                  ? 'Compra Verificada vía Trustpilot'
+                                  : 'Compra Verificada via Trustpilot'}
+                            </span>
+                          </div>
 
-                          <span className="inline-flex items-center gap-1 bg-[#eefbf5] text-[#005138] border border-[#c5f1dc] text-[12px] font-semibold px-2.5 py-1 rounded-md">
-                            {rev.productTag}
-                          </span>
-                        </div>
-
-                        {/* Interactive Bottom Action Bar (Helpful button) */}
-                        <div className="mt-3.5 pt-3 border-t border-[#f0f0ea] flex items-center justify-between gap-2 text-[12px] text-[#696969]">
                           <button
                             type="button"
-                            onClick={() => toggleHelpful(rev.id)}
-                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[12px] font-semibold transition-all cursor-pointer ${
+                            onClick={() =>
+                              setHelpfulVotes((prev) => ({ ...prev, [rev.id]: !prev[rev.id] }))
+                            }
+                            className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors cursor-pointer ${
                               isHelpful
-                                ? 'bg-[#d8f6e8] text-[#005138] border-[#00b67a]'
-                                : 'bg-white text-[#545454] border-[#d6d6ce] hover:bg-[#f7f7f2] hover:text-[#191919]'
+                                ? 'bg-[#e6f9f1] border-[#00b67a] text-[#005138]'
+                                : 'bg-white border-[#e5e5e5] text-[#545454] hover:bg-[#f7f7f2]'
                             }`}
                           >
-                            <ThumbsUp className="w-3.5 h-3.5" />
+                            <ThumbsUp className="w-3 h-3" />
                             <span>
-                              {language === 'en' ? 'Useful' : language === 'es' ? 'Útil' : 'Útil'} ({helpfulCount})
+                              {language === 'en' ? 'Useful' : 'Útil'} ({helpfulCount})
                             </span>
                           </button>
-
-                          <span className="text-[11px] text-[#696969]">
-                            {language === 'en'
-                              ? 'Verified via Trustpilot automatic invitation'
-                              : language === 'es'
-                                ? 'Verificado por invitación automática de Trustpilot'
-                                : 'Compra verificada via convite automático Trustpilot'}
-                          </span>
                         </div>
-
-                        {/* Official Store Reply on Trustpilot */}
-                        {rev.reply && (
-                          <div className="mt-3.5 bg-[#f7f7f2] border border-[#e5e5dd] border-l-4 border-l-[#00b67a] rounded-r-xl p-3.5 space-y-1">
-                            <div className="flex items-center gap-1.5 text-[12px] font-bold text-[#191919]">
-                              <CornerDownRight className="w-3.5 h-3.5 text-[#00b67a] shrink-0" />
-                              <span>
-                                {language === 'en'
-                                  ? 'Reply from C2Tech — Licenças Digitais'
-                                  : language === 'es'
-                                    ? 'Respuesta de C2Tech — Licenças Digitais'
-                                    : 'Resposta de C2Tech — Licenças Digitais'}
-                              </span>
-                            </div>
-                            <p className="text-[13px] text-[#333333] leading-relaxed pl-5">
-                              {rev.reply}
-                            </p>
-                          </div>
-                        )}
                       </article>
                     );
                   })}
                 </div>
               )}
 
-              {/* Load More Verified Reviews Button */}
-              {!showAllReviews &&
-                selectedStarFilter === null &&
-                !onlyWithReply &&
-                !searchQuery.trim() &&
-                filteredReviews.length > 5 && (
-                  <button
-                    type="button"
-                    onClick={() => setShowAllReviews(true)}
-                    className="w-full py-3 px-4 rounded-xl bg-white hover:bg-[#f2f2ec] border border-[#d6d6ce] text-[13px] font-bold text-[#191919] flex items-center justify-center gap-2 transition-colors cursor-pointer"
-                  >
-                    <span>
-                      {language === 'en'
-                        ? 'Show more verified reviews'
-                        : language === 'es'
-                          ? 'Mostrar más opiniones verificadas'
-                          : 'Mostrar mais avaliações verificadas'}
-                    </span>
-                    <ChevronDown className="w-4 h-4" />
-                  </button>
-                )}
+              {/* 3-Column Segmented Pagination Bar matching real Trustpilot screenshot */}
+              <div className="grid grid-cols-3 border border-[#c8c8be] text-[12px] rounded-xs overflow-hidden bg-white">
+                <button
+                  type="button"
+                  disabled={safePage <= 1}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  className={`py-2.5 px-3 text-center border-r border-[#c8c8be] transition-colors ${
+                    safePage <= 1
+                      ? 'text-[#b5b5ad] cursor-default'
+                      : 'text-[#191919] hover:bg-[#f7f7f2] cursor-pointer font-medium'
+                  }`}
+                >
+                  {language === 'en' ? 'Previous' : language === 'es' ? 'Anterior' : 'Anterior'}
+                </button>
+                <div className="py-2.5 px-3 text-center border-r border-[#c8c8be] border-t-2 border-t-[#002f1e] bg-[#efefef] font-bold text-[#191919]">
+                  {safePage}
+                </div>
+                <button
+                  type="button"
+                  disabled={safePage >= totalPages}
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  className={`py-2.5 px-3 text-center transition-colors ${
+                    safePage >= totalPages
+                      ? 'text-[#b5b5ad] cursor-default'
+                      : 'text-[#191919] hover:bg-[#f7f7f2] cursor-pointer font-medium'
+                  }`}
+                >
+                  {language === 'en' ? 'Next page' : language === 'es' ? 'Siguiente página' : 'Próxima página'}
+                </button>
+              </div>
+
+              {/* A Experiência Trustpilot Accordion Card */}
+              <div ref={experienceRef} className="border border-[#e5e5e5] rounded-xl p-5 space-y-2.5 bg-white">
+                <div className="flex items-center justify-center gap-1.5 pb-1">
+                  <h3 className="text-[15px] font-bold text-[#191919]">
+                    {language === 'en'
+                      ? 'The Trustpilot Experience'
+                      : language === 'es'
+                        ? 'La Experiencia Trustpilot'
+                        : 'A Experiência Trustpilot'}
+                  </h3>
+                  <TrustpilotStarIcon className="w-4 h-4" />
+                </div>
+
+                <div className="space-y-2">
+                  {experienceItems.map((item, idx) => {
+                    const isExpanded = openAccordionIdx === idx;
+                    return (
+                      <div key={item.title} className="border border-[#e5e5e5] rounded-lg overflow-hidden">
+                        <button
+                          type="button"
+                          onClick={() => setOpenAccordionIdx(isExpanded ? null : idx)}
+                          className="w-full px-3.5 py-2.5 flex items-center justify-between gap-2 text-left text-[12px] font-medium text-[#191919] hover:bg-[#fafaf8] transition-colors cursor-pointer"
+                        >
+                          <span>{item.title}</span>
+                          {isExpanded ? (
+                            <ChevronUp className="w-3.5 h-3.5 text-[#545454] shrink-0" />
+                          ) : (
+                            <ChevronDown className="w-3.5 h-3.5 text-[#545454] shrink-0" />
+                          )}
+                        </button>
+                        {isExpanded && (
+                          <div className="px-3.5 pb-3 pt-0.5 text-[11.5px] text-[#545454] leading-relaxed border-t border-[#f2f2f2] bg-[#fcfcfa]">
+                            {item.body}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setOpenAccordionIdx((prev) => (prev === 0 ? null : 0))}
+                  className="bg-[#002f1e] hover:bg-[#00452c] text-white font-bold text-[12px] py-2.5 rounded-full w-full cursor-pointer transition-colors mt-1"
+                >
+                  {language === 'en' ? 'Learn more' : language === 'es' ? 'Saber más' : 'Saiba mais'}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* 4. Bottom Sticky Bar */}
-        <div className="px-4 sm:px-6 py-3.5 bg-white border-t border-[#e5e5dd] flex flex-wrap items-center justify-between gap-3 shrink-0">
-          <div className="flex items-center gap-2 text-[12px] text-[#545454]">
-            <Lock className="w-4 h-4 text-[#00b67a] shrink-0" />
-            <span>
-              {text(
-                language === 'es'
-                  ? 'Visualizador integrado oficial • Todas las compras están protegidas con garantía de activación'
-                  : 'Visualizador oficial integrado • Todas as compras contam com ativação garantida e suporte no WhatsApp'
-              )}
-            </span>
-          </div>
+          {/* 4. Authentic Trustpilot Warm Beige Footer */}
+          <footer className="bg-[#f5f4f0] border-t border-[#e5e5dd] px-4 sm:px-6 py-8">
+            <div className="max-w-[820px] mx-auto space-y-5 text-left">
+              <TrustpilotLogo starSize="w-5 h-5" textSize="text-[16px] font-bold" />
 
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-5 py-2 rounded-lg bg-[#00b67a] hover:bg-[#009664] text-[#191919] font-bold text-[13px] cursor-pointer transition-colors"
-          >
-            {language === 'en' ? 'Back to Store' : language === 'es' ? 'Volver a la tienda' : 'Voltar para a loja'}
-          </button>
+              <p className="text-[10.5px] text-[#545454] leading-relaxed">
+                {language === 'en'
+                  ? 'This site is protected by reCAPTCHA. We collect device and interaction signals for security purposes, as described in our '
+                  : language === 'es'
+                    ? 'Este sitio está protegido por reCAPTCHA. Recopilamos señales de dispositivos e interacciones por seguridad, según nuestra '
+                    : 'Este site está protegido pelo reCAPTCHA. Coletamos sinais de dispositivos e interações para fins de segurança, conforme descrito em nossa '}
+                <span className="text-[#006b47] underline">
+                  {language === 'en' ? 'Privacy Policy' : language === 'es' ? 'Política de Privacidad' : 'Política de Privacidade'}
+                </span>
+                .
+              </p>
+
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-6 text-[11px] text-[#191919]">
+                <div className="space-y-1.5">
+                  <p className="font-bold">{language === 'en' ? 'About' : language === 'es' ? 'Sobre' : 'Sobre'}</p>
+                  <ul className="space-y-1 text-[#545454]">
+                    <li>{language === 'en' ? 'About us' : 'Quem somos'}</li>
+                    <li>{language === 'en' ? 'Jobs' : 'Empregos'}</li>
+                    <li>{language === 'en' ? 'Contact' : 'Contato'}</li>
+                    <li>Blog</li>
+                    <li>{language === 'en' ? 'How Trustpilot works' : 'Como a Trustpilot funciona'}</li>
+                    <li>{language === 'en' ? 'Transparency Report' : 'Imprensa'}</li>
+                    <li>{language === 'en' ? 'Investor Relations' : 'Relações com investidores'}</li>
+                  </ul>
+                </div>
+
+                <div className="space-y-1.5">
+                  <p className="font-bold">{language === 'en' ? 'Community' : language === 'es' ? 'Comunidad' : 'Comunidade'}</p>
+                  <ul className="space-y-1 text-[#545454]">
+                    <li>{language === 'en' ? 'Trust in reviews' : 'Confiar nas avaliações'}</li>
+                    <li>{language === 'en' ? 'Help Center' : 'Central de ajuda'}</li>
+                    <li>{language === 'en' ? 'Log in' : 'Acessar'}</li>
+                    <li>{language === 'en' ? 'Sign up' : 'Cadastre-se'}</li>
+                  </ul>
+                </div>
+
+                <div className="space-y-1.5">
+                  <p className="font-bold">{language === 'en' ? 'Businesses' : 'Empresas'}</p>
+                  <ul className="space-y-1 text-[#545454]">
+                    <li>Trustpilot Business</li>
+                    <li>{language === 'en' ? 'Products' : 'Produtos'}</li>
+                    <li>{language === 'en' ? 'Plans & Pricing' : 'Planos e preços'}</li>
+                    <li>{language === 'en' ? 'Business Login' : 'Login para empresas'}</li>
+                    <li>{language === 'en' ? 'Blog for Business' : 'Blog para empresas'}</li>
+                  </ul>
+                </div>
+
+                <div className="space-y-1.5">
+                  <p className="font-bold">{language === 'en' ? 'Follow us on' : language === 'es' ? 'Síguenos' : 'Siga-nos'}</p>
+                  <ul className="space-y-1 text-[#545454] font-semibold">
+                    <li>Facebook</li>
+                    <li>X</li>
+                    <li>Instagram</li>
+                    <li>LinkedIn</li>
+                    <li>YouTube</li>
+                  </ul>
+                </div>
+
+                <div className="space-y-2 col-span-2 sm:col-span-1">
+                  <p className="font-bold">
+                    {language === 'en' ? 'Choose country' : language === 'es' ? 'Elige el país' : 'Escolha o país'}
+                  </p>
+                  <div className="bg-white border border-[#d6d6ce] rounded px-2.5 py-1.5 flex items-center justify-between text-[11px] text-[#191919]">
+                    <span>🇧🇷 {language === 'en' ? 'Brazil' : 'Brasil'}</span>
+                    <ChevronDown className="w-3.5 h-3.5 text-[#545454]" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-[#e5e5dd] flex flex-wrap gap-x-5 gap-y-1.5 text-[10.5px] text-[#545454]">
+                <span>Legal</span>
+                <span>{language === 'en' ? 'Privacy Policy' : 'Política de Privacidade'}</span>
+                <span>{language === 'en' ? 'Terms & Conditions' : 'Termos & Condições'}</span>
+                <span>{language === 'en' ? 'Guidelines for Reviewers' : 'Diretrizes para Avaliadores'}</span>
+                <span>{language === 'en' ? 'System status' : 'Status do sistema'}</span>
+                <span>{language === 'en' ? 'Cookie preferences' : 'Preferências de cookies'}</span>
+                <span>Modern Slavery Statement</span>
+              </div>
+
+              <p className="text-[10.5px] text-[#545454]">
+                © 2026 Trustpilot, Inc.{' '}
+                {language === 'en'
+                  ? 'All rights reserved.'
+                  : language === 'es'
+                    ? 'Todos los derechos reservados.'
+                    : 'Todos os direitos reservados.'}
+              </p>
+            </div>
+          </footer>
         </div>
       </div>
     </div>
