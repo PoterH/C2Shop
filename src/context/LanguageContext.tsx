@@ -1,5 +1,6 @@
 import { loadTextDictionary, type TextDictionary } from '../utils/localeMessages';
 import { localizeText } from '../utils/localizeText';
+import { getTrustpilotReviewsLabel } from '../utils/trustpilotMetrics';
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { useCurrency, type CurrencyCode } from './CurrencyContext';
 
@@ -586,6 +587,9 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const dictionary = language === 'en' || language === 'es' ? dictionaries[language] : undefined;
   const text = useCallback((value: string) => localizeText(value, language, dictionary), [language, dictionary]);
   const t = useCallback((key: string, fallback?: string): string => {
+    if (key === 'trustpilot_reviews_count' || key === 'trustpilot_bar_reviews') {
+      return getTrustpilotReviewsLabel(language);
+    }
     const dict = TRANSLATIONS[language] || TRANSLATIONS['pt-BR'];
     if (dict[key]) return dict[key];
     const defaultDict = TRANSLATIONS['pt-BR'];

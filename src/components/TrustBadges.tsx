@@ -2,6 +2,11 @@ import { useText } from '../hooks/useText';
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { CheckCircle2, X, Lock, Award, CloudDownload, RefreshCw } from 'lucide-react';
+import {
+  TRUSTPILOT_REVIEW_BASE_DAYS,
+  formatTrustpilotDaysAgo,
+  getTrustpilotSatisfiedCustomersLabel,
+} from '../utils/trustpilotMetrics';
 
 // Official Trustpilot Two-Tone Star (Authentic Star Logo)
 export const TrustpilotStarIcon: React.FC<{ className?: string }> = ({ className = 'w-5 h-5' }) => (
@@ -182,7 +187,7 @@ export const TrustGuaranteesModal: React.FC<{
       id: 1,
       author: 'Carlos Eduardo M.',
       location: language === 'en' ? 'New York, US' : language === 'es' ? 'Madrid, ES' : 'São Paulo, SP',
-      date: language === 'es' ? 'Hace 2 días' : 'Há 2 dias',
+      date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[1], language),
       title: language === 'es' ? 'Entrega en menos de 2 minutos y video bien detallado' : 'Entrega em menos de 2 minutos e vídeo bem detalhado',
       comment: language === 'es'
         ? 'Pagué con tarjeta y el enlace de Google Drive llegó al correo al instante. El tutorial en video enseña todo paso a paso sin complicaciones. Ya lo estoy usando en mi trabajo.'
@@ -193,7 +198,7 @@ export const TrustGuaranteesModal: React.FC<{
       id: 2,
       author: 'Fernanda S. Oliveira',
       location: language === 'en' ? 'Miami, US' : language === 'es' ? 'Ciudad de México, MX' : 'Belo Horizonte, MG',
-      date: language === 'es' ? 'Hace 4 días' : 'Há 4 dias',
+      date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[2], language),
       title: language === 'es' ? 'Excelente relación calidad-precio y soporte de 10' : 'Excelente custo-benefício e suporte nota 10',
       comment: language === 'es'
         ? 'Es el segundo software que les compro. Tuve una duda en la instalación en mi Mac y el soporte respondió en menos de 5 minutos por WhatsApp. ¡Funcionando de maravilla sin mensualidades!'
@@ -204,7 +209,7 @@ export const TrustGuaranteesModal: React.FC<{
       id: 3,
       author: 'Roberto Almeida Jr.',
       location: language === 'en' ? 'London, UK' : language === 'es' ? 'Buenos Aires, AR' : 'Curitiba, PR',
-      date: language === 'es' ? 'Hace 1 semana' : 'Há 1 semana',
+      date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[3], language),
       title: language === 'es' ? 'La mejor tienda de licencias digitales' : 'Melhor loja de licenças digitais do Brasil',
       comment: language === 'es'
         ? 'Software completo, con todas las funciones desbloqueadas y sin bloqueos. Muy transparente, lo recomiendo con total confianza a todos los arquitectos e ingenieros.'
@@ -215,7 +220,7 @@ export const TrustGuaranteesModal: React.FC<{
       id: 4,
       author: 'Juliana Costa',
       location: language === 'es' ? 'Santiago, CL' : 'Rio de Janeiro, RJ',
-      date: language === 'es' ? 'Hace 1 semana' : 'Há 1 semana',
+      date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[4], language),
       title: language === 'es' ? 'Activación de por vida perfecta' : 'Ativação vitalícia perfeita',
       comment: language === 'es'
         ? 'Estaba cansada de pagar suscripciones costosas cada mes. Compré para probar y superó mis expectativas. Archivo limpio, rápido y de por vida.'
@@ -226,7 +231,7 @@ export const TrustGuaranteesModal: React.FC<{
       id: 5,
       author: 'Marcos Vinícius T.',
       location: language === 'es' ? 'Lima, PE' : 'Porto Alegre, RS',
-      date: language === 'es' ? 'Hace 2 semanas' : 'Há 2 semanas',
+      date: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[5], language),
       title: language === 'es' ? 'Confianza total y soporte rápido' : 'Confiança total e suporte rápido',
       comment: language === 'es'
         ? 'Compré el paquete completo. El equipo fue super amable y atento. ¡Nota máxima!'
@@ -259,7 +264,7 @@ export const TrustGuaranteesModal: React.FC<{
                 <TrustpilotStars count={5} size="w-5 h-5" />
                 <span className="text-xs font-extrabold text-slate-800">4.8 / 5</span>
                 <span className="trust-reviews-count text-xs text-slate-500 font-medium transition-colors duration-200 hover:text-[#191919]">
-                  {language === 'en' ? '(1,785 satisfied customers)' : language === 'es' ? '(1.785 clientes satisfechos)' : '(1.785 clientes satisfeitos)'}
+                  {getTrustpilotSatisfiedCustomersLabel(language)}
                 </span>
               </div>
             </div>
@@ -342,7 +347,7 @@ export const TrustGuaranteesModal: React.FC<{
                     </div>
                     <div className="flex items-center gap-1.5">
                       <TrustpilotStars count={rev.rating} size="w-3.5 h-3.5" starSize="w-2.5 h-2.5" />
-                      <span className="text-xs text-slate-400 font-medium">{text(rev.date)}</span>
+                      <span className="text-xs text-slate-400 font-medium">{rev.date}</span>
                     </div>
                   </div>
 

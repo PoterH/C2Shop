@@ -3,6 +3,7 @@ import { ChevronLeft, CircleCheck } from 'lucide-react';
 import { LearnMoreChevron } from './LearnMoreChevron';
 import { useLanguage } from '../context/LanguageContext';
 import { TrustpilotStars, TrustpilotLogo, TrustGuaranteesModal } from './TrustBadges';
+import { TRUSTPILOT_REVIEW_BASE_DAYS, formatTrustpilotDaysAgo } from '../utils/trustpilotMetrics';
 const TRUSTPILOT_REVIEWS_EN = [
   {
     id: 1,
@@ -200,7 +201,11 @@ export function StoreReviews({ summaryOnly = false }: { summaryOnly?: boolean })
  const { language, t } = useLanguage();
  const [trustpilotSlideIndex, setTrustpilotSlideIndex] = useState(0);
  const [isGuaranteesModalOpen, setIsGuaranteesModalOpen] = useState(false);
- const activeTrustpilotReviews = language === 'en' ? TRUSTPILOT_REVIEWS_EN : language === 'es' ? TRUSTPILOT_REVIEWS_ES : language === 'pt-PT' ? TRUSTPILOT_REVIEWS_PT : TRUSTPILOT_REVIEWS;
+ const rawTrustpilotReviews = language === 'en' ? TRUSTPILOT_REVIEWS_EN : language === 'es' ? TRUSTPILOT_REVIEWS_ES : language === 'pt-PT' ? TRUSTPILOT_REVIEWS_PT : TRUSTPILOT_REVIEWS;
+ const activeTrustpilotReviews = rawTrustpilotReviews.map((item) => ({
+   ...item,
+   timeAgo: formatTrustpilotDaysAgo(TRUSTPILOT_REVIEW_BASE_DAYS[item.id] ?? 2, language),
+ }));
  return <section aria-label={t('trustpilot_reviews_modal_title')}>
         <div className="trust-review-strip my-10 py-6">
           <div className={summaryOnly ? "flex justify-center" : "grid grid-cols-1 lg:grid-cols-[180px_minmax(0,1fr)] gap-6 items-start"}>
