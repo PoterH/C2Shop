@@ -202,7 +202,7 @@ export const Home: React.FC = () => {
 
         <div className="home-hero-content relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center gap-3 sm:gap-3 md:gap-4">
           <div className="home-hero-showcase">
-            <div className="home-hero-customer-proof t-avatar-group" aria-label={language === 'en' ? '+5,000 satisfied customers' : language === 'es' ? '+5.000 clientes satisfechos' : '+5.000 clientes satisfeitos'}>
+            <div className="home-hero-customer-proof t-avatar-group" aria-label={language === 'en' ? '+1,000 customers' : language === 'es' ? '+1000 clientes' : '+1000 clientes'}>
               <div className="home-hero-avatars" aria-hidden="true">
                 <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64&q=80" alt="" />
                 <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&h=64&q=80" alt="" />
@@ -210,7 +210,7 @@ export const Home: React.FC = () => {
                 <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=64&h=64&q=80" alt="" />
                 <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=64&h=64&q=80" alt="" />
               </div>
-              <span>{language === 'en' ? '+5,000 satisfied customers' : language === 'es' ? '+5.000 clientes satisfechos' : '+5.000 clientes satisfeitos'}</span>
+              <span>{language === 'en' ? '+1,000 customers' : language === 'es' ? '+1000 clientes' : '+1000 clientes'}</span>
             </div>
             <GridMotion
               items={heroGridCards}
