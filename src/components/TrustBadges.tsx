@@ -179,37 +179,36 @@ const TrustpilotSkeletonSlot: React.FC<{
 }> = ({ activeKey, delayMs, skeleton, children, className = '' }) => {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const skelRef = useRef<HTMLDivElement | null>(null);
-  const [revealed, setRevealed] = useState(false);
 
   React.useEffect(() => {
-    if (
-      typeof window !== 'undefined' &&
-      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-    ) {
-      setRevealed(true);
-      return;
-    }
-
     const wrap = wrapRef.current;
     const skel = skelRef.current;
     if (!wrap || !skel) return;
 
+    if (
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    ) {
+      wrap.classList.add('is-revealed');
+      return;
+    }
+
     wrap.classList.add('is-resetting');
-    setRevealed(false);
+    wrap.classList.remove('is-revealed');
     skel.classList.remove('is-pulsing');
     void skel.offsetWidth;
     wrap.classList.remove('is-resetting');
     skel.classList.add('is-pulsing');
 
     const timer = window.setTimeout(() => {
-      setRevealed(true);
+      wrap.classList.add('is-revealed');
     }, delayMs);
 
     return () => window.clearTimeout(timer);
   }, [activeKey, delayMs]);
 
   return (
-    <div ref={wrapRef} className={`t-skel ${revealed ? 'is-revealed' : ''} ${className}`}>
+    <div ref={wrapRef} className={`t-skel ${className}`}>
       <div ref={skelRef} className="t-skel-skeleton is-pulsing" aria-hidden="true">
         {skeleton}
       </div>
@@ -244,31 +243,38 @@ export const TrustGuaranteesModal: React.FC<{
 
   React.useEffect(() => {
     if (!isOpen) {
+      const resetRaf = window.requestAnimationFrame(() => {
+        setLoaderStage('idle');
+        setHasInteractedFeed(false);
+      });
+      return () => window.cancelAnimationFrame(resetRaf);
+    }
+
+    let innerRaf = 0;
+    let doneTimer = 0;
+
+    const outerRaf = window.requestAnimationFrame(() => {
+      setOpenCycle((prev) => prev + 1);
+      if (
+        typeof window !== 'undefined' &&
+        window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+      ) {
+        setLoaderStage('done');
+        return;
+      }
+
       setLoaderStage('idle');
-      setHasInteractedFeed(false);
-      return;
-    }
-
-    setOpenCycle((prev) => prev + 1);
-    setLoaderStage('idle');
-
-    if (
-      typeof window !== 'undefined' &&
-      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-    ) {
-      setLoaderStage('done');
-      return;
-    }
-
-    const rafId = window.requestAnimationFrame(() => {
-      setLoaderStage('loading');
+      innerRaf = window.requestAnimationFrame(() => {
+        setLoaderStage('loading');
+      });
+      doneTimer = window.setTimeout(() => {
+        setLoaderStage('done');
+      }, 1050);
     });
-    const doneTimer = window.setTimeout(() => {
-      setLoaderStage('done');
-    }, 1050);
 
     return () => {
-      window.cancelAnimationFrame(rafId);
+      window.cancelAnimationFrame(outerRaf);
+      window.cancelAnimationFrame(innerRaf);
       window.clearTimeout(doneTimer);
       if (feedTimerRef.current) {
         window.clearTimeout(feedTimerRef.current);
