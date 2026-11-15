@@ -1303,7 +1303,7 @@ h1 {
  .home-hero h1>span:first-child{font-size:18px;line-height:1.25}
  .home-hero h1>span:last-child{font-size:27px;line-height:1.15;margin-top:2px}
  .home-hero-showcase{position:relative;display:block;width:100vw;max-width:none;height:340px;margin-top:0;margin-bottom:0;margin-left:0;transform:none;isolation:isolate}
- .home-hero-showcase::after{display:block;background:radial-gradient(ellipse 86% 48% at 50% 54%,rgb(10 15 29 / .78) 0%,rgb(10 15 29 / .44) 62%,transparent 100%)}
+ .home-hero-showcase::after{display:block;background:radial-gradient(ellipse 84% 46% at 50% 54%,rgb(10 15 29 / .66) 0%,rgb(10 15 29 / .35) 62%,transparent 100%)}
  .home-hero-customer-proof{position:absolute;top:calc(50% - 62px);left:50%;z-index:20;display:inline-flex;align-items:center;justify-content:center;gap:9px;width:max-content;max-width:calc(100vw - 20px);margin:0;transform:translateX(-50%)}
  .home-hero-customer-label{font-size:13px;font-weight:700}
  .home-hero-avatars{display:inline-flex;align-items:center;flex-shrink:0}
@@ -1315,7 +1315,8 @@ h1 {
  .home-hero-search form input{font-size:14px;padding-top:9px;padding-bottom:9px}
  .home-hero-search form button{padding:9px 14px;font-size:13px}
  .home-hero-search p{display:none}
- .home-hero-gridmotion{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;--gm-dim:0.45!important}
+ .home-hero-gridmotion{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;--gm-dim:0.32!important}
+ .home-hero-gridmotion .grid-motion__tile img{filter:brightness(1.08) drop-shadow(0 10px 14px rgb(0 0 0 / calc(0.22 + 0.22 * var(--spot, 0))))}
  .home-trustpilot-intro{padding-left:12px;padding-right:12px}
  .home-trustpilot-intro .trust-review-strip{margin-top:0;margin-bottom:6px;padding-top:8px;padding-bottom:8px}
  .home-trustpilot-intro .trust-review-summary{padding-bottom:0}
