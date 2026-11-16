@@ -19,8 +19,10 @@ const FAQPage = lazy(() => import('./pages/FAQPage').then(module => ({ default: 
 const TermsPage = lazy(() => import('./pages/TermsPage').then(module => ({ default: module.TermsPage })));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then(module => ({ default: module.PrivacyPage })));
 const ThankYouPage = lazy(() => import('./pages/ThankYouPage').then(module => ({ default: module.ThankYouPage })));
+const AuthPage = lazy(() => import('./pages/AuthPage').then(module => ({ default: module.AuthPage })));
 
 import { CartProvider } from './context/CartContext';
+import { AuthProvider } from './context/AuthContext';
 import { CurrencyProvider } from './context/CurrencyContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { CartDrawer } from './components/CartDrawer';
@@ -49,6 +51,7 @@ return (
     <CurrencyProvider>
       <LanguageProvider>
         <CartProvider>
+          <AuthProvider>
         <BrowserRouter>
           <ScrollToTop />
           <MobileSearchEntry />
@@ -78,6 +81,8 @@ return (
                 <Route path="/termos" element={<TermsPage />} />
                 <Route path="/privacidade" element={<PrivacyPage />} />
                 <Route path="/obrigado" element={<ThankYouPage />} />
+                <Route path="/login" element={<AuthPage />} />
+                <Route path="/minha-conta" element={<AuthPage />} />
 
                 {/* Fallback route - redirect to home */}
                 <Route path="*" element={<Home />} />
@@ -96,6 +101,7 @@ return (
             <Analytics />
           </div>
         </BrowserRouter>
+          </AuthProvider>
       </CartProvider>
       </LanguageProvider>
     </CurrencyProvider>
