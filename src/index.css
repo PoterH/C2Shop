@@ -1392,3 +1392,89 @@ h1 {
 @media(prefers-reduced-motion:reduce){
  .home-software-logo-loop .home-software-logo-mark{transition:none}
 }
+
+/* ---------- How it works (Home): step cards with live mini-UI ---------- */
+.hiw-node {
+  display: inline-grid; place-items: center;
+  width: 36px; height: 36px; border-radius: 999px;
+  background: #fff; border: 1px solid var(--color-border-default);
+  font: 800 12px/1 var(--font-display); color: var(--color-action-primary);
+  box-shadow: 0 1px 2px rgb(15 23 42 / .06);
+}
+.hiw-line {
+  position: absolute; left: 44px; right: -16px; top: 50%; height: 2px; transform: translateY(-50%);
+  background: var(--color-border-default); border-radius: 2px; overflow: hidden;
+}
+.hiw-line::after {
+  content: ""; position: absolute; inset: 0; width: 30%;
+  background: linear-gradient(90deg, transparent, var(--color-action-primary), transparent);
+  animation: hiw-pulse 3.2s ease-in-out infinite;
+}
+.hiw-rail > div:nth-child(2) .hiw-line::after { animation-delay: .8s; }
+.hiw-rail > div:nth-child(3) .hiw-line::after { animation-delay: 1.6s; }
+@keyframes hiw-pulse { from { transform: translateX(-100%); } to { transform: translateX(340%); } }
+
+/* Phone: numbers on a vertical rail beside the cards */
+.hiw-step { padding-left: 52px; }
+.hiw-node--side { position: absolute; left: 0; top: 0; }
+.hiw-step:not(:last-child)::before {
+  content: ""; position: absolute; left: 17px; top: 40px; bottom: -16px; width: 2px;
+  background: var(--color-border-default); border-radius: 2px;
+}
+@media (min-width: 768px) {
+  .hiw-step { padding-left: 0; }
+  .hiw-step::before { display: none; }
+  .hiw-node--side { left: 16px; top: 16px; z-index: 2; width: 30px; height: 30px; font-size: 11px; }
+  .hiw-step .hiw-visual { padding-top: 40px; }
+}
+@media (min-width: 1024px) {
+  .hiw-step .hiw-visual { padding-top: 16px; }
+  .hiw-node--side { display: none; }
+}
+
+/* Hover: the card lifts 2px, its loop restarts */
+.hiw-card:hover { transform: translateY(-2px); border-color: var(--color-border-strong); box-shadow: 0 12px 28px -12px rgb(15 23 42 / .18); }
+.hiw-frame { width: 100%; max-width: 280px; margin: 0 auto; }
+
+/* Step 1: caret blinks, the chosen tile breathes */
+.hiw-caret { width: 1.5px; height: 14px; margin-left: -6px; background: var(--color-action-primary); animation: hiw-blink 1s steps(2) infinite; }
+@keyframes hiw-blink { 50% { opacity: 0; } }
+.hiw-tile--on { box-shadow: 0 0 0 3px rgb(0 102 255 / .14); animation: hiw-ring 3s ease-in-out infinite; }
+@keyframes hiw-ring { 50% { box-shadow: 0 0 0 5px rgb(0 102 255 / .08); } }
+
+/* Step 2: a light sweep across the pay button */
+.hiw-pay::after {
+  content: ""; position: absolute; inset: 0; width: 40%;
+  background: linear-gradient(100deg, transparent, rgb(255 255 255 / .35), transparent);
+  transform: translateX(-120%); animation: hiw-sweep 3s ease-in-out infinite;
+}
+@keyframes hiw-sweep { 60%, 100% { transform: translateX(300%); } }
+
+/* Step 3: the two notifications arrive one after the other */
+.hiw-note { animation: hiw-arrive 3.6s cubic-bezier(.2,.8,.2,1) infinite both; }
+.hiw-note--2 { animation-delay: .35s; }
+@keyframes hiw-arrive {
+  0% { opacity: 0; transform: translateY(8px) scale(.98); }
+  12%, 88% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: translateY(-4px); }
+}
+
+/* Step 4: install progress fills */
+.hiw-progress { width: 100%; transform-origin: left; animation: hiw-fill 3.4s ease-in-out infinite; }
+@keyframes hiw-fill { 0% { transform: scaleX(.08); } 70%, 100% { transform: scaleX(1); } }
+
+/* Restart loops on hover */
+.hiw-card:hover .hiw-note, .hiw-card:hover .hiw-progress, .hiw-card:hover .hiw-pay::after { animation-name: none; }
+.hiw-card:hover .hiw-note { animation: hiw-arrive2 3.6s cubic-bezier(.2,.8,.2,1) infinite both; }
+.hiw-card:hover .hiw-note--2 { animation-delay: .35s; }
+.hiw-card:hover .hiw-progress { animation: hiw-fill2 3.4s ease-in-out infinite; }
+.hiw-card:hover .hiw-pay::after { animation: hiw-sweep2 3s ease-in-out infinite; }
+@keyframes hiw-arrive2 { 0% { opacity: 0; transform: translateY(8px) scale(.98); } 12%, 88% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-4px); } }
+@keyframes hiw-fill2 { 0% { transform: scaleX(.08); } 70%, 100% { transform: scaleX(1); } }
+@keyframes hiw-sweep2 { 0% { transform: translateX(-120%); } 60%, 100% { transform: translateX(300%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hiw *, .hiw *::before, .hiw *::after { animation: none !important; }
+  .hiw-card { transition: none; }
+  .hiw-note { opacity: 1; transform: none; }
+}

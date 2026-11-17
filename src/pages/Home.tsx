@@ -1,6 +1,7 @@
 import { WhatsAppIcon } from '../components/WhatsAppIcon';
 import { HomeTrustpilot } from '../components/HomeTrustpilot';
 import { HeroBenefitsStack } from '../components/HeroBenefitsStack';
+import { HowItWorks } from '../components/HowItWorks';
 import { LearnMoreChevron } from '../components/LearnMoreChevron';
 import { useText } from '../hooks/useText';
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
@@ -165,30 +166,6 @@ export const Home: React.FC = () => {
   const toggleFaq = (index: number) => {
     setOpenFaqIndex(openFaqIndex === index ? null : index);
   };
-
-
-  const steps = [
-    {
-      icon: '/images/step-choose.png',
-      title: 'Escolha o software',
-      desc: 'Selecione o produto ideal para seu uso profissional em nosso catálogo.'
-    },
-    {
-      icon: '/images/step-purchase.png',
-      title: 'Finalize o pedido',
-      desc: 'Pagamento rápido e seguro em nosso checkout criptografado.'
-    },
-    {
-      icon: '/images/step-email.png',
-      title: 'Receba no e-mail',
-      desc: 'O link com os arquivos e instruções é enviado segundos após o pagamento.'
-    },
-    {
-      icon: '/images/step-support.png',
-      title: 'Instale com orientação',
-      desc: 'Siga o tutorial detalhado ou solicite auxílio do suporte remoto se necessário.'
-    }
-  ];
 
 
   const faqItems = [
@@ -448,32 +425,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* 4. HOW IT WORKS SECTION */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          {/* Section Header */}
-          <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
-            <span className="text-[11px] font-extrabold text-action-primary uppercase tracking-wider">
-              {localize("Praticidade")}</span>
-            <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
-              {localize("Como funciona o processo de compra?")}</h2>
-            <p className="text-slate-600 text-sm sm:text-base">
-              {localize("Da escolha do software ao uso pleno, sem complicação e com agilidade absoluta.")}</p>
-          </div>
-
-          {/* Steps Grid */}
-          <ol className="grid grid-cols-1 md:grid-cols-4 gap-8 border-t border-slate-200 pt-6">
-
-            {steps.map((step, index) => (
-              <li key={index} className="flex flex-col items-center text-center md:items-start md:text-left space-y-3">
-                <img src={step.icon} alt="" aria-hidden="true" className="h-10 w-10 object-contain mx-auto md:mx-0" />
-                <h3 className="font-display font-bold text-base text-slate-900">{localize(step.title)}</h3>
-                <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-xs md:max-w-none">{localize(step.desc)}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+      <HowItWorks />
 
       {/* 5. SUPPORT BANNER */}
       <section className="relative bg-slate-900 text-white py-16 overflow-hidden">
