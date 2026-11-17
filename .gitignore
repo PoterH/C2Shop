@@ -33,7 +33,6 @@ api/*.js
 
 .vercel
 .env*
-!.env.example
 
 # Temporary scratch files
 scratch/

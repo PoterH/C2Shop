@@ -17,10 +17,8 @@ import {
   Video,
   BriefcaseBusiness,
   Ruler,
-  User,
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
 import { useCurrency, CURRENCIES, type CurrencyCode } from '../context/CurrencyContext';
 import { useLanguage } from '../context/LanguageContext';
 import { products } from '../data/products';
@@ -383,7 +381,6 @@ const HeaderContent: React.FC = () => {
   const { cartItems, cartAddVersion, setIsCartOpen } = useCart();
   const { currency, setCurrency, currencyInfo, formatPrice } = useCurrency();
   const { language, setLanguage, t } = useLanguage();
-  const { user } = useAuth();
 
   const whatsappNumber = '5581997349300';
   const whatsappMessage = encodeURIComponent(localize('Olá, tenho interesse em um software da C2Tech e gostaria de tirar uma dúvida.'));
@@ -502,14 +499,6 @@ const HeaderContent: React.FC = () => {
             <span className="text-slate-600">|</span>
             <Link to="/contato" className="hover:text-white transition-colors">
               {localize(t('top_contact'))}
-            </Link>
-            <span className="text-slate-600">|</span>
-            <Link
-              to={user ? "/minha-conta" : "/login"}
-              className="hover:text-white transition-colors flex items-center gap-1.5"
-            >
-              <User className="w-3.5 h-3.5 text-blue-400" />
-              <span>{user ? (user.displayName || user.email?.split('@')[0] || 'Minha Conta') : 'Entrar'}</span>
             </Link>
           </div>
 
@@ -944,16 +933,6 @@ const HeaderContent: React.FC = () => {
                 >
                   <Search className="w-5 h-5" />
                 </button>
-
-                {/* User Account Button */}
-                <Link
-                  to={user ? "/minha-conta" : "/login"}
-                  className="hidden md:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:text-slate-950 hover:bg-slate-100 rounded-full transition-colors whitespace-nowrap shrink-0 border border-slate-200/80"
-                  title={user ? 'Minha Conta' : 'Entrar / Criar Conta'}
-                >
-                  <User className="w-4 h-4 text-blue-600 shrink-0" />
-                  <span>{user ? (user.displayName?.split(' ')[0] || user.email?.split('@')[0] || 'Minha Conta') : 'Entrar'}</span>
-                </Link>
 
                 {/* Cart Button `( 0 )` on a single unbroken line */}
                 <button
