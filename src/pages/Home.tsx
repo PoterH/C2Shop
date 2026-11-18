@@ -1,7 +1,7 @@
-import { WhatsAppIcon } from '../components/WhatsAppIcon';
 import { HomeTrustpilot } from '../components/HomeTrustpilot';
 import { HeroBenefitsStack } from '../components/HeroBenefitsStack';
 import { HowItWorks } from '../components/HowItWorks';
+import { SupportBand } from '../components/SupportBand';
 import { LearnMoreChevron } from '../components/LearnMoreChevron';
 import { useText } from '../hooks/useText';
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
@@ -427,33 +427,8 @@ export const Home: React.FC = () => {
       {/* 4. HOW IT WORKS SECTION */}
       <HowItWorks />
 
-      {/* 5. SUPPORT BANNER */}
-      <section className="relative bg-slate-900 text-white py-16 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-3xl mx-auto text-center space-y-5">
-            <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-white tracking-tight">
-              {localize("Precisa de ajuda com a instalação?")}</h2>
-            <p className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
-              {localize("Nossa equipe dedicada oferece orientação especializada para a correta instalação e configuração dos produtos adquiridos na C2Tech.")}</p>
-
-            <div className="max-w-md mx-auto space-y-1 border-y border-slate-700 py-3 text-slate-300 text-xs sm:text-sm">
-              <p>🕒 <strong>{localize("Atendimento de suporte:")}</strong> {localize(" Segunda a Domingo, das 09:00 às 20:00.")}</p>
-              <p className="text-slate-400 text-[11px]">{localize("Nota: Suporte exclusivo para clientes C2Tech. Poderá ser solicitado o e-mail informado na compra para localização do pedido.")}</p>
-            </div>
-
-            <div className="pt-2">
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-6 py-3.5 bg-feedback-success hover:bg-feedback-success-strong text-white font-bold rounded-control transition-colors"
-              >
-                <WhatsAppIcon className="w-5 h-5 mr-2 shrink-0" />
-                {localize("Falar com suporte no WhatsApp")}</a>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 5. HUMAN SUPPORT BAND */}
+      <SupportBand whatsappUrl={whatsappUrl} />
 
       {/* 7. FAQ SECTION */}
       <section className="py-16 md:py-24 bg-slate-50 border-t border-slate-100">

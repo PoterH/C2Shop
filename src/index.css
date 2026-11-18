@@ -1478,3 +1478,20 @@ h1 {
   .hiw-card { transition: none; }
   .hiw-note { opacity: 1; transform: none; }
 }
+
+/* ---------- Support band (Home): human support before and after purchase ---------- */
+.sb-dot { width: 8px; height: 8px; border-radius: 999px; background: #34d399; box-shadow: 0 0 0 0 rgb(52 211 153 / .6); animation: sb-live 2.8s ease-out infinite; }
+@keyframes sb-live { 0% { box-shadow: 0 0 0 0 rgb(52 211 153 / .55); } 70%, 100% { box-shadow: 0 0 0 8px rgb(52 211 153 / 0); } }
+.sb-cta { transition: transform .18s ease, background-color .2s ease; }
+.sb-cta:hover { transform: translateY(-1px); }
+.sb-cta:active { transform: translateY(1px) scale(.99); }
+.sb-thread { background-image: radial-gradient(rgb(255 255 255 / .035) 1px, transparent 1px); background-size: 14px 14px; }
+.sb-typing span { width: 6px; height: 6px; border-radius: 999px; background: rgb(255 255 255 / .7); animation: sb-type 1.4s ease-in-out infinite; }
+.sb-typing span:nth-child(2) { animation-delay: .18s; }
+.sb-typing span:nth-child(3) { animation-delay: .36s; }
+@keyframes sb-type { 0%, 60%, 100% { opacity: .35; transform: none; } 30% { opacity: 1; transform: translateY(-2px); } }
+@media (max-width: 639px) { .sb-cta { width: 100%; } }
+@media (prefers-reduced-motion: reduce) {
+  .sb-dot, .sb-typing span { animation: none; }
+  .sb-cta { transition: none; }
+}
