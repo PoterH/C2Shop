@@ -1577,29 +1577,7 @@ export const reviewsData: Record<string, Review[]> = {
       "comment": "Todo el paquete mecánico funciona sin inconvenientes."
     }
   ],
-  "vectric_aspire_12_5": [
-    {
-      "author": "Márcio V. Godoy",
-      "rating": 5,
-      "date": "4 dias atrás",
-      "country": "BR",
-      "comment": "Gerando percursos 2D e relevos 3D pra minha Router CNC perfeitamente."
-    },
-    {
-      "author": "Rômulo Franco",
-      "rating": 5,
-      "date": "3 semanas atrás",
-      "country": "BR",
-      "comment": "Em português e com biblioteca de cliparts completa."
-    },
-    {
-      "author": "Nélson Damasceno",
-      "rating": 5,
-      "date": "2 meses atrás",
-      "country": "BR",
-      "comment": "Muito fácil de instalar e usar."
-    }
-  ],
+  "vectric_aspire_12_5": [],
   "parallels_desktop_26": [
     {
       "author": "Hélio F. Varella",
@@ -1708,22 +1686,7 @@ export const reviewsData: Record<string, Review[]> = {
       "comment": "Pacote geotécnico excelente, envio imediato."
     }
   ],
-  "navisworks_2027": [
-    {
-      "author": "Karina M. Benevides",
-      "rating": 5,
-      "date": "1 semana atrás",
-      "country": "BR",
-      "comment": "Clash Detective e Timeliner funcionando perfeitamente para compatibilização BIM."
-    },
-    {
-      "author": "Eng. Otávio Siqueira",
-      "rating": 5,
-      "date": "2 meses atrás",
-      "country": "BR",
-      "comment": "Lê arquivos RVT e IFC pesados super rápido."
-    }
-  ],
+  "navisworks_2027": [],
   "zwcad_2026": [
     {
       "author": "Paulo Roberto S. Filho",
@@ -1788,22 +1751,7 @@ export const reviewsData: Record<string, Review[]> = {
       "comment": "Suporte me ajudou na instalação e ficou perfeito."
     }
   ],
-  "pdfelement_12": [
-    {
-      "author": "Lídia F. Bernardes",
-      "rating": 5,
-      "date": "1 semana atrás",
-      "country": "BR",
-      "comment": "Muito fácil para editar e converter relatórios em PDF."
-    },
-    {
-      "author": "Fabrício Toledo",
-      "rating": 4,
-      "date": "2 meses atrás",
-      "country": "BR",
-      "comment": "Leve e prático."
-    }
-  ],
+  "pdfelement_12": [],
   "filmora_15": [
     {
       "author": "Yasmim F. Caldas",
@@ -1847,22 +1795,6 @@ export const reviewsData: Record<string, Review[]> = {
       "comment": "Simulação de Arduino, PIC e layout de PCB ARES funcionando perfeitamente."
     }
   ],
-  "camtasia_2026": [
-    {
-      "author": "Prof. Sandro Alencar",
-      "rating": 5,
-      "date": "10 dias atrás",
-      "country": "BR",
-      "comment": "Excelente para gravar a tela e editar minhas videoaulas sem travar."
-    }
-  ],
-  "wondershare_recoverit_13": [
-    {
-      "author": "Rogério T. Mascarenhas",
-      "rating": 5,
-      "date": "1 semana atrás",
-      "country": "BR",
-      "comment": "Recuperou todas as fotos do meu HD externo que tinha corrompido. Salvou demais!"
-    }
-  ]
+  "camtasia_2026": [],
+  "wondershare_recoverit_13": []
 };
