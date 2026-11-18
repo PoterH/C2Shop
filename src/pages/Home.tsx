@@ -1,18 +1,17 @@
 import { HomeTrustpilot } from '../components/HomeTrustpilot';
 import { HeroBenefitsStack } from '../components/HeroBenefitsStack';
 import { HowItWorks } from '../components/HowItWorks';
+import { ProductCarousel } from '../components/ProductCarousel';
 import { SupportBand } from '../components/SupportBand';
 import { LearnMoreChevron } from '../components/LearnMoreChevron';
 import { useText } from '../hooks/useText';
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useMemo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Search,
   ChevronDown,
-  ChevronLeft,
 } from 'lucide-react';
 import { products } from '../data/products';
-import { ProductCard } from '../components/ProductCard';
 import { GridMotion, type GridMotionItem } from '../components/GridMotion';
 import LogoLoop, { type LogoLoopImage } from '../components/LogoLoop';
 import { useLanguage } from '../context/LanguageContext';
@@ -105,63 +104,6 @@ export const Home: React.FC = () => {
     .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
     .slice(0, 16), [activeCategory]);
 
-
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(
-    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  );
-  const carouselRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const updateMotionPreference = () => setPrefersReducedMotion(motionPreference.matches);
-    motionPreference.addEventListener('change', updateMotionPreference);
-    return () => motionPreference.removeEventListener('change', updateMotionPreference);
-  }, []);
-
-  // Reset scroll to 0 when category changes
-  useEffect(() => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollLeft = 0;
-    }
-  }, [activeCategory]);
-
-  // Auto scroll effect for carousel
-  useEffect(() => {
-    if (prefersReducedMotion) return;
-    const interval = setInterval(() => {
-      if (document.hidden) return;
-      const el = carouselRef.current;
-      if (el) {
-        const scrollAmount = (el.firstElementChild?.getBoundingClientRect().width ?? 0) + parseFloat(getComputedStyle(el).columnGap);
-        const currentScroll = el.scrollLeft;
-        const maxScroll = el.scrollWidth - el.clientWidth;
-
-        if (currentScroll >= maxScroll - 10) {
-          el.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          el.scrollTo({ left: currentScroll + scrollAmount, behavior: 'smooth' });
-        }
-      }
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [prefersReducedMotion, filteredProducts]);
-
-  const scrollLeft = () => {
-    const el = carouselRef.current;
-    if (el) {
-      const scrollAmount = (el.firstElementChild?.getBoundingClientRect().width ?? 0) + parseFloat(getComputedStyle(el).columnGap);
-      el.scrollTo({ left: el.scrollLeft - scrollAmount, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-    const el = carouselRef.current;
-    if (el) {
-      const scrollAmount = (el.firstElementChild?.getBoundingClientRect().width ?? 0) + parseFloat(getComputedStyle(el).columnGap);
-      el.scrollTo({ left: el.scrollLeft + scrollAmount, behavior: 'smooth' });
-    }
-  };
 
   const toggleFaq = (index: number) => {
     setOpenFaqIndex(openFaqIndex === index ? null : index);
@@ -373,37 +315,7 @@ export const Home: React.FC = () => {
 
           {/* Products Carousel */}
           {filteredProducts.length > 0 ? (
-            <div className="relative group/carousel w-full">
-              {/* Left Navigation Arrow */}
-              <button
-                onClick={scrollLeft}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 z-30 w-11 h-11 rounded-full bg-white hover:bg-slate-50 border border-slate-200 shadow-md hover:shadow-lg flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none opacity-0 group-hover/carousel:opacity-100 focus-visible:opacity-100"
-                aria-label={localize("Anterior")}
-              >
-                <ChevronLeft className="w-5 h-5 text-slate-700" />
-              </button>
-
-              {/* Scrollable Container */}
-              <div
-                ref={carouselRef}
-                className="home-product-carousel flex overflow-x-auto pb-6 pt-2 scroll-smooth scrollbar-none snap-x snap-mandatory"
-              >
-                {filteredProducts.map((product) => (
-                  <div key={product.id} className="home-carousel-item shrink-0 snap-start flex flex-col">
-                    <ProductCard product={product} />
-                  </div>
-                ))}
-              </div>
-
-              {/* Right Navigation Arrow */}
-              <button
-                onClick={scrollRight}
-                className="t-learn absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 z-30 w-11 h-11 rounded-full bg-white hover:bg-slate-50 border border-slate-200 shadow-md hover:shadow-lg flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none opacity-0 group-hover/carousel:opacity-100 focus-visible:opacity-100 text-slate-700"
-                aria-label={localize("Próximo")}
-              >
-                <LearnMoreChevron className="ml-0" size={20} />
-              </button>
-            </div>
+            <ProductCarousel products={filteredProducts} resetKey={activeCategory} />
           ) : (
             <div className="py-12 text-center">
               <p className="text-slate-500 text-sm font-medium">{localize("Nenhum software cadastrado nesta categoria no momento.")}</p>
