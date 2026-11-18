@@ -17,18 +17,28 @@ const benefits = [
 
 function CommitmentSeal() {
   const text = useText();
-  return <svg viewBox="0 0 280 310" role="img" aria-label="Compromisso C2Tech: clareza, orientação e suporte" className="w-[220px] sm:w-[270px] h-auto drop-shadow-xl">
-    <defs><linearGradient id="about-gold" x2="1" y2="1"><stop stopColor="#f9e5a8"/><stop offset=".45" stopColor="#cda44c"/><stop offset="1" stopColor="#f6dda0"/></linearGradient><linearGradient id="about-blue" x2="1" y2="1"><stop stopColor="#153d68"/><stop offset="1" stopColor="#081a35"/></linearGradient></defs>
-    <path d="M140 10 255 55v98c0 69-53 117-115 148C78 270 25 222 25 153V55Z" fill="url(#about-gold)"/>
-    <path d="M140 22 243 64v89c0 60-45 105-103 135C82 258 37 213 37 153V64Z" fill="url(#about-blue)"/>
-    <path d="M140 34 231 72v81c0 53-38 93-91 122-53-29-91-69-91-122V72Z" fill="none" stroke="#d5b974" strokeWidth="1" opacity=".6"/>
-    <text x="140" y="77" textAnchor="middle" fill="#ead39a" fontSize="11" letterSpacing="3" fontFamily="Inter, sans-serif">{text("COMPROMISSO")}</text>
-    <path d="m119 111 14 14 29-31" fill="none" stroke="#f3dda1" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/>
-    <text x="140" y="163" textAnchor="middle" fill="white" fontSize="31" fontWeight="700" fontFamily="Lato, Inter, sans-serif">C2Tech</text>
-    <path d="M80 178h120" stroke="#d5b974" opacity=".7"/>
-    <text x="140" y="201" textAnchor="middle" fill="#ead39a" fontSize="11" letterSpacing="2" fontFamily="Inter, sans-serif">{text("CLAREZA • ORIENTAÇÃO")}</text>
-    <text x="140" y="222" textAnchor="middle" fill="#ead39a" fontSize="11" letterSpacing="3" fontFamily="Inter, sans-serif">{text("SUPORTE")}</text>
-    <path d="m133 241 7 5 7-5-3 8 3 8-7-5-7 5 3-8Z" fill="#e5c879"/>
+  const font = { fontFamily: 'var(--font-display)' };
+  // Circular seal: the words ride the gold band on arcs, so they can never leave the frame.
+  return <svg viewBox="0 0 300 300" role="img" aria-label={text('Compromisso C2Tech: clareza, orientação e suporte')} className="about-seal w-[230px] sm:w-[280px] h-auto drop-shadow-xl">
+    <defs>
+      <linearGradient id="seal-gold" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#f6e3ad"/><stop offset=".5" stopColor="#c99d45"/><stop offset="1" stopColor="#f1d898"/></linearGradient>
+      <radialGradient id="seal-navy" cx=".5" cy=".38" r=".7"><stop stopColor="#1a4673"/><stop offset="1" stopColor="#0a1b33"/></radialGradient>
+      <path id="seal-arc-top" d="M 28 150 A 122 122 0 0 1 272 150"/>
+      <path id="seal-arc-bottom" d="M 19 150 A 131 131 0 0 0 281 150"/>
+    </defs>
+    <circle cx="150" cy="150" r="147" fill="none" stroke="#d9bc76" strokeOpacity=".55" strokeWidth="1.5"/>
+    <circle cx="150" cy="150" r="141" fill="url(#seal-gold)"/>
+    <circle cx="150" cy="150" r="112" fill="url(#seal-navy)" stroke="#8a6a28" strokeWidth="1"/>
+    <circle cx="150" cy="150" r="103" fill="none" stroke="#d9bc76" strokeOpacity=".45" strokeWidth="1" strokeDasharray="2 4"/>
+    <text fill="#0b2240" fontSize="13" fontWeight="700" letterSpacing="5" style={font}><textPath href="#seal-arc-top" startOffset="50%" textAnchor="middle">{text('COMPROMISSO')}</textPath></text>
+    <text fill="#0b2240" fontSize="10.5" fontWeight="700" letterSpacing="1.6" style={font}><textPath href="#seal-arc-bottom" startOffset="50%" textAnchor="middle">{text('CLAREZA · ORIENTAÇÃO · SUPORTE')}</textPath></text>
+    <circle cx="23" cy="150" r="3" fill="#0b2240"/>
+    <circle cx="277" cy="150" r="3" fill="#0b2240"/>
+    <circle cx="150" cy="103" r="19" fill="none" stroke="#e2c47e" strokeWidth="2"/>
+    <path d="m141 103 6.5 6.5 12-13" fill="none" stroke="#f3dda1" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <text x="150" y="161" textAnchor="middle" fill="#ffffff" fontSize="38" fontWeight="800" letterSpacing="-0.5" style={font}>C2Tech</text>
+    <path d="M112 177h76" stroke="#d9bc76" strokeOpacity=".7"/>
+    <text x="150" y="197" textAnchor="middle" fill="#e6cc8f" fontSize="9.5" fontWeight="600" letterSpacing="2.6" style={font}>{text('LICENÇAS DIGITAIS')}</text>
   </svg>;
 }
 

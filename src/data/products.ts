@@ -274,7 +274,7 @@ export const products: Product[] = [
     ],
     requirements: {
       os: 'WINDOWS: Windows 11 e Windows 10 (64-bits) versão 1809 ou superior | MAC: macOS Sequoia v15, Sonoma v14, Ventura v13 ou Monterey v12',
-      cpu: 'WINDOWS: Básico 2.5–2.9 GHz (Recomendado: 3+ GHz base, 4+ GHz turbo) | MAC: Apple Silicon (Série M1, M2, M3, M4 nativo) ou Intel 64-bits',
+      cpu: 'WINDOWS: Básico 2.5–2.9 GHz (Recomendado: 3+ GHz base, 4+ GHz turbo) | MAC: Apple Silicon (Série M1, M2, M3, M4, M5 nativo) ou Intel 64-bits',
       ram: 'WINDOWS: Básico 8 GB (Recomendado: 16 GB a 32 GB) | MAC: Mínimo 8 GB (Recomendado: 16 GB ou superior)',
       gpu: 'WINDOWS: Básico 2 GB GPU com DirectX 11 (Recomendado: 8 GB GPU compatível com DirectX 12) | MAC: Placa gráfica nativa compatível com Metal (Display Retina 2880 x 1800 suportado)',
       storage: 'WINDOWS: 10 GB de espaço livre em disco (SSD recomendado) | MAC: 8 GB de espaço livre em disco para download e instalação'
@@ -511,7 +511,7 @@ export const products: Product[] = [
     compatibility: 'Windows e macOS',
     version: '2021 a 2027 (64-bits)',
     description: 'Modelagem 3D intuitiva para arquitetura, interiores, marcenaria e documentação 2D com LayOut no Windows e macOS.',
-    longDescription: 'O SketchUp Pro é a ferramenta definitiva e mais intuitiva do mundo para modelagem 3D arquitetônica, design de interiores, marcenaria, paisagismo e maquetes eletrônicas. Esta versão completa e vitalícia inclui o modelador 3D SketchUp Pro Desktop, o LayOut (para pranchas técnicas, cotas e detalhamento executivo 2D) e o Style Builder, com total compatibilidade com os principais renderizadores do mercado (V-Ray, Enscape, Lumion e D5 Render) tanto em computadores Windows quanto em Mac (Intel e Apple Silicon M1/M2/M3/M4).',
+    longDescription: 'O SketchUp Pro é a ferramenta definitiva e mais intuitiva do mundo para modelagem 3D arquitetônica, design de interiores, marcenaria, paisagismo e maquetes eletrônicas. Esta versão completa e vitalícia inclui o modelador 3D SketchUp Pro Desktop, o LayOut (para pranchas técnicas, cotas e detalhamento executivo 2D) e o Style Builder, com total compatibilidade com os principais renderizadores do mercado (V-Ray, Enscape, Lumion e D5 Render) tanto em computadores Windows quanto em Mac (Intel e Apple Silicon M1/M2/M3/M4/M5).',
     price: 87.90,
     originalPrice: 152.90,
     checkoutUrl: 'https://pay.cakto.com.br/887oxn6',
@@ -591,7 +591,7 @@ export const products: Product[] = [
     features: [
       'Versão completa e vitalícia (Sem mensalidades ou anuidades)',
       'Inclui SketchUp Pro 3D, LayOut 2D e Style Builder completos',
-      'Edições 2021, 2024, 2025, 2026 e 2027 para Windows e macOS (Intel e Apple M1/M2/M3/M4)',
+      'Edições 2021, 2024, 2025, 2026 e 2027 para Windows e macOS (Intel e Apple M1/M2/M3/M4/M5)',
       'Totalmente compatível com V-Ray, Enscape, Lumion e plugins Ruby',
       'Acompanha instruções passo a passo em vídeo para instalação rápida',
       'Link de download enviado imediatamente no seu e-mail após a compra',
@@ -599,7 +599,7 @@ export const products: Product[] = [
     ],
     requirements: {
       os: 'WINDOWS: Windows 11 ou Windows 10 (64-bits) / MAC: macOS Sequoia 15, Sonoma 14, Ventura 13 ou Monterey 12',
-      cpu: 'WINDOWS: Processador Intel/AMD de 2.1+ GHz (Recomendado: 3.0+ GHz) / MAC: Apple Silicon (M1, M2, M3, M4) ou Intel Core i5/i7 multi-core',
+      cpu: 'WINDOWS: Processador Intel/AMD de 2.1+ GHz (Recomendado: 3.0+ GHz) / MAC: Apple Silicon (M1, M2, M3, M4, M5) ou Intel Core i5/i7 multi-core',
       ram: 'WINDOWS: Mínimo 8 GB (Recomendado: 16 GB ou superior) / MAC: Mínimo 8 GB (Recomendado: 16 GB de memória unificada)',
       gpu: 'WINDOWS: Placa de vídeo 3D com mínimo 1 GB de VRAM e suporte a OpenGL 3.1 / DirectX 12 (Recomendado: 4 GB+ VRAM dedicada) / MAC: GPU integrada ou dedicada com suporte nativo a Apple Metal',
       storage: 'WINDOWS: 4 GB de espaço livre em disco (SSD recomendado) / MAC: 4 GB de espaço livre em disco'
@@ -716,7 +716,7 @@ export const products: Product[] = [
     compatibility: 'Windows',
     version: '28, 29 e 30 (Português Brasil)',
     description: 'Software de autoria BIM líder mundial para arquitetura, documentação 2D/3D e modelagem construtiva.',
-    longDescription: 'O Graphisoft ArchiCAD BRA é a referência máxima em modelagem arquitetônica e engenharia BIM. Desenvolvido por e para arquitetos, entrega modelagem precisa de volumes, automação de pranchas e cortes a partir do modelo 3D tridimensional, além de coordenação Open BIM completa. Disponível nas edições completas e vitalícias 28, 29 e 30 em Português do Brasil.',
+    longDescription: 'O Graphisoft ArchiCAD BRA é a referência máxima em modelagem arquitetônica e engenharia BIM. Desenvolvido por e para arquitetos, entrega modelagem precisa de volumes, automação de pranchas e cortes a partir do modelo 3D, além de coordenação Open BIM completa. Disponível nas edições completas e vitalícias 28, 29 e 30 em Português do Brasil.',
     price: 127.90,
     originalPrice: 209.00,
     checkoutUrl: 'https://pay.cakto.com.br/e6wi689',
@@ -913,8 +913,8 @@ export const products: Product[] = [
     category: 'Engenharia e Arquitetura',
     compatibility: 'Windows',
     version: '2025 (64-bits)',
-    description: 'Software de engenharia de avaliações de imóveis por regressão linear e redes neurais.',
-    longDescription: 'O SisDEA 2025 é o software líder para engenheiros de avaliações e peritos judiciais realizarem avaliações mercadológicas de imóveis urbanos e rurais de acordo com as normas da ABNT NBR 14653. Esta versão completa e funcional realiza tratamentos estatísticos avançados, regressões lineares múltiplas e análises por redes neurais artificiais.',
+    description: 'Software de engenharia de avaliações de imóveis por inferência estatística e regressão linear.',
+    longDescription: 'O SisDEA 2025 é o software líder para engenheiros de avaliações e peritos judiciais realizarem avaliações mercadológicas de imóveis urbanos e rurais de acordo com as normas da ABNT NBR 14653. Esta versão completa e funcional realiza tratamentos estatísticos avançados e regressões lineares múltiplas.',
     price: 197.90,
     originalPrice: 329.90,
     checkoutUrl: 'https://pay.cakto.com.br/3cg7y55',
@@ -1061,7 +1061,7 @@ export const products: Product[] = [
       os: 'Windows 10 ou 11 (64-bits)',
       cpu: 'Intel Core i5 / AMD Ryzen 5 ou superior (Recomendado i7/Ryzen 7)',
       ram: '16 GB RAM (Recomendável: 32 GB)',
-      gpu: 'Placa de vídeo dedicada de 4 GB VRAM dedicada (NVIDIA GeForce/RTX ou Quadro)',
+      gpu: 'Placa de vídeo dedicada de 4 GB VRAM (NVIDIA GeForce/RTX ou Quadro)',
       storage: '10 GB de espaço livre (SSD)'
     }
   },
@@ -1073,8 +1073,8 @@ export const products: Product[] = [
     category: 'Escritório e Produtividade',
     compatibility: 'Windows e macOS',
     version: '2024 Professional (Windows e macOS)',
-    description: 'Pacote de produtividade com Word, Excel, PowerPoint, Access e Outlook para Windows e Mac.',
-    longDescription: 'O Office 2024 Professional é o conjunto clássico de aplicativos de escritório locais da Microsoft. Contém as aplicações em suas versões completas instaladas diretamente na máquina, com compatibilidade nativa tanto para Windows quanto para macOS (processadores Apple Silicon M1/M2/M3/M4 e Intel), eliminando a dependência de assinaturas de nuvem.',
+    description: 'Pacote de produtividade com Word, Excel, PowerPoint e Outlook para Windows e Mac (Access na edição para Windows).',
+    longDescription: 'O Office 2024 Professional é o conjunto clássico de aplicativos de escritório locais da Microsoft. Contém as aplicações em suas versões completas instaladas diretamente na máquina, com compatibilidade nativa tanto para Windows quanto para macOS (processadores Apple Silicon M1/M2/M3/M4/M5 e Intel), eliminando a dependência de assinaturas de nuvem.',
     price: 127.90,
     originalPrice: 199.90,
     checkoutUrl: 'https://pay.cakto.com.br/g2h5czk_443849',
@@ -1115,7 +1115,7 @@ export const products: Product[] = [
     ],
     requirements: {
       os: 'WINDOWS: Windows 10 ou 11 (64-bits) / MAC: macOS Monterey, Ventura, Sonoma ou Sequoia',
-      cpu: 'WINDOWS: Intel ou AMD de 1.6 GHz / MAC: Apple Silicon (M1/M2/M3/M4) ou Intel Core',
+      cpu: 'WINDOWS: Intel ou AMD de 1.6 GHz / MAC: Apple Silicon (M1/M2/M3/M4/M5) ou Intel Core',
       ram: 'WINDOWS: 4 GB RAM / MAC: 4 GB RAM (Recomendado: 8 GB)',
       gpu: 'Placa de vídeo compatível com DirectX 9 ou superior',
       storage: '4 GB a 10 GB de espaço livre em disco'
@@ -1340,7 +1340,7 @@ export const products: Product[] = [
     compatibility: 'Windows e macOS',
     version: 'X7 a 2026 (64-bits)',
     description: 'Suíte profissional completa para design gráfico, ilustração vetorial, gráficas, sublimação e diagramação no Windows e macOS.',
-    longDescription: 'O CorelDRAW Graphics Suite é o software definitivo e mais consagrado do mercado para criação de artes vetoriais, identidades visuais, comunicação visual, serigrafia, sublimação, corte a laser/plotter e edição de imagens com o Corel PHOTO-PAINT. Esta versão completa e vitalícia inclui o CorelDRAW, Corel PHOTO-PAINT, Corel Font Manager e PowerTRACE, funcionando localmente com altíssimo desempenho tanto em computadores Windows quanto em Mac (Intel e Apple Silicon M1/M2/M3/M4).',
+    longDescription: 'O CorelDRAW Graphics Suite é o software definitivo e mais consagrado do mercado para criação de artes vetoriais, identidades visuais, comunicação visual, serigrafia, sublimação, corte a laser/plotter e edição de imagens com o Corel PHOTO-PAINT. Esta versão completa e vitalícia inclui o CorelDRAW, Corel PHOTO-PAINT, Corel Font Manager e PowerTRACE, funcionando localmente com altíssimo desempenho tanto em computadores Windows quanto em Mac (Intel e Apple Silicon M1/M2/M3/M4/M5).',
     price: 47.90,
     originalPrice: 89.90,
     checkoutUrl: 'https://pay.cakto.com.br/os323a8',
@@ -1461,7 +1461,7 @@ export const products: Product[] = [
     ],
     requirements: {
       os: 'WINDOWS: Windows 11, Windows 10 ou Windows 7/8 (para X7) 64-bits / MAC: macOS Sequoia 15, Sonoma 14, Ventura 13 ou Monterey 12',
-      cpu: 'WINDOWS: Intel Core i3/i5/i7/i9 ou AMD Ryzen 3/5/7/9 / MAC: Apple Silicon (M1, M2, M3, M4) nativo ou Intel Core multi-core',
+      cpu: 'WINDOWS: Intel Core i3/i5/i7/i9 ou AMD Ryzen 3/5/7/9 / MAC: Apple Silicon (M1, M2, M3, M4, M5) nativo ou Intel Core multi-core',
       ram: 'WINDOWS: Mínimo 4 GB para X7 / 8 GB para 2022–2026 (Recomendado: 16 GB) / MAC: 8 GB de RAM (Recomendado: 16 GB)',
       gpu: 'WINDOWS: Placa de vídeo compatível com OpenCL 1.2 / DirectX 11 ou superior (resolução 1280 x 720 ou Full HD) / MAC: GPU com suporte nativo a Apple Metal e telas Retina',
       storage: 'WINDOWS: 5.5 GB de espaço livre em disco (SSD recomendado) / MAC: 4 GB de espaço livre em disco'
@@ -1497,7 +1497,7 @@ export const products: Product[] = [
     ],
     requirements: {
       os: 'WINDOWS: Windows 10/11 64-bits / MAC: macOS Monterey, Ventura, Sonoma ou Sequoia',
-      cpu: 'Intel ou AMD com suporte a 64 bits (2 GHz ou mais) / Apple Silicon (M1/M2/M3/M4)',
+      cpu: 'Intel ou AMD com suporte a 64 bits (2 GHz ou mais) / Apple Silicon (M1/M2/M3/M4/M5)',
       ram: '8 GB (Recomendável: 16 GB)',
       gpu: 'Compatível com DirectX 12 / Metal com no mínimo 2 GB VRAM',
       storage: '20 GB de espaço livre (SSD recomendado)'
@@ -1533,7 +1533,7 @@ export const products: Product[] = [
     ],
     requirements: {
       os: 'WINDOWS: Windows 10 ou 11 (64-bits) / MAC: macOS Monterey, Ventura, Sonoma ou Sequoia',
-      cpu: 'Processador Intel ou AMD de múltiplos núcleos / Apple Silicon (M1/M2/M3/M4)',
+      cpu: 'Processador Intel ou AMD de múltiplos núcleos / Apple Silicon (M1/M2/M3/M4/M5)',
       ram: '8 GB (Recomendável: 16 GB)',
       gpu: 'Compatível com OpenGL 4.x / DirectX 12 com no mínimo 2 GB VRAM',
       storage: '4 GB de espaço livre (SSD recomendado)'
@@ -1546,7 +1546,7 @@ export const products: Product[] = [
     category: 'Design e Criatividade',
     compatibility: 'Windows e macOS',
     version: '2026 (Windows e macOS)',
-    description: 'Edição de vídeo profissional para cinema, TV e web com linha do tempo intuitiva e IA integrada (Versão 2026).',
+    description: 'Edição de vídeo profissional para cinema, TV e web com linha do tempo intuitiva (Versão 2026).',
     longDescription: 'O Adobe Premiere Pro é o software líder para edição de vídeo de alto nível em computadores Windows e Mac, oferecendo ferramentas criativas robustas, integração com outros apps e uma engine potente de renderização em tempo real local.',
     price: 97.90,
     originalPrice: 179.90,
@@ -1568,7 +1568,7 @@ export const products: Product[] = [
     ],
     requirements: {
       os: 'WINDOWS: Windows 10 ou 11 (64-bits) / MAC: macOS Monterey, Ventura, Sonoma ou Sequoia',
-      cpu: 'Intel Core i5 / AMD Ryzen 5 / Apple Silicon (M1/M2/M3/M4)',
+      cpu: 'Intel Core i5 / AMD Ryzen 5 / Apple Silicon (M1/M2/M3/M4/M5)',
       ram: '8 GB (Recomendado: 16 GB ou mais)',
       gpu: 'Placa dedicada com suporte a DirectX 12 / Metal e mínimo de 2 GB VRAM',
       storage: '8 GB de espaço livre (SSD recomendado)'
@@ -1603,7 +1603,7 @@ export const products: Product[] = [
     ],
     requirements: {
       os: 'WINDOWS: Windows 10 ou 11 (64-bits) / MAC: macOS Monterey, Ventura, Sonoma ou Sequoia',
-      cpu: 'Processador Intel ou AMD de múltiplos núcleos / Apple Silicon (M1/M2/M3/M4)',
+      cpu: 'Processador Intel ou AMD de múltiplos núcleos / Apple Silicon (M1/M2/M3/M4/M5)',
       ram: '16 GB (Recomendado: 32 GB)',
       gpu: 'Placa de vídeo dedicada de no mínimo 2 GB VRAM com suporte a DirectX 12 / Metal',
       storage: '15 GB de espaço livre (SSD recomendado)'
@@ -1638,7 +1638,7 @@ export const products: Product[] = [
     ],
     requirements: {
       os: 'WINDOWS: Windows 10 ou 11 (64-bits) / MAC: macOS Monterey, Ventura, Sonoma ou Sequoia',
-      cpu: 'Intel ou AMD de múltiplos núcleos / Apple Silicon (M1/M2/M3/M4)',
+      cpu: 'Intel ou AMD de múltiplos núcleos / Apple Silicon (M1/M2/M3/M4/M5)',
       ram: '8 GB (Recomendado: 16 GB)',
       gpu: 'Placa dedicada com suporte a DirectX 12 / Metal e mínimo de 2 GB VRAM',
       storage: '4 GB de espaço livre'
@@ -1710,7 +1710,7 @@ export const products: Product[] = [
     compatibility: 'macOS',
     version: '26 Standard & 27 Business Edition',
     description: 'Execute Windows e outras aplicações de PC diretamente no seu Mac sem reiniciar.',
-    longDescription: 'O Parallels Desktop para Mac é a solução de virtualização líder de mercado, permitindo que você execute aplicativos do Windows lado a lado com seus aplicativos favoritos do macOS. Disponível nas versões 26 Standard e na nova 27 Business Edition, com compatibilidade nativa com processadores Apple Silicon (M1/M2/M3/M4) e Intel, desempenho gráfico avançado com DirectX 12 e integração fluida entre sistemas operacionais com acesso vitalício.',
+    longDescription: 'O Parallels Desktop para Mac é a solução de virtualização líder de mercado, permitindo que você execute aplicativos do Windows lado a lado com seus aplicativos favoritos do macOS. Disponível nas versões 26 Standard e na nova 27 Business Edition, com compatibilidade nativa com processadores Apple Silicon (M1/M2/M3/M4/M5) e Intel, desempenho gráfico avançado com DirectX 12 e integração fluida entre sistemas operacionais com acesso vitalício.',
     price: 237.90,
     originalPrice: 389.90,
     checkoutUrl: 'https://pay.cakto.com.br/8oornwz',
@@ -1746,7 +1746,7 @@ export const products: Product[] = [
     ],
     features: [
       'Disponível nas versões 26 Standard e a nova 27 Business Edition',
-      'Compatibilidade nativa com Apple Silicon (M1/M2/M3/M4) e processadores Intel',
+      'Compatibilidade nativa com Apple Silicon (M1/M2/M3/M4/M5) e processadores Intel',
       'Execute Windows e softwares de PC lado a lado no Mac sem reiniciar',
       'Desempenho gráfico aprimorado com DirectX 12 e Metal',
       'Versão completa e funcional com acesso vitalício sem mensalidades',
@@ -1755,7 +1755,7 @@ export const products: Product[] = [
     ],
     requirements: {
       os: 'macOS 12 (Monterey), Ventura, Sonoma ou Sequoia',
-      cpu: 'Apple Silicon (M1/M2/M3/M4) ou processador Intel',
+      cpu: 'Apple Silicon (M1/M2/M3/M4/M5) ou processador Intel',
       ram: '8 GB (Recomendável: 16 GB ou mais)',
       gpu: 'Suporte nativo a Metal da Apple',
       storage: '600 MB para instalação do Parallels + espaço para máquina virtual (SSD recomendado)'
@@ -1769,7 +1769,7 @@ export const products: Product[] = [
     compatibility: 'Windows',
     version: '2026.1.2',
     description: 'Editor de vídeo e gravador de tela profissional tudo-em-um para criação de conteúdo de alta qualidade.',
-    longDescription: 'O TechSmith Camtasia 2026 é o software líder de mercado para gravação de tela e edição de vídeo voltado para a criação de tutoriais, demonstrações de produtos, aulas online e vídeos de treinamento. Esta versão completa e funcional oferece gravação em alta definição, edição multitrilha intuitiva, efeitos visuais modernos, legendagem automática por IA e biblioteca rica em recursos prontos, tudo com acesso vitalício e sem taxas de assinatura mensal.',
+    longDescription: 'O TechSmith Camtasia 2026 é o software líder de mercado para gravação de tela e edição de vídeo voltado para a criação de tutoriais, demonstrações de produtos, aulas online e vídeos de treinamento. Esta versão completa e funcional oferece gravação em alta definição, edição multitrilha intuitiva, efeitos visuais modernos, legendas e biblioteca rica em recursos prontos, tudo com acesso vitalício e sem taxas de assinatura mensal.',
     price: 69.90,
     originalPrice: 208.90,
     checkoutUrl: 'https://pay.cakto.com.br/kxd76qu',
@@ -1827,7 +1827,7 @@ export const products: Product[] = [
     compatibility: 'Windows',
     version: '13.0.0',
     description: 'Software profissional de recuperação de dados e restauração de arquivos excluídos.',
-    longDescription: 'O Wondershare Recoverit 13 para Windows é um software profissional de recuperação de dados líder de mercado. Ele possui uma taxa de recuperação de 95% e suporta a restauração de mais de 1000 formatos de arquivos (incluindo fotos, vídeos, documentos e e-mails) de quase todos os tipos de dispositivos de armazenamento: discos rígidos (HDD/SSD), pen drives, cartões de memória, além de sistemas de arquivos danificados ou formatados de forma acidental.',
+    longDescription: 'O Wondershare Recoverit 13 para Windows é um software profissional de recuperação de dados líder de mercado. Ele recupera mais de 1000 formatos de arquivos (incluindo fotos, vídeos, documentos e e-mails) de quase todos os tipos de dispositivos de armazenamento: discos rígidos (HDD/SSD), pen drives, cartões de memória, além de sistemas de arquivos danificados ou formatados de forma acidental.',
     price: 69.90,
     originalPrice: 194.90,
     checkoutUrl: 'https://pay.cakto.com.br/3dqe23f',
@@ -2109,8 +2109,8 @@ export const products: Product[] = [
     category: 'Design e Criatividade',
     compatibility: 'Windows',
     version: '15',
-    description: 'Um dos editores de vídeo mais populares e fáceis de usar do mercado, com recursos avançados de IA.',
-    longDescription: 'O Wondershare Filmora 15 traz uma revolução na edição de vídeo com novas ferramentas alimentadas por inteligência artificial. Crie vídeos incríveis de forma rápida, com efeitos, transições e edição de áudio profissional, tudo em uma interface intuitiva. Licença vitalícia completa para Windows.',
+    description: 'Um dos editores de vídeo mais populares e fáceis de usar do mercado, com efeitos, transições e edição de áudio completos.',
+    longDescription: 'O Wondershare Filmora 15 deixa a edição de vídeo rápida e simples. Crie vídeos com efeitos, transições e edição de áudio profissional, tudo em uma interface intuitiva. Licença vitalícia completa para Windows.',
     price: 69.90,
     originalPrice: 198.00,
     checkoutUrl: 'https://pay.cakto.com.br/32u8f6d',
@@ -2118,7 +2118,7 @@ export const products: Product[] = [
     isSubscription: false,
     features: [
       'Acesso vitalício',
-      'Edição de vídeo com IA',
+      'Linha do tempo simples e intuitiva',
       'Efeitos e transições premium',
       'Edição de áudio avançada',
       'Exportação em 4K'

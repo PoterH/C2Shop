@@ -1,4 +1,8 @@
 import { LifetimeSeal } from '../components/LifetimeSeal';
+import { ProductDescription } from '../components/ProductDescription';
+import { ReviewsMoreButton } from '../components/ReviewsMoreButton';
+
+const REVIEWS_PREVIEW = 5;
 import { AnimatedPrice } from '../components/AnimatedPrice';
 import { JellyRadio } from '../components/JellyRadio';
 import { LearnMoreChevron } from '../components/LearnMoreChevron';
@@ -184,6 +188,7 @@ const ProductDetailContent: React.FC = () => {
   const [quantity, setQuantity] = useState<number>(1);
   const [mobileInfoOpen, setMobileInfoOpen] = useState<'description' | 'specs' | 'activation' | null>(null);
   const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'activation'>('description');
+  const [showAllReviews, setShowAllReviews] = useState(false);
   const [activeThumbIndex, setActiveThumbIndex] = useState<number>(0);
 
   // Modals for "Faça uma pergunta" & "Escrever uma avaliação"
@@ -231,6 +236,7 @@ const ProductDetailContent: React.FC = () => {
     setSelectedLicenseOption(cheapest);
     setQuantity(1);
     setActiveThumbIndex(0);
+    setShowAllReviews(false);
   }, [product]);
 
   useEffect(() => {
@@ -583,7 +589,7 @@ const ProductDetailContent: React.FC = () => {
                         decoding="async"
                       />
                       {savingsAmount > 0 && <div className="product-cover-overlay product-savings">{localize(t('save'))} {localize(formattedSavings)}</div>}
-                      <div className="product-cover-overlay product-lifetime"><LifetimeSeal label={localize(product.isSubscription ? 'Original' : 'Vitalício')} /></div>
+                      <div className="product-cover-overlay product-lifetime"><LifetimeSeal subscription={!!product.isSubscription} /></div>
                     </div>
                   ) : (
                     <div className="w-56 h-72 bg-gradient-to-b from-slate-100 to-slate-200 rounded-xl shadow-xl border border-slate-300 flex flex-col justify-between p-5 text-left relative">
@@ -746,50 +752,52 @@ const ProductDetailContent: React.FC = () => {
             </div>
 
             {/* 3 Horizontal Trust Badges (Mobile Responsive) */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-2 py-3.5 border-y border-slate-200 text-left bg-slate-50/60 sm:bg-transparent rounded-xl sm:rounded-none px-3.5 sm:px-0">
-              <div className="flex items-center gap-2 sm:gap-2.5 sm:pr-2 sm:border-r border-slate-200">
+            <div className="grid grid-cols-1 sm:flex sm:justify-between gap-2.5 sm:gap-3 py-3.5 border-y border-slate-200 text-left bg-slate-50/60 sm:bg-transparent rounded-xl sm:rounded-none px-3.5 sm:px-0">
+              <div className="flex items-center gap-2 min-w-0">
                 <img
                   src="/images/icons/badge-seal.webp"
                   alt={localize(product.id === 'autodesk_all_apps' ? "Acesso por Assinatura" : "Uso Vitalício")}
-                  className="w-8 h-8 object-contain shrink-0 select-none"
+                  className="w-7 h-7 object-contain shrink-0 select-none"
                   loading="eager"
                 />
-                <div>
-                  <p className="text-xs font-bold text-slate-800 leading-tight">{localize(product.id === 'autodesk_all_apps' ? 'Acesso por Assinatura' : t('badge_lifetime'))}</p>
-                  <p className="text-xs text-slate-500 leading-snug mt-0.5">
-                    {localize(product.id === 'autodesk_all_apps' ? 'Válido pelo período escolhido' : t('badge_lifetime_sub'))}
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-slate-800 leading-tight truncate">{localize(product.id === 'autodesk_all_apps' ? 'Acesso por Assinatura' : t('badge_lifetime'))}</p>
+                  <p className="text-[11.5px] text-slate-500 leading-tight mt-0.5 truncate">
+                    {localize(product.id === 'autodesk_all_apps' ? 'Pelo período escolhido' : 'Sem mensalidade')}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 sm:gap-2.5 sm:px-1 sm:border-r border-slate-200">
+              <span className="hidden sm:block w-px self-stretch bg-slate-200" aria-hidden="true" />
+              <div className="flex items-center gap-2 min-w-0">
                 <img
                   src="/images/icons/badge-shield.webp"
                   alt={localize("Ativação Garantida")}
-                  className="w-8 h-8 object-contain shrink-0 select-none"
+                  className="w-7 h-7 object-contain shrink-0 select-none"
                   loading="eager"
                 />
-                <div>
-                  <p className="text-xs font-bold text-slate-800 leading-tight">
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-slate-800 leading-tight truncate">
                     {localize(product.isSubscription ? (language === 'es' ? 'Acceso Oficial' : 'Acesso Oficial') : t('badge_guaranteed'))}
                   </p>
-                  <p className="text-xs text-slate-500 leading-snug mt-0.5">
-                    {localize(product.isSubscription ? (language === 'es' ? 'Cuenta verificada' : 'Conta verificada') : t('badge_guaranteed_sub'))}
+                  <p className="text-[11.5px] text-slate-500 leading-tight mt-0.5 truncate">
+                    {localize(product.isSubscription ? (language === 'es' ? 'Cuenta verificada' : 'Conta verificada') : '30 dias de suporte')}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 sm:gap-2.5 sm:pl-1">
+              <span className="hidden sm:block w-px self-stretch bg-slate-200" aria-hidden="true" />
+              <div className="flex items-center gap-2 min-w-0">
                 <img
                   src="/images/icons/badge-plane.webp"
                   alt={localize(product.id === 'autodesk_all_apps' ? "Conta Privada" : "Entrega Digital")}
-                  className="w-8 h-8 object-contain shrink-0 select-none"
+                  className="w-7 h-7 object-contain shrink-0 select-none"
                   loading="eager"
                 />
-                <div>
-                  <p className="text-xs font-bold text-slate-800 leading-tight">{localize(product.id === 'autodesk_all_apps' ? 'Conta Privada' : t('badge_digital_delivery'))}</p>
-                  <p className="text-xs text-slate-500 leading-snug mt-0.5">
-                    {localize(product.id === 'autodesk_all_apps' ? 'Login e senha após a compra' : t('badge_digital_delivery_sub'))}
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-slate-800 leading-tight truncate">{localize(product.id === 'autodesk_all_apps' ? 'Conta Privada' : t('badge_digital_delivery'))}</p>
+                  <p className="text-[11.5px] text-slate-500 leading-tight mt-0.5 truncate">
+                    {localize(product.id === 'autodesk_all_apps' ? 'Login após a compra' : 'E-mail e WhatsApp')}
                   </p>
                 </div>
               </div>
@@ -1110,352 +1118,8 @@ const ProductDetailContent: React.FC = () => {
           {/* ----------------------------------------------------------------- */}
           <button type="button" aria-expanded={mobileInfoOpen === 'description'} aria-controls="product-info-description" onClick={() => setMobileInfoOpen(current => current === 'description' ? null : 'description')} className="sm:hidden flex w-full items-center gap-3 py-4 text-left text-sm font-bold border-b border-slate-200 text-slate-900"><Info className="w-5 h-5 shrink-0"/><span className="flex-1">{localize(t('tab_description'))}</span><ChevronRight className={`w-5 h-5 transition-transform ${mobileInfoOpen === 'description' ? 'rotate-90' : ''}`}/></button>
           {(
-            <div id="product-info-description" className={`${mobileInfoOpen === 'description' ? 'block py-5' : 'hidden'} ${activeTab === 'description' ? 'sm:block' : 'sm:hidden'} sm:py-0 space-y-8 text-slate-700 text-sm leading-relaxed`}>
-              {/* Top Note */}
-              <p className="text-sm sm:text-base text-slate-800 bg-white/80 p-4 rounded-xl border border-slate-200/80">
-                {product.id === 'autodesk_all_apps' ? (
-                  <>
-                    <strong>{localize("NOTA IMPORTANTE:")}</strong> {localize(" O plano")}{localize(' ')}
-                    <strong>{localize("Pacote Autodesk 86+ Apps Originais")}</strong> {localize(" oferece acesso oficial completo a mais de 86 aplicativos oficiais da Autodesk. Você receberá")}{localize(' ')}
-                    <strong>{localize("login e senha de uma conta privada Autodesk para seu uso")}</strong>{localize(' ')}
-                    {localize("diretamente no portal oficial ")}<strong>manage.autodesk.com</strong>{localize(", com download direto dos instaladores oficiais, atualizações contínuas e suporte prioritário via WhatsApp.")}</>
-                ) : (
-                  <>
-                    <strong>{localize("NOTA IMPORTANTE:")}</strong> {localize(" Esta é uma versão")}{localize(' ')}
-                    <strong>{localize("100% completa e vitalícia")}</strong> {localize(" do ")}{localize(product.name)}{localize(", oferecendo todos os recursos profissionais sem mensalidades ou taxas ocultas. Após a confirmação da compra, o ")}<strong>{localize("link de download direto chega imediatamente no seu e-mail")}</strong>{localize(' ')}
-                    {localize("acompanhado de ")}<strong>{localize("instruções passo a passo em vídeo")}</strong> {localize(" para uma instalação rápida, segura e definitiva.")}</>
-                )}
-              </p>
-
-              {/* Detalhes do Produto */}
-              <div className="space-y-3">
-                <h3 className="font-display font-extrabold text-base text-slate-900">
-                  {localize(t('product_details_heading'))}
-                </h3>
-                <ul className="space-y-2 text-sm sm:text-base">
-                  {product.features.map((feat, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
-                      <span>{localize(feat)}</span>
-                    </li>
-                  ))}
-                  {product.id !== 'autodesk_all_apps' && (
-                    <>
-                      <li className="flex items-start gap-2">
-                        <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
-                        <span>
-                          <strong>{localize("Instruções em vídeo passo a passo:")}</strong> {localize(" tutorial em vídeo claro e detalhado ensinando a instalar e ativar sem complicação.")}</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
-                        <span>
-                          <strong>{localize("Garantia de 30 dias de suporte técnico")}</strong> {localize(" gratuito via WhatsApp para instalação e ativação (com funcionamento vitalício do software).")}</span>
-                      </li>
-                    </>
-                  )}
-                </ul>
-              </div>
-
-              {/* Receba seu software em 3 passos simples */}
-              <div className="space-y-4 pt-2 border-t border-slate-200">
-                <h3 className="font-display font-extrabold text-base text-slate-900">
-                  {localize(product.id === 'autodesk_all_apps'
-                    ? 'Acesse sua conta oficial em 3 passos simples'
-                    : `Receba seu ${product.name} em 3 passos simples`)}
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl pt-2">
-                  <div className="flex flex-col items-center text-center space-y-2">
-                    <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center justify-center text-slate-800">
-                      <Mail className="w-6 h-6" />
-                    </div>
-                    <p className="text-xs text-slate-700 font-medium leading-snug">
-                      {product.id === 'autodesk_all_apps' ? (
-                        <>
-                          {localize("Após a compra, receba o ")}<strong>{localize("login e senha da conta oficial")}</strong> {localize(" diretamente no seu")}{localize(' ')}
-                          <strong>{localize("e-mail e WhatsApp")}</strong>
-                        </>
-                      ) : (
-                        <>
-                          {localize("Após a compra, receba o ")}<strong>{localize("link de download")}</strong> {localize(" diretamente no seu")}{localize(' ')}
-                          <strong>{localize("e-mail")}</strong>
-                        </>
-                      )}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col items-center text-center space-y-2">
-                    <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center justify-center text-slate-800">
-                      <CloudDownload className="w-6 h-6" />
-                    </div>
-                    <p className="text-xs text-slate-700 font-medium leading-snug">
-                      {product.id === 'autodesk_all_apps' ? (
-                        <>
-                          {localize("Faça login no portal oficial em")}{localize(' ')}
-                          <strong>manage.autodesk.com</strong>
-                        </>
-                      ) : (
-                        <>
-                          {localize("Baixe o software completo junto com as")}{localize(' ')}
-                          <strong>{localize("instruções em vídeo passo a passo")}</strong>
-                        </>
-                      )}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col items-center text-center space-y-2">
-                    <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center justify-center text-slate-800">
-                      <PlayCircle className="w-6 h-6" />
-                    </div>
-                    <p className="text-xs text-slate-700 font-medium leading-snug">
-                      {product.id === 'autodesk_all_apps' ? (
-                        <>
-                          {localize("Baixe e utilize qualquer um dos ")}<strong>{localize("mais de 86 aplicativos Autodesk")}</strong> {localize(" oficiais")}</>
-                      ) : (
-                        <>
-                          {localize("Siga o vídeo tutorial e ")}<strong>{localize("ative de forma vitalícia")}</strong> {localize(" no seu computador")}</>
-                      )}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Sobre / Diferença entre AutoCAD Completo e AutoCAD LT / SketchUp Pro Completo */}
-              <div className="space-y-3 pt-4 border-t border-slate-200">
-                {product.id === 'autocad_2027_win' ? (
-                  <>
-                    <h3 className="font-display font-extrabold text-base text-slate-900">
-                      {localize("A diferença entre o nosso AutoCAD Completo e o AutoCAD LT")}</h3>
-                    <p className="text-sm sm:text-base text-slate-600">
-                      {localize("Ao adquirir na C2Tech, você recebe a edição ")}<strong>{localize("AutoCAD Completa")}</strong>{localize(' ')}
-                      {localize("(e não a versão limitada LT), garantindo máxima produtividade para projetos de engenharia, arquitetura e design:")}</p>
-                    <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
-                      <li>
-                        <strong>{localize("AutoCAD Completo (Nossa Versão):")}</strong> {localize(" Ideal para profissionais e estudantes que precisam tanto de desenho técnico 2D quanto de")}{localize(' ')}
-                        <strong>{localize("modelagem 3D completa")}</strong>{localize(", renderização realista, nuvem de pontos, automação com rotinas ")}<strong>AutoLISP / LISP</strong>{localize(", APIs e bibliotecas completas de arquitetura, mecânica e elétrica.")}</li>
-                      <li>
-                        <strong>{localize("Compatibilidade Total DWG:")}</strong> {localize(" Crie, edite e exporte arquivos nativos `.DWG` e `.DXF` com total precisão, compatível com projetos de qualquer escritório ou cliente.")}</li>
-                    </ul>
-                  </>
-                ) : product.id === 'sketchup_2026_win' ? (
-                  <>
-                    <h3 className="font-display font-extrabold text-base text-slate-900">
-                      {localize("Por que o nosso SketchUp Pro Desktop Completo supera a versão Web / Go?")}</h3>
-                    <p className="text-sm sm:text-base text-slate-600">
-                      {localize("Ao adquirir na C2Tech, você recebe a suíte ")}<strong>{localize("SketchUp Pro Desktop Completa")}</strong>{localize(' ')}
-                      {localize("(com ")}<strong>LayOut</strong> e <strong>Style Builder</strong> {localize(" inclusos), essencial para arquitetos, designers de interiores, marceneiros e engenheiros:")}</p>
-                    <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
-                      <li>
-                        <strong>{localize("Suporte Total a Plugins e Renderizadores:")}</strong> {localize(" Ao contrário das edições básicas ou web, o SketchUp Pro Desktop aceita todos os plugins Ruby (`.rbz`) e funciona perfeitamente com ")}<strong>V-Ray, Enscape, Lumion, D5 Render</strong>{localize(' ')}
-                        {localize("e blocos dinâmicos.")}</li>
-                      <li>
-                        <strong>{localize("LayOut 2D Profissional Incluso:")}</strong> {localize(" Transforme seus modelos 3D em pranchas técnicas executivas 2D com cotas, escalas, cortes, plantas baixas e exportação direta para `.DWG`, `.DXF` e `.PDF` em alta resolução.")}</li>
-                    </ul>
-                  </>
-                ) : product.id === 'cype_2026' ? (
-                  <>
-                    <h3 className="font-display font-extrabold text-base text-slate-900">
-                      {localize("O que está incluso no pacote CYPE Completo (2025.d e 2026.a)?")}</h3>
-                    <p className="text-sm sm:text-base text-slate-600">
-                      {localize("Tanto na versão ")}<strong>2025.d</strong> {localize(" quanto na versão ")}<strong>2026.a</strong>{localize(", você recebe a suíte ")}<strong>{localize("CYPE Completa")}</strong> {localize(" com todos os módulos desbloqueados, incluindo:")}</p>
-                    <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
-                      <li>
-                        <strong>{localize("Programas Inclusos:")}</strong> <strong>CYPECAD</strong> {localize(" (concreto armado, protendido, lajes, vigas, pilares e fundações), ")}<strong>CYPE 3D</strong>{localize(' ')}
-                        {localize("(estruturas metálicas, galpões, madeira e alumínio),")}{localize(' ')}
-                        <strong>CYPETHERM</strong> {localize(" (análise térmica e energética),")}{localize(' ')}
-                        <strong>Arquimedes</strong> {localize(" (orçamentos e banco de preços), além de módulos de instalações prediais, muros de arrimo e marcos, entre outros.")}</li>
-                      <li>
-                        <strong>{localize("Atenção aos Idiomas de cada versão:")}</strong> {localize(" A versão")}{localize(' ')}
-                        <strong>CYPE 2026.a</strong> {localize(" está disponível exclusivamente em")}{localize(' ')}
-                        <strong>{localize("Português Brasil (PT-BR)")}</strong>{localize(", enquanto a versão")}{localize(' ')}
-                        <strong>CYPE 2025.d</strong> {localize(" possui suporte completo a")}{localize(' ')}
-                        <strong>{localize("todas as linguagens")}</strong> {localize(" (Português, Espanhol, Inglês, Francês, Italiano, entre outras).")}</li>
-                    </ul>
-                  </>
-                ) : product.id === 'coreldraw_2026' ? (
-                  <>
-                    <h3 className="font-display font-extrabold text-base text-slate-900">
-                      {localize("O que está incluso no nosso CorelDRAW Graphics Suite Completo?")}</h3>
-                    <p className="text-sm sm:text-base text-slate-600">
-                      {localize("Ao adquirir na C2Tech, você recebe a suíte ")}<strong>{localize("CorelDRAW Graphics Suite Completa")}</strong>{localize(' ')}
-                      {localize("para uso local ilimitado (sem bloqueios de tela ou assinaturas mensais), ideal para gráficas, agências, sublimação, corte a laser e comunicação visual:")}</p>
-                    <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
-                      <li>
-                        <strong>{localize("Aplicativos Principais Inclusos:")}</strong> <strong>CorelDRAW</strong>{localize(' ')}
-                        {localize("(ilustração vetorial e layout de página), ")}<strong>Corel PHOTO-PAINT</strong>{localize(' ')}
-                        {localize("(edição profissional de imagens e retoque), ")}<strong>Corel PowerTRACE</strong>{localize(' ')}
-                        {localize("(vetorização rápida de bitmaps por IA) e ")}<strong>Corel Font Manager</strong>.
-                      </li>
-                      <li>
-                        <strong>{localize("Pronto para Impressão e Produção:")}</strong> {localize(" Suporte completo a cores CMYK, Pantone, fechamento de arquivos `.CDR`, `.PDF`, `.EPS`, `.SVG`, `.AI` e `.PSD` sem restrições de exportação ou salvamento.")}</li>
-                    </ul>
-                  </>
-                ) : (
-                  <>
-                    <h3 className="font-display font-extrabold text-base text-slate-900">
-                      {localize("Sobre o ")}{localize(product.name)}
-                    </h3>
-                    <p className="text-sm sm:text-base text-slate-700 whitespace-pre-line">
-                      {localize(product.longDescription)}
-                    </p>
-                  </>
-                )}
-              </div>
-
-              {/* Compre pelo melhor preço em uma loja confiável */}
-              <div className="space-y-3 pt-4 border-t border-slate-200">
-                <h3 className="font-display font-extrabold text-base text-slate-900">
-                  {localize("Compre o ")}{localize(product.name)} {localize(" pelo melhor preço na C2Tech")}</h3>
-                <p className="text-sm sm:text-base text-slate-600">
-                  {localize("Na C2Tech você garante softwares profissionais completos por uma fração do custo tradicional, com entrega imediata e suporte real. Veja por que milhares de clientes confiam em nós:")}</p>
-                {product.id === 'autodesk_all_apps' ? (
-                <ul className="space-y-2.5 text-sm sm:text-base">
-                  {[["Acesso pelo Período Escolhido:"," Utilize os aplicativos durante os 30 dias, 1 ano, 2 anos ou 3 anos do plano adquirido. O acesso acompanha a duração do plano contratado."],["Conta Privada para Seu Uso:"," Você recebe login e senha de uma conta privada Autodesk, com orientações para entrar no portal oficial."],["Aplicativos Originais em um Só Pacote:"," Acesse mais de 86 aplicativos disponíveis na conta, incluindo AutoCAD, Revit, Inventor, Fusion, Maya, 3ds Max e Navisworks."],["Recebimento das Credenciais:"," Após a confirmação do pagamento, enviamos os dados de acesso e as instruções para utilizar sua conta. Os programas são baixados pelo portal oficial da Autodesk."],["Suporte para Começar:"," Conte com a C2Tech para orientações de acesso à conta e instalação dos aplicativos disponíveis, conforme as condições de suporte do produto."]].map(([title, text]) => (
-                    <li key={title} className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
-                      <span><strong>{localize(title)}</strong> {localize(text)}</span>
-                    </li>
-                  ))}
-                </ul>
-                ) : (
-                <ul className="space-y-2.5 text-sm sm:text-base">
-                  <li className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
-                    <span>
-                      <strong>{localize("Acesso Vitalício e Completo:")}</strong> {localize(" Você paga uma única vez e utiliza o software completo para sempre, sem cobranças mensais ou anuais surpresas.")}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
-                    <span>
-                      <strong>{localize("Instruções em Vídeo Inclusas:")}</strong> {localize(" Não precisa ser técnico em informática! Nosso vídeo tutorial mostra exatamente o passo a passo da instalação do início ao fim.")}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
-                    <span>
-                      <strong>{localize("Envio Automático por E-mail:")}</strong> {localize(" Confirmou o pagamento no Pix ou Cartão, o link de download chega direto na sua caixa de entrada.")}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
-                    <span>
-                      <strong>{localize("Suporte Técnico de 30 Dias Incluso:")}</strong> {localize(" Você conta com 30 dias de garantia de suporte técnico especializado via WhatsApp para auxiliar na instalação, enquanto o software tem funcionamento vitalício.")}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
-                    <span>
-                      <strong>{localize("Reinstalação Garantida:")}</strong> {localize(" O link enviado para o seu e-mail permanece disponível caso você formate ou troque de computador no futuro.")}</span>
-                  </li>
-                </ul>
-                )}
-              </div>
-
-              {/* Como escolher entre as edições (específico para AutoCAD ou SketchUp Pro) */}
-              {product.id === 'autocad_2027_win' && (
-                <div className="space-y-3 pt-4 border-t border-slate-200">
-                  <h3 className="font-display font-extrabold text-base text-slate-900">
-                    {localize("Como escolher entre as edições do AutoCAD (2019, 2024, 2025, 2026 e 2027)")}</h3>
-                  <p className="text-xs font-bold text-slate-800">
-                    {localize("Considere a compatibilidade do seu computador:")}</p>
-                  <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
-                    <li>
-                      <strong>{localize("AutoCAD 2019 (Windows):")}</strong> {localize(" Excelente escolha para computadores ou notebooks mais antigos (com 8 GB de RAM ou placas de vídeo integradas). É extremamente leve, rápido e abre arquivos DWG perfeitamente.")}</li>
-                    <li>
-                      <strong>{localize("AutoCAD 2024 e 2025 (Windows e macOS):")}</strong> {localize(" O equilíbrio ideal entre estabilidade comprovada em escritórios e recursos modernos de automação, contagem automática de blocos (Count) e janelas flutuantes.")}</li>
-                    <li>
-                      <strong>{localize("AutoCAD 2026 e 2027 (Windows e macOS):")}</strong> {localize(" Recomendados para máquinas atuais. Trazem o novo motor gráfico acelerado, Smart Blocks com inteligência artificial, histórico de atividades aprimorado e suporte nativo otimizado para Windows 11 e chips Apple Silicon (M1, M2, M3 e M4).")}</li>
-                  </ul>
-                </div>
-              )}
-
-              {product.id === 'sketchup_2026_win' && (
-                <div className="space-y-3 pt-4 border-t border-slate-200">
-                  <h3 className="font-display font-extrabold text-base text-slate-900">
-                    {localize("Como escolher entre as edições do SketchUp Pro (2021, 2024, 2025 e 2026)")}</h3>
-                  <p className="text-xs font-bold text-slate-800">
-                    {localize("Considere a configuração do seu computador e seus plugins favoritos:")}</p>
-                  <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
-                    <li>
-                      <strong>{localize("SketchUp Pro 2021 (Windows):")}</strong> {localize(" Ideal para PCs ou notebooks mais modestos (8 GB de RAM ou vídeo integrado) e para quem utiliza bibliotecas de plugins clássicos. É super leve, estável e consome poucos recursos.")}</li>
-                    <li>
-                      <strong>{localize("SketchUp Pro 2024 e 2025 (Windows e macOS):")}</strong> {localize(" Trazem o novo motor gráfico de alta performance (até 8x mais rápido na navegação de cenas pesadas), Oclusão Ambiental (Ambient Occlusion) em tempo real e materiais fotorrealistas PBR.")}</li>
-                    <li>
-                      <strong>{localize("SketchUp Pro 2026 (Windows e macOS):")}</strong> {localize(" A versão mais recente e avançada, otimizada para Windows 11 e chips Apple Silicon (M1, M2, M3 e M4), com melhorias de interoperabilidade BIM/IFC, LayOut acelerado e suporte aos renderizadores mais novos (V-Ray 7 e Enscape).")}</li>
-                  </ul>
-                </div>
-              )}
-
-              {product.id === 'cype_2026' && (
-                <div className="space-y-3 pt-4 border-t border-slate-200">
-                  <h3 className="font-display font-extrabold text-base text-slate-900">
-                    {localize("Como escolher entre o CYPE 2025.d e o CYPE 2026.a")}</h3>
-                  <p className="text-xs font-bold text-slate-800">
-                    {localize("Ambas as versões incluem CYPECAD, CYPE 3D, CYPETHERM, Arquimedes e todos os módulos:")}</p>
-                  <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
-                    <li>
-                      <strong>{localize("CYPE 2025.d (Todos os Idiomas):")}</strong> {localize(" Excelente custo-benefício e disponível em ")}<strong>{localize("todas as linguagens")}</strong> {localize(" (Português, Espanhol, Inglês, Francês, etc.), ideal tanto para projetos nacionais com normas ABNT NBR quanto para engenheiros que trabalham com eurocódigos ou idiomas internacionais.")}</li>
-                    <li>
-                      <strong>{localize("CYPE 2026.a (Português Brasil):")}</strong> {localize(" A versão mais recente da suíte, disponível exclusivamente em ")}<strong>{localize("Português Brasil (PT-BR)")}</strong>{localize(", com as últimas atualizações de dimensionamento estrutural, ligações metálicas e detalhamento de armaduras segundo as normas brasileiras.")}</li>
-                  </ul>
-                </div>
-              )}
-
-              {product.id === 'coreldraw_2026' && (
-                <div className="space-y-3 pt-4 border-t border-slate-200">
-                  <h3 className="font-display font-extrabold text-base text-slate-900">
-                    {localize("Como escolher entre as edições do CorelDRAW (X7, 2022, 2023, 2024, 2025 e 2026)")}</h3>
-                  <p className="text-xs font-bold text-slate-800">
-                    {localize("Escolha a edição ideal para o seu fluxo de trabalho e computador:")}</p>
-                  <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700">
-                    <li>
-                      <strong>{localize("CorelDRAW X7 (Windows):")}</strong> {localize(" O clássico favorito de gráficas rápidas, estamparia, sublimação e máquinas de corte (Plotter / Laser). É extremamente leve, abre instantaneamente até em notebooks básicos com 4 GB de RAM.")}</li>
-                    <li>
-                      <strong>{localize("CorelDRAW 2022, 2023 e 2024 (Windows e macOS):")}</strong> {localize(" Excelente equilíbrio entre leveza e recursos modernos, incluindo exportação multipágina rápida, visualização de páginas lado a lado, novos pincéis artísticos e suporte nativo a macOS e Windows 10/11.")}</li>
-                    <li>
-                      <strong>{localize("CorelDRAW 2025 e 2026 (Windows e macOS):")}</strong> {localize(" As edições mais recentes e completas, com aceleração gráfica avançada, vetorização PowerTRACE aprimorada, catálogo Pantone atualizado e otimização total para Windows 11 e Macs com processadores Apple Silicon (M1, M2, M3 e M4).")}</li>
-                  </ul>
-                </div>
-              )}
-
-              {/* FAQ */}
-              <div className="space-y-4 pt-4 border-t border-slate-200">
-                <h3 className="font-display font-extrabold text-base text-slate-900">
-                  {localize("Perguntas Frequentes (FAQ)")}</h3>
-
-                <div className="space-y-3 text-sm sm:text-base">
-                  <div>
-                    <p className="font-bold text-slate-900">
-                      {localize(product.id === 'autodesk_all_apps' ? 'Como recebo minha conta privada?' : 'Como recebo meu software após a compra?')}</p>
-                    <p className="text-slate-600 mt-0.5">
-                      {localize(product.id === 'autodesk_all_apps' ? 'Após a confirmação do pagamento, enviamos login e senha de uma conta privada para você acessar o portal oficial da Autodesk e baixar os aplicativos disponíveis no plano.' : 'Assim que o pagamento é aprovado (instantâneo via Pix ou Cartão de Crédito), você recebe automaticamente um e-mail com o botão de download direto no Google Drive contendo o instalador completo e o vídeo de instruções.')}</p>
-                  </div>
-
-                  <div>
-                    <p className="font-bold text-slate-900">
-                      {localize(product.id === 'autodesk_all_apps' ? 'Por quanto tempo posso usar os aplicativos?' : 'O software é realmente vitalício? Preciso pagar mensalidade depois?')}</p>
-                    <p className="text-slate-600 mt-0.5">
-                      {localize(product.isSubscription
-                        ? 'Este produto é um plano de assinatura com renovação conforme o período escolhido.'
-                        : 'Sim, é 100% vitalício! Você realiza um único pagamento e utiliza o software completo por tempo indeterminado, sem nunca precisar pagar mensalidades ou anuidades.')}
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="font-bold text-slate-900">
-                      {localize("O que fazer se eu tiver dificuldade para instalar ou ativar?")}</p>
-                    <p className="text-slate-600 mt-0.5">
-                      {localize("Além do tutorial em vídeo super detalhado que acompanha o download, você conta com nosso suporte técnico gratuito via WhatsApp. Nossa equipe auxilia você passo a passo até o programa estar 100% pronto para uso.")}</p>
-                  </div>
-
-                  {(product.id === 'autocad_2027_win' ||
-                    product.id === 'sketchup_2026_win' ||
-                    product.id === 'coreldraw_2026') && (
-                    <div>
-                      <p className="font-bold text-slate-900">
-                        O {localize(product.name)} {localize(" funciona em Mac (Apple M1/M2/M3/M4) e Windows?")}</p>
-                      <p className="text-slate-600 mt-0.5">
-                        {localize("Sim! Basta selecionar no topo desta página a plataforma desejada (")}<strong>Windows</strong> {localize(" ou ")}<strong>macOS</strong>{localize(") e o ano da versão antes de clicar em comprar. Você receberá exatamente a edição compatível com o seu sistema operacional.")}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
+            <div id="product-info-description" className={`${mobileInfoOpen === 'description' ? 'block py-5' : 'hidden'} ${activeTab === 'description' ? 'sm:block' : 'sm:hidden'} sm:py-0`}>
+              <ProductDescription product={product} />
             </div>
           )}
 
@@ -1494,7 +1158,7 @@ const ProductDetailContent: React.FC = () => {
                         {localize(product.id === 'autocad_2027_win'
                           ? 'WINDOWS: Mínimo 2 GB de VRAM com suporte a DirectX 11 (Recomendado: 8 GB de VRAM DirectX 12 para 3D e telas 4K até 3840 x 2160) / MAC: Tela de 1280 x 800 (Recomendado: Retina 2880 x 1800 com placa gráfica nativa Apple Metal).'
                           : product.id === 'sketchup_2026_win'
-                          ? 'WINDOWS: Placa de vídeo 3D com no mínimo 1 GB de VRAM compatível com OpenGL 3.1 e DirectX 12 (Recomendado: 4 GB a 8 GB de VRAM dedicada NVIDIA GTX/RTX ou AMD Radeon para cenas complexas) / MAC: Placa gráfica nativa compatível com Apple Metal (Apple M1/M2/M3/M4 ou Radeon Pro).'
+                          ? 'WINDOWS: Placa de vídeo 3D com no mínimo 1 GB de VRAM compatível com OpenGL 3.1 e DirectX 12 (Recomendado: 4 GB a 8 GB de VRAM dedicada NVIDIA GTX/RTX ou AMD Radeon para cenas complexas) / MAC: Placa gráfica nativa compatível com Apple Metal (Apple M1/M2/M3/M4/M5 ou Radeon Pro).'
                           : product.requirements.gpu ||
                             'Placa gráfica compatível com DirectX 11/12 ou superior (resolução mínima 1920 x 1080).')}
                       </td>
@@ -1506,9 +1170,9 @@ const ProductDetailContent: React.FC = () => {
                       </th>
                       <td className="py-3.5 px-4 text-slate-700 leading-relaxed">
                         {localize(product.id === 'autocad_2027_win'
-                          ? 'WINDOWS: Processador 64 bits de 2.5–2.9 GHz (base). Recomendado: 3+ GHz (base) ou 4+ GHz (turbo) / MAC: Apple Silicon (M1, M2, M3, M4 Pro/Max) ou Intel Core i7 64 bits.'
+                          ? 'WINDOWS: Processador 64 bits de 2.5–2.9 GHz (base). Recomendado: 3+ GHz (base) ou 4+ GHz (turbo) / MAC: Apple Silicon (M1, M2, M3, M4, M5 Pro/Max) ou Intel Core i7 64 bits.'
                           : product.id === 'sketchup_2026_win'
-                          ? 'WINDOWS: Processador Intel ou AMD 64 bits de 2.1+ GHz (Recomendado: 2.8+ GHz ou superior multi-core) / MAC: Apple Silicon (M1, M2, M3, M4) nativo ou Intel Core i5/i7 de 2.1+ GHz.'
+                          ? 'WINDOWS: Processador Intel ou AMD 64 bits de 2.1+ GHz (Recomendado: 2.8+ GHz ou superior multi-core) / MAC: Apple Silicon (M1, M2, M3, M4, M5) nativo ou Intel Core i5/i7 de 2.1+ GHz.'
                           : product.requirements.cpu)}
                       </td>
                     </tr>
@@ -1869,8 +1533,8 @@ const ProductDetailContent: React.FC = () => {
           </div>
 
           {/* Customer Reviews List */}
-          <div className="divide-y divide-slate-200">
-            {productReviews.map((review, idx) => {
+          {(() => {
+            const renderReview = (review: (typeof productReviews)[number], idx: number) => {
               const avatarColor = AVATAR_COLORS[idx % AVATAR_COLORS.length];
               const initial = review.author.trim().charAt(0).toUpperCase();
 
@@ -1926,8 +1590,37 @@ const ProductDetailContent: React.FC = () => {
                   </div>
                 </div>
               );
-            })}
-          </div>
+            };
+            const extra = productReviews.slice(REVIEWS_PREVIEW);
+            return (
+              <>
+                <div className="divide-y divide-slate-200">
+                  {productReviews.slice(0, REVIEWS_PREVIEW).map((r, i) => renderReview(r, i))}
+                </div>
+                {extra.length > 0 && (
+                  <div className="t-acc" data-open={showAllReviews ? 'true' : 'false'}>
+                    <div className="t-acc-panel" id="product-reviews-more" aria-hidden={!showAllReviews}>
+                      <div className="t-acc-panel-inner">
+                        <div className="divide-y divide-slate-200 border-t border-slate-200">
+                          {extra.map((r, i) => renderReview(r, i + REVIEWS_PREVIEW))}
+                        </div>
+                      </div>
+                    </div>
+                    <ReviewsMoreButton
+                      open={showAllReviews}
+                      count={extra.length}
+                      initials={extra.slice(0, 3).map((r) => r.author.trim().charAt(0).toUpperCase())}
+                      onToggle={() => {
+                const closing = showAllReviews;
+                setShowAllReviews(!closing);
+                if (closing) window.setTimeout(() => document.querySelector('.rv-more')?.scrollIntoView({ block: 'center', behavior: 'smooth' }), 60);
+              }}
+                    />
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </div>
       </div>
 
