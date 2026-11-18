@@ -241,7 +241,7 @@ export function StoreReviews({ summaryOnly = false }: { summaryOnly?: boolean })
                     prev === 0 ? activeTrustpilotReviews.length - 1 : prev - 1
                   )
                 }
-                className="w-6 h-6 rounded-full border border-[#545454] bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0 mr-2 cursor-pointer shadow-2xs"
+                className="w-6 h-6 rounded-full border border-[#545454] bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0 mr-3 sm:mr-6 cursor-pointer shadow-2xs"
                 aria-label="Avaliação anterior"
               >
                 <ChevronLeft className="w-4 h-4" />
@@ -321,7 +321,7 @@ export function StoreReviews({ summaryOnly = false }: { summaryOnly?: boolean })
                 onClick={() =>
                   setTrustpilotSlideIndex((prev) => (prev + 1) % activeTrustpilotReviews.length)
                 }
-                className="t-learn w-6 h-6 rounded-full border border-[#545454] bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0 ml-2 cursor-pointer shadow-2xs"
+                className="t-learn w-6 h-6 rounded-full border border-[#545454] bg-white text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0 ml-3 sm:ml-6 cursor-pointer shadow-2xs"
                 aria-label="Próxima avaliação"
               >
                 <LearnMoreChevron className="ml-0" size={16} />
@@ -329,7 +329,7 @@ export function StoreReviews({ summaryOnly = false }: { summaryOnly?: boolean })
             </div>}
           </div>
 
-          <div className={summaryOnly ? "mt-3 text-center" : "mt-4 pt-1 text-center lg:text-left lg:pl-[236px]"}>
+          <div className={summaryOnly ? "mt-3 text-center" : "mt-4 pt-1 text-center lg:text-left lg:pl-[252px]"}>
             <button
               type="button"
               onClick={() => setIsGuaranteesModalOpen(true)}
