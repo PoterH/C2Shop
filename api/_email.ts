@@ -2,6 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import { getDownloadLink } from './_downloads.js';
 
+/** Password the customer uses to extract the downloaded files. */
+const EXTRACTION_PASSWORD = '@c2techoficial';
+
 export function getResendApiKey() {
   try {
     const envPath = path.join(process.cwd(), '.env');
@@ -87,109 +90,229 @@ export async function sendConfirmationEmail({
     return { success: false, error: 'Nenhum produto fornecido para o e-mail de confirmação.' };
   }
 
-  const paymentMethodLabel = paymentMethod === 'pix' ? 'Pix (Aprovação Instantânea)' : (paymentMethod === 'boleto' ? 'Boleto Bancário' : 'Cartão de Crédito');
+  const paymentMethodLabel = paymentMethod === 'pix' ? 'Pix' : (paymentMethod === 'boleto' ? 'Boleto bancário' : 'Cartão de crédito');
   const totalPaid = checkoutProducts.reduce((sum, p) => sum + p.price, 0);
   const formattedTotalPrice = totalPaid.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-  // Generate dynamic product rows
+  const esc = (value: string) => String(value).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string));
+  const brl = (value: number) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const firstName = esc((buyerName || '').trim().split(/\s+/)[0] || 'cliente');
+  const orderDate = new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: 'long', year: 'numeric' });
+  const supportUrl = `https://wa.me/5581997349300?text=${encodeURIComponent(`Olá! Preciso de ajuda com o pedido ${orderId}.`)}`;
+  const font = "font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;";
+
+  // Order summary rows
   const productsTableRows = checkoutProducts.map(p => `
     <tr>
-      <td style="padding: 12px; text-align: left; font-size: 14px; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 500;">${p.name}</td>
-      <td style="padding: 12px; text-align: right; font-size: 14px; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 500;">${p.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
-    </tr>
-  `).join('');
+      <td style="${font} padding: 10px 0; font-size: 14px; color: #1e293b; border-bottom: 1px solid #eef2f7;">${esc(p.name)}</td>
+      <td align="right" style="${font} padding: 10px 0; font-size: 14px; color: #1e293b; border-bottom: 1px solid #eef2f7; white-space: nowrap;">${brl(p.price)}</td>
+    </tr>`).join('');
 
-  // Generate dynamic download buttons
+  // One card per product with its download or activation button
   const downloadButtonsSection = checkoutProducts.map(p => {
     const downloadUrl = getDownloadLink(p.slug);
     const isWhatsApp = downloadUrl.includes('wa.me');
-    const buttonText = isWhatsApp ? 'Entrar em Contato (Ativar Conta)' : 'Acessar Google Drive (Download)';
-    const headerText = isWhatsApp ? `Ativação de Conta: ${p.name}` : p.name;
-    const buttonBg = isWhatsApp ? '#25d366' : '#0284c7';
+    const buttonText = isWhatsApp ? 'Ativar pelo WhatsApp' : 'Baixar no Google Drive &rarr;';
+    const buttonBg = isWhatsApp ? '#16a34a' : '#0066ff';
+    const tag = isWhatsApp ? 'Ativação da conta' : 'Pronto para download';
+    const tagColor = isWhatsApp ? '#15803d' : '#0052cc';
+    const tagBg = isWhatsApp ? '#dcfce7' : '#e8f0ff';
     return `
-      <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 16px 0; text-align: center;">
-        <h4 style="margin: 0 0 10px 0; color: #0f172a; font-size: 15px; font-weight: bold;">${headerText}</h4>
-        <a href="${downloadUrl}" target="_blank" style="display: inline-block; background-color: ${buttonBg}; color: #ffffff !important; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-weight: bold; font-size: 14px; text-align: center; border: 1px solid ${buttonBg}; min-width: 200px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);"><span style="color: #ffffff; font-weight: bold; text-decoration: none;">${buttonText}</span></a>
-      </div>
-    `;
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 12px 0; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff;">
+        <tr>
+          <td style="padding: 18px 20px;">
+            <span style="${font} display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; color: ${tagColor}; background-color: ${tagBg}; border-radius: 999px; padding: 4px 10px;">${tag}</span>
+            <p style="${font} margin: 10px 0 14px 0; font-size: 16px; font-weight: 700; color: #0f172a; line-height: 1.35;">${esc(p.name)}</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="${buttonBg}" style="border-radius: 10px;">
+              <a href="${downloadUrl}" target="_blank" style="${font} display: inline-block; padding: 13px 24px; font-size: 14px; font-weight: 700; color: #ffffff; text-decoration: none; border-radius: 10px;">${buttonText}</a>
+            </td></tr></table>
+          </td>
+        </tr>
+      </table>`;
   }).join('');
+
+  // Shown whenever the order has a file download (account activations via WhatsApp have no files).
+  const hasFileDownload = checkoutProducts.some(p => !getDownloadLink(p.slug).includes('wa.me'));
+  const extractionPasswordSection = hasFileDownload ? `
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 8px 0 0 0; background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 12px;">
+        <tr>
+          <td style="padding: 18px 20px;">
+            <p style="${font} margin: 0 0 4px 0; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #92400e;">&#128273; Senha para extrair os arquivos</p>
+            <p style="${font} margin: 0 0 12px 0; font-size: 13px; color: #78350f; line-height: 1.5;">Use esta senha ao descompactar os arquivos baixados:</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="background-color: #ffffff; border: 2px dashed #f59e0b; border-radius: 10px; padding: 10px 20px;">
+              <span style="font-family: Consolas, 'SF Mono', 'Courier New', monospace; font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: 0.5px;">${EXTRACTION_PASSWORD}</span>
+            </td></tr></table>
+            <p style="${font} margin: 12px 0 0 0; font-size: 12px; color: #92400e; line-height: 1.5;">Digite exatamente como está: com o <strong>@</strong> no início e tudo em letras minúsculas.</p>
+          </td>
+        </tr>
+      </table>` : '';
 
   const hasSubscription = checkoutProducts.some(p => p.slug === 'capcut-pro-mensal' || p.slug === 'canva-pro-mensal' || p.slug === 'autodesk-all-apps');
   const emailIntroText = hasSubscription
-    ? 'O seu pagamento foi confirmado! Abaixo estão liberadas as instruções e links para ativar a sua assinatura e acessar os recursos Pro de cada um dos seus produtos adquiridos.'
-    : 'O seu pagamento foi confirmado! Abaixo estão liberados os links de acesso seguro ao Google Drive contendo todos os arquivos necessários para a instalação, ativação e o tutorial em vídeo passo a passo de cada um dos seus produtos adquiridos.';
+    ? 'Seu pagamento foi confirmado. Abaixo estão as instruções e os links para ativar sua assinatura e acessar os recursos de cada produto.'
+    : 'Seu pagamento foi confirmado. Abaixo estão os links seguros do Google Drive com os arquivos de instalação e o tutorial em vídeo de cada produto.';
 
-  const htmlContent = `
-    <!DOCTYPE html>
-    <html lang="pt-BR">
-    <head>
-      <meta charset="UTF-8">
-      <title>Entrega de Pedido C2Shop</title>
-    </head>
-    <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; color: #1e293b; margin: 0; padding: 0;">
-      <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-        <div style="background-color: #020617; padding: 32px; text-align: center; border-bottom: 4px solid #0284c7;">
-          <div style="font-size: 24px; font-weight: bold; color: #ffffff; letter-spacing: 1px;">C2<span style="color: #0284c7;">Shop</span></div>
-        </div>
-        <div style="padding: 40px;">
-          <h1 style="font-size: 22px; color: #0f172a; margin-top: 0; font-weight: bold;">Olá, ${buyerName}!</h1>
-          <p style="font-size: 15px; line-height: 1.6; color: #475569; margin-bottom: 24px;">${emailIntroText}</p>
+  const steps = hasFileDownload
+    ? [
+        ['Baixe os arquivos', 'Clique em <strong>Baixar no Google Drive</strong> e baixe a pasta do seu software.'],
+        ['Extraia com a senha', `Descompacte os arquivos usando a senha <strong style="color: #0f172a;">${EXTRACTION_PASSWORD}</strong>.`],
+        ['Siga o vídeo e ative', 'Assista ao tutorial incluído na pasta e siga o passo a passo para instalar e ativar.'],
+      ]
+    : [
+        ['Abra o link', 'Clique no botão do seu produto para receber as instruções de acesso.'],
+        ['Siga as orientações', 'Nossa equipe envia o passo a passo para ativar a sua conta.'],
+        ['Comece a usar', 'Pronto! Seu acesso fica liberado conforme o plano escolhido.'],
+      ];
+  const stepsRows = steps.map(([title, text], i) => `
+    <tr>
+      <td width="40" valign="top" style="padding: 0 0 16px 0;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="28" height="28" align="center" bgcolor="#0a0f1d" style="${font} border-radius: 999px; font-size: 13px; font-weight: 700; color: #ffffff; line-height: 28px;">${i + 1}</td></tr></table>
+      </td>
+      <td valign="top" style="padding: 2px 0 16px 0;">
+        <p style="${font} margin: 0 0 2px 0; font-size: 14px; font-weight: 700; color: #0f172a;">${title}</p>
+        <p style="${font} margin: 0; font-size: 13px; color: #475569; line-height: 1.55;">${text}</p>
+      </td>
+    </tr>`).join('');
 
-          <h2 style="font-size: 16px; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-top: 32px; margin-bottom: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Detalhes do Pedido</h2>
-          <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-            <thead>
-              <tr style="border-bottom: 2px solid #e2e8f0;">
-                <th style="padding: 12px 6px; text-align: left; font-size: 13px; color: #64748b; font-weight: bold; text-transform: uppercase;">Software</th>
-                <th style="padding: 12px 6px; text-align: right; font-size: 13px; color: #64748b; font-weight: bold; text-transform: uppercase;">Preço</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${productsTableRows}
-              <tr>
-                <td style="padding: 16px 6px 12px 6px; text-align: left; font-size: 14px; font-weight: bold; color: #0f172a;">Total Pago</td>
-                <td style="padding: 16px 6px 12px 6px; text-align: right; font-size: 16px; font-weight: bold; color: #0284c7;">${formattedTotalPrice}</td>
-              </tr>
-              <tr>
-                <td style="padding: 6px; text-align: left; font-size: 13px; color: #64748b;">Método de Pagamento</td>
-                <td style="padding: 6px; text-align: right; font-size: 13px; color: #475569;">${paymentMethodLabel}</td>
-              </tr>
-              <tr>
-                <td style="padding: 6px; text-align: left; font-size: 13px; color: #64748b; border-bottom: none;">Código do Pedido</td>
-                <td style="padding: 6px; text-align: right; font-size: 13px; color: #475569; border-bottom: none;"><code>${orderId}</code></td>
-              </tr>
-            </tbody>
-          </table>
+  const sectionTitle = (text: string) => `<p style="${font} margin: 0 0 14px 0; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #64748b;">${text}</p>`;
 
-          <h2 style="font-size: 16px; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-top: 36px; margin-bottom: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Links de Download e Acesso</h2>
-          
-          ${downloadButtonsSection}
+  const htmlContent = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <title>Seu pedido C2Tech está pronto</title>
+  <style>
+    @media only screen and (max-width: 620px) {
+      .container { width: 100% !important; }
+      .px { padding-left: 20px !important; padding-right: 20px !important; }
+      .hero-title { font-size: 22px !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #eef2f7;">
+  <div style="display: none; max-height: 0; overflow: hidden; opacity: 0; color: #eef2f7;">Pagamento confirmado! Seus links de download e a senha dos arquivos estão aqui.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#eef2f7">
+    <tr>
+      <td align="center" style="padding: 32px 12px;">
+        <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" border="0" style="width: 600px; max-width: 600px;">
 
-          <h2 style="font-size: 16px; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-top: 36px; margin-bottom: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Instruções de Instalação</h2>
-          <div style="margin: 20px 0;">
-            <div style="margin-bottom: 16px;">
-              <span style="background-color: #0284c7; color: #ffffff; width: 24px; height: 24px; border-radius: 50%; display: inline-block; text-align: center; line-height: 24px; font-weight: bold; font-size: 13px; margin-right: 12px; vertical-align: middle;">1</span>
-              <span style="font-size: 14px; color: #475569; line-height: 1.5; vertical-align: middle;">Clique nos botões correspondentes para abrir as pastas no Google Drive.</span>
-            </div>
-            <div style="margin-bottom: 16px;">
-              <span style="background-color: #0284c7; color: #ffffff; width: 24px; height: 24px; border-radius: 50%; display: inline-block; text-align: center; line-height: 24px; font-weight: bold; font-size: 13px; margin-right: 12px; vertical-align: middle;">2</span>
-              <span style="font-size: 14px; color: #475569; line-height: 1.5; vertical-align: middle;">Assista aos vídeos explicativos e siga o tutorial passo a passo para a instalação.</span>
-            </div>
-            <div style="margin-bottom: 16px;">
-              <span style="background-color: #0284c7; color: #ffffff; width: 24px; height: 24px; border-radius: 50%; display: inline-block; text-align: center; line-height: 24px; font-weight: bold; font-size: 13px; margin-right: 12px; vertical-align: middle;">3</span>
-              <span style="font-size: 14px; color: #475569; line-height: 1.5; vertical-align: middle;">Pronto! Siga as instruções recebidas para acessar os produtos adquiridos.</span>
-            </div>
-          </div>
+          <!-- Brand -->
+          <tr>
+            <td class="px" style="padding: 0 8px 18px 8px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                <td valign="middle">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+                    <td valign="middle"><img src="https://c2tech.shop/images/logo.png" width="36" height="36" alt="C2Tech" style="display: block; border-radius: 9px; border: 0;"></td>
+                    <td valign="middle" style="padding-left: 10px;">
+                      <p style="${font} margin: 0; font-size: 17px; font-weight: 800; color: #0f172a; line-height: 1.1;">C2Tech</p>
+                      <p style="${font} margin: 0; font-size: 11px; color: #64748b;">Licenças Digitais</p>
+                    </td>
+                  </tr></table>
+                </td>
+                <td align="right" valign="middle" style="${font} font-size: 12px; color: #64748b;">${orderDate}</td>
+              </tr></table>
+            </td>
+          </tr>
 
-          <p style="margin-top: 32px; font-size: 13px; color: #64748b; line-height: 1.6;">Precisando de ajuda durante a instalação? Nosso suporte técnico via WhatsApp está à disposição para auxiliá-lo a qualquer momento. Basta entrar em contato.</p>
-        </div>
-        <div style="background-color: #f1f5f9; padding: 24px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0;">
-          <p style="margin: 0 0 8px 0;">&copy; ${new Date().getFullYear()} C2Tech. Todos os direitos reservados.</p>
-          <p style="margin: 0;">Ambiente seguro criptografado.</p>
-        </div>
-      </div>
-    </body>
-    </html>
-  `;
+          <!-- Card -->
+          <tr>
+            <td style="background-color: #ffffff; border-radius: 18px; border: 1px solid #e2e8f0; overflow: hidden;">
+
+              <!-- Hero -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td class="px" bgcolor="#0052cc" style="background-color: #0052cc; background-image: linear-gradient(135deg, #1f7bff 0%, #0047b3 100%); border-radius: 18px 18px 0 0; padding: 34px 36px 30px 36px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+                      <td style="${font} background-color: rgba(255,255,255,0.16); border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 700; color: #ffffff;">&#10003;&nbsp; Pagamento confirmado</td>
+                    </tr></table>
+                    <h1 class="hero-title" style="${font} margin: 16px 0 8px 0; font-size: 26px; line-height: 1.25; font-weight: 800; color: #ffffff;">Olá, ${firstName}! Seu pedido está pronto.</h1>
+                    <p style="${font} margin: 0; font-size: 15px; line-height: 1.6; color: #dbe7ff;">${emailIntroText}</p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Downloads -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td class="px" style="padding: 30px 36px 6px 36px;">
+                    ${sectionTitle(hasSubscription && !hasFileDownload ? 'Seu acesso' : 'Seus downloads')}
+                    ${downloadButtonsSection}
+                    ${extractionPasswordSection}
+                  </td>
+                </tr>
+
+                <!-- Steps -->
+                <tr>
+                  <td class="px" style="padding: 26px 36px 4px 36px;">
+                    ${sectionTitle('Como instalar em 3 passos')}
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${stepsRows}</table>
+                  </td>
+                </tr>
+
+                <!-- Order summary -->
+                <tr>
+                  <td class="px" style="padding: 8px 36px 6px 36px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; border-radius: 12px;">
+                      <tr><td style="padding: 18px 20px 14px 20px;">
+                        ${sectionTitle('Resumo do pedido')}
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                          ${productsTableRows}
+                          <tr>
+                            <td style="${font} padding: 14px 0 4px 0; font-size: 15px; font-weight: 800; color: #0f172a;">Total pago</td>
+                            <td align="right" style="${font} padding: 14px 0 4px 0; font-size: 18px; font-weight: 800; color: #0052cc; white-space: nowrap;">${formattedTotalPrice}</td>
+                          </tr>
+                          <tr>
+                            <td style="${font} padding: 6px 0 0 0; font-size: 12px; color: #64748b;">Pagamento</td>
+                            <td align="right" style="${font} padding: 6px 0 0 0; font-size: 12px; color: #334155;">${paymentMethodLabel}</td>
+                          </tr>
+                          <tr>
+                            <td style="${font} padding: 4px 0 0 0; font-size: 12px; color: #64748b;">Pedido</td>
+                            <td align="right" style="padding: 4px 0 0 0; font-family: Consolas, 'Courier New', monospace; font-size: 12px; color: #334155;">${esc(orderId)}</td>
+                          </tr>
+                        </table>
+                      </td></tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Support -->
+                <tr>
+                  <td class="px" style="padding: 22px 36px 34px 36px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border: 1px solid #e2e8f0; border-radius: 12px;">
+                      <tr>
+                        <td style="padding: 18px 20px;">
+                          <p style="${font} margin: 0 0 4px 0; font-size: 15px; font-weight: 700; color: #0f172a;">Precisa de ajuda na instalação?</p>
+                          <p style="${font} margin: 0 0 14px 0; font-size: 13px; color: #475569; line-height: 1.55;">Você tem 30 dias de suporte técnico pelo WhatsApp, de segunda a domingo, das 09:00 às 20:00.</p>
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#16a34a" style="border-radius: 10px;">
+                            <a href="${supportUrl}" target="_blank" style="${font} display: inline-block; padding: 11px 20px; font-size: 13px; font-weight: 700; color: #ffffff; text-decoration: none; border-radius: 10px;">Falar com o suporte</a>
+                          </td></tr></table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td align="center" class="px" style="padding: 22px 16px 0 16px;">
+              <p style="${font} margin: 0 0 6px 0; font-size: 12px; color: #64748b;">Você recebeu este e-mail porque fez uma compra na <a href="https://c2tech.shop" target="_blank" style="color: #0052cc; text-decoration: none; font-weight: 600;">C2Tech</a>.</p>
+              <p style="${font} margin: 0; font-size: 12px; color: #94a3b8;">&copy; ${new Date().getFullYear()} C2Tech &middot; Licenças Digitais</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
 
   // Determine email subject name
   const subjectLabel = checkoutProducts.length === 1 ? checkoutProducts[0].name : `${checkoutProducts.length} Softwares`;
