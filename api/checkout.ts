@@ -115,7 +115,7 @@ export default async function handler(req: any, res: any) {
     finalTotal = subtotal - discountAmount;
   }
 
-  const pixPrice = isSubPayment ? finalTotal : (finalTotal * 0.98);
+  const pixPrice = isSubPayment ? finalTotal : Math.round(finalTotal * 0.95 * 100) / 100; // mesmo arredondamento da página de checkout
   const pixPriceStr = pixPrice.toFixed(2);
 
   if (paymentMethod === 'infinitepay') {

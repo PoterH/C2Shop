@@ -93,7 +93,7 @@ export default async function handler(req: any, res: any) {
       if (p.isSubscription && !itemOverridePrice) {
         finalPrice = subOption === 'recurrent' ? (p.recurrencePrice || p.price) : p.price;
       } else if (!p.isSubscription) {
-        finalPrice = finalPrice * 0.98; // Aplica desconto do Pix (2%) para exibir o valor correto do recibo
+        finalPrice = finalPrice * 0.95; // Aplica desconto do Pix (5%) para exibir o valor correto do recibo
       }
       return {
         slug: p.customSlug || p.slug,

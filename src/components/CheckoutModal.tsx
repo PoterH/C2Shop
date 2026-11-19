@@ -333,7 +333,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
         ? activeProduct.selectedLicenseOption.price
         : (activeProduct?.isSubscription
             ? (subOption === 'recurrent' ? (activeProduct.recurrencePrice || activeProduct.price) : activeProduct.price)
-            : total * 0.98);
+            : total * 0.95);
       trackEvent('AddPaymentInfo', {
         content_ids: cartItems.map(item => item.slug),
         content_type: 'product',
@@ -367,7 +367,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
             ? activeProduct.selectedLicenseOption.price
             : (activeProduct?.isSubscription
                 ? (subOption === 'recurrent' ? (activeProduct.recurrencePrice || activeProduct.price) : activeProduct.price)
-                : total * 0.98);
+                : total * 0.95);
 
           // Track Purchase on Browser Pixel (deduplicated with Server CAPI via eventID = txid)
           trackEvent('Purchase', {
@@ -514,7 +514,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
     if (isDirectProductCheckout && product?.isSubscription) {
       return checkoutTotal; // Subscriptions have set net prices
     }
-    return checkoutTotal * 0.98;
+    return checkoutTotal * 0.95;
   };
   const pixDiscountPrice = getPixPrice();
   const formattedPixPrice = pixDiscountPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -829,9 +829,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
 
                        <span className="text-xs font-bold text-slate-800">Pix</span>
 
-                       {/* 2% OFF Badge */}
+                       {/* 5% OFF Badge */}
                        <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 bg-feedback-success text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm z-10 whitespace-nowrap">
-                         2% OFF
+                         5% OFF
                        </div>
                      </button>
 
@@ -883,7 +883,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, isOpen, o
                       <p>
                         {localize(activeProduct?.isSubscription
                           ? `A ativação do seu plano ${activeProduct.name} será realizada imediatamente após a confirmação do pagamento Pix.`
-                          : 'Ganhe 2% de desconto exclusivo pagando via Pix! O pagamento é aprovado imediatamente e o acesso será enviado ao seu e-mail em segundos.')}
+                          : 'Ganhe 5% de desconto exclusivo pagando via Pix! O pagamento é aprovado imediatamente e o acesso será enviado ao seu e-mail em segundos.')}
                       </p>
                     </div>
 
