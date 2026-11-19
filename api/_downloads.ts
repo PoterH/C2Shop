@@ -56,6 +56,7 @@ export const DOWNLOAD_LINKS: Record<string, string> = {
   'altoqi-visus-2026': 'https://drive.google.com/drive/folders/1iB-8pJlcggopLS6QUQvee9Ef_SKgrvM2?usp=drive_link',
   'cypecad-2027': 'https://drive.google.com/drive/folders/1wp0tXGCwPnHHyX2n9oGhvsenjqJwwfgN?usp=drive_link',
   'archicad-28-bra': 'https://drive.google.com/drive/folders/1CPZBdp7KedWZ4o1shFUuPp0_Kx4SoebD?usp=drive_link',
+  'archicad-28-bra-macos': 'https://drive.google.com/drive/folders/1iSHpnN8HyBs6Zi1xWZO2joJCY3aUHhM1?usp=sharing',
   'archicad-28': 'https://drive.google.com/drive/folders/1CPZBdp7KedWZ4o1shFUuPp0_Kx4SoebD?usp=drive_link',
   'archicad-29-bra': 'https://drive.google.com/open?id=1TnHlZ7orSkt2yYlIEiJ9aKdJEPA2TKhY',
   'archicad-30-bra': 'https://drive.google.com/drive/folders/18WRYXfZVXSuOD8W0LGYLWS69wVa5dPMT?usp=sharing',

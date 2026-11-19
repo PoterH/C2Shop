@@ -45,7 +45,7 @@ export interface LicenseOption {
   label: string;
   price: number;
   originalPrice?: number;
-  checkoutUrl: string;
+  checkoutUrl?: string;
   internationalCheckoutUrl?: string;
   platform?: 'Windows' | 'macOS';
   year?: string;
@@ -713,10 +713,10 @@ export const products: Product[] = [
     slug: 'archicad-30-bra',
     name: 'Graphisoft ArchiCAD BRA',
     category: 'Engenharia e Arquitetura',
-    compatibility: 'Windows',
+    compatibility: 'Windows e macOS',
     version: '28, 29 e 30 (Português Brasil)',
     description: 'Software de autoria BIM líder mundial para arquitetura, documentação 2D/3D e modelagem construtiva.',
-    longDescription: 'O Graphisoft ArchiCAD BRA é a referência máxima em modelagem arquitetônica e engenharia BIM. Desenvolvido por e para arquitetos, entrega modelagem precisa de volumes, automação de pranchas e cortes a partir do modelo 3D, além de coordenação Open BIM completa. Disponível nas edições completas e vitalícias 28, 29 e 30 em Português do Brasil.',
+    longDescription: 'O Graphisoft ArchiCAD BRA é a referência máxima em modelagem arquitetônica e engenharia BIM. Desenvolvido por e para arquitetos, entrega modelagem precisa de volumes, automação de pranchas e cortes a partir do modelo 3D, além de coordenação Open BIM completa. Disponível nas edições completas e vitalícias 28, 29 e 30 para Windows e na edição 28 para macOS, em Português do Brasil.',
     price: 127.90,
     originalPrice: 209.00,
     checkoutUrl: 'https://pay.cakto.com.br/e6wi689',
@@ -756,18 +756,29 @@ export const products: Product[] = [
         checkoutUrl: 'https://pay.cakto.com.br/khwk5iz',
         downloadSlug: 'archicad-30-bra',
         imageUrl: "/images/products/archicad_30-card-39-20261111.webp"
+      },
+      {
+        quantity: 282,
+        label: 'macOS - 28 BRA',
+        platform: 'macOS',
+        year: '28',
+        price: 167.90,
+        originalPrice: 269.90,
+        checkoutUrl: 'https://pay.cakto.com.br/3anvnfj',
+        downloadSlug: 'archicad-28-bra-macos',
+        imageUrl: "/images/products/archicad-28-bra-macos.webp"
       }
     ],
     features: [
       'Versões completas e funcionais em Português Brasil (BRA)',
-      'Edições 28, 29 e 30 para Windows 10 e 11 (64-bits)',
+      'Edições 28, 29 e 30 para Windows 10 e 11 (64-bits) e edição 28 para macOS',
       'Acesso vitalício sem mensalidades ou anuidades',
       'Instalação assistida e tutorial passo a passo em vídeo inclusos',
       'Entrega imediata por e-mail após a confirmação do pagamento',
       'Suporte técnico dedicado via WhatsApp com garantia de 30 dias'
     ],
     requirements: {
-      os: 'Windows 10 ou 11 (64-bits)',
+      os: 'Windows 10 ou 11 (64-bits) / macOS 13 Ventura ou superior (Apple Silicon e Intel)',
       cpu: 'Intel Core i5 ou AMD Ryzen equivalente (Recomendado i7/Ryzen 7)',
       ram: '8 GB (Recomendável: 16 GB ou mais)',
       gpu: 'Placa com 2 GB VRAM dedicada com suporte a OpenGL 4.5 (Recomendado 4 GB+)',

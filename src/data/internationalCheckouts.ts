@@ -78,6 +78,7 @@ export const INTERNATIONAL_OPTION_CHECKOUTS: Record<string, string> = {
   archicad_30_281: 'https://pay.cakto.com.br/mgm7azd',
   archicad_30_291: 'https://pay.cakto.com.br/oidqniy',
   archicad_30_301: 'https://pay.cakto.com.br/bqytmz2',
+  archicad_30_282: 'https://pay.cakto.com.br/3anvnfj',
 
   // CorelDRAW Graphics Suite
   coreldraw_2026_20141: 'https://pay.cakto.com.br/pbr3xer',
@@ -166,6 +167,7 @@ export const INTERNATIONAL_SLUG_CHECKOUTS: Record<string, string> = {
   'archicad-28-bra': 'https://pay.cakto.com.br/mgm7azd',
   'archicad-29-bra': 'https://pay.cakto.com.br/oidqniy',
   'archicad-30-bra': 'https://pay.cakto.com.br/bqytmz2',
+  'archicad-28-bra-macos': 'https://pay.cakto.com.br/3anvnfj',
 
   'coreldraw-x7-windows': 'https://pay.cakto.com.br/pbr3xer',
   'coreldraw-2022-windows': 'https://pay.cakto.com.br/37sbqb4',
@@ -263,6 +265,8 @@ export function getEffectiveCheckoutUrl(
     }
   }
 
-  // Fallback to standard checkout URL
-  return option?.checkoutUrl || product.checkoutUrl;
+  // Fallback to standard checkout URL. A chosen edition without its own link never borrows
+  // the product's default link (that would charge for a different edition).
+  if (option) return option.checkoutUrl || '';
+  return product.checkoutUrl;
 }

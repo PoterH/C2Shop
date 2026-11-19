@@ -924,7 +924,7 @@
   "Ativação permanente para uso ilimitado sem mensalidades": "Activación permanente para uso ilimitado, sin mensualidades",
   "Entrega digital imediata via e-mail e WhatsApp": "Entrega digital inmediata por correo y WhatsApp",
   "Versões completas e funcionais em Português Brasil (BRA)": "Ediciones completas y funcionales en portugués de Brasil (BRA)",
-  "Edições 28, 29 e 30 para Windows 10 e 11 (64-bits)": "Ediciones 28, 29 y 30 para Windows 10 y 11 (64 bits)",
+  "Edições 28, 29 e 30 para Windows 10 e 11 (64-bits) e edição 28 para macOS": "Ediciones 28, 29 y 30 para Windows 10 y 11 (64 bits) y edición 28 para macOS",
   "Acesso vitalício sem mensalidades ou anuidades": "Acceso de por vida sin mensualidades ni cuotas anuales",
   "Instalação assistida e tutorial passo a passo em vídeo inclusos": "Instalación asistida y video tutorial paso a paso incluidos",
   "Entrega imediata por e-mail após a confirmação do pagamento": "Entrega inmediata por correo tras confirmar el pago",
@@ -1605,7 +1605,7 @@
   "Licença original": "Licencia original",
   "Licença vitalícia, sem mensalidade": "Licencia vitalicia, sin mensualidad",
   "ASSINATURA": "SUSCRIPCIÓN",
-  "O Graphisoft ArchiCAD BRA é a referência máxima em modelagem arquitetônica e engenharia BIM. Desenvolvido por e para arquitetos, entrega modelagem precisa de volumes, automação de pranchas e cortes a partir do modelo 3D, além de coordenação Open BIM completa. Disponível nas edições completas e vitalícias 28, 29 e 30 em Português do Brasil.": "Graphisoft ArchiCAD BRA ofrece modelado arquitectónico e ingeniería BIM, con volúmenes precisos, planos y secciones automáticos desde el modelo 3D y coordinación Open BIM. Disponible en ediciones vitalicias completas 28, 29 y 30 en portugués de Brasil.",
+  "O Graphisoft ArchiCAD BRA é a referência máxima em modelagem arquitetônica e engenharia BIM. Desenvolvido por e para arquitetos, entrega modelagem precisa de volumes, automação de pranchas e cortes a partir do modelo 3D, além de coordenação Open BIM completa. Disponível nas edições completas e vitalícias 28, 29 e 30 para Windows e na edição 28 para macOS, em Português do Brasil.": "Graphisoft ArchiCAD BRA ofrece modelado arquitectónico e ingeniería BIM, con volúmenes precisos, planos y secciones automáticos desde el modelo 3D y coordinación Open BIM. Disponible en ediciones vitalicias completas 28, 29 y 30 para Windows y en la edición 28 para macOS, en portugués de Brasil.",
   "Software de engenharia de avaliações de imóveis por inferência estatística e regressão linear.": "Software de valoración inmobiliaria mediante inferencia estadística y regresión lineal.",
   "O SisDEA 2025 é o software líder para engenheiros de avaliações e peritos judiciais realizarem avaliações mercadológicas de imóveis urbanos e rurais de acordo com as normas da ABNT NBR 14653. Esta versão completa e funcional realiza tratamentos estatísticos avançados e regressões lineares múltiplas.": "SisDEA 2025 ayuda a ingenieros y peritos a valorar inmuebles urbanos y rurales según ABNT NBR 14653. Incluye procesamiento estadístico avanzado y regresión lineal múltiple.",
   "Pacote de produtividade com Word, Excel, PowerPoint e Outlook para Windows e Mac (Access na edição para Windows).": "Suite de productividad con Word, Excel, PowerPoint y Outlook para Windows y Mac (Access en la edición para Windows).",
@@ -1707,5 +1707,6 @@
   "Sim. Escolha a plataforma (Windows ou macOS) e o ano da versão no topo da página antes de comprar. Você recebe a edição compatível com o seu sistema.": "Sí. Elige la plataforma (Windows o macOS) y el año de la versión al inicio de la página antes de comprar. Recibes la edición compatible con tu sistema.",
   "A edição para macOS roda nativamente em Macs com **Apple Silicon M1, M2, M3, M4 e M5**.": "La edición para macOS funciona de forma nativa en Macs con **Apple Silicon M1, M2, M3, M4 y M5**.",
   "**Modelos compatíveis:** MacBook Air, MacBook Pro, MacBook Neo, iMac, Mac mini e Mac Studio.": "**Modelos compatibles:** MacBook Air, MacBook Pro, MacBook Neo, iMac, Mac mini y Mac Studio.",
-  "**Macs com M6:** suporte em breve.": "**Macs con M6:** soporte próximamente."
+  "**Macs com M6:** suporte em breve.": "**Macs con M6:** soporte próximamente.",
+  "Windows 10 ou 11 (64-bits) / macOS 13 Ventura ou superior (Apple Silicon e Intel)": "Windows 10 u 11 (64 bits) / macOS 13 Ventura o superior (Apple Silicon e Intel)"
 }

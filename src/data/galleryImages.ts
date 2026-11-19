@@ -46,6 +46,7 @@ const galleryImages: Record<string, string> = {
 "/images/products/archicad_30-card-37-20261111.webp": "/images/product-gallery/archicad_30-card-37-20261111.webp",
 "/images/products/archicad_30-card-38-20261111.webp": "/images/product-gallery/archicad_30-card-38-20261111.webp",
 "/images/products/archicad_30-card-39-20261111.webp": "/images/product-gallery/archicad_30-card-39-20261111.webp",
+"/images/products/archicad-28-bra-macos.webp": "/images/product-gallery/archicad-28-bra-macos.webp",
 "/images/products/eberick_builder_2025-card-40-20261111.webp": "/images/product-gallery/eberick_builder_2025-card-40-20261111.webp",
 "/images/products/eberick_builder_2025-card-41-20261111.webp": "/images/product-gallery/eberick_builder_2025-card-41-20261111.webp",
 "/images/products/eberick_builder_2025-card-42-20261111.webp": "/images/product-gallery/eberick_builder_2025-card-42-20261111.webp",
