@@ -7,6 +7,8 @@ import { AnimatedPrice } from '../components/AnimatedPrice';
 import { JellyRadio } from '../components/JellyRadio';
 import { LearnMoreChevron } from '../components/LearnMoreChevron';
 import { galleryImageSource } from '../data/galleryImages';
+import { getTutorialVideoId } from '../data/tutorialVideos';
+import { YouTubeTutorial } from '../components/YouTubeTutorial';
 import { StoreReviews } from '../components/StoreReviews';
 import { ReviewComment } from '../components/ReviewComment';
 import { useText } from '../hooks/useText';
@@ -34,6 +36,7 @@ import {
   Mail,
   CloudDownload,
   PlayCircle,
+  Play,
   Award,
   Edit3,
   MessageSquare,
@@ -534,6 +537,8 @@ const ProductDetailContent: React.FC = () => {
   ];
 
   const activeThumb = thumbnails[activeThumbIndex] || thumbnails[0];
+  const tutorialVideoId = getTutorialVideoId(product.id, selectedPlatform);
+  const tutorialTitle = `Tutorial de instalação ${product.name}${hasPlatformYearMatrix ? ` (${selectedPlatform})` : ''}`;
 
   return (
     <div className="pt-28 pb-20 bg-white min-h-screen text-left font-sans">
@@ -619,6 +624,10 @@ const ProductDetailContent: React.FC = () => {
                     </div>
                   )}
                 </div>
+              ) : activeThumb?.type === 'video' && tutorialVideoId ? (
+                <div className="w-full max-w-[560px] my-auto">
+                  <YouTubeTutorial videoId={tutorialVideoId} title={tutorialTitle} className="shadow-xl" />
+                </div>
               ) : activeThumb?.type === 'video' ? (
                 <div className="w-full max-w-[340px] bg-slate-900 text-white rounded-2xl p-6 shadow-xl space-y-4 text-center my-auto">
                   <div className="w-14 h-14 rounded-2xl bg-action-primary/20 border border-blue-500/30 text-blue-400 flex items-center justify-center mx-auto">
@@ -697,6 +706,21 @@ const ProductDetailContent: React.FC = () => {
                       alt={thumb.label}
                       className="w-full h-11 object-contain"
                     />
+                  ) : thumb.type === 'video' && tutorialVideoId ? (
+                    <div className="relative w-full h-11 rounded overflow-hidden bg-slate-900">
+                      <img
+                        src={`https://i.ytimg.com/vi/${tutorialVideoId}/mqdefault.jpg`}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover"
+                      />
+                      <span className="absolute inset-0 flex items-center justify-center">
+                        <span className="flex h-5 w-7 items-center justify-center rounded-md bg-red-600 text-white">
+                          <Play className="h-3 w-3 fill-current" />
+                        </span>
+                      </span>
+                    </div>
                   ) : (
                     <div className="w-full h-11 rounded bg-slate-50 text-slate-700 flex items-center justify-center text-xs font-black">
                       {thumb.type === 'video' ? (
@@ -1120,6 +1144,22 @@ const ProductDetailContent: React.FC = () => {
           {(
             <div id="product-info-description" className={`${mobileInfoOpen === 'description' ? 'block py-5' : 'hidden'} ${activeTab === 'description' ? 'sm:block' : 'sm:hidden'} sm:py-0`}>
               <ProductDescription product={product} />
+              {tutorialVideoId && (
+                <section className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-6" aria-labelledby="product-tutorial-heading">
+                  <div className="flex items-center gap-2 mb-1">
+                    <PlayCircle className="w-5 h-5 text-red-600 shrink-0" />
+                    <h3 id="product-tutorial-heading" className="font-display font-bold text-lg text-slate-900">
+                      {localize('Vídeo tutorial de instalação')}
+                    </h3>
+                  </div>
+                  <p className="text-sm text-slate-600 mb-4">
+                    {localize(hasPlatformYearMatrix
+                      ? `Veja passo a passo como instalar e ativar o ${product.name} no ${selectedPlatform}.`
+                      : `Veja passo a passo como instalar e ativar o ${product.name}.`)}
+                  </p>
+                  <YouTubeTutorial videoId={tutorialVideoId} title={tutorialTitle} />
+                </section>
+              )}
             </div>
           )}
 
