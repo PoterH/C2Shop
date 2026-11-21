@@ -1391,9 +1391,11 @@ const ProductDetailContent: React.FC = () => {
                       >
                         {rel.imageUrl ? (
                           <img
-                            src={rel.imageUrl}
+                            src={galleryImageSource(rel.imageUrl)}
                             alt={rel.name}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                            decoding="async"
+                            className="w-full h-full p-2 object-contain hover:scale-[1.03] transition-transform duration-300"
                           />
                         ) : (
                           <div className="w-24 h-32 bg-slate-900 text-white rounded-lg p-2.5 flex flex-col justify-between text-left">
