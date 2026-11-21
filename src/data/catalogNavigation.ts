@@ -8,7 +8,15 @@ export const CATALOG_SECTIONS = [
         "title": "Microsoft Office & Windows",
         "slugs": [
           "office-2024-professional-plus",
-          "office-2024-professional-plus",
+          "office-2024-professional-mac",
+          "office-2021-professional-plus-windows",
+          "office-2021-professional-plus-mac",
+          "office-2019-professional-plus-windows",
+          "office-2019-professional-plus-mac",
+          "office-2016-professional-plus",
+          "project-pro-2024-ltsc",
+          "combo-acrobat-pro-2026-office-2024",
+          "combo-windows-11-pro-office-2024",
           "windows-11-pro",
           "windows-10-pro"
         ]
@@ -16,6 +24,7 @@ export const CATALOG_SECTIONS = [
       {
         "title": "PDF, Virtualização & Dados",
         "slugs": [
+          "combo-acrobat-pro-2026-office-2024",
           "adobe-acrobat-pro-dc-2026",
           "parallels-desktop-27",
           "pdfelement-12",
@@ -33,7 +42,9 @@ export const CATALOG_SECTIONS = [
           "coreldraw-graphics-suite-2026",
           "adobe-photoshop-2026",
           "adobe-illustrator-2026",
-          "adobe-lightroom-classic-2026"
+          "adobe-lightroom-classic-2026",
+          "combo-photography-2026-windows",
+          "combo-photography-2026-macos"
         ]
       },
       {

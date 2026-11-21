@@ -163,8 +163,14 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
         title: 'Microsoft Office & Windows',
         seeAllLink: catalogLink('Microsoft Office & Windows'),
         items: [
-          { name: 'Office 2024 Professional Plus (Win)', slug: 'office-2024-professional-plus' },
-          { name: 'Office 2024 LTSC Professional (Mac)', slug: 'office-2024-professional-mac' },
+          { name: 'Office 2024 LTSC (Windows)', slug: 'office-2024-professional-plus' },
+          { name: 'Office 2024 LTSC (Mac)', slug: 'office-2024-professional-mac' },
+          { name: 'Office 2021 (Windows)', slug: 'office-2021-professional-plus-windows' },
+          { name: 'Office 2021 (Mac)', slug: 'office-2021-professional-plus-mac' },
+          { name: 'Office 2019 (Windows)', slug: 'office-2019-professional-plus-windows' },
+          { name: 'Office 2019 (Mac)', slug: 'office-2019-professional-plus-mac' },
+          { name: 'Office 2016 (Windows)', slug: 'office-2016-professional-plus' },
+          { name: 'Project Pro 2024 LTSC', slug: 'project-pro-2024-ltsc' },
           { name: 'Windows 11 Pro (Chave Original)', slug: 'windows-11-pro' },
           { name: 'Windows 10 Pro (Chave Original)', slug: 'windows-10-pro' },
         ],
@@ -173,6 +179,8 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
         title: 'PDF, Virtualização & Dados',
         seeAllLink: catalogLink('PDF, Virtualização & Dados'),
         items: [
+          { name: 'Combo Acrobat 2026 + Office 2024', slug: 'combo-acrobat-pro-2026-office-2024' },
+          { name: 'Combo Windows 11 Pro + Office 2024', slug: 'combo-windows-11-pro-office-2024' },
           { name: 'Adobe Acrobat Pro DC 2026', slug: 'adobe-acrobat-pro-dc-2026' },
           { name: 'Parallels Desktop 27 (macOS)', slug: 'parallels-desktop-27' },
           { name: 'Wondershare PDFelement 12', slug: 'pdfelement-12' },
@@ -180,7 +188,7 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
         ],
       },
     ],
-    featuredSlugs: ['office-2024-professional-plus', 'windows-11-pro', 'parallels-desktop-27'],
+    featuredSlugs: ['office-2024-professional-plus', 'combo-acrobat-pro-2026-office-2024', 'windows-11-pro'],
   },
   {
     id: 'multimidia-design',
@@ -196,6 +204,8 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
           { name: 'Adobe Photoshop 2026', slug: 'adobe-photoshop-2026' },
           { name: 'Adobe Illustrator 2026', slug: 'adobe-illustrator-2026' },
           { name: 'Adobe Lightroom Classic 2026', slug: 'adobe-lightroom-classic-2026' },
+          { name: 'Combo Photography 2026 (Windows)', slug: 'combo-photography-2026-windows' },
+          { name: 'Combo Photography 2026 (Mac)', slug: 'combo-photography-2026-macos' },
         ],
       },
       {

@@ -1,7 +1,9 @@
 import type { Product } from '../data/products';
 import { getEffectiveCheckoutUrl, getInternationalCheckoutUrl } from '../data/internationalCheckouts.js';
+import { orderBumpPrice, ORDER_BUMP_DISCOUNT_PERCENT } from '../data/orderBumps';
 export const cartItemKey = (item: Product) => `${item.id}:${item.selectedLicenseOption?.quantity ?? 'base'}:${item.selectedSubOption ?? 'avulso'}`;
-export const itemUnitPrice = (item: Product) => item.selectedLicenseOption?.price ?? (item.isSubscription && item.selectedSubOption !== 'avulso' ? item.recurrencePrice ?? item.price : item.price);
+const basePrice = (item: Product) => item.selectedLicenseOption?.price ?? (item.isSubscription && item.selectedSubOption !== 'avulso' ? item.recurrencePrice ?? item.price : item.price);
+export const itemUnitPrice = (item: Product) => item.orderBump ? orderBumpPrice(basePrice(item)) : basePrice(item);
 export const itemCount = (item: Product) => Math.min(99, Math.max(1, Math.trunc(item.deviceCount || 1)));
 export const itemTotal = (item: Product) => Math.round(itemUnitPrice(item) * itemCount(item) * 100) / 100;
 export const itemVersion = (item: Product) => {
@@ -18,6 +20,6 @@ export const paymentUrl = (item: Product, international: boolean) => {
   return /^https:\/\/pay\.cakto\.com\.br\//.test(url || '') ? url : undefined;
 };
 export const whatsappOrderUrl = (items: Product[], method: string) => {
-  const details = items.map(item => `• ${item.name} — ${item.selectedLicenseOption?.label || item.version} — ${item.selectedLicenseOption?.platform || item.compatibility} — quantidade: ${itemCount(item)}`).join('\n');
+  const details = items.map(item => `• ${item.name} — ${item.selectedLicenseOption?.label || item.version} — ${item.selectedLicenseOption?.platform || item.compatibility} — quantidade: ${itemCount(item)}${item.orderBump ? ` — oferta do checkout (${ORDER_BUMP_DISCOUNT_PERCENT}% off)` : ''}`).join('\n');
   return `https://wa.me/5581997349300?text=${encodeURIComponent(`Olá! Quero finalizar meu pedido via ${method}:\n${details}${new Set(items.map(item => item.id)).size >= 2 ? '\nQuero aproveitar os 10% de desconto para 2 softwares ou mais.' : ''}`)}`;
 };

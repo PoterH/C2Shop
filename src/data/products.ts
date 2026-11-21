@@ -30,6 +30,10 @@ export interface Product {
   licenseOptions?: LicenseOption[];
   selectedLicenseOption?: LicenseOption;
   deviceCount?: number;
+  /** Combo: download slugs of the products it contains; the delivery e-mail sends one link for each. */
+  bundle?: string[];
+  /** Added from the checkout order bump: priced with its discount (see data/orderBumps.ts). */
+  orderBump?: boolean;
   reviews?: any[];
   keywords?: string[];
   isRecommended?: boolean;
@@ -1078,58 +1082,360 @@ export const products: Product[] = [
   },
   {
     id: 'office_25_win',
-    keywords: ['microsoft', 'office', 'windows', 'design', 'video', 'word', 'excel', 'powerpoint', 'mac'],
+    keywords: ['microsoft', 'office', 'windows', 'word', 'excel', 'powerpoint', 'outlook', 'access', '2024', 'ltsc'],
     slug: 'office-2024-professional-plus',
-    name: 'Microsoft Office 2024 Professional',
+    name: 'Microsoft Office 2024 Professional Plus LTSC (Windows)',
     category: 'Escritório e Produtividade',
-    compatibility: 'Windows e macOS',
-    version: '2024 Professional (Windows e macOS)',
-    description: 'Pacote de produtividade com Word, Excel, PowerPoint e Outlook para Windows e Mac (Access na edição para Windows).',
-    longDescription: 'O Office 2024 Professional é o conjunto clássico de aplicativos de escritório locais da Microsoft. Contém as aplicações em suas versões completas instaladas diretamente na máquina, com compatibilidade nativa tanto para Windows quanto para macOS (processadores Apple Silicon M1/M2/M3/M4/M5 e Intel), eliminando a dependência de assinaturas de nuvem.',
-    price: 127.90,
+    compatibility: 'Windows',
+    version: '2024 Professional Plus LTSC',
+    description: 'Word, Excel, PowerPoint, Outlook e Access 2024 instalados no seu PC com Windows. Licença vitalícia, sem assinatura.',
+    longDescription: 'O Office 2024 Professional Plus LTSC é a edição mais recente do pacote clássico da Microsoft para Windows. Os aplicativos ficam instalados no computador e funcionam sem assinatura mensal: Word, Excel, PowerPoint, Outlook, Access, OneNote e Publisher.',
+    price: 129.50,
     originalPrice: 199.90,
-    checkoutUrl: 'https://pay.cakto.com.br/g2h5czk_443849',
-    imageUrl: "/images/products/office-card-2-20261111.webp",
+    checkoutUrl: '',
+    imageUrl: '/images/products/office-2024-ltsc-windows.webp',
     notes: 'Nota: A licença é local e não inclui espaço de armazenamento em nuvem no OneDrive.',
-    licenseOptions: [
-      {
-        quantity: 1,
-        label: 'Windows',
-        platform: 'Windows',
-        year: 'Windows',
-        price: 127.90,
-        originalPrice: 199.90,
-        checkoutUrl: 'https://pay.cakto.com.br/g2h5czk_443849',
-        downloadSlug: 'office-2024-professional-plus',
-        imageUrl: "/images/products/office-card-3-20261111.webp"
-      },
-      {
-        quantity: 2,
-        label: 'macOS',
-        platform: 'macOS',
-        year: 'macOS',
-        price: 187.90,
-        originalPrice: 289.90,
-        checkoutUrl: 'https://pay.cakto.com.br/363brvw',
-        downloadSlug: 'office-2024-professional-mac',
-        imageUrl: "/images/products/office-card-4-20261111.webp"
-      }
-    ],
     features: [
-      'Versão completa e funcional (Word, Excel, PowerPoint, Outlook)',
-      'Edições dedicadas para Windows e macOS (Apple Silicon nativo)',
-      'Acesso vitalício para uso ilimitado',
+      'Word, Excel, PowerPoint, Outlook, Access, OneNote e Publisher 2024',
+      'Licença vitalícia, sem mensalidade',
       'Instalação assistida inclusa',
       'Entrega automática no e-mail após o pagamento',
-      'Suporte remoto quando necessário',
-      'Pronto para uso imediato'
+      'Suporte remoto quando necessário'
     ],
     requirements: {
-      os: 'WINDOWS: Windows 10 ou 11 (64-bits) / MAC: macOS Monterey, Ventura, Sonoma ou Sequoia',
-      cpu: 'WINDOWS: Intel ou AMD de 1.6 GHz / MAC: Apple Silicon (M1/M2/M3/M4/M5) ou Intel Core',
-      ram: 'WINDOWS: 4 GB RAM / MAC: 4 GB RAM (Recomendado: 8 GB)',
-      gpu: 'Placa de vídeo compatível com DirectX 9 ou superior',
-      storage: '4 GB a 10 GB de espaço livre em disco'
+      os: 'Windows 10 ou 11 (64-bits)',
+      cpu: 'Intel ou AMD de 1.6 GHz, 2 núcleos',
+      ram: '4 GB RAM (Recomendado: 8 GB)',
+      gpu: 'Placa de vídeo compatível com DirectX 10',
+      storage: '4 GB de espaço livre em disco'
+    }
+  },
+  {
+    id: 'office_2024_mac',
+    keywords: ['microsoft', 'office', 'mac', 'macos', 'apple', 'word', 'excel', 'powerpoint', 'outlook', '2024', 'ltsc'],
+    slug: 'office-2024-professional-mac',
+    name: 'Microsoft Office 2024 Professional Plus LTSC (macOS)',
+    category: 'Escritório e Produtividade',
+    compatibility: 'macOS',
+    version: '2024 Professional Plus LTSC',
+    description: 'Word, Excel, PowerPoint e Outlook 2024 para Mac, nativos em Apple Silicon e Intel. Licença vitalícia, sem assinatura.',
+    longDescription: 'O Office 2024 LTSC para Mac traz Word, Excel, PowerPoint, Outlook e OneNote em versão nativa para Macs com Apple Silicon (M1 a M5) e Intel. Os aplicativos ficam instalados no Mac e funcionam sem assinatura mensal.',
+    price: 145.90,
+    originalPrice: 229.90,
+    checkoutUrl: '',
+    imageUrl: '/images/products/office-2024-ltsc-macos.webp',
+    notes: 'Nota: A licença é local e não inclui espaço de armazenamento em nuvem no OneDrive.',
+    features: [
+      'Word, Excel, PowerPoint, Outlook e OneNote 2024',
+      'Nativo para Apple Silicon (M1 a M5) e Intel',
+      'Licença vitalícia, sem mensalidade',
+      'Instalação assistida inclusa',
+      'Entrega automática no e-mail após o pagamento'
+    ],
+    requirements: {
+      os: 'macOS Monterey 12 ou superior',
+      cpu: 'Apple Silicon (M1 a M5) ou Intel Core',
+      ram: '4 GB RAM (Recomendado: 8 GB)',
+      storage: '10 GB de espaço livre em disco'
+    }
+  },
+  {
+    id: 'office_2021_win',
+    keywords: ['microsoft', 'office', 'windows', 'word', 'excel', 'powerpoint', 'outlook', 'access', '2021'],
+    slug: 'office-2021-professional-plus-windows',
+    name: 'Microsoft Office 2021 Professional Plus (Windows)',
+    category: 'Escritório e Produtividade',
+    compatibility: 'Windows',
+    version: '2021 Professional Plus',
+    description: 'Word, Excel, PowerPoint, Outlook e Access 2021 para Windows. Licença vitalícia, sem assinatura.',
+    longDescription: 'O Office 2021 Professional Plus reúne Word, Excel, PowerPoint, Outlook, Access, OneNote e Publisher para Windows. Uma edição estável e leve, indicada para quem quer o pacote completo instalado no PC sem pagar mensalidade.',
+    price: 120.10,
+    originalPrice: 189.90,
+    checkoutUrl: '',
+    imageUrl: '/images/products/office-2021-windows.webp',
+    notes: 'Nota: A licença é local e não inclui espaço de armazenamento em nuvem no OneDrive.',
+    features: [
+      'Word, Excel, PowerPoint, Outlook, Access, OneNote e Publisher 2021',
+      'Licença vitalícia, sem mensalidade',
+      'Instalação assistida inclusa',
+      'Entrega automática no e-mail após o pagamento'
+    ],
+    requirements: {
+      os: 'Windows 10 ou 11 (64-bits)',
+      cpu: 'Intel ou AMD de 1.1 GHz, 2 núcleos',
+      ram: '4 GB RAM',
+      gpu: 'Placa de vídeo compatível com DirectX 10',
+      storage: '4 GB de espaço livre em disco'
+    }
+  },
+  {
+    id: 'office_2021_mac',
+    keywords: ['microsoft', 'office', 'mac', 'macos', 'apple', 'word', 'excel', 'powerpoint', 'outlook', '2021'],
+    slug: 'office-2021-professional-plus-mac',
+    name: 'Microsoft Office 2021 Professional Plus (macOS)',
+    category: 'Escritório e Produtividade',
+    compatibility: 'macOS',
+    version: '2021 Professional Plus',
+    description: 'Word, Excel, PowerPoint e Outlook 2021 para Mac. Licença vitalícia, sem assinatura.',
+    longDescription: 'O Office 2021 para Mac traz Word, Excel, PowerPoint, Outlook e OneNote instalados no seu Mac, com suporte a Apple Silicon e Intel. Uma licença vitalícia para trabalhar sem mensalidade.',
+    price: 139.50,
+    originalPrice: 219.90,
+    checkoutUrl: '',
+    imageUrl: '/images/products/office-2021-macos.webp',
+    notes: 'Nota: A licença é local e não inclui espaço de armazenamento em nuvem no OneDrive.',
+    features: [
+      'Word, Excel, PowerPoint, Outlook e OneNote 2021',
+      'Compatível com Apple Silicon e Intel',
+      'Licença vitalícia, sem mensalidade',
+      'Instalação assistida inclusa',
+      'Entrega automática no e-mail após o pagamento'
+    ],
+    requirements: {
+      os: 'macOS Big Sur 11 ou superior',
+      cpu: 'Apple Silicon ou Intel Core',
+      ram: '4 GB RAM',
+      storage: '10 GB de espaço livre em disco'
+    }
+  },
+  {
+    id: 'office_2019_win',
+    keywords: ['microsoft', 'office', 'windows', 'word', 'excel', 'powerpoint', 'outlook', 'access', '2019'],
+    slug: 'office-2019-professional-plus-windows',
+    name: 'Microsoft Office 2019 Professional Plus (Windows)',
+    category: 'Escritório e Produtividade',
+    compatibility: 'Windows',
+    version: '2019 Professional Plus',
+    description: 'Word, Excel, PowerPoint, Outlook e Access 2019 para Windows. Licença vitalícia, sem assinatura.',
+    longDescription: 'O Office 2019 Professional Plus traz Word, Excel, PowerPoint, Outlook, Access e Publisher para Windows. Leve e estável, roda bem em computadores mais antigos e atende o dia a dia de escritório sem mensalidade.',
+    price: 112.30,
+    originalPrice: 179.90,
+    checkoutUrl: '',
+    imageUrl: '/images/products/office-2019-windows.webp',
+    notes: 'Nota: A licença é local e não inclui espaço de armazenamento em nuvem no OneDrive.',
+    features: [
+      'Word, Excel, PowerPoint, Outlook, Access e Publisher 2019',
+      'Leve para computadores mais antigos',
+      'Licença vitalícia, sem mensalidade',
+      'Instalação assistida inclusa',
+      'Entrega automática no e-mail após o pagamento'
+    ],
+    requirements: {
+      os: 'Windows 10 ou 11',
+      cpu: 'Intel ou AMD de 1.6 GHz, 2 núcleos',
+      ram: '4 GB RAM (64-bits) ou 2 GB (32-bits)',
+      gpu: 'Placa de vídeo compatível com DirectX 9',
+      storage: '4 GB de espaço livre em disco'
+    }
+  },
+  {
+    id: 'office_2019_mac',
+    keywords: ['microsoft', 'office', 'mac', 'macos', 'apple', 'word', 'excel', 'powerpoint', 'outlook', '2019'],
+    slug: 'office-2019-professional-plus-mac',
+    name: 'Microsoft Office 2019 Professional Plus (macOS)',
+    category: 'Escritório e Produtividade',
+    compatibility: 'macOS',
+    version: '2019 Professional Plus',
+    description: 'Word, Excel, PowerPoint e Outlook 2019 para Mac. Licença vitalícia, sem assinatura.',
+    longDescription: 'O Office 2019 para Mac traz Word, Excel, PowerPoint, Outlook e OneNote instalados no seu Mac. Indicado para Macs que rodam versões anteriores do macOS e precisam do pacote completo sem mensalidade.',
+    price: 129.80,
+    originalPrice: 209.90,
+    checkoutUrl: '',
+    imageUrl: '/images/products/office-2019-macos.webp',
+    notes: 'Nota: A licença é local e não inclui espaço de armazenamento em nuvem no OneDrive.',
+    features: [
+      'Word, Excel, PowerPoint, Outlook e OneNote 2019',
+      'Licença vitalícia, sem mensalidade',
+      'Instalação assistida inclusa',
+      'Entrega automática no e-mail após o pagamento'
+    ],
+    requirements: {
+      os: 'macOS Catalina 10.15 ou superior',
+      cpu: 'Intel Core ou Apple Silicon',
+      ram: '4 GB RAM',
+      storage: '10 GB de espaço livre em disco'
+    }
+  },
+  {
+    id: 'office_2016_win',
+    keywords: ['microsoft', 'office', 'windows', 'word', 'excel', 'powerpoint', 'outlook', 'access', '2016'],
+    slug: 'office-2016-professional-plus',
+    name: 'Microsoft Office 2016 Professional Plus (Windows)',
+    category: 'Escritório e Produtividade',
+    compatibility: 'Windows',
+    version: '2016 Professional Plus',
+    description: 'Word, Excel, PowerPoint, Outlook e Access 2016 para Windows. A opção mais em conta, licença vitalícia.',
+    longDescription: 'O Office 2016 Professional Plus traz Word, Excel, PowerPoint, Outlook, Access e Publisher para Windows. É a edição mais leve do catálogo, ideal para notebooks e PCs antigos, com licença vitalícia e sem mensalidade.',
+    price: 98.90,
+    originalPrice: 159.90,
+    checkoutUrl: '',
+    imageUrl: '/images/products/office-2016-windows.webp',
+    notes: 'Nota: A licença é local e não inclui espaço de armazenamento em nuvem no OneDrive.',
+    features: [
+      'Word, Excel, PowerPoint, Outlook, Access e Publisher 2016',
+      'A edição mais leve, roda em PCs antigos',
+      'Licença vitalícia, sem mensalidade',
+      'Instalação assistida inclusa',
+      'Entrega automática no e-mail após o pagamento'
+    ],
+    requirements: {
+      os: 'Windows 7, 8.1, 10 ou 11',
+      cpu: 'Intel ou AMD de 1 GHz',
+      ram: '2 GB RAM',
+      gpu: 'Placa de vídeo compatível com DirectX 10',
+      storage: '3 GB de espaço livre em disco'
+    }
+  },
+  {
+    id: 'project_pro_2024',
+    keywords: ['microsoft', 'project', 'projetos', 'cronograma', 'gantt', 'gestão', 'windows', '2024', 'ltsc', 'office'],
+    slug: 'project-pro-2024-ltsc',
+    name: 'Microsoft Project Pro 2024 LTSC',
+    category: 'Escritório e Produtividade',
+    compatibility: 'Windows',
+    version: 'Pro 2024 LTSC',
+    description: 'Planeje cronogramas, recursos e custos de projetos com gráfico de Gantt. Licença vitalícia para Windows.',
+    longDescription: 'O Microsoft Project Pro 2024 LTSC é a ferramenta da Microsoft para planejar e acompanhar projetos: cronogramas com gráfico de Gantt, caminho crítico, alocação de recursos, controle de custos e relatórios. Instalado no PC com Windows, com licença vitalícia e sem assinatura.',
+    price: 149.80,
+    originalPrice: 239.90,
+    checkoutUrl: '',
+    imageUrl: '/images/products/project-pro-2024-ltsc.webp',
+    features: [
+      'Cronogramas com gráfico de Gantt e caminho crítico',
+      'Alocação de recursos e controle de custos',
+      'Relatórios prontos de andamento',
+      'Licença vitalícia, sem mensalidade',
+      'Entrega automática no e-mail após o pagamento'
+    ],
+    requirements: {
+      os: 'Windows 10 ou 11 (64-bits)',
+      cpu: 'Intel ou AMD de 1.6 GHz, 2 núcleos',
+      ram: '4 GB RAM (Recomendado: 8 GB)',
+      gpu: 'Placa de vídeo compatível com DirectX 10',
+      storage: '4 GB de espaço livre em disco'
+    }
+  },
+  {
+    id: 'combo_acrobat_office_2024',
+    keywords: ['combo', 'adobe', 'acrobat', 'pdf', 'microsoft', 'office', 'word', 'excel', 'powerpoint', 'windows', '2024', '2026'],
+    slug: 'combo-acrobat-pro-2026-office-2024',
+    name: 'Combo Adobe Acrobat Pro DC 2026 + Office 2024 LTSC',
+    category: 'Escritório e Produtividade',
+    compatibility: 'Windows',
+    version: 'Acrobat Pro DC 2026 + Office 2024 Professional Plus LTSC',
+    description: 'Escreva no Word, calcule no Excel e feche tudo em PDF no Acrobat: o fluxo completo de documentos no seu PC com Windows.',
+    longDescription: 'O Office 2024 cria os documentos, planilhas e apresentações; o Acrobat Pro DC 2026 transforma tudo em PDF, edita, junta arquivos, coleta assinaturas e protege com senha. Juntos, cobrem o ciclo inteiro de um documento, do rascunho no Word ao contrato assinado em PDF, sem trocar de ferramenta nem depender de serviços online.',
+    // Acrobat Pro DC 2026 Windows (R$ 167,90) + Office 2024 Windows (R$ 129,50) = R$ 297,40, menos 10%.
+    price: 267.66,
+    originalPrice: 297.40,
+    checkoutUrl: '',
+    imageUrl: '/images/products/combo-acrobat-2026-office-2024.webp',
+    bundle: ['adobe-acrobat-pro-dc-2026-windows', 'office-2024-professional-plus'],
+    features: [
+      'Adobe Acrobat Pro DC 2026 (Windows)',
+      'Microsoft Office 2024 Professional Plus LTSC (Windows)',
+      'Do Word ao PDF assinado sem sair do PC',
+      'Licenças vitalícias, sem mensalidade',
+      'Os dois links de download no seu e-mail'
+    ],
+    requirements: {
+      os: 'Windows 10 ou 11 (64-bits)',
+      cpu: 'Intel ou AMD de 1.6 GHz, 2 núcleos',
+      ram: '8 GB RAM',
+      gpu: 'Placa de vídeo compatível com DirectX 10',
+      storage: '8 GB de espaço livre em disco'
+    }
+  },
+  {
+    id: 'combo_windows11_office_2024',
+    keywords: ['combo', 'microsoft', 'windows', 'windows 11', 'chave', 'ativação', 'office', 'word', 'excel', 'powerpoint', '2024', 'pc novo'],
+    slug: 'combo-windows-11-pro-office-2024',
+    name: 'Combo Windows 11 Pro + Office 2024 LTSC',
+    category: 'Escritório e Produtividade',
+    compatibility: 'Windows',
+    version: 'Windows 11 Pro + Office 2024 Professional Plus LTSC',
+    description: 'O sistema ativado e o Office instalado: tudo o que um PC novo ou formatado precisa para começar a trabalhar.',
+    longDescription: 'O Windows 11 Pro ativa o sistema com recursos profissionais como BitLocker e Área de Trabalho Remota; o Office 2024 Professional Plus LTSC instala Word, Excel, PowerPoint e Outlook no mesmo PC. É a dupla para quem acabou de montar, comprar ou formatar o computador. O Office chega por link de download no seu e-mail; a chave de ativação do Windows, de 25 dígitos, você solicita pelo nosso WhatsApp logo após a compra.',
+    // Windows 11 Pro (R$ 89,90) + Office 2024 Windows (R$ 129,50) = R$ 219,40, menos 10%.
+    price: 197.46,
+    originalPrice: 219.40,
+    checkoutUrl: '',
+    imageUrl: '/images/products/combo-windows-11-office-2024.webp',
+    bundle: ['windows-11-pro', 'office-2024-professional-plus'],
+    features: [
+      'Windows 11 Pro: chave de ativação de 25 dígitos',
+      'Microsoft Office 2024 Professional Plus LTSC (Windows)',
+      'PC novo ou formatado pronto para o trabalho',
+      'Office por link de download no seu e-mail',
+      'Chave do Windows solicitada pelo WhatsApp após a compra'
+    ],
+    requirements: {
+      os: 'Windows 11 instalado (ou PC compatível com Windows 11)',
+      cpu: 'Processador de 1 GHz ou superior, compatível com Windows 11',
+      ram: '4 GB RAM (Recomendado: 8 GB)',
+      gpu: 'Gráficos compatíveis com DirectX 12',
+      storage: '64 GB de espaço livre'
+    }
+  },
+  {
+    id: 'combo_photography_2026_win',
+    keywords: ['combo', 'photography', 'fotografia', 'adobe', 'photoshop', 'lightroom', 'lightroom classic', 'foto', 'raw', 'windows', '2026'],
+    slug: 'combo-photography-2026-windows',
+    name: 'Combo Photography 2026 (Windows)',
+    category: 'Design e Criatividade',
+    compatibility: 'Windows',
+    version: 'Photoshop 2026 + Lightroom Classic 2026',
+    description: 'Photoshop e Lightroom Classic 2026 para Windows: organize e revele no Lightroom, finalize no Photoshop.',
+    longDescription: 'O Lightroom Classic importa, organiza e revela os arquivos RAW da sessão inteira de uma vez, com ajustes de luz, cor e predefinições aplicados em lote. Quando uma foto pede mais, ela abre direto no Photoshop para retoque de pele, remoção de objetos e composições, e volta ao catálogo já editada. É o fluxo que fotógrafos usam de ponta a ponta, agora com os dois programas no mesmo PC com Windows.',
+    // Photoshop 2026 Windows (R$ 97,90) + Lightroom Classic 2026 Windows (R$ 97,90) = R$ 195,80, menos 10%.
+    price: 176.22,
+    originalPrice: 195.80,
+    checkoutUrl: '',
+    imageUrl: '/images/products/combo-photography-2026-windows.webp',
+    bundle: ['adobe-photoshop-2026-windows', 'adobe-lightroom-classic-2026-windows'],
+    features: [
+      'Adobe Photoshop 2026 (Windows)',
+      'Adobe Lightroom Classic 2026 (Windows)',
+      'Do RAW ao retoque final em um só fluxo',
+      'Licenças vitalícias, sem mensalidade',
+      'Os dois links de download no seu e-mail'
+    ],
+    requirements: {
+      os: 'Windows 10 ou 11 (64-bits)',
+      cpu: 'Intel ou AMD 64-bits com suporte a SSE 4.2',
+      ram: '8 GB RAM (Recomendado: 16 GB)',
+      gpu: 'GPU compatível com DirectX 12 e 2 GB de VRAM',
+      storage: '20 GB de espaço livre (SSD)'
+    }
+  },
+  {
+    id: 'combo_photography_2026_mac',
+    keywords: ['combo', 'photography', 'fotografia', 'adobe', 'photoshop', 'lightroom', 'lightroom classic', 'foto', 'raw', 'mac', 'macos', '2026'],
+    slug: 'combo-photography-2026-macos',
+    name: 'Combo Photography 2026 (macOS)',
+    category: 'Design e Criatividade',
+    compatibility: 'macOS',
+    version: 'Photoshop 2026 + Lightroom Classic 2026',
+    description: 'Photoshop e Lightroom Classic 2026 para Mac: organize e revele no Lightroom, finalize no Photoshop.',
+    longDescription: 'O Lightroom Classic importa, organiza e revela os arquivos RAW da sessão inteira de uma vez, com ajustes de luz, cor e predefinições aplicados em lote. Quando uma foto pede mais, ela abre direto no Photoshop para retoque de pele, remoção de objetos e composições, e volta ao catálogo já editada. Os dois rodam nativos em Macs com Apple Silicon e Intel.',
+    // Photoshop 2026 macOS (R$ 137,90) + Lightroom Classic 2026 macOS (R$ 137,90) = R$ 275,80, menos 10%.
+    price: 248.22,
+    originalPrice: 275.80,
+    checkoutUrl: '',
+    imageUrl: '/images/products/combo-photography-2026-macos.webp',
+    bundle: ['adobe-photoshop-2026-macos', 'adobe-lightroom-classic-2026-macos'],
+    features: [
+      'Adobe Photoshop 2026 (macOS)',
+      'Adobe Lightroom Classic 2026 (macOS)',
+      'Do RAW ao retoque final em um só fluxo',
+      'Nativo para Apple Silicon e Intel',
+      'Os dois links de download no seu e-mail'
+    ],
+    requirements: {
+      os: 'macOS Ventura 13 ou superior',
+      cpu: 'Apple Silicon (M1 a M5) ou Intel com suporte a SSE 4.2',
+      ram: '8 GB RAM (Recomendado: 16 GB)',
+      gpu: 'GPU compatível com Metal e 2 GB de VRAM',
+      storage: '20 GB de espaço livre (SSD)'
     }
   },
   {
@@ -2210,7 +2516,10 @@ export function getProductBySlug(slug: string): Product | undefined {
   if (slug === 'rhinoceros-8' || slug === 'rhinoceros-8-mac' || slug === 'rhino-8-mac' || slug === 'rhino-8' || slug === 'rhino-9' || slug === 'rhino' || slug === 'rhinoceros') {
     return products.find(p => p.slug === 'rhinoceros-9');
   }
-  if (slug === 'office-2024-professional-mac' || slug === 'office-2024-mac' || slug === 'office-2024') {
+  if (slug === 'office-2024-mac') {
+    return products.find(p => p.slug === 'office-2024-professional-mac');
+  }
+  if (slug === 'office-2024') {
     return products.find(p => p.slug === 'office-2024-professional-plus');
   }
   if (slug === 'solidworks-2025' || slug === 'solidworks') {

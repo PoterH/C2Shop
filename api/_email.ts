@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { getDownloadLink } from './_downloads.js';
+import { deliveryItems, getDownloadLink, isActivationKey } from './_downloads.js';
 
 /** Password the customer uses to extract the downloaded files. */
 const EXTRACTION_PASSWORD = '@c2techoficial';
@@ -109,12 +109,15 @@ export async function sendConfirmationEmail({
     </tr>`).join('');
 
   // One card per product with its download or activation button
-  const downloadButtonsSection = checkoutProducts.map(p => {
+  // A combo delivers one card for each product it contains.
+  const deliveries = checkoutProducts.flatMap(p => deliveryItems(p.slug, p.name));
+  const downloadButtonsSection = deliveries.map(p => {
     const downloadUrl = getDownloadLink(p.slug);
     const isWhatsApp = downloadUrl.includes('wa.me');
-    const buttonText = isWhatsApp ? 'Ativar pelo WhatsApp' : 'Baixar no Google Drive &rarr;';
+    const isKey = isActivationKey(p.slug);
+    const buttonText = isKey ? 'Pedir a chave no WhatsApp' : isWhatsApp ? 'Ativar pelo WhatsApp' : 'Baixar no Google Drive &rarr;';
     const buttonBg = isWhatsApp ? '#16a34a' : '#0066ff';
-    const tag = isWhatsApp ? 'Ativação da conta' : 'Pronto para download';
+    const tag = isKey ? 'Chave de 25 dígitos' : isWhatsApp ? 'Ativação da conta' : 'Pronto para download';
     const tagColor = isWhatsApp ? '#15803d' : '#0052cc';
     const tagBg = isWhatsApp ? '#dcfce7' : '#e8f0ff';
     return `
@@ -132,7 +135,7 @@ export async function sendConfirmationEmail({
   }).join('');
 
   // Shown whenever the order has a file download (account activations via WhatsApp have no files).
-  const hasFileDownload = checkoutProducts.some(p => !getDownloadLink(p.slug).includes('wa.me'));
+  const hasFileDownload = deliveries.some(p => !getDownloadLink(p.slug).includes('wa.me'));
   const extractionPasswordSection = hasFileDownload ? `
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 8px 0 0 0; background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 12px;">
         <tr>

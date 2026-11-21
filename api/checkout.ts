@@ -1,5 +1,6 @@
 import { createCardOrder } from './_infinitepay.js';
 import { products } from './_products.js';
+import { MAX_ORDER_BUMPS, orderBumpPrice } from '../src/data/orderBumps.js';
 import { getEfiInstance, getEfiChargesInstance, isMockMode } from './_efi.js';
 import { sendConfirmationEmail } from './_email.js';
 import { MercadoPagoConfig, Payment, PreApproval, Order } from 'mercadopago';
@@ -85,7 +86,11 @@ export default async function handler(req: any, res: any) {
   let recurrence = false;
   const firstProduct = matchedProducts[0];
 
-  const itemsWithPrices = checkoutItems.map(item => {
+  // Checkout order bump: up to MAX_ORDER_BUMPS add-ons at a discount, only alongside a regular item.
+  const bumpCount = checkoutItems.filter(item => item.orderBump === true).length;
+  const bumpAllowed = bumpCount > 0 && bumpCount <= MAX_ORDER_BUMPS && bumpCount < checkoutItems.length;
+
+  const itemsWithPrices = checkoutItems.map((item, index) => {
     const prod = products.find((p: any) => p.slug === item.slug);
     if (!prod) return { item, prod: null, price: 0 };
 
@@ -99,6 +104,11 @@ export default async function handler(req: any, res: any) {
       isSubPayment = true;
       recurrence = subOption === 'recurrent';
       itemPrice = recurrence ? (prod.recurrencePrice || prod.price) : prod.price;
+    }
+
+    if (bumpAllowed && item.orderBump === true && !prod.isSubscription) {
+      itemPrice = orderBumpPrice(itemPrice);
+      matchedProducts[index] = { ...matchedProducts[index], price: itemPrice };
     }
 
     return { item, prod, price: itemPrice };

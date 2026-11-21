@@ -3,6 +3,7 @@ import { products } from '../data/products';
 import { cartItemKey, itemTotal } from '../utils/cart';
 import type { Product, LicenseOption } from '../data/products';
 import { trackEvent } from '../utils/pixel';
+import { orderBumpPrice } from '../data/orderBumps';
 
 interface CartContextType {
   cartItems: Product[];
@@ -19,6 +20,7 @@ interface CartContextType {
     licenseOption?: LicenseOption,
     deviceCount?: number
   ) => void;
+  addOrderBump: (product: Product, licenseOption?: LicenseOption) => void;
   removeFromCart: (productId: string) => void;
   clearCart: () => void;
   updateQuantity: (key: string, quantity: number) => void;
@@ -37,8 +39,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const current = products.find(product => product.slug === item.slug);
         if(!current)return item;
         const option = current.licenseOptions?.find(option => option.quantity === item.selectedLicenseOption?.quantity);
-        if(item.selectedLicenseOption && !option)return item;
-        return {...current, selectedLicenseOption:option, selectedSubOption:item.selectedSubOption, deviceCount:item.deviceCount};
+        // An edition that became its own product (e.g. Office split by platform) is kept as that product.
+        if(item.selectedLicenseOption && current.licenseOptions?.length && !option)return item;
+        return {...current, selectedLicenseOption:option, selectedSubOption:item.selectedSubOption, deviceCount:item.deviceCount, orderBump:item.orderBump === true || undefined};
       }) : [];
     } catch { return []; }
   });
@@ -96,6 +99,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 selectedSubOption: chosenSubOption,
                 selectedLicenseOption: chosenOption,
                 deviceCount: validDeviceCount,
+                orderBump: undefined,
               }
             : item
         );
@@ -130,8 +134,28 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsCartOpen(true);
   };
 
+  // Adds a checkout order bump without opening the cart drawer, so the payment step stays in view.
+  const addOrderBump = (product: Product, licenseOption?: LicenseOption) => {
+    if (product.unavailable) return;
+    setCartItems((prev) => {
+      if (prev.some((item) => item.id === product.id)) return prev;
+      return [...prev, { ...product, selectedSubOption: 'avulso', selectedLicenseOption: licenseOption, deviceCount: 1, orderBump: true }];
+    });
+    trackEvent('AddToCart', {
+      content_name: product.name,
+      content_ids: [product.slug],
+      content_type: 'product',
+      value: orderBumpPrice(licenseOption?.price ?? product.price),
+      currency: 'BRL',
+    });
+  };
+
   const removeFromCart = (productId: string) => {
-    setCartItems((prev) => prev.filter((item) => cartItemKey(item) !== productId));
+    setCartItems((prev) => {
+      const next = prev.filter((item) => cartItemKey(item) !== productId);
+      // An order bump keeps its discount only while something else is being bought.
+      return next.some((item) => !item.orderBump) ? next : next.map((item) => ({ ...item, orderBump: undefined }));
+    });
   };
 
   const updateQuantity = (key: string, quantity: number) => {
@@ -183,6 +207,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         total,
         discountPercentage,
         addToCart,
+        addOrderBump,
         removeFromCart,
         clearCart,
         updateQuantity,

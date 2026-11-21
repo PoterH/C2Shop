@@ -100,10 +100,6 @@ export const INTERNATIONAL_OPTION_CHECKOUTS: Record<string, string> = {
   rhinoceros_8_1: 'https://pay.cakto.com.br/dgr2xz8',
   rhinoceros_8_2: 'https://pay.cakto.com.br/am2bfot',
 
-  // Microsoft Office 2024 Pro
-  office_25_win_1: 'https://pay.cakto.com.br/9k74men',
-  office_25_win_2: 'https://pay.cakto.com.br/78abdwy',
-
   // Parallels Desktop
   parallels_desktop_26_26: 'https://pay.cakto.com.br/33d45v8',
   parallels_desktop_26_27: 'https://pay.cakto.com.br/97u3fwj',
@@ -185,9 +181,6 @@ export const INTERNATIONAL_SLUG_CHECKOUTS: Record<string, string> = {
   'rhinoceros-9': 'https://pay.cakto.com.br/3ctrs2o',
   'rhinoceros-8': 'https://pay.cakto.com.br/dgr2xz8',
   'rhinoceros-8-mac': 'https://pay.cakto.com.br/am2bfot',
-
-  'office-2024-professional-plus': 'https://pay.cakto.com.br/9k74men',
-  'office-2024-professional-mac': 'https://pay.cakto.com.br/78abdwy',
 
   'parallels-desktop-26': 'https://pay.cakto.com.br/33d45v8',
   'parallels-desktop-27': 'https://pay.cakto.com.br/97u3fwj',

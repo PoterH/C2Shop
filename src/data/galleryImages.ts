@@ -207,6 +207,16 @@ const galleryImages: Record<string, string> = {
   "/images/products/adobe-acrobat-pro-dc-2026-windows.webp": "/images/product-gallery/adobe-acrobat-pro-dc-2026-windows.webp",
   "/images/products/adobe-acrobat-pro-dc-2025-macos.webp": "/images/product-gallery/adobe-acrobat-pro-dc-2025-macos.webp",
   "/images/products/fl-studio-2025.webp": "/images/product-gallery/fl-studio-2025.webp",
-  "/images/products/filmora-15.webp": "/images/product-gallery/filmora-15.webp"
+  "/images/products/filmora-15.webp": "/images/product-gallery/filmora-15.webp",
+  "/images/products/office-2024-ltsc-windows.webp": "/images/product-gallery/office-2024-ltsc-windows.webp",
+  "/images/products/office-2024-ltsc-macos.webp": "/images/product-gallery/office-2024-ltsc-macos.webp",
+  "/images/products/office-2021-windows.webp": "/images/product-gallery/office-2021-windows.webp",
+  "/images/products/office-2021-macos.webp": "/images/product-gallery/office-2021-macos.webp",
+  "/images/products/office-2019-windows.webp": "/images/product-gallery/office-2019-windows.webp",
+  "/images/products/office-2019-macos.webp": "/images/product-gallery/office-2019-macos.webp",
+  "/images/products/office-2016-windows.webp": "/images/product-gallery/office-2016-windows.webp",
+  "/images/products/project-pro-2024-ltsc.webp": "/images/product-gallery/project-pro-2024-ltsc.webp",
+  "/images/products/combo-photography-2026-windows.webp": "/images/product-gallery/combo-photography-2026-windows.webp",
+  "/images/products/combo-photography-2026-macos.webp": "/images/product-gallery/combo-photography-2026-macos.webp"
 };
 export const galleryImageSource = (url: string) => galleryImages[url] ?? url;

@@ -107,6 +107,22 @@ export const DOWNLOAD_LINKS: Record<string, string> = {
   'filmora-15': 'https://drive.google.com/drive/folders/1SNQdYIVplkSOupotluXZgR3lDCDRLONV?usp=sharing',
 };
 
+/** What the buyer receives for one purchased slug: a combo expands into each product it contains. */
+export function deliveryItems(slug: string, name: string): Array<{ slug: string; name: string }> {
+  const combo = products.find(product => product.slug === slug && product.bundle?.length);
+  if (!combo?.bundle) return [{ slug, name }];
+  return combo.bundle.map(part => {
+    for (const product of products) {
+      const option = product.licenseOptions?.find(option => option.downloadSlug === part);
+      if (option) return { slug: part, name: `${product.name} — ${option.label}` };
+    }
+    return { slug: part, name: products.find(product => product.slug === part)?.name || part };
+  });
+}
+
+/** Windows activation keys are sent by WhatsApp on request, not as a download. */
+export const isActivationKey = (slug: string) => slug === 'windows-11-pro' || slug === 'windows-10-pro';
+
 export function getDownloadLink(slug: string): string {
   // Edition-specific links from the shared catalog take precedence over old aliases.
   for (const product of products) {
