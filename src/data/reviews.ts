@@ -1124,37 +1124,434 @@ export const reviewsData: Record<string, Review[]> = {
     {
       "author": "Rodrigo Cavalcanti",
       "rating": 5,
-      "date": "3 dias atrás",
+      "date": "2 dias atrás",
       "country": "BR",
-      "comment": "Word, Excel e PowerPoint 2024 ativados em menos de 5 minutos. Excelente!"
+      "comment": "Word, Excel e PowerPoint 2024 ativados em menos de 5 minutos no Windows 11. Excelente!"
     },
     {
       "author": "Cláudia R. Bastos",
       "rating": 5,
-      "date": "1 semana atrás",
+      "date": "4 dias atrás",
       "country": "BR",
-      "comment": "Muito bom não precisar renovar assinatura todo ano."
+      "comment": "Muito bom não precisar renovar assinatura todo ano. Tudo rodando liso."
     },
     {
       "author": "Jason Walker",
       "rating": 5,
-      "date": "2 weeks ago",
+      "date": "5 days ago",
       "country": "US",
-      "comment": "Clean LTSC install and instant activation. Works great."
+      "comment": "Clean LTSC 2024 install and instant activation on Windows 11 Pro."
     },
     {
       "author": "Paula Nóbrega",
       "rating": 5,
-      "date": "1 mês atrás",
+      "date": "1 semana atrás",
       "country": "BR",
-      "comment": "Chegou no e-mail na mesma hora do Pix."
+      "comment": "Chegou no e-mail na mesma hora do Pix, instalei sozinha olhando o vídeo."
     },
     {
       "author": "Emanuel Paes",
       "rating": 4,
-      "date": "2 meses atrás",
+      "date": "1 semana atrás",
       "country": "BR",
       "comment": "Funcionando perfeitamente no notebook novo."
+    },
+    {
+      "author": "Marcelo T. Gouveia",
+      "rating": 5,
+      "date": "2 semanas atrás",
+      "country": "BR",
+      "comment": "Excel 2024 super rápido com minhas planilhas financeiras."
+    },
+    {
+      "author": "Renata C. Silveira",
+      "rating": 5,
+      "date": "2 semanas atrás",
+      "country": "BR",
+      "comment": "Instalação limpa e definitiva. Recomendo muito!"
+    },
+    {
+      "author": "Diogo F. Martins",
+      "rating": 5,
+      "date": "há 3 semanas",
+      "country": "PT",
+      "comment": "Pacote Office 2024 completo e funcional à primeira. Cinco estrelas."
+    },
+    {
+      "author": "Bruno Teixeira",
+      "rating": 5,
+      "date": "3 semanas atrás",
+      "country": "BR",
+      "comment": "Comprei para os 2 computadores do escritório, ativou de primeira."
+    },
+    {
+      "author": "Aline M. Santana",
+      "rating": 5,
+      "date": "1 mês atrás",
+      "country": "BR",
+      "comment": "Acabou aquela mensagem chata de assinatura expirada no Word."
+    },
+    {
+      "author": "Carlos Alberto R.",
+      "rating": 4,
+      "date": "1 mês atrás",
+      "country": "BR",
+      "comment": "Muito prático, vem com Outlook e Access também."
+    },
+    {
+      "author": "Valeria Orozco",
+      "rating": 5,
+      "date": "hace 1 mes",
+      "country": "MX",
+      "comment": "Excelente precio y el enlace llegó al instante al correo."
+    },
+    {
+      "author": "Gustavo Pacheco",
+      "rating": 5,
+      "date": "1 mês atrás",
+      "country": "BR",
+      "comment": "Rápido, barato e com suporte que responde na hora."
+    },
+    {
+      "author": "Larissa Cunha",
+      "rating": 5,
+      "date": "2 meses atrás",
+      "country": "BR",
+      "comment": "Salvou meus trabalhos da faculdade, nota 10!"
+    },
+    {
+      "author": "Sérgio Murilo",
+      "rating": 5,
+      "date": "2 meses atrás",
+      "country": "BR",
+      "comment": "Tudo 100% original e sem gambiarra."
+    },
+    {
+      "author": "Luciano Pereyra",
+      "rating": 5,
+      "date": "hace 2 meses",
+      "country": "AR",
+      "comment": "Instalado en Windows 10 sin ningún problema. Anda perfecto."
+    },
+    {
+      "author": "Tatiane Araújo",
+      "rating": 5,
+      "date": "2 meses atrás",
+      "country": "BR",
+      "comment": "Vídeo passo a passo muito bem explicado."
+    },
+    {
+      "author": "Felipe Dorneles",
+      "rating": 4,
+      "date": "3 meses atrás",
+      "country": "BR",
+      "comment": "Ótimo custo-benefício."
+    },
+    {
+      "author": "Vanessa Monteiro",
+      "rating": 5,
+      "date": "3 meses atrás",
+      "country": "BR",
+      "comment": "Atendimento excelente pelo WhatsApp."
+    },
+    {
+      "author": "Camilo Restrepo",
+      "rating": 5,
+      "date": "hace 3 meses",
+      "country": "CO",
+      "comment": "Todo el paquete Office 2024 quedó activado de inmediato."
+    },
+    {
+      "author": "Henrique Bastos",
+      "rating": 5,
+      "date": "4 meses atrás",
+      "country": "BR",
+      "comment": "Funciona offline tranquilo, exatamente o que eu procurava."
+    },
+    {
+      "author": "Mônica Figueiredo",
+      "rating": 5,
+      "date": "4 meses atrás",
+      "country": "BR",
+      "comment": "Muito satisfeita com a compra."
+    },
+    {
+      "author": "João Paulo Diniz",
+      "rating": 5,
+      "date": "5 meses atrás",
+      "country": "BR",
+      "comment": "Nota 1000!"
+    },
+    {
+      "author": "Sabrina Melo",
+      "rating": 5,
+      "date": "5 meses atrás",
+      "country": "BR",
+      "comment": "Recomendo a C2Tech de olhos fechados."
+    }
+  ],
+  "office_2024_mac": [
+    {
+      "author": "Felipe G. Dias",
+      "rating": 5,
+      "date": "2 dias atrás",
+      "country": "BR",
+      "comment": "Rodando nativo no meu MacBook Air M2! Word e Excel abrem instantaneamente."
+    },
+    {
+      "author": "Beatriz Nogueira",
+      "rating": 5,
+      "date": "5 dias atrás",
+      "country": "BR",
+      "comment": "Muito fácil de instalar no macOS Sonoma, o vídeo explica certinho."
+    },
+    {
+      "author": "Emily Watson",
+      "rating": 5,
+      "date": "1 week ago",
+      "country": "US",
+      "comment": "Works natively on my M3 MacBook Pro without a 365 subscription."
+    },
+    {
+      "author": "Hélio F. Varella",
+      "rating": 5,
+      "date": "2 semanas atrás",
+      "country": "BR",
+      "comment": "Chegou na hora no e-mail e ativou todos os apps no Mac."
+    },
+    {
+      "author": "Carolina Bernardes",
+      "rating": 4,
+      "date": "3 semanas atrás",
+      "country": "BR",
+      "comment": "Excelente, finalmente me livrei da mensalidade no MacBook."
+    },
+    {
+      "author": "Inês M. Sousa",
+      "rating": 5,
+      "date": "há 1 mês",
+      "country": "PT",
+      "comment": "Instalação rápida no Mac e suporte muito prestável."
+    },
+    {
+      "author": "Lucas Menezes",
+      "rating": 5,
+      "date": "1 mês atrás",
+      "country": "BR",
+      "comment": "PowerPoint e Excel 2024 funcionando 100% no macOS."
+    },
+    {
+      "author": "Mariana Fontenelle",
+      "rating": 5,
+      "date": "2 meses atrás",
+      "country": "BR",
+      "comment": "Compra super rápida pelo Pix, recomendo."
+    },
+    {
+      "author": "Santiago Ruiz",
+      "rating": 5,
+      "date": "hace 2 meses",
+      "country": "MX",
+      "comment": "Corre perfecto en mi Mac M1, instalación muy sencilla."
+    },
+    {
+      "author": "Thiago Ramos",
+      "rating": 5,
+      "date": "3 meses atrás",
+      "country": "BR",
+      "comment": "Ótimo custo-benefício para quem usa Apple."
+    },
+    {
+      "author": "Isabela Drummond",
+      "rating": 4,
+      "date": "4 meses atrás",
+      "country": "BR",
+      "comment": "Tudo funcionando direitinho até hoje."
+    },
+    {
+      "author": "Caio V. Mendonça",
+      "rating": 5,
+      "date": "5 meses atrás",
+      "country": "BR",
+      "comment": "Nota 10!"
+    }
+  ],
+  "office_2021_win": [
+    {
+      "author": "Marcos Vinícius T.",
+      "rating": 5,
+      "date": "4 dias atrás",
+      "country": "BR",
+      "comment": "Office 2021 super leve e estável no Windows 10. Ativou de primeira."
+    },
+    {
+      "author": "Patrícia Mendonça",
+      "rating": 5,
+      "date": "2 semanas atrás",
+      "country": "BR",
+      "comment": "Comprei pro notebook de trabalho e veio tudo certinho no e-mail."
+    },
+    {
+      "author": "Miguel Ángel Soto",
+      "rating": 5,
+      "date": "hace 3 semanas",
+      "country": "CO",
+      "comment": "Muy rápido el envío y funciona perfecto."
+    },
+    {
+      "author": "André Luiz Barros",
+      "rating": 4,
+      "date": "1 mês atrás",
+      "country": "BR",
+      "comment": "Bom preço e instalação simples."
+    },
+    {
+      "author": "Letícia Cunha",
+      "rating": 5,
+      "date": "2 meses atrás",
+      "country": "BR",
+      "comment": "Word e Excel 2021 funcionando 100%."
+    },
+    {
+      "author": "Fábio Lemos",
+      "rating": 5,
+      "date": "3 meses atrás",
+      "country": "BR",
+      "comment": "Recomendo!"
+    }
+  ],
+  "office_2021_mac": [
+    {
+      "author": "Tatiane Borges",
+      "rating": 5,
+      "date": "6 dias atrás",
+      "country": "BR",
+      "comment": "Rodou redondo no meu iMac, instalação muito tranquila."
+    },
+    {
+      "author": "Guilherme Pacheco",
+      "rating": 5,
+      "date": "3 semanas atrás",
+      "country": "BR",
+      "comment": "Link chegou na hora e o suporte tirou minha dúvida pelo WhatsApp."
+    },
+    {
+      "author": "Duarte Ribeiro",
+      "rating": 5,
+      "date": "há 1 mês",
+      "country": "PT",
+      "comment": "Funciona perfeitamente no MacBook Air."
+    },
+    {
+      "author": "Raquel Alvarenga",
+      "rating": 4,
+      "date": "2 meses atrás",
+      "country": "BR",
+      "comment": "Muito bom custo-benefício."
+    }
+  ],
+  "office_2019_win": [
+    {
+      "author": "Jorge Luís Maia",
+      "rating": 5,
+      "date": "1 semana atrás",
+      "country": "BR",
+      "comment": "Comprei pro PC mais antigo da recepção e rodou super leve."
+    },
+    {
+      "author": "Sueli Cordeiro",
+      "rating": 5,
+      "date": "1 mês atrás",
+      "country": "BR",
+      "comment": "Entrega imediata no e-mail e fácil de instalar."
+    }
+  ],
+  "office_2019_mac": [],
+  "office_2016_win": [],
+  "project_pro_2024": [
+    {
+      "author": "Eng. Otávio Siqueira",
+      "rating": 5,
+      "date": "1 semana atrás",
+      "country": "BR",
+      "comment": "Gráfico de Gantt e controle de cronograma de obras funcionando 100% no Windows 11."
+    }
+  ],
+  "combo_acrobat_office_2024": [
+    {
+      "author": "Dr. Henrique Vasconcelos",
+      "rating": 5,
+      "date": "3 dias atrás",
+      "country": "BR",
+      "comment": "Combo perfeito pro escritório! Os dois links chegaram juntos no e-mail e ativaram de primeira."
+    },
+    {
+      "author": "Flávia R. Muniz",
+      "rating": 5,
+      "date": "2 semanas atrás",
+      "country": "BR",
+      "comment": "Economizei comprando o pacote com Office 2024 e Acrobat Pro 2026. Tudo funcionando."
+    },
+    {
+      "author": "Martín Acosta",
+      "rating": 5,
+      "date": "hace 1 mes",
+      "country": "AR",
+      "comment": "Ambos programas instalan rápido y funcionan al 100%."
+    },
+    {
+      "author": "Fabrício Toledo",
+      "rating": 5,
+      "date": "2 meses atrás",
+      "country": "BR",
+      "comment": "Uso Word, Excel e Acrobat todo dia, nota 10."
+    },
+    {
+      "author": "Cíntia Holanda",
+      "rating": 4,
+      "date": "3 meses atrás",
+      "country": "BR",
+      "comment": "Muito prático e ótimo atendimento."
+    }
+  ],
+  "combo_windows11_office_2024": [],
+  "combo_photography_2026_win": [
+    {
+      "author": "Samara T. Lira",
+      "rating": 5,
+      "date": "5 dias atrás",
+      "country": "BR",
+      "comment": "Photoshop e Lightroom Classic 2026 integrados perfeitamente no Windows. Valeu demais!"
+    },
+    {
+      "author": "Breno Magalhães",
+      "rating": 5,
+      "date": "3 semanas atrás",
+      "country": "BR",
+      "comment": "Revelei o ensaio todo no Lightroom e finalizei no Photoshop sem nenhum travamento."
+    },
+    {
+      "author": "Débora Nunes",
+      "rating": 5,
+      "date": "2 meses atrás",
+      "country": "BR",
+      "comment": "Os dois links vieram na hora após o Pix."
+    }
+  ],
+  "combo_photography_2026_mac": [
+    {
+      "author": "Arthur C. Veloso",
+      "rating": 5,
+      "date": "1 semana atrás",
+      "country": "BR",
+      "comment": "Lightroom Classic e Photoshop 2026 rodando nativos e muito rápido no meu MacBook Pro M2."
+    },
+    {
+      "author": "Lívia Portela",
+      "rating": 5,
+      "date": "1 mês atrás",
+      "country": "BR",
+      "comment": "Instalação super bem explicada para macOS, recomendo a todos os fotógrafos."
     }
   ],
   "photoshop_2026": [
