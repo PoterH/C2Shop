@@ -1,9 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { deliveryItems, getDownloadLink, isActivationKey } from './_downloads.js';
+import { deliveryItems, extractionPassword, getDownloadLink, isActivationKey } from './_downloads.js';
 
-/** Password the customer uses to extract the downloaded files. */
-const EXTRACTION_PASSWORD = '@c2techoficial';
 
 export function getResendApiKey() {
   try {
@@ -135,16 +133,24 @@ export async function sendConfirmationEmail({
   }).join('');
 
   // Shown whenever the order has a file download (account activations via WhatsApp have no files).
-  const hasFileDownload = deliveries.some(p => !getDownloadLink(p.slug).includes('wa.me'));
+  const fileDeliveries = deliveries.filter(p => !getDownloadLink(p.slug).includes('wa.me'));
+  const hasFileDownload = fileDeliveries.length > 0;
+  // Office for Windows uses its own password, so a mixed order lists the password of each product.
+  const passwords = [...new Set(fileDeliveries.map(p => extractionPassword(p.slug)))];
+  const passwordBox = (password: string) => `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="background-color: #ffffff; border: 2px dashed #f59e0b; border-radius: 10px; padding: 10px 20px;">
+              <span style="font-family: Consolas, 'SF Mono', 'Courier New', monospace; font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: 0.5px;">${password}</span>
+            </td></tr></table>`;
+  const passwordContent = passwords.length === 1
+    ? `<p style="${font} margin: 0 0 12px 0; font-size: 13px; color: #78350f; line-height: 1.5;">Use esta senha ao descompactar os arquivos baixados:</p>
+            ${passwordBox(passwords[0])}`
+    : fileDeliveries.map(p => `<p style="${font} margin: 0 0 6px 0; font-size: 13px; font-weight: 700; color: #78350f; line-height: 1.4;">${esc(p.name)}</p>
+            <div style="margin: 0 0 14px 0;">${passwordBox(extractionPassword(p.slug))}</div>`).join("");
   const extractionPasswordSection = hasFileDownload ? `
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 8px 0 0 0; background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 12px;">
         <tr>
           <td style="padding: 18px 20px;">
-            <p style="${font} margin: 0 0 4px 0; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #92400e;">&#128273; Senha para extrair os arquivos</p>
-            <p style="${font} margin: 0 0 12px 0; font-size: 13px; color: #78350f; line-height: 1.5;">Use esta senha ao descompactar os arquivos baixados:</p>
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="background-color: #ffffff; border: 2px dashed #f59e0b; border-radius: 10px; padding: 10px 20px;">
-              <span style="font-family: Consolas, 'SF Mono', 'Courier New', monospace; font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: 0.5px;">${EXTRACTION_PASSWORD}</span>
-            </td></tr></table>
+            <p style="${font} margin: 0 0 4px 0; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #92400e;">&#128273; ${passwords.length === 1 ? "Senha para extrair os arquivos" : "Senhas para extrair os arquivos"}</p>
+            ${passwordContent}
             <p style="${font} margin: 12px 0 0 0; font-size: 12px; color: #92400e; line-height: 1.5;">Digite exatamente como está: com o <strong>@</strong> no início e tudo em letras minúsculas.</p>
           </td>
         </tr>
@@ -158,7 +164,9 @@ export async function sendConfirmationEmail({
   const steps = hasFileDownload
     ? [
         ['Baixe os arquivos', 'Clique em <strong>Baixar no Google Drive</strong> e baixe a pasta do seu software.'],
-        ['Extraia com a senha', `Descompacte os arquivos usando a senha <strong style="color: #0f172a;">${EXTRACTION_PASSWORD}</strong>.`],
+        ['Extraia com a senha', passwords.length === 1
+          ? `Descompacte os arquivos usando a senha <strong style="color: #0f172a;">${passwords[0]}</strong>.`
+          : 'Descompacte os arquivos de cada produto usando a senha indicada abaixo.'],
         ['Siga o vídeo e ative', 'Assista ao tutorial incluído na pasta e siga o passo a passo para instalar e ativar.'],
       ]
     : [

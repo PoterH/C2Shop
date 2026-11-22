@@ -1,6 +1,23 @@
 import { products } from './_products.js';
 
+/** Every Office edition for Windows downloads from one folder and extracts with its own password. */
+const OFFICE_WINDOWS_FOLDER = 'https://drive.google.com/drive/folders/171D-xOBKQyWelQ_qCrHckvliwVsQgrgr?usp=drive_link';
+const OFFICE_WINDOWS_SLUGS = [
+  'office-2024-professional-plus',
+  'office-2021-professional-plus-windows',
+  'office-2019-professional-plus-windows',
+  'office-2016-professional-plus',
+];
+
+/** Password the customer uses to extract the downloaded files. */
+const DEFAULT_EXTRACTION_PASSWORD = '@c2techoficial';
+const OFFICE_WINDOWS_EXTRACTION_PASSWORD = '@c2tech';
+
+export const extractionPassword = (slug: string) =>
+  OFFICE_WINDOWS_SLUGS.includes(slug) ? OFFICE_WINDOWS_EXTRACTION_PASSWORD : DEFAULT_EXTRACTION_PASSWORD;
+
 export const DOWNLOAD_LINKS: Record<string, string> = {
+  ...Object.fromEntries(OFFICE_WINDOWS_SLUGS.map(slug => [slug, OFFICE_WINDOWS_FOLDER])),
 "revit-2024": "https://drive.google.com/drive/folders/1i31lC4zUxAAYyKLRqNuR79fdnCmPvBpr?usp=drive_link",
 "revit-2025": "https://drive.google.com/drive/folders/1-XFTsL415cVi4mJ6HCYD78B3_H_o5SgD?usp=drive_link",
 "rhinoceros-8-mac": "https://drive.google.com/drive/folders/1gKuIUT5TqObb3V-znZtlKYx0NZNwp6rb?usp=drive_link",
@@ -62,7 +79,6 @@ export const DOWNLOAD_LINKS: Record<string, string> = {
   'archicad-30-bra': 'https://drive.google.com/drive/folders/18WRYXfZVXSuOD8W0LGYLWS69wVa5dPMT?usp=sharing',
   'cypecad-2026': 'https://drive.google.com/open?id=18d9KGJpC5iwv52Td3mGUNtaYZ5hBIl3l',
   'cypecad-2025': 'https://drive.google.com/drive/folders/1GQjNd7AoxYw3yQ7csIR5ryJPBCN5spm9?usp=drive_link',
-  'office-2024-professional-plus': 'https://drive.google.com/open?id=171D-xOBKQyWelQ_qCrHckvliwVsQgrgr',
   'eberick-builder-2024-plena': 'https://drive.google.com/drive/folders/1AOD3jP7Qkyk5eqx65uBEQMyCYdI1dfNn?usp=drive_link',
   'eberick-builder-2025': 'https://drive.google.com/open?id=10KvPsuZ4coEQ6RIirgdVnvr4wewhNrrS',
   'eberick-builder-2025-infinity': 'https://drive.google.com/open?id=10KvPsuZ4coEQ6RIirgdVnvr4wewhNrrS',
