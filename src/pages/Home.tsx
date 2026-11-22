@@ -12,6 +12,8 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { products } from '../data/products';
+import { reviewsData } from '../data/reviews';
+import { CATALOG_SECTIONS } from '../data/catalogNavigation';
 import { GridMotion, type GridMotionItem } from '../components/GridMotion';
 import LogoLoop, { type LogoLoopImage } from '../components/LogoLoop';
 import { useLanguage } from '../context/LanguageContext';
@@ -24,9 +26,15 @@ const HOME_PRODUCT_FILTERS = [
   { id: 'woodworking', label: 'Marcenaria' },
 ] as const;
 
+// The Microsoft filter shows exactly the catalog's "Microsoft Office & Windows" group.
+const MICROSOFT_SLUGS: string[] = CATALOG_SECTIONS
+  .flatMap((section) => section.groups)
+  .find((group) => group.title === 'Microsoft Office & Windows')?.slugs ?? [];
+
 const heroGridCards: GridMotionItem[] = [
-  1, 2, 5, 7, 17, 20, 28, 38, 41, 44, 48, 52, 53, 55, 59, 65, 67, 71, 78, 93, 96, 98,
-].map((number) => ({ src: `/images/grid-cards/trimmed/card-${String(number).padStart(2, '0')}.png` }));
+  '01', 'office-2024', '05', '07', '17', '20', '28', 'archicad-30', '41', 'rhinoceros-9', '48',
+  '52', '53', '55', '59', '65', 'illustrator-2026', 'cype-2026', '78', '93', 'premiere-pro-2026', 'project-pro-2024',
+].map((card) => ({ src: `/images/grid-cards/trimmed/card-${card}.png` }));
 
 const softwareBrandLogos: LogoLoopImage[] = [
   { src: '/images/company-logos/brand-01.png', alt: '', hoverColor: '#ed1c24' },
@@ -55,7 +63,7 @@ export const Home: React.FC = () => {
   const navigate = useNavigate();
   const [heroSearch, setHeroSearch] = useState('');
   const { language } = useLanguage();
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [activeCategory, setActiveCategory] = useState<string>('microsoft');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const avatarGroupRef = useRef<HTMLDivElement>(null);
 
@@ -85,13 +93,14 @@ export const Home: React.FC = () => {
     });
   }, []);
 
-  // Filter products for the landing page grid (show max 16 of active category)
+  // Filter products for the landing page grid (show max 16 of active category),
+  // most reviewed first; ties keep the catalog order of the Microsoft group, then the name.
   const filteredProducts = useMemo(() => products
     .filter((product) => {
       if (product.isSubscription) return false;
       if (activeCategory === 'all') return true;
       const name = product.name.toLocaleLowerCase('pt-BR');
-      if (activeCategory === 'microsoft') return /microsoft|windows|office/.test(name);
+      if (activeCategory === 'microsoft') return MICROSOFT_SLUGS.includes(product.slug);
       if (activeCategory === 'adobe') return name.includes('adobe');
       if (activeCategory === 'macos') return product.compatibility === 'macOS' || product.compatibility === 'Windows e macOS';
       if (activeCategory === 'woodworking') return product.category === 'Marcenaria e Móveis Planejados';
@@ -101,7 +110,15 @@ export const Home: React.FC = () => {
       }
       return false;
     })
-    .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
+    .sort((a, b) => {
+      const byReviews = (reviewsData[b.id]?.length ?? 0) - (reviewsData[a.id]?.length ?? 0);
+      if (byReviews) return byReviews;
+      const order = (slug: string) => {
+        const index = MICROSOFT_SLUGS.indexOf(slug);
+        return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+      };
+      return order(a.slug) - order(b.slug) || a.name.localeCompare(b.name, 'pt-BR');
+    })
     .slice(0, 16), [activeCategory]);
 
 
