@@ -152,6 +152,9 @@ interface MegaMenuCategory {
   featuredSlugs: string[];
 }
 
+// Each column lists at most this many software, most searched first.
+const MEGA_MENU_MAX_ITEMS = 5;
+
 const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
   {
     id: 'microsoft-utilitarios',
@@ -164,14 +167,9 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
         seeAllLink: catalogLink('Microsoft Office & Windows'),
         items: [
           { name: 'Office 2024 LTSC (Windows)', slug: 'office-2024-professional-plus' },
+          { name: 'Windows 11 Pro (Chave Original)', slug: 'windows-11-pro' },
           { name: 'Office 2024 LTSC (Mac)', slug: 'office-2024-professional-mac' },
           { name: 'Office 2021 (Windows)', slug: 'office-2021-professional-plus-windows' },
-          { name: 'Office 2021 (Mac)', slug: 'office-2021-professional-plus-mac' },
-          { name: 'Office 2019 (Windows)', slug: 'office-2019-professional-plus-windows' },
-          { name: 'Office 2019 (Mac)', slug: 'office-2019-professional-plus-mac' },
-          { name: 'Office 2016 (Windows)', slug: 'office-2016-professional-plus' },
-          { name: 'Project Pro 2024 LTSC', slug: 'project-pro-2024-ltsc' },
-          { name: 'Windows 11 Pro (Chave Original)', slug: 'windows-11-pro' },
           { name: 'Windows 10 Pro (Chave Original)', slug: 'windows-10-pro' },
         ],
       },
@@ -179,12 +177,11 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
         title: 'PDF, Virtualização & Dados',
         seeAllLink: catalogLink('PDF, Virtualização & Dados'),
         items: [
-          { name: 'Combo Acrobat 2026 + Office 2024', slug: 'combo-acrobat-pro-2026-office-2024' },
-          { name: 'Combo Windows 11 Pro + Office 2024', slug: 'combo-windows-11-pro-office-2024' },
           { name: 'Adobe Acrobat Pro DC 2026', slug: 'adobe-acrobat-pro-dc-2026' },
+          { name: 'Combo Acrobat 2026 + Office 2024', slug: 'combo-acrobat-pro-2026-office-2024' },
           { name: 'Parallels Desktop 27 (macOS)', slug: 'parallels-desktop-27' },
+          { name: 'Combo Windows 11 Pro + Office 2024', slug: 'combo-windows-11-pro-office-2024' },
           { name: 'Wondershare PDFelement 12', slug: 'pdfelement-12' },
-          { name: 'Wondershare Recoverit 13', slug: 'wondershare-recoverit-13' },
         ],
       },
     ],
@@ -200,12 +197,11 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
         title: 'Design Gráfico & Vetor',
         seeAllLink: catalogLink('Design Gráfico & Vetor'),
         items: [
-          { name: 'CorelDRAW Graphics Suite (X7 a 2026)', slug: 'coreldraw-graphics-suite-2026' },
           { name: 'Adobe Photoshop 2026', slug: 'adobe-photoshop-2026' },
+          { name: 'CorelDRAW Graphics Suite (X7 a 2026)', slug: 'coreldraw-graphics-suite-2026' },
           { name: 'Adobe Illustrator 2026', slug: 'adobe-illustrator-2026' },
           { name: 'Adobe Lightroom Classic 2026', slug: 'adobe-lightroom-classic-2026' },
-          { name: 'Combo Photography 2026 (Windows)', slug: 'combo-photography-2026-windows' },
-          { name: 'Combo Photography 2026 (Mac)', slug: 'combo-photography-2026-macos' },
+          { name: 'Combo Photography 2026 (Photoshop + Lightroom)', slug: 'combo-photography-2026-windows' },
         ],
       },
       {
@@ -236,22 +232,21 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
         title: 'Marcenaria & Móveis Planejados',
         seeAllLink: catalogLink('Marcenaria & Móveis Planejados'),
         items: [
-          { name: 'Promob Plus (2024 Enterprise e 2026 Pro)', slug: 'promob-plus-professional-2026' },
-          { name: 'Vectric Aspire Pro 12.5 (CNC Router)', slug: 'vectric-aspire-pro-12-5' },
-          { name: 'Rhinoceros', slug: 'rhinoceros-9' },
           { name: 'SketchUp Pro (2021 a 2027)', slug: 'sketchup-pro-2026-windows' },
+          { name: 'Promob Plus (2024 Enterprise e 2026 Pro)', slug: 'promob-plus-professional-2026' },
+          { name: 'Rhinoceros', slug: 'rhinoceros-9' },
+          { name: 'Vectric Aspire Pro 12.5 (CNC Router)', slug: 'vectric-aspire-pro-12-5' },
         ],
       },
       {
         title: 'Elétrica, Odonto & Engenharia',
         seeAllLink: catalogLink('Elétrica, Odonto & Engenharia'),
         items: [
+          { name: 'Autodesk Inventor Pro 2027', slug: 'inventor-professional-2027' },
           { name: 'Proteus 9 Professional Design Suite', slug: 'proteus-9-professional' },
           { name: 'ExoCAD DentalCAD 3.1 Rijeka', slug: 'exocad-dentalcad-31-rijeka' },
-          { name: 'SisDEA 2025 (Avaliação de Imóveis)', slug: 'sisdea-2025' },
-          { name: 'GEO5 2024 (Geotecnia Completo)', slug: 'geo5-2024-windows' },
-          { name: 'Autodesk Inventor Pro 2027', slug: 'inventor-professional-2027' },
           { name: 'Autodesk Navisworks Manage 2027', slug: 'navisworks-manage-2027' },
+          { name: 'GEO5 2024 (Geotecnia Completo)', slug: 'geo5-2024-windows' },
         ],
       },
     ],
@@ -272,25 +267,21 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
         seeAllLink: catalogLink('Modelagem CAD & BIM'),
         items: [
           { name: 'Autodesk AutoCAD (2019 a 2027)', slug: 'autocad-2027-windows' },
-          { name: 'Autodesk Revit (2024 a 2027)', slug: 'revit-2027' },
           { name: 'SketchUp Pro (2021 a 2027)', slug: 'sketchup-pro-2026-windows' },
+          { name: 'Autodesk Revit (2024 a 2027)', slug: 'revit-2027' },
           { name: 'Graphisoft ArchiCAD (28, 29 e 30 BRA)', slug: 'archicad-30-bra' },
           { name: 'Autodesk Civil 3D 2027', slug: 'civil-3d-2027' },
-          { name: 'ZWCAD Professional 2026', slug: 'zwcad-professional-2026' },
         ],
       },
       {
         title: 'Cálculo, Estruturas & Render',
         seeAllLink: catalogLink('Cálculo, Estruturas & Render'),
         items: [
-          { name: 'TQS 24.7', slug: 'tqs-24-7' },
-          { name: 'AltoQi Eberick + Builder (2024 a 2026)', slug: 'eberick-builder-2025' },
-          { name: 'CYPE Completo (2025.d e 2026.a)', slug: 'cypecad-2026' },
-          { name: 'SolidWorks 2026 Premium', slug: 'solidworks-2026' },
-          { name: 'Tekla Structures 2026', slug: 'tekla-structures-2026' },
           { name: 'V-Ray 7 para SketchUp/3ds Max', slug: 'vray-7-windows' },
+          { name: 'SolidWorks 2026 Premium', slug: 'solidworks-2026' },
+          { name: 'AltoQi Eberick + Builder (2024 a 2026)', slug: 'eberick-builder-2025' },
           { name: 'Chaos Enscape 3D Real-Time', slug: 'chaos-enscape-windows' },
-          { name: 'Pacote Autodesk 86+ Apps Originais', slug: 'autodesk-all-apps' },
+          { name: 'TQS 24.7', slug: 'tqs-24-7' },
         ],
       },
     ],
@@ -1015,14 +1006,21 @@ const HeaderContent: React.FC = () => {
                           {localize(getMegaColumnTitle(col.title, language))}
                         </h4>
                         <ul className="space-y-2">
-                          {col.items.map((item) => (
+                          {col.items.slice(0, MEGA_MENU_MAX_ITEMS).map((item, itemIdx) => (
                             <li key={item.slug}>
                               <Link
                                 to={`/produto/${item.slug}`}
                                 onClick={() => setActiveMegaId(null)}
-                                className="text-sm text-slate-600 hover:text-[#0b5ed7] hover:translate-x-0.5 inline-block transition-all font-medium"
+                                className={`text-sm hover:text-[#0b5ed7] hover:translate-x-0.5 inline-flex flex-col items-start gap-1 transition-all ${
+                                  itemIdx === 0 ? 'text-slate-900 font-bold' : 'text-slate-600 font-medium'
+                                }`}
                               >
-                                {localize(item.name)}
+                                {itemIdx === 0 && (
+                                  <span className="rounded-full bg-[#0b5ed7]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#0b5ed7]">
+                                    {localize(language === 'en' ? 'Top pick' : 'Mais procurado')}
+                                  </span>
+                                )}
+                                <span>{localize(item.name)}</span>
                               </Link>
                             </li>
                           ))}
