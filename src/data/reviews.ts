@@ -1998,29 +1998,7 @@ export const reviewsData: Record<string, Review[]> = {
       "comment": "Tutorial em vídeo muito claro."
     }
   ],
-  "after_effects_2026": [
-    {
-      "author": "Frederico L. Guerra",
-      "rating": 5,
-      "date": "1 semana atrás",
-      "country": "BR",
-      "comment": "Motion graphics e plugins funcionando sem fechar sozinho."
-    },
-    {
-      "author": "Arthur Veloso",
-      "rating": 5,
-      "date": "1 mês atrás",
-      "country": "BR",
-      "comment": "Chegou na hora no e-mail, recomendo."
-    },
-    {
-      "author": "Lucas Castilho",
-      "rating": 4,
-      "date": "2 meses atrás",
-      "country": "BR",
-      "comment": "Ótimo desempenho."
-    }
-  ],
+  "after_effects_2026": [],
   "windows_10_pro": [
     {
       "author": "Igor S. Medeiros",
@@ -2044,29 +2022,7 @@ export const reviewsData: Record<string, Review[]> = {
       "comment": "Funcionou de primeira."
     }
   ],
-  "fl_studio_2025": [
-    {
-      "author": "Willian C. Prado",
-      "rating": 5,
-      "date": "5 dias atrás",
-      "country": "BR",
-      "comment": "Producer Edition com todos os plugins nativos abertos, salvando projetos normalmente."
-    },
-    {
-      "author": "Breno Magalhães",
-      "rating": 5,
-      "date": "3 semanas atrás",
-      "country": "BR",
-      "comment": "Instalou certinho no meu estúdio."
-    },
-    {
-      "author": "Lucas Córdoba",
-      "rating": 5,
-      "date": "hace 2 meses",
-      "country": "AR",
-      "comment": "Todos los sintetizadores nativos funcionando al 100%."
-    }
-  ],
+  "fl_studio_2025": [],
   "geo5_2024_win": [
     {
       "author": "Eng. Jorge Luís Maia",
