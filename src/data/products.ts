@@ -2166,46 +2166,6 @@ export const products: Product[] = [
     }
   },
   {
-    id: 'autodesk_all_apps',
-    keywords: ['autocad', 'revit', 'maya', 'fusion 360', '3ds max', 'advanced steel', 'inventor', 'autodesk', 'bim', 'cad'],
-    slug: 'autodesk-all-apps',
-    name: 'Pacote Autodesk 86+ Apps Originais',
-    category: 'Engenharia e Arquitetura',
-    compatibility: 'Windows e macOS',
-    version: '2024/2025/2026/2027',
-    description: "Mais de 86 aplicativos originais Autodesk em um só pacote. Receba uma conta privada com login e senha para acessar o portal oficial e baixar AutoCAD, Revit, Inventor, Fusion, Maya, 3ds Max, Navisworks e muito mais pelo período escolhido.",
-    longDescription: "O Pacote Autodesk 86+ Apps Originais reúne em um único acesso mais de 86 aplicativos para arquitetura, engenharia, construção, design de produtos, modelagem 3D, animação e efeitos visuais. Após a confirmação do pagamento, enviamos login e senha de uma conta privada para seu uso, permitindo entrar na conta Autodesk pelo portal oficial manage.autodesk.com e baixar os programas originais disponíveis no pacote. Entre os destaques estão AutoCAD e seus módulos especializados, Revit, Inventor, Fusion, Maya, 3ds Max, Navisworks, Civil 3D, Advance Steel e Robot Structural Analysis, entre outros. A principal vantagem é reunir ferramentas para diferentes etapas do trabalho: desenho CAD, projetos BIM, detalhamento, desenvolvimento mecânico, compatibilização, modelagem e animação, sem precisar escolher apenas um software. Tenha acesso aos instaladores oficiais e às versões disponíveis na conta, incluindo edições 2024 a 2027 conforme o aplicativo. Escolha 30 dias, 1 ano, 2 anos ou 3 anos de acesso. O uso dos programas fica disponível durante a vigência do plano escolhido. A disponibilidade de versões, módulos e compatibilidade com Windows ou macOS varia conforme cada aplicativo. A C2Tech fornece orientações de acesso e suporte para ajudar você a começar.",
-    price: 39.90,
-    originalPrice: 148.90,
-    checkoutUrl: 'https://pay.cakto.com.br/6ek2ybh',
-    imageUrl: '/images/products/autodesk-86-apps-subscription-20261111.webp',
-    isSubscription: true,
-    billingPeriod: 'mensal',
-    licenseOptions: [
-      { quantity: 1, label: '30 dias', price: 39.90, checkoutUrl: 'https://pay.cakto.com.br/6ek2ybh' },
-      { quantity: 12, label: '1 ano', price: 397.90, checkoutUrl: 'https://pay.cakto.com.br/sweaaho_448678' },
-      { quantity: 24, label: '2 anos', price: 597.90, checkoutUrl: 'https://pay.cakto.com.br/3ci8dh3' },
-      { quantity: 36, label: '3 anos', price: 737.90, checkoutUrl: 'https://pay.cakto.com.br/sjhwfte' }
-    ],
-    features: [
-      'Você recebe uma conta privada Autodesk com login e senha para seu uso',
-      'Acesso direto no portal oficial manage.autodesk.com',
-      '86+ aplicativos originais: AutoCAD e módulos, Revit, Inventor, Fusion, Maya, 3ds Max e Navisworks',
-      'Download e instalação oficial pelo aplicativo Autodesk Desktop',
-      'Ferramentas para CAD, BIM, engenharia, design de produtos, animação e compatibilização',
-      'Planos de 30 dias, 1 ano, 2 anos ou 3 anos de acesso',
-      'Windows e macOS conforme a compatibilidade de cada aplicativo',
-      'Atualizações oficiais e suporte prioritário via WhatsApp'
-    ],
-    requirements: {
-      os: 'Windows 10/11 ou macOS atualizado',
-      cpu: 'Processador Intel ou AMD Dual-core básico',
-      ram: '4 GB de memória RAM',
-      gpu: 'Placa de vídeo básica integrada',
-      storage: 'Espaço livre variável de acordo com a instalação'
-    }
-  },
-  {
     id: 'windows_11_pro',
     keywords: ['microsoft', 'office', 'windows', 'design', 'video'],
     slug: 'windows-11-pro',

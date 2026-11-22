@@ -112,7 +112,6 @@ export const CATALOG_SECTIONS = [
           "tekla-structures-2026",
           "vray-7-windows",
           "chaos-enscape-windows",
-          "autodesk-all-apps",
           "altoqi-visus-2026",
           "geo5-2024-windows",
           "sisdea-2025",

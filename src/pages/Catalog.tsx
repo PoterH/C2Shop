@@ -182,8 +182,6 @@ export const Catalog: React.FC = () => {
           const aScore = a.isRecommended ? 1 : 0;
           const bScore = b.isRecommended ? 1 : 0;
           if (aScore !== bScore) return bScore - aScore;
-          if (a.id === 'autodesk_all_apps') return -1;
-          if (b.id === 'autodesk_all_apps') return 1;
           return 0;
         });
       case 'relevance':

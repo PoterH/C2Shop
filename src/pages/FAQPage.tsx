@@ -54,7 +54,7 @@ export const FAQPage: React.FC = () => {
     },
     {
       q: 'Como funcionam os planos de assinatura e contas oficiais?',
-      a: 'Para softwares sob demanda ou planos oficiais (como Autodesk Todos os Aplicativos), oferecemos opções de acesso com faturamento simplificado via Pix ou Cartão. Você recebe credenciais exclusivas para uso profissional.'
+      a: 'Para softwares sob demanda ou planos oficiais, oferecemos opções de acesso com faturamento simplificado via Pix ou Cartão. Você recebe credenciais exclusivas para uso profissional.'
     },
     {
       q: 'O que recebo ao assinar um plano mensal?',
