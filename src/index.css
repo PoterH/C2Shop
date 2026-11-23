@@ -1592,3 +1592,36 @@ h1 {
 @media (max-width: 639px) { .rv-more { width: 100%; } .rv-more-text { flex: 1; } }
 @media (prefers-reduced-motion: reduce) { .rv-more, .rv-more-chevron { transition: none; } }
 
+
+/* Checkout order bump: a damped sway every few seconds draws the eye without moving the layout.
+   It pauses on hover and stops once an offer is ticked. */
+@keyframes order-bump-swing {
+  0%, 30%, 100% { transform: rotate(0deg); }
+  4%  { transform: rotate(-1.4deg); }
+  10% { transform: rotate(1.1deg); }
+  16% { transform: rotate(-0.7deg); }
+  22% { transform: rotate(0.35deg); }
+  27% { transform: rotate(-0.12deg); }
+}
+@keyframes order-bump-badge {
+  0%, 12%, 100% { transform: scale(1); }
+  5% { transform: scale(1.14); }
+}
+.order-bump-swing {
+  transform-origin: 50% 0;
+  animation: order-bump-swing 4.5s cubic-bezier(.36, .07, .19, .97) 1.2s infinite;
+  will-change: transform;
+}
+.order-bump-swing .order-bump-badge {
+  animation: order-bump-badge 4.5s ease-out 1.2s infinite;
+}
+.order-bump-swing:hover,
+.order-bump-swing:focus-within,
+.order-bump-swing:hover .order-bump-badge,
+.order-bump-swing:focus-within .order-bump-badge {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .order-bump-swing,
+  .order-bump-swing .order-bump-badge { animation: none; }
+}

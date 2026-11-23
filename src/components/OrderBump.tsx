@@ -24,6 +24,7 @@ export function OrderBump() {
   const offers = useMemo(() => getOrderBumpOffers(cartItems.filter(item => !item.orderBump)), [mainKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!offers.length) return null;
+  const anyChecked = offers.some(offer => cartItems.some(item => item.id === offer.id && item.orderBump));
 
   const toggle = (offer: Product) => {
     const added = cartItems.find(item => item.id === offer.id && item.orderBump);
@@ -32,7 +33,7 @@ export function OrderBump() {
   };
 
   return (
-    <section aria-labelledby="order-bump-title" className="rounded-xl border-2 border-dashed border-amber-300 bg-amber-50/60 p-3.5 sm:p-4">
+    <section aria-labelledby="order-bump-title" className={`rounded-xl border-2 border-dashed border-amber-300 bg-amber-50/60 p-3.5 sm:p-4 ${anyChecked ? '' : 'order-bump-swing'}`}>
       <h3 id="order-bump-title" className="text-sm font-bold text-slate-900">
         {text(`Leve junto com ${ORDER_BUMP_DISCOUNT_PERCENT}% de desconto`)}
       </h3>
@@ -66,7 +67,7 @@ export function OrderBump() {
                     <span className="text-sm font-bold text-emerald-700">{formatPrice(orderBumpPrice(base))}</span>
                   </span>
                 </span>
-                <span className="shrink-0 rounded-md bg-emerald-600 px-1.5 py-0.5 text-xs font-bold text-white">−{ORDER_BUMP_DISCOUNT_PERCENT}%</span>
+                <span className="order-bump-badge shrink-0 rounded-md bg-emerald-600 px-1.5 py-0.5 text-xs font-bold text-white">−{ORDER_BUMP_DISCOUNT_PERCENT}%</span>
               </button>
             </li>
           );
