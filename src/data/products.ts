@@ -1096,6 +1096,7 @@ export const products: Product[] = [
     price: 129.50,
     originalPrice: 199.90,
     checkoutUrl: '',
+    internationalCheckoutUrl: 'https://pay.cakto.com.br/g2h5czk_443849',
     imageUrl: '/images/products/office-2024-ltsc-windows.webp',
     notes: 'Nota: A licença é local e não inclui espaço de armazenamento em nuvem no OneDrive.',
     features: [
@@ -1126,6 +1127,7 @@ export const products: Product[] = [
     price: 145.90,
     originalPrice: 229.90,
     checkoutUrl: '',
+    internationalCheckoutUrl: 'https://pay.cakto.com.br/363brvw',
     imageUrl: '/images/products/office-2024-ltsc-macos.webp',
     notes: 'Nota: A licença é local e não inclui espaço de armazenamento em nuvem no OneDrive.',
     features: [
