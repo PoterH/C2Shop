@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { useText } from '../hooks/useText';
 import { ORDER_BUMP_DISCOUNT_PERCENT } from '../data/orderBumps';
+import { LicenseWarning } from './LicenseWarning';
 import { cartItemKey, itemCount, itemTotal, itemValidity, itemUnitPrice, itemVersion } from '../utils/cart';
 export function CartLine({ item, compact = false, editable = true }: { item: Product; compact?: boolean; editable?: boolean }) {
   const { removeFromCart, updateQuantity, setIsCartOpen } = useCart();
@@ -17,6 +18,7 @@ export function CartLine({ item, compact = false, editable = true }: { item: Pro
     <div className="min-w-0 flex-1">
       <Link to={`/produto/${item.slug}`} onClick={() => setIsCartOpen(false)} className="font-bold text-action-primary leading-snug block">{text(item.name)}</Link>
       <dl className="text-xs text-slate-500 mt-2 space-y-1"><div>{text('Plataforma')}: {text(item.selectedLicenseOption?.platform || item.compatibility)}</div><div>{text('Versão')}: {text(itemVersion(item))}</div><div>{text(itemValidity(item))}</div></dl>
+      {item.selectedLicenseOption?.warning && <LicenseWarning compact text={text(item.selectedLicenseOption.warning)} />}
       {item.orderBump && <span className="inline-flex mt-2 rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">{text(`Oferta do checkout • ${ORDER_BUMP_DISCOUNT_PERCENT}% off`)}</span>}
       <div className="flex flex-wrap items-center justify-between gap-3 mt-4">
         {editable ? <div className="inline-flex border border-slate-200 rounded-lg items-center"><button aria-label={text(`Diminuir quantidade de ${item.name}`)} disabled={itemCount(item) <= 1} onClick={() => updateQuantity(key, itemCount(item) - 1)} className="p-2 disabled:opacity-30"><Minus size={14} /></button><span className="px-3 text-sm" aria-label={text('Quantidade')}>{itemCount(item)}</span><button aria-label={text(`Aumentar quantidade de ${item.name}`)} disabled={itemCount(item) >= 99} onClick={() => updateQuantity(key, itemCount(item) + 1)} className="p-2 disabled:opacity-30"><Plus size={14} /></button></div> : <span className="text-xs text-slate-500">{text('Quantidade')}: {itemCount(item)}</span>}

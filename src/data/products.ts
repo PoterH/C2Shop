@@ -57,6 +57,8 @@ export interface LicenseOption {
   imageUrl?: string;
   gallery?: string[];
   driveUrl?: string;
+  /** Shown to the buyer whenever this option is selected (product page, cart and checkout). */
+  warning?: string;
 }
 
 
@@ -655,7 +657,8 @@ export const products: Product[] = [
         internationalCheckoutUrl: 'https://pay.cakto.com.br/8x4fckr',
         driveUrl: 'https://drive.google.com/drive/folders/1Agg7qd7JFCAKsfFdgsoEUnGDMgDnZ_B0?usp=drive_link',
         downloadSlug: 'eberick-builder-2026-infinity',
-        imageUrl: "/images/products/eberick_builder_2025-card-40-20261111.webp"
+        imageUrl: "/images/products/eberick_builder_2025-card-40-20261111.webp",
+        warning: 'A versão 2026.09 não abre projetos feitos no AltoQi original. Se você precisa trabalhar em projetos já existentes, fale com a nossa equipe antes de comprar.'
       }
     ],
     features: [

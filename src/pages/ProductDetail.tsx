@@ -48,6 +48,7 @@ import {
   Minus,
 } from 'lucide-react';
 import { reviewsData } from '../data/reviews';
+import { LicenseWarning } from '../components/LicenseWarning';
 import { translateCategory, translateCompatibility } from '../utils/i18n';
 import { trackEvent } from '../utils/pixel';
 
@@ -938,6 +939,9 @@ const ProductDetailContent: React.FC = () => {
                         }
                       }}
                     />
+                    {selectedLicenseOption?.warning && (
+                      <LicenseWarning text={localize(selectedLicenseOption.warning)} />
+                    )}
                   </div>
                 ) : (
                   <div className="space-y-1.5">
