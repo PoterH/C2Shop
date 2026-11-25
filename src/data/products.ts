@@ -493,7 +493,7 @@ export const products: Product[] = [
     originalPrice: 219.90,
     checkoutUrl: '',
     driveUrl: 'https://drive.google.com/drive/folders/1GpVMa0dGNWfg_uuVchH4twBEHjymcqa1?usp=drive_link',
-    imageUrl: '/images/products/autocad-electrical-2027.webp',
+    imageUrl: '/images/products/autocad-electrical-2027-v2.webp',
     features: [
       'Diagramas esquemáticos com bibliotecas de símbolos elétricos',
       'Numeração automática de fios e componentes',
@@ -525,7 +525,7 @@ export const products: Product[] = [
     originalPrice: 219.90,
     checkoutUrl: '',
     driveUrl: 'https://drive.google.com/drive/folders/1VRFFaPWuSdv9Xy3-SbrEQAmmdXsNyaM1?usp=drive_link',
-    imageUrl: '/images/products/autocad-mechanical-2027.webp',
+    imageUrl: '/images/products/autocad-mechanical-2027-v2.webp',
     features: [
       'Biblioteca de peças padronizadas em normas ISO, ANSI e DIN',
       'Geradores de eixos, molas e engrenagens',
@@ -557,7 +557,7 @@ export const products: Product[] = [
     originalPrice: 219.90,
     checkoutUrl: '',
     driveUrl: 'https://drive.google.com/drive/folders/1o0GUtJW3E-sx8-EsjJIjXJBacs0FcqAO?usp=drive_link',
-    imageUrl: '/images/products/autocad-architecture-2027.webp',
+    imageUrl: '/images/products/autocad-architecture-2027-v2.webp',
     features: [
       'Paredes, portas, janelas e escadas como objetos inteligentes',
       'Cortes e elevações gerados a partir da planta',
@@ -589,7 +589,7 @@ export const products: Product[] = [
     originalPrice: 219.90,
     checkoutUrl: '',
     driveUrl: 'https://drive.google.com/drive/folders/1av9TCsPIF1YtpSqnOX07cGdED02Qg0ir?usp=drive_link',
-    imageUrl: '/images/products/autocad-mep-2027.webp',
+    imageUrl: '/images/products/autocad-mep-2027-v2.webp',
     features: [
       'Dutos, tubulação e eletrodutos com conexões de catálogo',
       'Circuitos e painéis elétricos prediais',
@@ -621,7 +621,7 @@ export const products: Product[] = [
     originalPrice: 219.90,
     checkoutUrl: '',
     driveUrl: 'https://drive.google.com/drive/folders/1pTA-vJISqvFSqPX08yyqkt-_qlN_XRUh?usp=drive_link',
-    imageUrl: '/images/products/autocad-plant-3d-2027.webp',
+    imageUrl: '/images/products/autocad-plant-3d-2027-v2.webp',
     features: [
       'Fluxogramas P&ID com símbolos de processo',
       'Modelagem 3D de tubulação, equipamentos e estruturas',
@@ -653,7 +653,7 @@ export const products: Product[] = [
     originalPrice: 219.90,
     checkoutUrl: '',
     driveUrl: 'https://drive.google.com/drive/folders/1bOldMux578xTfo33UlNeUDTvFGjkLMUb?usp=drive_link',
-    imageUrl: '/images/products/autocad-map-3d-2027.webp',
+    imageUrl: '/images/products/autocad-map-3d-2027-v2.webp',
     features: [
       'Leitura e edição de shapefiles, bancos espaciais e imagens',
       'Conversão entre sistemas de coordenadas',
