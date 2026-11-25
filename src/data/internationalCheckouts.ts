@@ -2,7 +2,6 @@ import type { Product, LicenseOption } from './products';
 
 // Mapping for products that have a single global/Windows version
 export const INTERNATIONAL_PRODUCT_CHECKOUTS: Record<string, string> = {
-  tqs_24_7: 'https://pay.cakto.com.br/rwnz4ws',
   geo5_2024_win: 'https://pay.cakto.com.br/wnwwtv3',
   inventor_pro_2027: 'https://pay.cakto.com.br/37735sw',
   civil3d_2027: 'https://pay.cakto.com.br/8scpmou',
@@ -125,7 +124,6 @@ export const INTERNATIONAL_OPTION_CHECKOUTS: Record<string, string> = {
 
 // Secondary lookup by downloadSlug (extra safety)
 export const INTERNATIONAL_SLUG_CHECKOUTS: Record<string, string> = {
-  'tqs-24-7': 'https://pay.cakto.com.br/rwnz4ws',
   'autocad-2019-windows': 'https://pay.cakto.com.br/w2y6f75_1247182',
   'autocad-2024-windows': 'https://pay.cakto.com.br/yibwpho',
   'autocad-2025-windows': 'https://pay.cakto.com.br/sdujqqx',

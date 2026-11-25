@@ -32,7 +32,7 @@ const MICROSOFT_SLUGS: string[] = CATALOG_SECTIONS
   .find((group) => group.title === 'Microsoft Office & Windows')?.slugs ?? [];
 
 const heroGridCards: GridMotionItem[] = [
-  '01', 'office-2024', '05', '07', '17', '20', '28', 'archicad-30', '41', 'rhinoceros-9', '48',
+  'solidworks-2026', 'office-2024', '05', '07', '17', '20', '28', 'archicad-30', '41', 'rhinoceros-9', '48',
   '52', '53', '55', '59', '65', 'illustrator-2026', 'cype-2026', '78', '93', 'premiere-pro-2026', 'project-pro-2024',
 ].map((card) => ({ src: `/images/grid-cards/trimmed/card-${card}.png` }));
 
@@ -105,7 +105,7 @@ export const Home: React.FC = () => {
       if (activeCategory === 'macos') return product.compatibility === 'macOS' || product.compatibility === 'Windows e macOS';
       if (activeCategory === 'woodworking') return product.category === 'Marcenaria e Móveis Planejados';
       if (activeCategory === '3d-cad') {
-        return /cad|3d|bim|archicad|revit|sketchup|rhino|solidworks|inventor|cype|tqs|enscape|marcenaria|dental/.test(name)
+        return /cad|3d|bim|archicad|revit|sketchup|rhino|solidworks|inventor|cype|enscape|marcenaria|dental/.test(name)
           || /Engenharia e Arquitetura|Marcenaria e Móveis Planejados|Odontologia e CAD Dental|Projetos Elétricos e Eletrônicos/.test(product.category);
       }
       return false;

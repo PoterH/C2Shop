@@ -113,7 +113,6 @@ export const CATALOG_SECTIONS = [
       {
         "title": "Cálculo, Estruturas & Render",
         "slugs": [
-          "tqs-24-7",
           "eberick-builder-2025",
           "cypecad-2026",
           "solidworks-2026",

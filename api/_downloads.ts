@@ -22,7 +22,6 @@ export const DOWNLOAD_LINKS: Record<string, string> = {
 "revit-2025": "https://drive.google.com/drive/folders/1-XFTsL415cVi4mJ6HCYD78B3_H_o5SgD?usp=drive_link",
 "rhinoceros-8-mac": "https://drive.google.com/drive/folders/1gKuIUT5TqObb3V-znZtlKYx0NZNwp6rb?usp=drive_link",
 "fl-studio-2025-producer-edition": "https://drive.google.com/drive/folders/1puLyWQPEB_NgWhxAOC6yYyhycO5V5AZF?usp=drive_link",
-  'tqs-24-7': 'https://drive.google.com/drive/folders/1XjuMbUacZXd1F5A3z8bJw6Do7e__AOLY?usp=sharing',
   'parallels-desktop-27': "https://drive.google.com/drive/folders/1z6eL7yiGFPsDWAjZdA7Yl5dhK5Q_uz2V?usp=sharing",
   'sketchup-pro-2027-windows': 'https://drive.google.com/drive/folders/1rcSMvCV5MFqJunxKwrAR3_olmBFtuNZT?usp=sharing',
   'sketchup-pro-2027-macos': 'https://drive.google.com/drive/folders/1AzyE3jJ1ER1RKyA6sI-dfCn1uvbJqAcM?usp=drive_link',

@@ -76,43 +76,6 @@ export const CATEGORIES = [
 
 export const products: Product[] = [
   {
-  "id": "tqs_24_7",
-  "slug": "tqs-24-7",
-  "name": "TQS 24.7",
-  "category": "Engenharia e Arquitetura",
-  "compatibility": "Windows",
-  "version": "24.7",
-  "description": "TQS 24.7 para engenharia estrutural no Windows. O pacote inclui também PREO e ALVEST, com entrega digital e orientações de instalação.",
-  "longDescription": "O pacote TQS 24.7 para Windows reúne o TQS na versão 24.7 e os adicionais PREO e ALVEST em uma única compra. Uma opção para profissionais de engenharia estrutural que desejam trabalhar com essas ferramentas no computador. Após a confirmação do pagamento, você recebe por e-mail o link de acesso aos arquivos do pacote, junto com as orientações de instalação. PREO e ALVEST estão incluídos no valor anunciado, sem compra separada desses adicionais.",
-  "price": 437.9,
-  "originalPrice": 657.90,
-  "checkoutUrl": "https://pay.cakto.com.br/rwnz4ws",
-  "imageUrl": "/images/products/tqs-card-1-20261111.webp",
-  "features": [
-    "TQS versão 24.7 para Windows",
-    "PREO e ALVEST incluídos no pacote",
-    "Pacote para engenharia estrutural",
-    "Entrega digital após a confirmação do pagamento",
-    "Orientações para instalação e suporte C2Tech"
-  ],
-  "requirements": {
-    "os": "Windows",
-    "cpu": "Consulte os requisitos do TQS 24.7 para o seu equipamento",
-    "ram": "Conforme os requisitos da versão e o porte dos projetos",
-    "storage": "Espaço para o programa e os arquivos dos projetos"
-  },
-  "internationalCheckoutUrl": "https://pay.cakto.com.br/rwnz4ws",
-  "driveUrl": "https://drive.google.com/drive/folders/1XjuMbUacZXd1F5A3z8bJw6Do7e__AOLY?usp=sharing",
-  "keywords": [
-    "tqs",
-    "tqs 24.7",
-    "preo",
-    "alvest",
-    "engenharia",
-    "estruturas"
-  ]
-},
-  {
     id: 'geo5_2024_win',
     keywords: ['autodesk', 'engenharia', 'arquitetura', 'cad', 'bim'],
     slug: 'geo5-2024-windows',

@@ -281,7 +281,7 @@ const MEGA_MENU_CATEGORIES: MegaMenuCategory[] = [
           { name: 'SolidWorks 2026 Premium', slug: 'solidworks-2026' },
           { name: 'AltoQi Eberick + Builder (2024 a 2026)', slug: 'eberick-builder-2025' },
           { name: 'Chaos Enscape 3D Real-Time', slug: 'chaos-enscape-windows' },
-          { name: 'TQS 24.7', slug: 'tqs-24-7' },
+          { name: 'CYPE Completo (2025.d e 2026.a)', slug: 'cypecad-2026' },
         ],
       },
     ],
